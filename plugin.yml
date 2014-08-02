@@ -1,0 +1,60 @@
+name: MinePacks
+author: GeorgH93
+website: http://dev.bukkit.org/bukkit-plugins/minepacks/
+main: at.pcgamingfreaks.georgh.MinePacks.MinePacks
+version: 1.0
+commands:
+   backpack:
+      description: Main command
+      usage: /backpack
+permissions:
+  backpack.*:
+    description: Gives acces to the full MinePacks functionality
+    children:
+      backpack: true
+      backpack.size.6: true
+      backpack.others: true
+      backpack.others.edit: true
+      backpack.KeepOnDeath: true
+      backpack.clean: true
+      backpack.clean.other: true
+  backpack:
+    description: Allows to open the backback
+    default: false
+  backpack.size.1:
+    description: Mini size for a backpack, if player has backpack permission he will also have at least a backpack with the size 1
+    default: false
+  backpack.size.2:
+    description: 2*9 backpack
+    default: false
+  backpack.size.3:
+    description: 3*9 backpack
+    default: false
+  backpack.size.4:
+    description: 4*9 backpack
+    default: false
+  backpack.size.5:
+    description: 5*9 backpack
+    default: false
+  backpack.size.6:
+    description: 6*9 backpack
+    default: false
+  backpack.clean:
+    description: Allows to clean the own backpack.
+    default: false
+  backpack.clean.other:
+    description: Allows to clean the others backpacks.
+    default: op
+    children:
+      backpack.clean: true
+  backpack.others:
+    description: Allows to open backpacks of other players
+    default: op
+  backpack.others.edit:
+    description: Allows to edit backpacks of other players
+    default: op
+    children:
+      backpack.others: true
+  backpack.KeepOnDeath:
+    description: Allows to keeps the items in backpack on death
+    defautl: op
