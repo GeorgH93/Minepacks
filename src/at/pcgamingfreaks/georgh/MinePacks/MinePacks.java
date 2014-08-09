@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import at.pcgamingfreaks.georgh.MinePacks.Database.*;
@@ -56,6 +57,7 @@ public class MinePacks extends JavaPlugin
 		
 		BackpackTitle = config.getBPTitle();
 		Message_IvalidBackpack = ChatColor.RED + lang.Get("Ingame.IvalidBackpack");
+		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 		log.info(lang.Get("Console.Enabled"));
 	}
 	
