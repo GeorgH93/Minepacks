@@ -2,7 +2,7 @@ name: MinePacks
 author: GeorgH93
 website: http://dev.bukkit.org/bukkit-plugins/minepacks/
 main: at.pcgamingfreaks.georgh.MinePacks.MinePacks
-version: 1.0.0.1
+version: 1.1.0.0
 commands:
    backpack:
       description: Main command

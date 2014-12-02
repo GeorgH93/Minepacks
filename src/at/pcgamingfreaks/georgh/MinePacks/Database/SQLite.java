@@ -119,7 +119,7 @@ public class SQLite extends Database
 		{
 			Statement stmt = GetConnection().createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE);");
-			if(plugin.config.UseUUIDs())
+			if(plugin.UseUUIDs)
 			{
 				try
 				{
@@ -148,7 +148,7 @@ public class SQLite extends Database
 		try
 		{
 			PreparedStatement ps;
-			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`=?;" : "`name`=?;"));
+			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
 			if(plugin.UseUUIDs)
 			{
 				ps.setString(1, player.getUniqueId().toString().replace("-", ""));

@@ -112,7 +112,7 @@ public class MySQL extends Database
 		{
 			Statement stmt = GetConnection().createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `name` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`player_id`));");
-			if(plugin.config.UseUUIDs())
+			if(plugin.UseUUIDs)
 			{
 				try
 				{
@@ -151,7 +151,7 @@ public class MySQL extends Database
 				{
 					PreparedStatement ps;
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());;
-					ps = con.prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`=?;" : "`name`=?;"));
+					ps = con.prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
 					if(plugin.UseUUIDs)
 					{
 						ps.setString(1, player.getUniqueId().toString().replace("-", ""));

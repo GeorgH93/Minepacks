@@ -161,7 +161,7 @@ public class Backpack
 		bp = Bukkit.createInventory(null, newSize, title);
 		for(int i = 0; i < itsa.length; i++)
 		{
-			bp.setItem(i, itsa[0]);
+			bp.setItem(i, itsa[i]);
 		}
 		size = newSize;
 		for(Entry<Player, Boolean> e : opend.entrySet())
