@@ -11,7 +11,7 @@
   </repositories>
   <build>
 	<defaultGoal>clean install</defaultGoal>
-		<sourceDirectory>src/main/java</sourceDirectory>
+		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
 				<directory>resources</directory>
