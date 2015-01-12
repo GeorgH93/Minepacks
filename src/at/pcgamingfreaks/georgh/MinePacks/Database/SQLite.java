@@ -18,7 +18,6 @@
 package at.pcgamingfreaks.georgh.MinePacks.Database;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,7 +32,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
@@ -195,10 +193,6 @@ public class SQLite extends Database
 	{
 		try
 		{
-			// Serialising the backpack
-			ByteArrayOutputStream b = new ByteArrayOutputStream();
-		    BukkitObjectOutputStream output = new BukkitObjectOutputStream(b);
-		    output.writeObject(backpack.getBackpack().getContents());
 			PreparedStatement ps = null; // Statement Variable
 			// Building the mysql statement
 			if(backpack.getID() <= 0)
@@ -226,15 +220,14 @@ public class SQLite extends Database
 				ps.close();
 				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`) VALUES (?,?);");
 				ps.setInt(1, backpack.getID());
-				ps.setBytes(2, b.toByteArray());
+				ps.setBytes(2, backpack.getBackpackByteArray());
 			}
 			else
 			{
 				ps = GetConnection().prepareStatement("UPDATE `" + Table_Backpacks + "` SET `itemstacks`=? WHERE `owner`=?");
-				ps.setBytes(1, b.toByteArray());
+				ps.setBytes(1, backpack.getBackpackByteArray());
 				ps.setInt(2, backpack.getID());
 			}
-			output.close();
 			ps.execute();
 			ps.close();
 		}
