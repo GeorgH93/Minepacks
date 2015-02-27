@@ -27,7 +27,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
-import net.minecraft.util.com.google.gson.Gson;
+import com.google.gson.Gson;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.pcgamingfreaks</groupId>
   <artifactId>MinePacks</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
   <repositories>
       <repository>
-          <id>bukkit-repo</id>
-          <url>http://repo.bukkit.org/content/groups/public</url>
+          <id>spigot-repo</id>
+          <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
       </repository>
   </repositories>
   <build>
@@ -30,18 +30,39 @@
 	          <target>1.7</target>
 	        </configuration>
 	      </plugin>
+	      <plugin>
+	       <groupId>org.apache.maven.plugins</groupId>
+	       <artifactId>maven-shade-plugin</artifactId>
+	       <version>2.3</version>
+	       <executions>
+	          <execution>
+	            <phase>package</phase>
+	            <goals>
+	              <goal>shade</goal>
+	            </goals>
+	            <configuration>
+	              <createDependencyReducedPom>false</createDependencyReducedPom>
+	              <minimizeJar>true</minimizeJar>
+	              <artifactSet>
+	                  <includes>
+	                      <include>com.google.code.gson:gson</include>
+	                  </includes>
+	              </artifactSet>
+	            </configuration>
+	          </execution>
+	        </executions>
+	      </plugin>
 	    </plugins>
   </build>
   <dependencies>
   	<dependency>
-  		<groupId>org.bukkit</groupId>
-  		<artifactId>bukkit</artifactId>
-  		<version>LATEST</version>
-  		<scope>provided</scope>
-  	</dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.3.1</version>
+    </dependency>
   	<dependency>
   		<groupId>org.bukkit</groupId>
-  		<artifactId>minecraft-server</artifactId>
+  		<artifactId>bukkit</artifactId>
   		<version>LATEST</version>
   		<scope>provided</scope>
   	</dependency>
