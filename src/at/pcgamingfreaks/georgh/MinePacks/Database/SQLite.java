@@ -69,7 +69,7 @@ public class SQLite extends Database
 				{
 					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
 				}
-				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1)) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
+				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), plugin.getServer().getOnlineMode()) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
 			}
 			if(converter.size() > 0)
 			{
