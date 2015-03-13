@@ -17,7 +17,6 @@
 
 package at.pcgamingfreaks.georgh.MinePacks.Database;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,7 +30,6 @@ import java.util.List;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
@@ -101,7 +99,6 @@ public class SQLite extends Database
 				{
 					e.printStackTrace();
 				}
-				
 			}
 		}
 		catch (SQLException e)
@@ -132,6 +129,17 @@ public class SQLite extends Database
 				}
 			}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB);");
+			try
+			{
+				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");
+			}
+			catch(SQLException e)
+			{
+				if(e.getErrorCode() != 1060)
+				{
+					e.printStackTrace();
+				}
+			}
 			stmt.close();
 		}
 		catch (SQLException e)
@@ -218,15 +226,23 @@ public class SQLite extends Database
 			    }
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`) VALUES (?,?);");
+				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`, `version`) VALUES (?,?,?);", Statement.RETURN_GENERATED_KEYS);
 				ps.setInt(1, backpack.getID());
-				ps.setBytes(2, backpack.getBackpackByteArray());
+				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
+				ps.setInt(3, itsSerializer.getUsedVersion());
+				ps.executeUpdate();
+				rs = ps.getGeneratedKeys();
+				backpack.setID(rs.getInt(1));
+				ps.close();
+				rs.close();
+				return;
 			}
 			else
 			{
-				ps = GetConnection().prepareStatement("UPDATE `" + Table_Backpacks + "` SET `itemstacks`=? WHERE `owner`=?");
-				ps.setBytes(1, backpack.getBackpackByteArray());
-				ps.setInt(2, backpack.getID());
+				ps = GetConnection().prepareStatement("UPDATE `" + Table_Backpacks + "` SET `itemstacks`=?,`version`=? WHERE `owner`=?");
+				ps.setBytes(1, itsSerializer.Serialize(backpack.getBackpack()));
+				ps.setInt(2, itsSerializer.getUsedVersion());
+				ps.setInt(3, backpack.getID());
 			}
 			ps.execute();
 			ps.close();
@@ -242,7 +258,7 @@ public class SQLite extends Database
 		try
 		{
 			PreparedStatement ps = null; // Statement Variable
-			ps = GetConnection().prepareStatement("SELECT `owner`,`itemstacks` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `owner`=`player_id` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
+			ps = GetConnection().prepareStatement("SELECT `owner`,`itemstacks`,`version` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `owner`=`player_id` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
 			if(plugin.UseUUIDs)
 			{
 				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
@@ -257,9 +273,7 @@ public class SQLite extends Database
 				return null;
 			}
 			int bpid = rs.getInt(1);
-			BukkitObjectInputStream bois = new BukkitObjectInputStream(new ByteArrayInputStream(rs.getBytes(2)));
-            ItemStack[] its = (ItemStack[]) bois.readObject();
-            bois.close();
+			ItemStack[] its = itsSerializer.Deserialize(rs.getBytes(2), rs.getInt(3));
 			rs.close();
 			ps.close();
 			return new Backpack(player, its, bpid);

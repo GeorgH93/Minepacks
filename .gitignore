@@ -46,3 +46,4 @@ Temporary Items
 *.project
 *.prefs
 /target/
+jar_libs/bukkit.jar

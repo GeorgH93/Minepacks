@@ -24,12 +24,14 @@ import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
+import at.pcgamingfreaks.georgh.MinePacks.Database.Serializer.ItemStackSerializer;
 
 public class Database
 {
 	protected MinePacks plugin;
 	
 	public HashSet<Backpack> backpacks = new HashSet<Backpack>();
+	public ItemStackSerializer itsSerializer = new ItemStackSerializer();
 	
 	public Database(MinePacks mp)
 	{

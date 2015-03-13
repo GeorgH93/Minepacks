@@ -17,7 +17,6 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public class Backpack
 {
@@ -182,22 +180,5 @@ public class Backpack
 	public String getTitle()
 	{
 		return title;
-	}
-	
-	public byte[] getBackpackByteArray()
-	{
-		try
-		{
-			ByteArrayOutputStream b = new ByteArrayOutputStream();
-		    BukkitObjectOutputStream output = new BukkitObjectOutputStream(b);
-		    output.writeObject(getBackpack().getContents());
-		    byte[] ba = b.toByteArray();
-		    output.close();
-		    return ba;
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
 	}
 }
