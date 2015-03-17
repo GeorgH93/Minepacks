@@ -114,26 +114,14 @@ public class MySQL extends Database
 				{
 					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `uuid` CHAR(32) UNIQUE;");
 				}
-				catch(SQLException e)
-				{
-					if(e.getErrorCode() != 1060)
-					{
-						e.printStackTrace();
-					}
-				}
+				catch(SQLException e) { }
 			}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED NOT NULL, `itemstacks` BLOB, PRIMARY KEY (`owner`));");
 			try
 			{
 				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");
 			}
-			catch(SQLException e)
-			{
-				if(e.getErrorCode() != 1060)
-				{
-					e.printStackTrace();
-				}
-			}
+			catch(SQLException e) { }
 			stmt.close();
 		}
 		catch (SQLException e)
