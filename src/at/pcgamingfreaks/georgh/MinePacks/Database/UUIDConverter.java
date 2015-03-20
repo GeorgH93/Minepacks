@@ -23,9 +23,10 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.UUID;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import com.google.common.base.Charsets;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonObject;
 
 public class UUIDConverter
 {
@@ -37,7 +38,7 @@ public class UUIDConverter
 			URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.replaceAll("-", ""));
 			Scanner jsonScanner = new Scanner(url.openConnection().getInputStream(), "UTF-8");
 			String json = jsonScanner.next();
-			name = (((JsonObject)new JsonParser().parse(json)).get("name")).toString();
+			name = (((JSONObject)new JSONParser().parse(json)).get("name")).toString();
 			jsonScanner.close();
 		}
 		catch (Exception e)
@@ -60,7 +61,7 @@ public class UUIDConverter
 			try
 	    	{
 	    		BufferedReader in = new BufferedReader(new InputStreamReader(new URL("https://api.mojang.com/users/profiles/minecraft/" + name).openStream()));
-	    		uuid = (((JsonObject)new JsonParser().parse(in)).get("id")).toString().replaceAll("\"", "");
+	    		uuid = (((JSONObject)new JSONParser().parse(in)).get("id")).toString().replaceAll("\"", "");
 	    		in.close();
 	    	}
 	    	catch (Exception e)

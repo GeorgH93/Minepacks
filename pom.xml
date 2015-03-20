@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.pcgamingfreaks</groupId>
   <artifactId>MinePacks</artifactId>
-  <version>1.2.2</version>
+  <version>1.2.3</version>
   <repositories>
       <repository>
 		  <id>in-project</id>
@@ -35,36 +35,9 @@
 	          <target>1.7</target>
 	        </configuration>
 	      </plugin>
-	      <plugin>
-	       <groupId>org.apache.maven.plugins</groupId>
-	       <artifactId>maven-shade-plugin</artifactId>
-	       <version>2.3</version>
-	       <executions>
-	          <execution>
-	            <phase>package</phase>
-	            <goals>
-	              <goal>shade</goal>
-	            </goals>
-	            <configuration>
-	              <createDependencyReducedPom>false</createDependencyReducedPom>
-	              <minimizeJar>true</minimizeJar>
-	              <artifactSet>
-	                  <includes>
-	                      <include>com.google.code.gson:gson</include>
-	                  </includes>
-	              </artifactSet>
-	            </configuration>
-	          </execution>
-	        </executions>
-	      </plugin>
 	    </plugins>
   </build>
   <dependencies>
-  	<dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.3.1</version>
-    </dependency>
   	<dependency>
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
