@@ -113,12 +113,12 @@ public class SQLite extends Database
 		try
 		{
 			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE)" + ((plugin.UseUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +";");
 			if(plugin.UseUUIDs)
 			{
 				try
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `uuid` CHAR(32) UNIQUE;");
+					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `uuid` CHAR(32);");
 				}
 				catch(SQLException e) { }
 			}
