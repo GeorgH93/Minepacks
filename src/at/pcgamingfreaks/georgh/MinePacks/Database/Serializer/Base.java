@@ -46,6 +46,10 @@ public class Base
 	
 	public ItemStack[] toItemStack(byte[] data)
 	{
+		if(data == null)
+		{
+			return null;
+		}
 		try
 		{
 			BukkitObjectInputStream bois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
