@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,8 +41,8 @@ public class EventListener implements Listener
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();
 		
-		Message_OwnBPClose = plugin.lang.Get("Ingame.OwnBackPackClose");
-		Message_PlayerBPClose = plugin.lang.Get("Ingame.PlayerBackPackClose");
+		Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
+		Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
 	}
 	
 	@EventHandler

@@ -38,7 +38,7 @@ public class MySQL extends Database
 	private Connection conn = null;
 	
 	private String Table_Players, Table_Backpacks; // Table Names
-	
+	private String Query_UpdatePlayerGet, Query_UpdatePlayerUUID, Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP;
 	private boolean UpdatePlayer;
 	
 	public MySQL(MinePacks mp)
@@ -49,11 +49,33 @@ public class MySQL extends Database
 		Table_Backpacks = plugin.config.getBackpackTable();
 		UpdatePlayer = plugin.config.getUpdatePlayer();
 		
+		BuildQuerys();
 		CheckDB(); // Check Database
 		if(plugin.config.UseUUIDs())
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
+	}
+	
+	private void BuildQuerys()
+	{
+		if(plugin.UseUUIDs)
+		{
+			Query_UpdatePlayerGet = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
+			Query_UpdatePlayerUUID = "UPDATE `" + Table_Players + "` SET `" + plugin.config.getDBFields("User.Name") + "`=? WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
+			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Name") + "`,`" + plugin.config.getDBFields("User.UUID") + "`) VALUES (?,?);";
+			Query_GetPlayerID = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
+			Query_GetBP = "SELECT `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`,`" + plugin.config.getDBFields("Backpack.ItemStacks") + "`,`" + plugin.config.getDBFields("Backpack.Version") + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=`" + plugin.config.getDBFields("User.Player_ID") + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
+		}
+		else
+		{
+			Query_UpdatePlayerGet = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
+			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Name") + "`) VALUES (?);";
+			Query_GetPlayerID = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
+			Query_GetBP = "SELECT `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`,`" + plugin.config.getDBFields("Backpack.ItemStacks") + "`,`" + plugin.config.getDBFields("Backpack.Version") + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=`" + plugin.config.getDBFields("User.Player_ID") + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
+		}
+		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "`, `" + plugin.config.getDBFields("Backpack.ItemStacks") + "`, `" + plugin.config.getDBFields("Backpack.Version") + "`) VALUES (?,?,?);";
+		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + plugin.config.getDBFields("Backpack.ItemStacks") + "`=?,`" + plugin.config.getDBFields("Backpack.Version") + "`=? WHERE `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=?;";
 	}
 	
 	private void CheckUUIDs()
@@ -62,14 +84,14 @@ public class MySQL extends Database
 		{
 			List<String> converter = new ArrayList<String>();
 			Statement stmt = GetConnection().createStatement();
-			ResultSet res = stmt.executeQuery("SELECT `name` FROM `" + Table_Players + "` WHERE `uuid` IS NULL");
+			ResultSet res = stmt.executeQuery("SELECT `" + plugin.config.getDBFields("User.Name") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "` IS NULL");
 			while(res.next())
 			{
 				if(res.isFirst())
 				{
 					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
 				}
-				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), true) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
+				converter.add("UPDATE `" + Table_Players + "` SET `" + plugin.config.getDBFields("User.UUID") + "`='" + UUIDConverter.getUUIDFromName(res.getString(1), true) + "' WHERE `" + plugin.config.getDBFields("User.Name") + "`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
 			}
 			if(converter.size() > 0)
 			{
@@ -107,19 +129,19 @@ public class MySQL extends Database
 		try
 		{
 			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `name` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`player_id`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Player_ID") + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + plugin.config.getDBFields("User.Name") + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`player_id`));");
 			if(plugin.UseUUIDs)
 			{
 				try
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `uuid` CHAR(32) UNIQUE;");
+					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + plugin.config.getDBFields("User.UUID") + "` CHAR(32) UNIQUE;");
 				}
 				catch(SQLException e) { }
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED NOT NULL, `itemstacks` BLOB, PRIMARY KEY (`owner`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "` INT UNSIGNED NOT NULL, `" + plugin.config.getDBFields("Backpack.ItemStacks") + "` BLOB, PRIMARY KEY (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "`));");
 			try
 			{
-				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");
+				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + plugin.config.getDBFields("Backpack.Version") + "` INT DEFAULT 0;");
 			}
 			catch(SQLException e) { }
 			stmt.close();
@@ -146,7 +168,7 @@ public class MySQL extends Database
 				{
 					PreparedStatement ps;
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());;
-					ps = con.prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
+					ps = con.prepareStatement(Query_UpdatePlayerGet);
 					if(plugin.UseUUIDs)
 					{
 						ps.setString(1, player.getUniqueId().toString().replace("-", ""));
@@ -165,7 +187,7 @@ public class MySQL extends Database
 							con.close();
 							return;
 						}
-						ps = con.prepareStatement("UPDATE `" + Table_Players + "` SET `name`=? WHERE `uuid`=?;");
+						ps = con.prepareStatement(Query_UpdatePlayerUUID);
 						ps.setString(1, player.getName());
 						ps.setString(2, player.getUniqueId().toString().replace("-", ""));
 					}
@@ -173,7 +195,7 @@ public class MySQL extends Database
 					{
 						rs.close();
 						ps.close();
-						ps = con.prepareStatement("INSERT INTO `" + Table_Players + "` (`name`" + ((plugin.UseUUIDs) ? ",`uuid`" : "") + ") VALUES (?" + ((plugin.UseUUIDs) ? ",?" : "") + ");");
+						ps = con.prepareStatement(Query_UpdatePlayerAdd);
 						ps.setString(1, player.getName());
 						if(plugin.UseUUIDs)
 						{
@@ -200,7 +222,7 @@ public class MySQL extends Database
 			// Building the mysql statement
 			if(backpack.getID() <= 0)
 			{
-				ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
+				ps = GetConnection().prepareStatement(Query_GetPlayerID);
 				if(plugin.UseUUIDs)
 				{
 					ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
@@ -221,7 +243,7 @@ public class MySQL extends Database
 			    }
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`, `version`) VALUES (?,?,?);", Statement.RETURN_GENERATED_KEYS);
+				ps = GetConnection().prepareStatement(Query_InsertBP, Statement.RETURN_GENERATED_KEYS);
 				ps.setInt(1, backpack.getID());
 				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
 				ps.setInt(3, itsSerializer.getUsedVersion());
@@ -234,7 +256,7 @@ public class MySQL extends Database
 			}
 			else
 			{
-				ps = GetConnection().prepareStatement("UPDATE `" + Table_Backpacks + "` SET `itemstacks`=?,`version`=? WHERE `owner`=?");
+				ps = GetConnection().prepareStatement(Query_UpdateBP);
 				ps.setBytes(1, itsSerializer.Serialize(backpack.getBackpack()));
 				ps.setInt(2, itsSerializer.getUsedVersion());
 				ps.setInt(3, backpack.getID());
@@ -253,7 +275,7 @@ public class MySQL extends Database
 		try
 		{
 			PreparedStatement ps = null; // Statement Variable
-			ps = GetConnection().prepareStatement("SELECT `owner`,`itemstacks`,`version` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `owner`=`player_id` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
+			ps = GetConnection().prepareStatement(Query_GetBP);
 			if(plugin.UseUUIDs)
 			{
 				ps.setString(1, player.getUniqueId().toString().replace("-", ""));

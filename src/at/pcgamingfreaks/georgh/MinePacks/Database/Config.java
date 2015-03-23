@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 1;
+	private static final int CONFIG_VERSION = 2;
 	
 	public Config(MinePacks mp)
 	{
@@ -95,6 +95,12 @@ public class Config
 		config.set("Database.MySQL.Password", "minecraft");
 		config.set("Database.Tables.User", "backpack_players");
 		config.set("Database.Tables.Backpack", "backpacks");
+		config.set("Database.Tables.Fields.User.Player_ID", "player_id");
+		config.set("Database.Tables.Fields.User.Name", "name");
+		config.set("Database.Tables.Fields.User.UUID", "uuid");
+		config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
+		config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
+		config.set("Database.Tables.Fields.Backpack.Version", "version");
 		config.set("Version",CONFIG_VERSION);
 		
 		try 
@@ -112,7 +118,13 @@ public class Config
 	{
 		switch(config.getInt("Version"))
 		{
-			case 0:
+			case 1:
+				config.set("Database.Tables.Fields.User.Player_ID", "player_id");
+				config.set("Database.Tables.Fields.User.Name", "name");
+				config.set("Database.Tables.Fields.User.UUID", "uuid");
+				config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
+				config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
+				config.set("Database.Tables.Fields.Backpack.Version", "version");
 			break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -174,6 +186,11 @@ public class Config
 	public String getBackpackTable()
 	{
 		return config.getString("Database.Tables.Backpack", "backpacks");
+	}
+	
+	public String getDBFields(String sub)
+	{
+		return config.getString("Database.Tables.Fields." + sub);
 	}
 	
 	public boolean getUpdatePlayer()

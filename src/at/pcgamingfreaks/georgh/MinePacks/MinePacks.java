@@ -56,7 +56,7 @@ public class MinePacks extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new EventListener(this), this);
 		
 		BackpackTitle = config.getBPTitle();
-		Message_IvalidBackpack = ChatColor.RED + lang.Get("Ingame.IvalidBackpack");
+		Message_IvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + lang.Get("Ingame.IvalidBackpack"));
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 		log.info(lang.Get("Console.Enabled"));
 	}

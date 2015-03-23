@@ -37,10 +37,10 @@ public class OnCommand implements CommandExecutor
 	public OnCommand(MinePacks mp) 
 	{
 		plugin = mp;
-		Message_NotFromConsole = plugin.lang.Get("Console.NotFromConsole");
-		Message_NoPermission = ChatColor.RED + plugin.lang.Get("Ingame.NoPermission");
-		Message_IvalidBackpack = ChatColor.RED + plugin.lang.Get("Ingame.IvalidBackpack");
-		Message_BackpackCleaned = ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.BackpackCleaned");
+		Message_NotFromConsole = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Console.NotFromConsole"));
+		Message_NoPermission = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.NoPermission"));
+		Message_IvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.IvalidBackpack"));
+		Message_BackpackCleaned = ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.BackpackCleaned"));
 	}
 
 	@SuppressWarnings("deprecation")
