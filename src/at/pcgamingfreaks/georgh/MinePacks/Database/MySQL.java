@@ -129,7 +129,7 @@ public class MySQL extends Database
 		try
 		{
 			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Player_ID") + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + plugin.config.getDBFields("User.Name") + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`player_id`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Player_ID") + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + plugin.config.getDBFields("User.Name") + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + plugin.config.getDBFields("User.Player_ID") + "`));");
 			if(plugin.UseUUIDs)
 			{
 				try
