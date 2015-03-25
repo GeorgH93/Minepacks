@@ -38,8 +38,9 @@ public class MySQL extends Database
 	private Connection conn = null;
 	
 	private String Table_Players, Table_Backpacks; // Table Names
-	private String Query_UpdatePlayerGet, Query_UpdatePlayerUUID, Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP;
-	private boolean UpdatePlayer;
+	private String Field_Name, Field_PlayerID, Field_UUID, Field_BPOwner, Field_BPITS, Field_BPVersion; // Table Fields
+	private String Query_UpdatePlayerGet, Query_UpdatePlayerUUID, Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP; // DB Querys
+	private boolean UpdatePlayer, UseUUIDSeparators;
 	
 	public MySQL(MinePacks mp)
 	{
@@ -47,11 +48,18 @@ public class MySQL extends Database
 		// Load Settings
 		Table_Players = plugin.config.getUserTable();
 		Table_Backpacks = plugin.config.getBackpackTable();
+		Field_PlayerID = plugin.config.getDBFields("User.Player_ID");
+		Field_Name = plugin.config.getDBFields("User.Name");
+		Field_UUID = plugin.config.getDBFields("User.UUID");
+		Field_BPOwner = plugin.config.getDBFields("Backpack.Owner_ID");
+		Field_BPITS = plugin.config.getDBFields("Backpack.ItemStacks");
+		Field_BPVersion = plugin.config.getDBFields("Backpack.Version");
 		UpdatePlayer = plugin.config.getUpdatePlayer();
-		
+		UseUUIDSeparators = plugin.config.getUseUUIDSeparators();
+
 		BuildQuerys();
 		CheckDB(); // Check Database
-		if(plugin.config.UseUUIDs())
+		if(plugin.UseUUIDs && UpdatePlayer)
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
@@ -61,21 +69,21 @@ public class MySQL extends Database
 	{
 		if(plugin.UseUUIDs)
 		{
-			Query_UpdatePlayerGet = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
-			Query_UpdatePlayerUUID = "UPDATE `" + Table_Players + "` SET `" + plugin.config.getDBFields("User.Name") + "`=? WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
-			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Name") + "`,`" + plugin.config.getDBFields("User.UUID") + "`) VALUES (?,?);";
-			Query_GetPlayerID = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
-			Query_GetBP = "SELECT `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`,`" + plugin.config.getDBFields("Backpack.ItemStacks") + "`,`" + plugin.config.getDBFields("Backpack.Version") + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=`" + plugin.config.getDBFields("User.Player_ID") + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "`=?;";
+			Query_UpdatePlayerGet = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "`=?;";
+			Query_UpdatePlayerUUID = "UPDATE `" + Table_Players + "` SET `" + Field_Name + "`=? WHERE `" + Field_UUID + "`=?;";
+			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + Field_Name + "`,`" + Field_UUID + "`) VALUES (?,?);";
+			Query_GetPlayerID = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "`=?;";
+			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Field_BPOwner + "`=`" + Field_PlayerID + "` WHERE `" + Field_UUID + "`=?;";
 		}
 		else
 		{
-			Query_UpdatePlayerGet = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
-			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Name") + "`) VALUES (?);";
-			Query_GetPlayerID = "SELECT `" + plugin.config.getDBFields("User.Player_ID") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
-			Query_GetBP = "SELECT `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`,`" + plugin.config.getDBFields("Backpack.ItemStacks") + "`,`" + plugin.config.getDBFields("Backpack.Version") + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=`" + plugin.config.getDBFields("User.Player_ID") + "` WHERE `" + plugin.config.getDBFields("User.Name") + "`=?;";
+			Query_UpdatePlayerGet = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_Name + "`=?;";
+			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + Field_Name + "`) VALUES (?);";
+			Query_GetPlayerID = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_Name + "`=?;";
+			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Field_BPOwner + "`=`" + Field_PlayerID + "` WHERE `" + Field_Name + "`=?;";
 		}
-		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "`, `" + plugin.config.getDBFields("Backpack.ItemStacks") + "`, `" + plugin.config.getDBFields("Backpack.Version") + "`) VALUES (?,?,?);";
-		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + plugin.config.getDBFields("Backpack.ItemStacks") + "`=?,`" + plugin.config.getDBFields("Backpack.Version") + "`=? WHERE `" + plugin.config.getDBFields("Backpack.Owner_ID") + "`=?;";
+		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + Field_BPOwner + "`, `" + Field_BPITS + "`, `" + Field_BPVersion + "`) VALUES (?,?,?);";
+		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + Field_BPITS + "`=?,`" + Field_BPVersion + "`=? WHERE `" + Field_BPOwner + "`=?;";
 	}
 	
 	private void CheckUUIDs()
@@ -84,14 +92,14 @@ public class MySQL extends Database
 		{
 			List<String> converter = new ArrayList<String>();
 			Statement stmt = GetConnection().createStatement();
-			ResultSet res = stmt.executeQuery("SELECT `" + plugin.config.getDBFields("User.Name") + "` FROM `" + Table_Players + "` WHERE `" + plugin.config.getDBFields("User.UUID") + "` IS NULL");
+			ResultSet res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_Name + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` IS NULL");
 			while(res.next())
 			{
 				if(res.isFirst())
 				{
 					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
 				}
-				converter.add("UPDATE `" + Table_Players + "` SET `" + plugin.config.getDBFields("User.UUID") + "`='" + UUIDConverter.getUUIDFromName(res.getString(1), true) + "' WHERE `" + plugin.config.getDBFields("User.Name") + "`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
+				converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + UUIDConverter.getUUIDFromName(res.getString(2), true, UseUUIDSeparators) + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
 			}
 			if(converter.size() > 0)
 			{
@@ -99,8 +107,51 @@ public class MySQL extends Database
 				{
 					stmt.execute(string);
 				}
-				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"),converter.size()));
+				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
 			}
+			res.close();
+			res = null;
+			if(UseUUIDSeparators)
+			{
+				res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_UUID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` NOT LIKE '%-%'");
+				while(res.next())
+				{
+					if(res.isFirst())
+					{
+						plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+					}
+					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
+				}
+				if(converter.size() > 0)
+				{
+					for (String string : converter)
+					{
+						stmt.execute(string);
+					}
+					plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
+				}
+			}
+			else
+			{
+				res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_UUID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` LIKE '%-%'");
+				while(res.next())
+				{
+					if(res.isFirst())
+					{
+						plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+					}
+					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("-", "") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
+				}
+				if(converter.size() > 0)
+				{
+					for (String string : converter)
+					{
+						stmt.execute(string);
+					}
+					plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
+				}
+			}
+			res.close();
 		}
 		catch (SQLException e)
 		{
@@ -129,19 +180,42 @@ public class MySQL extends Database
 		try
 		{
 			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + plugin.config.getDBFields("User.Player_ID") + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + plugin.config.getDBFields("User.Name") + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + plugin.config.getDBFields("User.Player_ID") + "`));");
+			ResultSet res;
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + Field_Name + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + Field_PlayerID + "`));");
 			if(plugin.UseUUIDs)
 			{
 				try
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + plugin.config.getDBFields("User.UUID") + "` CHAR(32) UNIQUE;");
+					res = stmt.executeQuery("SELECT * INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+					if(!res.next())
+					{
+						stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + Field_UUID + "` CHAR(36) UNIQUE;");
+					}
+					res.close();
 				}
 				catch(SQLException e) { }
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "` INT UNSIGNED NOT NULL, `" + plugin.config.getDBFields("Backpack.ItemStacks") + "` BLOB, PRIMARY KEY (`" + plugin.config.getDBFields("Backpack.Owner_ID") + "`));");
+			if(UseUUIDSeparators)
+			{
+				try
+				{
+					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+					if(res.next() && res.getInt(1) < 36)
+					{
+						stmt.execute("ALTER TABLE `" + Table_Players + "` ADD MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
+					}
+					res.close();
+				}
+				catch(SQLException e) { }
+			}
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, PRIMARY KEY (`" + Field_BPOwner + "`));");
 			try
 			{
-				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + plugin.config.getDBFields("Backpack.Version") + "` INT DEFAULT 0;");
+				res = stmt.executeQuery("SELECT * INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPVersion + "';");
+				if(!res.next())
+				{
+					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPVersion + "` INT DEFAULT 0;");
+				}
 			}
 			catch(SQLException e) { }
 			stmt.close();
@@ -171,7 +245,14 @@ public class MySQL extends Database
 					ps = con.prepareStatement(Query_UpdatePlayerGet);
 					if(plugin.UseUUIDs)
 					{
-						ps.setString(1, player.getUniqueId().toString().replace("-", ""));
+						if(UseUUIDSeparators)
+						{
+							ps.setString(1, player.getUniqueId().toString());
+						}
+						else
+						{
+							ps.setString(1, player.getUniqueId().toString().replace("-", ""));
+						}
 					}
 					else
 					{
@@ -189,7 +270,14 @@ public class MySQL extends Database
 						}
 						ps = con.prepareStatement(Query_UpdatePlayerUUID);
 						ps.setString(1, player.getName());
-						ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+						if(UseUUIDSeparators)
+						{
+							ps.setString(2, player.getUniqueId().toString());
+						}
+						else
+						{
+							ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+						}
 					}
 					else
 					{
@@ -199,7 +287,14 @@ public class MySQL extends Database
 						ps.setString(1, player.getName());
 						if(plugin.UseUUIDs)
 						{
-							ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+							if(UseUUIDSeparators)
+							{
+								ps.setString(2, player.getUniqueId().toString());
+							}
+							else
+							{
+								ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+							}
 						}
 					}
 					ps.execute();
@@ -225,6 +320,14 @@ public class MySQL extends Database
 				ps = GetConnection().prepareStatement(Query_GetPlayerID);
 				if(plugin.UseUUIDs)
 				{
+					if(UseUUIDSeparators)
+					{
+						ps.setString(1, backpack.getOwner().getUniqueId().toString());
+					}
+					else
+					{
+						ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
+					}
 					ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
 				}
 				else
@@ -278,7 +381,14 @@ public class MySQL extends Database
 			ps = GetConnection().prepareStatement(Query_GetBP);
 			if(plugin.UseUUIDs)
 			{
-				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
+				if(UseUUIDSeparators)
+				{
+					ps.setString(1, player.getUniqueId().toString());
+				}
+				else
+				{
+					ps.setString(1, player.getUniqueId().toString().replace("-", ""));
+				}
 			}
 			else
 			{

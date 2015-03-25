@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 2;
+	private static final int CONFIG_VERSION = 3;
 	
 	public Config(MinePacks mp)
 	{
@@ -86,9 +86,10 @@ public class Config
 		config.set("drop_on_death", true);
 		config.set("Language","en");
 		config.set("LanguageUpdateMode","Overwrite");
-		config.set("UseUUIDs", Bukkit.getServer().getOnlineMode() && UUIDComp());
 		config.set("Database.Type","sqlite");
 		config.set("Database.UpdatePlayer", true);
+		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && UUIDComp());
+		config.set("Database.UseUUIDSeparators", false);
 		config.set("Database.MySQL.Host", "localhost:3306");
 		config.set("Database.MySQL.Database", "minecraft");
 		config.set("Database.MySQL.User", "minecraft");
@@ -125,6 +126,8 @@ public class Config
 				config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
 				config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
 				config.set("Database.Tables.Fields.Backpack.Version", "version");
+			case 2:
+				config.set("Database.UseUUIDSeparators", false);
 			break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -200,7 +203,16 @@ public class Config
 	
 	public boolean UseUUIDs()
 	{
+		if(config.isSet("Database.UseUUIDs"))
+		{
+			return config.getBoolean("Database.UseUUIDs");
+		}
 		return config.getBoolean("UseUUIDs");
+	}
+	
+	public boolean getUseUUIDSeparators()
+	{
+		return config.getBoolean("Database.UseUUIDSeparators");
 	}
 	
 	public String getBPTitle()
