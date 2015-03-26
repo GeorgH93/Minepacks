@@ -346,15 +346,12 @@ public class MySQL extends Database
 			    }
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement(Query_InsertBP, Statement.RETURN_GENERATED_KEYS);
+				ps = GetConnection().prepareStatement(Query_InsertBP);
 				ps.setInt(1, backpack.getID());
 				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
 				ps.setInt(3, itsSerializer.getUsedVersion());
-				ps.executeUpdate();
-				rs = ps.getGeneratedKeys();
-				backpack.setID(rs.getInt(1));
+				ps.execute();
 				ps.close();
-				rs.close();
 				return;
 			}
 			else

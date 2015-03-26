@@ -214,15 +214,12 @@ public class SQLite extends Database
 			    }
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`, `version`) VALUES (?,?,?);", Statement.RETURN_GENERATED_KEYS);
+				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`, `version`) VALUES (?,?,?);");
 				ps.setInt(1, backpack.getID());
 				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
 				ps.setInt(3, itsSerializer.getUsedVersion());
-				ps.executeUpdate();
-				rs = ps.getGeneratedKeys();
-				backpack.setID(rs.getInt(1));
+				ps.execute();
 				ps.close();
-				rs.close();
 				return;
 			}
 			else

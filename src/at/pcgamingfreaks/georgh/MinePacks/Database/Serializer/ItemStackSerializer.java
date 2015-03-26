@@ -6,13 +6,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemStackSerializer
 {
-	Base serializer;
+	Base serializer, base;
 	int usedVersion = 1;
 	
 	public ItemStackSerializer()
 	{
 		String name = Bukkit.getServer().getClass().getPackage().getName();
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
+		base = new Base();
 		try
 		{
 			if(version[0].equals("1"))
@@ -34,7 +35,7 @@ public class ItemStackSerializer
 		if(serializer == null)
 		{
 			usedVersion = 0;
-			serializer = new Base();
+			serializer = base;
 		}
 	}
 	
@@ -52,7 +53,7 @@ public class ItemStackSerializer
 	{
 		if(version == 0)
 		{
-			(new Base()).toItemStack(data);
+			base.toItemStack(data);
 		}
 		return serializer.toItemStack(data);
 	}
