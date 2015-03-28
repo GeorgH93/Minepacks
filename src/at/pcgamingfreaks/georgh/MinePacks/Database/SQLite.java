@@ -20,71 +20,41 @@ package at.pcgamingfreaks.georgh.MinePacks.Database;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
 
-public class SQLite extends Database
+public class SQLite extends SQL
 {
-	private Connection conn = null;
-	
-	private String Table_Players, Table_Backpacks; // Table Names
-	
 	public SQLite(MinePacks mp)
 	{
-		super(mp);
-		// Load Settings
-		Table_Players = plugin.config.getUserTable();
-		Table_Backpacks = plugin.config.getBackpackTable();
+		super(mp); // Load Settings
 		
+		Field_PlayerID = "player_id";
+		Field_Name = "name";
+		Field_UUID = "uuid";
+		Field_BPOwner = "owner";
+		Field_BPITS = "itemstacks";
+		Field_BPVersion = "version";
+		Table_Players = "backpack_players";
+		Table_Backpacks = "backpacks";
+		
+		UseUUIDSeparators = false;
+		UpdatePlayer = true;
+		
+		BuildQuerys(); // Build Querys
 		CheckDB(); // Check Database
-		if(plugin.config.UseUUIDs())
+		if(plugin.UseUUIDs && UpdatePlayer)
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
 	}
 	
-	private void CheckUUIDs()
-	{
-		try
-		{
-			List<String> converter = new ArrayList<String>();
-			Statement stmt = GetConnection().createStatement();
-			ResultSet res = stmt.executeQuery("SELECT `name` FROM `" + Table_Players + "` WHERE `uuid` IS NULL");
-			while(res.next())
-			{
-				if(res.isFirst())
-				{
-					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
-				}
-				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), plugin.getServer().getOnlineMode()) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
-			}
-			if(converter.size() > 0)
-			{
-				for (String string : converter)
-				{
-					stmt.execute(string);
-				}
-				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"),converter.size()));
-			}
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	private Connection GetConnection()
+	protected Connection GetConnection()
 	{
 		try
 		{
@@ -108,7 +78,7 @@ public class SQLite extends Database
 		return conn;
 	}
 	
-	private void CheckDB()
+	protected void CheckDB()
 	{
 		try
 		{
@@ -136,137 +106,33 @@ public class SQLite extends Database
 		}
 	}
 	
-	// Plugin Functions
-	public void UpdatePlayer(Player player)
+	protected void CheckUUIDs()
 	{
 		try
 		{
-			PreparedStatement ps;
-			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
-			if(plugin.UseUUIDs)
+			List<String> converter = new ArrayList<String>();
+			Statement stmt = GetConnection().createStatement();
+			ResultSet res = stmt.executeQuery("SELECT `name` FROM `" + Table_Players + "` WHERE `uuid` IS NULL");
+			while(res.next())
 			{
-				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
-			}
-			else
-			{
-				ps.setString(1, player.getName());
-			}
-			ResultSet rs = ps.executeQuery();
-			if(rs.next())
-			{
-				rs.close();
-				ps.close();
-				if(!plugin.UseUUIDs)
+				if(res.isFirst())
 				{
-					return;
+					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
 				}
-				ps = GetConnection().prepareStatement("UPDATE `" + Table_Players + "` SET `name`=? WHERE `uuid`=?;");
-				ps.setString(1, player.getName());
-				ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), plugin.getServer().getOnlineMode()) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
 			}
-			else
+			if(converter.size() > 0)
 			{
-				rs.close();
-				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Players + "` (`name`" + ((plugin.UseUUIDs) ? ",`uuid`" : "") + ") VALUES (?" + ((plugin.UseUUIDs) ? ",?" : "") + ");");
-				ps.setString(1, player.getName());
-				if(plugin.UseUUIDs)
+				for (String string : converter)
 				{
-					ps.setString(2, player.getUniqueId().toString().replace("-", ""));
+					stmt.execute(string);
 				}
+				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"),converter.size()));
 			}
-			ps.execute();
-			ps.close();
 		}
 		catch (SQLException e)
-	    {
-	        plugin.log.info("Failed to add user: " + player.getName());
-	        e.printStackTrace();
-	    }
-	}
-
-	public void SaveBackpack(Backpack backpack)
-	{
-		try
-		{
-			PreparedStatement ps = null; // Statement Variable
-			// Building the mysql statement
-			if(backpack.getID() <= 0)
-			{
-				ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
-				if(plugin.UseUUIDs)
-				{
-					ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
-				}
-				else
-				{
-					ps.setString(1, backpack.getOwner().getName());
-				}
-				ResultSet rs = ps.executeQuery();
-				if(rs.next())
-			    {
-			    	backpack.setID(rs.getInt(1));
-			    }
-			    else
-			    {
-			    	plugin.log.warning("Faild saving backpack for: " + backpack.getOwner().getName());
-			    	return;
-			    }
-				rs.close();
-				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Backpacks + "` (`owner`, `itemstacks`, `version`) VALUES (?,?,?);");
-				ps.setInt(1, backpack.getID());
-				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
-				ps.setInt(3, itsSerializer.getUsedVersion());
-				ps.execute();
-				ps.close();
-				return;
-			}
-			else
-			{
-				ps = GetConnection().prepareStatement("UPDATE `" + Table_Backpacks + "` SET `itemstacks`=?,`version`=? WHERE `owner`=?");
-				ps.setBytes(1, itsSerializer.Serialize(backpack.getBackpack()));
-				ps.setInt(2, itsSerializer.getUsedVersion());
-				ps.setInt(3, backpack.getID());
-			}
-			ps.execute();
-			ps.close();
-		}
-		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-	}
-
-	public Backpack LoadBackpack(OfflinePlayer player)
-	{
-		try
-		{
-			PreparedStatement ps = null; // Statement Variable
-			ps = GetConnection().prepareStatement("SELECT `owner`,`itemstacks`,`version` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `owner`=`player_id` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`")+ "=?;");
-			if(plugin.UseUUIDs)
-			{
-				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
-			}
-			else
-			{
-				ps.setString(1, player.getName());
-			}
-			ResultSet rs = ps.executeQuery();
-			if(!rs.next())
-			{
-				return null;
-			}
-			int bpid = rs.getInt(1);
-			ItemStack[] its = itsSerializer.Deserialize(rs.getBytes(2), rs.getInt(3));
-			rs.close();
-			ps.close();
-			return new Backpack(player, its, bpid);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
 	}
 }

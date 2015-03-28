@@ -53,7 +53,7 @@ public class ItemStackSerializer
 	{
 		if(version == 0)
 		{
-			base.toItemStack(data);
+			return base.toItemStack(data);
 		}
 		return serializer.toItemStack(data);
 	}

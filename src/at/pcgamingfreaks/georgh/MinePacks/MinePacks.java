@@ -33,7 +33,6 @@ public class MinePacks extends JavaPlugin
 	public Config config;
 	public Language lang;
 	public Database DB;
-	public String DBType;
 	public boolean UseUUIDs;
 	
 	static public String BackpackTitle;
@@ -45,13 +44,7 @@ public class MinePacks extends JavaPlugin
 		config = new Config(this);
 		lang = new Language(this);
 		UseUUIDs = config.UseUUIDs();
-		DBType = config.GetDatabaseType().toLowerCase();
-		switch(DBType)
-		{
-			case "mysql": DB = new MySQL(this); break;
-			case "sqlite":
-			default: DB = new SQLite(this); break;
-		}
+		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		getServer().getPluginManager().registerEvents(new EventListener(this), this);
 		

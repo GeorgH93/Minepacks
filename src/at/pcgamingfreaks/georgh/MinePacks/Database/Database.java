@@ -30,12 +30,22 @@ public class Database
 {
 	protected MinePacks plugin;
 	
-	public HashSet<Backpack> backpacks = new HashSet<Backpack>();
-	public ItemStackSerializer itsSerializer = new ItemStackSerializer();
+	private HashSet<Backpack> backpacks = new HashSet<Backpack>();
+	protected ItemStackSerializer itsSerializer = new ItemStackSerializer();
 	
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
+	}
+	
+	public static Database getDatabase(MinePacks Plugin)
+	{
+		switch(Plugin.config.GetDatabaseType().toLowerCase())
+		{
+			case "mysql": return new MySQL(Plugin);
+			case "sqlite":
+			default: return new SQLite(Plugin);
+		}
 	}
 	
 	private Backpack findBackpack(OfflinePlayer player)
