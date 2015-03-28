@@ -51,7 +51,7 @@ public class EventListener implements Listener
 		Player player = event.getEntity();
 		if (drop_on_death && !player.hasPermission("backpack.KeepOnDeath"))
 		{
-			Inventory BP = plugin.DB.getBackpack(player).getBackpack();
+			Inventory BP = plugin.DB.getBackpack(player, false).getBackpack();
 			for (ItemStack i : BP.getContents())
 			{
 			    if (i != null)
@@ -111,8 +111,8 @@ public class EventListener implements Listener
 	@EventHandler
 	public void PlayerLeaveEvent(PlayerQuitEvent event)
 	{
-		Backpack bp = plugin.DB.getBackpack(event.getPlayer());
-		if(!bp.isOpen())
+		Backpack bp = plugin.DB.getBackpack(event.getPlayer(), true);
+		if(bp != null && !bp.isOpen())
 		{
 			plugin.DB.UnloadBackpack(bp);
 		}

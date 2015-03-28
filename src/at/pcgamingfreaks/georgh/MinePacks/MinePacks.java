@@ -68,7 +68,7 @@ public class MinePacks extends JavaPlugin
 	
 	public void OpenBackpack(Player opener, OfflinePlayer owener, boolean editable)
 	{
-		OpenBackpack(opener, DB.getBackpack(owener), editable);
+		OpenBackpack(opener, DB.getBackpack(owener, false), editable);
 	}
 	
 	public void OpenBackpack(Player opener, Backpack backpack, boolean editable)

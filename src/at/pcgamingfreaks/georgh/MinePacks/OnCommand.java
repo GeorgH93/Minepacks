@@ -63,7 +63,7 @@ public class OnCommand implements CommandExecutor
 			// Open player backpack
 			if(player.hasPermission("backpack"))
 			{
-				Backpack bp = plugin.DB.getBackpack(player);
+				Backpack bp = plugin.DB.getBackpack(player, false);
 				if(bp == null)
 				{
 					player.sendMessage(Message_IvalidBackpack);
@@ -128,7 +128,7 @@ public class OnCommand implements CommandExecutor
 						{
 							OP = Bukkit.getOfflinePlayer(args[1]);
 						}
-						Backpack BP = plugin.DB.getBackpack(OP);
+						Backpack BP = plugin.DB.getBackpack(OP, false);
 						BP.getBackpack().clear();
 						player.sendMessage(Message_BackpackCleaned);
 					}

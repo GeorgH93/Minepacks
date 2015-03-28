@@ -62,10 +62,10 @@ public class Database
 		return null;
 	}
 	
-	public Backpack getBackpack(OfflinePlayer player)
+	public Backpack getBackpack(OfflinePlayer player, boolean loadedonly)
 	{
 		Backpack lbp = findBackpack(player);
-		if(lbp == null)
+		if(lbp == null && !loadedonly)
 		{
 			lbp = LoadBackpack(player);
 			if(lbp == null)
