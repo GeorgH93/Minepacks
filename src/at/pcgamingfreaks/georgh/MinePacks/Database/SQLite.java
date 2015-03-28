@@ -122,7 +122,7 @@ public class SQLite extends Database
 				}
 				catch(SQLException e) { }
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try
 			{
 				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");

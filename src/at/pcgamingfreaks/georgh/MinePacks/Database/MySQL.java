@@ -73,14 +73,14 @@ public class MySQL extends Database
 			Query_UpdatePlayerUUID = "UPDATE `" + Table_Players + "` SET `" + Field_Name + "`=? WHERE `" + Field_UUID + "`=?;";
 			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + Field_Name + "`,`" + Field_UUID + "`) VALUES (?,?);";
 			Query_GetPlayerID = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "`=?;";
-			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Field_BPOwner + "`=`" + Field_PlayerID + "` WHERE `" + Field_UUID + "`=?;";
+			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Table_Backpacks + "`.`" + Field_BPOwner + "`=`" + Table_Players + "`.`" + Field_PlayerID + "` WHERE `" + Field_UUID + "`=?;";
 		}
 		else
 		{
 			Query_UpdatePlayerGet = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_Name + "`=?;";
 			Query_UpdatePlayerAdd = "INSERT INTO `" + Table_Players + "` (`" + Field_Name + "`) VALUES (?);";
 			Query_GetPlayerID = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_Name + "`=?;";
-			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Field_BPOwner + "`=`" + Field_PlayerID + "` WHERE `" + Field_Name + "`=?;";
+			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Table_Backpacks + "`.`" + Field_BPOwner + "`=`" + Table_Players + "`.`" + Field_PlayerID + "` WHERE `" + Field_Name + "`=?;";
 		}
 		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + Field_BPOwner + "`, `" + Field_BPITS + "`, `" + Field_BPVersion + "`) VALUES (?,?,?);";
 		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + Field_BPITS + "`=?,`" + Field_BPVersion + "`=? WHERE `" + Field_BPOwner + "`=?;";
@@ -181,43 +181,31 @@ public class MySQL extends Database
 		{
 			Statement stmt = GetConnection().createStatement();
 			ResultSet res;
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + Field_Name + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + Field_PlayerID + "`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + Field_Name + "` CHAR(16) NOT NULL UNIQUE, " + ((plugin.UseUUIDs) ? "`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
 			if(plugin.UseUUIDs)
 			{
-				try
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+				if(!res.next())
 				{
-					res = stmt.executeQuery("SELECT * INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
-					if(!res.next())
-					{
-						stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + Field_UUID + "` CHAR(36) UNIQUE;");
-					}
-					res.close();
+					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + Field_UUID + "` CHAR(36) UNIQUE;");
 				}
-				catch(SQLException e) { }
+				res.close();
 			}
 			if(UseUUIDSeparators)
 			{
-				try
+				res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+				if(res.next() && res.getInt(1) < 36)
 				{
-					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
-					if(res.next() && res.getInt(1) < 36)
-					{
-						stmt.execute("ALTER TABLE `" + Table_Players + "` ADD MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
-					}
-					res.close();
+					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
 				}
-				catch(SQLException e) { }
+				res.close();
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, PRIMARY KEY (`" + Field_BPOwner + "`));");
-			try
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, `" + Field_BPVersion + "` INT DEFAULT 0, PRIMARY KEY (`" + Field_BPOwner + "`));");
+			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPVersion + "';");
+			if(!res.next())
 			{
-				res = stmt.executeQuery("SELECT * INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPVersion + "';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPVersion + "` INT DEFAULT 0;");
-				}
+				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPVersion + "` INT DEFAULT 0;");
 			}
-			catch(SQLException e) { }
 			stmt.close();
 		}
 		catch (SQLException e)
