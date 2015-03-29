@@ -33,7 +33,6 @@ public class MinePacks extends JavaPlugin
 	public Config config;
 	public Language lang;
 	public Database DB;
-	public boolean UseUUIDs;
 	
 	static public String BackpackTitle;
 	public String Message_IvalidBackpack;
@@ -43,7 +42,6 @@ public class MinePacks extends JavaPlugin
 		log = getLogger();
 		config = new Config(this);
 		lang = new Language(this);
-		UseUUIDs = config.UseUUIDs();
 		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		getServer().getPluginManager().registerEvents(new EventListener(this), this);

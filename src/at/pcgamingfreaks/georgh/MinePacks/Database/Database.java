@@ -30,12 +30,16 @@ public class Database
 {
 	protected MinePacks plugin;
 	
+	protected boolean UseUUIDs, UseUUIDSeparators;
+	
 	private HashSet<Backpack> backpacks = new HashSet<Backpack>();
 	protected ItemStackSerializer itsSerializer = new ItemStackSerializer();
 	
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
+		UseUUIDSeparators = plugin.config.getUseUUIDSeparators();
+		UseUUIDs = plugin.config.UseUUIDs();
 	}
 	
 	public static Database getDatabase(MinePacks Plugin)

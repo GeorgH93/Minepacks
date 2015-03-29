@@ -48,7 +48,7 @@ public class SQLite extends SQL
 		
 		BuildQuerys(); // Build Querys
 		CheckDB(); // Check Database
-		if(plugin.UseUUIDs && UpdatePlayer)
+		if(UseUUIDs && UpdatePlayer)
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
@@ -83,8 +83,8 @@ public class SQLite extends SQL
 		try
 		{
 			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((plugin.UseUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +");");
-			if(plugin.UseUUIDs)
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((UseUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +");");
+			if(UseUUIDs)
 			{
 				try
 				{

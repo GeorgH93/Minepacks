@@ -36,7 +36,7 @@ public class SQL extends Database
 	protected String Table_Players, Table_Backpacks; // Table Names
 	protected String Field_Name, Field_PlayerID, Field_UUID, Field_BPOwner, Field_BPITS, Field_BPVersion; // Table Fields
 	protected String Query_UpdatePlayerGet, Query_UpdatePlayerUUID, Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP; // DB Querys
-	protected boolean UpdatePlayer, UseUUIDSeparators;
+	protected boolean UpdatePlayer;
 	
 	public SQL(MinePacks mp)
 	{
@@ -51,12 +51,11 @@ public class SQL extends Database
 		Field_BPITS = plugin.config.getDBFields("Backpack.ItemStacks");
 		Field_BPVersion = plugin.config.getDBFields("Backpack.Version");
 		UpdatePlayer = plugin.config.getUpdatePlayer();
-		UseUUIDSeparators = plugin.config.getUseUUIDSeparators();
 	}
 	
 	protected void BuildQuerys()
 	{
-		if(plugin.UseUUIDs)
+		if(UseUUIDs)
 		{
 			Query_UpdatePlayerGet = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "`=?;";
 			Query_UpdatePlayerUUID = "UPDATE `" + Table_Players + "` SET `" + Field_Name + "`=? WHERE `" + Field_UUID + "`=?;";
@@ -87,8 +86,8 @@ public class SQL extends Database
 		try
 		{
 			PreparedStatement ps;
-			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((plugin.UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
-			if(plugin.UseUUIDs)
+			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
+			if(UseUUIDs)
 			{
 				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
 			}
@@ -101,7 +100,7 @@ public class SQL extends Database
 			{
 				rs.close();
 				ps.close();
-				if(!plugin.UseUUIDs)
+				if(!UseUUIDs)
 				{
 					return;
 				}
@@ -113,9 +112,9 @@ public class SQL extends Database
 			{
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Players + "` (`name`" + ((plugin.UseUUIDs) ? ",`uuid`" : "") + ") VALUES (?" + ((plugin.UseUUIDs) ? ",?" : "") + ");");
+				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Players + "` (`name`" + ((UseUUIDs) ? ",`uuid`" : "") + ") VALUES (?" + ((UseUUIDs) ? ",?" : "") + ");");
 				ps.setString(1, player.getName());
-				if(plugin.UseUUIDs)
+				if(UseUUIDs)
 				{
 					ps.setString(2, player.getUniqueId().toString().replace("-", ""));
 				}
@@ -139,7 +138,7 @@ public class SQL extends Database
 			if(backpack.getID() <= 0)
 			{
 				ps = GetConnection().prepareStatement(Query_GetPlayerID);
-				if(plugin.UseUUIDs)
+				if(UseUUIDs)
 				{
 					if(UseUUIDSeparators)
 					{
@@ -197,7 +196,7 @@ public class SQL extends Database
 		{
 			PreparedStatement ps = null; // Statement Variable
 			ps = GetConnection().prepareStatement(Query_GetBP);
-			if(plugin.UseUUIDs)
+			if(UseUUIDs)
 			{
 				if(UseUUIDSeparators)
 				{

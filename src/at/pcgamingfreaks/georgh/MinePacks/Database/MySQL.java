@@ -37,7 +37,7 @@ public class MySQL extends SQL
 
 		BuildQuerys(); // Build Querys
 		CheckDB(); // Check Database
-		if(plugin.UseUUIDs && UpdatePlayer)
+		if(UseUUIDs && UpdatePlayer)
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
@@ -138,8 +138,8 @@ public class MySQL extends SQL
 		{
 			Statement stmt = GetConnection().createStatement();
 			ResultSet res;
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT, `" + Field_Name + "` CHAR(16) NOT NULL UNIQUE, " + ((plugin.UseUUIDs) ? "`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
-			if(plugin.UseUUIDs)
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL UNIQUE" + ((UseUUIDs) ? ",`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
+			if(UseUUIDs)
 			{
 				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
 				if(!res.next())
@@ -188,7 +188,7 @@ public class MySQL extends SQL
 					PreparedStatement ps;
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());;
 					ps = con.prepareStatement(Query_UpdatePlayerGet);
-					if(plugin.UseUUIDs)
+					if(UseUUIDs)
 					{
 						if(UseUUIDSeparators)
 						{
@@ -208,7 +208,7 @@ public class MySQL extends SQL
 					{
 						rs.close();
 						ps.close();
-						if(!plugin.UseUUIDs)
+						if(!UseUUIDs)
 						{
 							con.close();
 							return;
@@ -230,7 +230,7 @@ public class MySQL extends SQL
 						ps.close();
 						ps = con.prepareStatement(Query_UpdatePlayerAdd);
 						ps.setString(1, player.getName());
-						if(plugin.UseUUIDs)
+						if(UseUUIDs)
 						{
 							if(UseUUIDSeparators)
 							{
