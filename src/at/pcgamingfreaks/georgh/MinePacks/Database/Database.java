@@ -42,11 +42,32 @@ public class Database
 		UseUUIDs = plugin.config.UseUUIDs();
 	}
 	
+	protected String GetPlayerNameOrUUID(OfflinePlayer player)
+	{
+		if(UseUUIDs)
+		{
+			if(UseUUIDSeparators)
+			{
+				return player.getUniqueId().toString();
+			}
+			else
+			{
+				return player.getUniqueId().toString().replace("-", "");
+			}
+		}
+		else
+		{
+			return player.getName();
+		}
+	}
+	
 	public static Database getDatabase(MinePacks Plugin)
 	{
 		switch(Plugin.config.GetDatabaseType().toLowerCase())
 		{
 			case "mysql": return new MySQL(Plugin);
+			case "file":
+			case "files": return new Files(Plugin);
 			case "sqlite":
 			default: return new SQLite(Plugin);
 		}

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
 
 public class MySQL extends SQL
@@ -41,6 +42,10 @@ public class MySQL extends SQL
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
 		}
+		
+		// Fire DB request every 10 minutes to keep database connection alive
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){ @Override public void run() { try { GetConnection().createStatement().execute("SELECT 1"); }
+		catch(Exception e) { } }}, 600*20, 600*20);
 	}
 	
 	protected void CheckUUIDs()
@@ -122,7 +127,7 @@ public class MySQL extends SQL
 		{
 			if(conn == null || conn.isClosed())
 			{
-				conn = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());
+				conn = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase() + "?autoReconnect=true&timeBetweenEvictionRunsMillis=300000&testWhileIdle=true", plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());
 			}
 		}
 		catch (SQLException e)
@@ -188,21 +193,7 @@ public class MySQL extends SQL
 					PreparedStatement ps;
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());;
 					ps = con.prepareStatement(Query_UpdatePlayerGet);
-					if(UseUUIDs)
-					{
-						if(UseUUIDSeparators)
-						{
-							ps.setString(1, player.getUniqueId().toString());
-						}
-						else
-						{
-							ps.setString(1, player.getUniqueId().toString().replace("-", ""));
-						}
-					}
-					else
-					{
-						ps.setString(1, player.getName());
-					}
+					ps.setString(1, GetPlayerNameOrUUID(player));
 					ResultSet rs = ps.executeQuery();
 					if(rs.next())
 					{

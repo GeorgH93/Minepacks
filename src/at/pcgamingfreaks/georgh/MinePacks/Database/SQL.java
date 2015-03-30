@@ -85,16 +85,8 @@ public class SQL extends Database
 	{
 		try
 		{
-			PreparedStatement ps;
-			ps = GetConnection().prepareStatement("SELECT `player_id` FROM `" + Table_Players + "` WHERE " + ((UseUUIDs) ? "`uuid`" : "`name`") + "=?;");
-			if(UseUUIDs)
-			{
-				ps.setString(1, player.getUniqueId().toString().replace("-", ""));
-			}
-			else
-			{
-				ps.setString(1, player.getName());
-			}
+			PreparedStatement ps = GetConnection().prepareStatement(Query_UpdatePlayerGet);
+			ps.setString(1, GetPlayerNameOrUUID(player));
 			ResultSet rs = ps.executeQuery();
 			if(rs.next())
 			{
@@ -104,7 +96,7 @@ public class SQL extends Database
 				{
 					return;
 				}
-				ps = GetConnection().prepareStatement("UPDATE `" + Table_Players + "` SET `name`=? WHERE `uuid`=?;");
+				ps = GetConnection().prepareStatement(Query_UpdatePlayerUUID);
 				ps.setString(1, player.getName());
 				ps.setString(2, player.getUniqueId().toString().replace("-", ""));
 			}
@@ -112,7 +104,7 @@ public class SQL extends Database
 			{
 				rs.close();
 				ps.close();
-				ps = GetConnection().prepareStatement("INSERT INTO `" + Table_Players + "` (`name`" + ((UseUUIDs) ? ",`uuid`" : "") + ") VALUES (?" + ((UseUUIDs) ? ",?" : "") + ");");
+				ps = GetConnection().prepareStatement(Query_UpdatePlayerAdd);
 				ps.setString(1, player.getName());
 				if(UseUUIDs)
 				{
@@ -138,22 +130,7 @@ public class SQL extends Database
 			if(backpack.getID() <= 0)
 			{
 				ps = GetConnection().prepareStatement(Query_GetPlayerID);
-				if(UseUUIDs)
-				{
-					if(UseUUIDSeparators)
-					{
-						ps.setString(1, backpack.getOwner().getUniqueId().toString());
-					}
-					else
-					{
-						ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
-					}
-					ps.setString(1, backpack.getOwner().getUniqueId().toString().replace("-", ""));
-				}
-				else
-				{
-					ps.setString(1, backpack.getOwner().getName());
-				}
+				ps.setString(1, GetPlayerNameOrUUID(backpack.getOwner()));
 				ResultSet rs = ps.executeQuery();
 				if(rs.next())
 			    {
@@ -161,7 +138,7 @@ public class SQL extends Database
 			    }
 			    else
 			    {
-			    	plugin.log.warning("Faild saving backpack for: " + backpack.getOwner().getName());
+			    	plugin.log.warning("Faild saving backpack for: " + backpack.getOwner().getName() + " (Unable to get players ID)");
 			    	return;
 			    }
 				rs.close();
@@ -196,21 +173,7 @@ public class SQL extends Database
 		{
 			PreparedStatement ps = null; // Statement Variable
 			ps = GetConnection().prepareStatement(Query_GetBP);
-			if(UseUUIDs)
-			{
-				if(UseUUIDSeparators)
-				{
-					ps.setString(1, player.getUniqueId().toString());
-				}
-				else
-				{
-					ps.setString(1, player.getUniqueId().toString().replace("-", ""));
-				}
-			}
-			else
-			{
-				ps.setString(1, player.getName());
-			}
+			ps.setString(1, GetPlayerNameOrUUID(player));
 			ResultSet rs = ps.executeQuery();
 			if(!rs.next())
 			{

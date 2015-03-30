@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.Scanner;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -43,7 +45,17 @@ public class UUIDConverter
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			System.out.println("UUID not found at Mojang (probably offline mode UUID, try Bukkit offline player ...");
+			if(!uuid.contains("-"))
+			{
+				uuid = uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+			}
+			OfflinePlayer oP = Bukkit.getServer().getOfflinePlayer(UUID.fromString(uuid));
+			if(oP != null)
+			{
+				name = oP.getName();
+			}
+			//e.printStackTrace();
 		}
 		return name;
 	}
@@ -66,7 +78,8 @@ public class UUIDConverter
 	    	}
 	    	catch (Exception e)
 	    	{
-	    		e.printStackTrace();
+	    		System.out.println("Unable to get UUID for: " + name + "! Giving offline UUID!");
+	    		//e.printStackTrace();
 	    		uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)).toString();
 	    	}
 		}
