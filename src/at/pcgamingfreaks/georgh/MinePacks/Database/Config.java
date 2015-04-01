@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 3;
+	private static final int CONFIG_VERSION = 4;
 	
 	public Config(MinePacks mp)
 	{
@@ -102,6 +102,7 @@ public class Config
 		config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
 		config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
 		config.set("Database.Tables.Fields.Backpack.Version", "version");
+		config.set("auto-update", true);
 		config.set("Version",CONFIG_VERSION);
 		
 		try 
@@ -128,6 +129,8 @@ public class Config
 				config.set("Database.Tables.Fields.Backpack.Version", "version");
 			case 2:
 				config.set("Database.UseUUIDSeparators", false);
+			case 3:
+				config.set("auto-update", true);
 			break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -224,5 +227,10 @@ public class Config
 	public boolean getDropOnDeath()
 	{
 		return config.getBoolean("drop_on_death", true);
+	}
+	
+	public boolean getAutoUpdate()
+	{
+		return config.getBoolean("auto-update", true);
 	}
 }

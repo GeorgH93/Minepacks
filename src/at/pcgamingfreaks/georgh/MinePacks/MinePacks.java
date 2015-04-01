@@ -19,6 +19,9 @@ package at.pcgamingfreaks.georgh.MinePacks;
 
 import java.util.logging.Logger;
 
+import net.gravitydevelopment.Updater.Bukkit_Updater;
+import net.gravitydevelopment.Updater.UpdateType;
+
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -53,7 +56,12 @@ public class MinePacks extends JavaPlugin
 	}
 	
 	public void onDisable()
-	{ 
+	{
+		if(config.getAutoUpdate())
+		{
+			new Bukkit_Updater(this, 74734, this.getFile(), UpdateType.DEFAULT, true);
+		}
+		DB.Close();
 		log.info(lang.Get("Console.Disabled"));
 	}
 	

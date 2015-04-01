@@ -53,6 +53,15 @@ public class SQL extends Database
 		UpdatePlayer = plugin.config.getUpdatePlayer();
 	}
 	
+	public void Close()
+	{
+		try
+		{
+			conn.close();
+		}
+		catch(Exception e) { }
+	}
+	
 	protected void BuildQuerys()
 	{
 		if(UseUUIDs)

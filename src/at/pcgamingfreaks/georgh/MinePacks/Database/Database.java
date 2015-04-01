@@ -42,6 +42,8 @@ public class Database
 		UseUUIDs = plugin.config.UseUUIDs();
 	}
 	
+	public void Close() { }
+	
 	protected String GetPlayerNameOrUUID(OfflinePlayer player)
 	{
 		if(UseUUIDs)

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>at.pcgamingfreaks</groupId>
   <artifactId>MinePacks</artifactId>
-  <version>1.7</version>
+  <version>1.7.1</version>
   <repositories>
     <repository>
 	  <id>in-project</id>
@@ -35,6 +35,25 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+      <plugin>
+	    <groupId>org.codehaus.mojo</groupId>
+	    <artifactId>build-helper-maven-plugin</artifactId>
+	    <version>1.4</version>
+	    <executions>
+		  <execution>
+		    <id>add-wsdl-source</id>
+		    <phase>generate-sources</phase>
+		    <goals>
+		      <goal>add-source</goal>
+		    </goals>
+		    <configuration>
+		      <sources>
+		        <source>${basedir}/libs</source>
+		      </sources>
+		    </configuration>
+		  </execution>
+	    </executions>
+	  </plugin>
     </plugins>
   </build>
   <dependencies>
