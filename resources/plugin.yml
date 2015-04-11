@@ -4,9 +4,10 @@ website: http://dev.bukkit.org/bukkit-plugins/minepacks/
 main: at.pcgamingfreaks.georgh.MinePacks.MinePacks
 version: ${version}
 commands:
-   backpack:
-      description: Main command
-      usage: /backpack
+  backpack:
+    description: Main command
+    aliases: bp
+    usage: /backpack
 permissions:
   backpack.*:
     description: Gives acces to the full MinePacks functionality
