@@ -2,6 +2,7 @@ name: MinePacks
 author: GeorgH93
 website: http://dev.bukkit.org/bukkit-plugins/minepacks/
 main: at.pcgamingfreaks.georgh.MinePacks.MinePacks
+description: Minepacks is a backpack plugin with different backpack sizes, multilanguage and MySQL storage support. It is a simple plugin, but still has a lot of functions.
 version: ${version}
 commands:
   backpack:
@@ -10,7 +11,7 @@ commands:
     usage: /backpack
 permissions:
   backpack.*:
-    description: Gives acces to the full MinePacks functionality
+    description: Gives access to the full MinePacks functionality.
     children:
       backpack: true
       backpack.size.6: true
@@ -19,11 +20,15 @@ permissions:
       backpack.KeepOnDeath: true
       backpack.clean: true
       backpack.clean.other: true
+  backpack.use:
+    description: Allows a player to open the backpack.
+    children:
+      backpack: true
   backpack:
-    description: Allows to open the backback
+    description: Allows a player to open the backpack.
     default: false
   backpack.size.1:
-    description: Mini size for a backpack, if player has backpack permission he will also have at least a backpack with the size 1
+    description: Mini size for a backpack, if the player has backpack permission he will also have at least a backpack with the size 1.
     default: false
   backpack.size.2:
     description: 2*9 backpack
@@ -41,21 +46,21 @@ permissions:
     description: 6*9 backpack
     default: false
   backpack.clean:
-    description: Allows to clean the own backpack.
+    description: Allows the player to clean their own backpack.
     default: false
   backpack.clean.other:
-    description: Allows to clean the others backpacks.
+    description: Allows the player to clean other players backpacks.
     default: op
     children:
       backpack.clean: true
   backpack.others:
-    description: Allows to open backpacks of other players
+    description: Allows the player open backpacks of other players.
     default: op
   backpack.others.edit:
-    description: Allows to edit backpacks of other players
+    description: Allows the player to edit backpacks of other players.
     default: op
     children:
       backpack.others: true
   backpack.KeepOnDeath:
-    description: Allows to keeps the items in backpack on death
+    description: Allows the player to keep their items in their backpack on death.
     defautl: op
