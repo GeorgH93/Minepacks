@@ -59,7 +59,7 @@ public class MinePacks extends JavaPlugin
 	{
 		if(config.getAutoUpdate())
 		{
-			new Bukkit_Updater(this, 74734, this.getFile(), UpdateType.DEFAULT, true);
+			new Bukkit_Updater(this, 83445, this.getFile(), UpdateType.DEFAULT, true);
 		}
 		DB.Close();
 		log.info(lang.Get("Console.Disabled"));
