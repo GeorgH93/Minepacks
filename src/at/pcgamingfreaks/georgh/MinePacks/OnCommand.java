@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
+import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -32,7 +33,9 @@ public class OnCommand implements CommandExecutor
 {
 	private MinePacks plugin;
 	
-	public String Message_NotFromConsole, Message_NoPermission, Message_IvalidBackpack, Message_BackpackCleaned;
+	public String Message_NotFromConsole, Message_NoPermission, Message_IvalidBackpack, Message_BackpackCleaned, Message_Cooldown;
+	
+	public int cooldown;
 	
 	public OnCommand(MinePacks mp) 
 	{
@@ -41,6 +44,8 @@ public class OnCommand implements CommandExecutor
 		Message_NoPermission = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.NoPermission"));
 		Message_IvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.IvalidBackpack"));
 		Message_BackpackCleaned = ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.BackpackCleaned"));
+		Message_Cooldown = ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.Cooldown"));
+		cooldown = plugin.config.getCommandCooldown();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -57,7 +62,18 @@ public class OnCommand implements CommandExecutor
 			sender.sendMessage(Message_NotFromConsole);
 			return true;
 		}
-		
+		if(cooldown > 0)
+		{
+			if(plugin.cooldowns.containsKey(player))
+			{
+				if(((new Date()).getTime() - plugin.cooldowns.get(player).longValue()) < cooldown)
+				{
+					sender.sendMessage(Message_Cooldown);
+					return true;
+				}
+			}
+			plugin.cooldowns.put(player, new Long((new Date()).getTime()));
+		}
 		if(args.length == 0)
 		{
 			// Open player backpack

@@ -116,5 +116,9 @@ public class EventListener implements Listener
 		{
 			plugin.DB.UnloadBackpack(bp);
 		}
+		if(plugin.cooldowns.containsKey(event.getPlayer()))
+		{
+			plugin.cooldowns.remove(event.getPlayer());
+		}
 	}
 }

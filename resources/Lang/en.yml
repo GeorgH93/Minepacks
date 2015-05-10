@@ -1,20 +1,21 @@
-Version: 1
+Version: 2
 Language:
-    Console:
-        Enabled: MinePacks has been enabled!
-        Disabled: MinePacks has been disabled.
-        NotFromConsole: Command not useable from console.
-        LangUpdated: Language File has been updated.
-        UpdateUUIDs: Start updating database to UUIDs ...
-        UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
-    Ingame:
-        NoPermission: You don't have the Permission to do that.
-        OwnBackPackClose: 'Backpack closed!'
-        PlayerBackPackClose: "%s's backpack closed!"
-        IvalidBackpack: Invalid backpack.
-        BackpackCleaned: Backpack cleaned.
-    Description:
-        Backpack: Opens your backpack.
-        Clean: Cleans your backpack.
-        CleanOther: Cleans the backpack of other players.
-        View: Shows the backpack of other player.
+  Console:
+    Enabled: MinePacks has been enabled!
+    Disabled: MinePacks has been disabled.
+    NotFromConsole: Command not useable from console.
+    LangUpdated: Language File has been updated.
+    UpdateUUIDs: Start updating database to UUIDs ...
+    UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
+  Ingame:
+    NoPermission: You don't have the Permission to do that.
+    OwnBackPackClose: 'Backpack closed!'
+    PlayerBackPackClose: "%s's backpack closed!"
+    IvalidBackpack: Invalid backpack.
+    BackpackCleaned: Backpack cleaned.
+    Cooldown: "Please wait till you reopen your backpack."
+  Description:
+    Backpack: Opens your backpack.
+    Clean: Cleans your backpack.
+    CleanOther: Cleans the backpack of other players.
+    View: Shows the backpack of other player.

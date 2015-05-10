@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import net.gravitydevelopment.Updater.Bukkit_Updater;
@@ -36,6 +37,8 @@ public class MinePacks extends JavaPlugin
 	public Config config;
 	public Language lang;
 	public Database DB;
+	
+	public HashMap<Player, Long> cooldowns = new HashMap<Player, Long>();
 	
 	static public String BackpackTitle;
 	public String Message_IvalidBackpack;

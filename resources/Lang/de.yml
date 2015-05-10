@@ -1,20 +1,21 @@
-Version: 1
+Version: 2
 Language:
-    Console:
-        Enabled: MinePacks wurde aktiviert!
-        Disabled: MinePacks wurde deaktiviert.
-        NotFromConsole: Befehlt nicht von der Console aus verwendbar.
-        LangUpdated: Sprachdatei wurde aktualisiert.
-        UpdateUUIDs: Starte Datenbank Update auf UUIDs ...
-        UpdatedUUIDs: '%s Datensätze wurden auf UUIDs geupdated.'
-    Ingame:
-        NoPermission: 'Dir fehlen die Rechte dafür.'
-        OwnBackPackClose: 'Rucksack geschlossen!'
-        PlayerBackPackClose: "%s's Rucksack geschlossen!"
-        IvalidBackpack: Rucksack fehlerhaft.
-        BackpackCleaned: Rucksack gelehrt.
-    Description:
-        Backpack: Öffnet deinen Rucksack.
-        Clean: Leert deinen Rucksack.
-        CleanOther: Leert den Rucksack von Spielern.
-        View: Zeigt den Rucksack von anderen Spielern.
+  Console:
+    Enabled: MinePacks wurde aktiviert!
+    Disabled: MinePacks wurde deaktiviert.
+    NotFromConsole: Befehlt nicht von der Console aus verwendbar.
+    LangUpdated: Sprachdatei wurde aktualisiert.
+    UpdateUUIDs: Starte Datenbank Update auf UUIDs ...
+    UpdatedUUIDs: '%s Datensätze wurden auf UUIDs geupdated.'
+  Ingame:
+    NoPermission: 'Dir fehlen die Rechte dafür.'
+    OwnBackPackClose: 'Rucksack geschlossen!'
+    PlayerBackPackClose: "%s's Rucksack geschlossen!"
+    IvalidBackpack: Rucksack fehlerhaft.
+    BackpackCleaned: Rucksack gelehrt.
+    Cooldown: 'Bitte warte etwas bis du deinen Rucksack erneut öffnest.'
+  Description:
+    Backpack: Öffnet deinen Rucksack.
+    Clean: Leert deinen Rucksack.
+    CleanOther: Leert den Rucksack von Spielern.
+    View: Zeigt den Rucksack von anderen Spielern.

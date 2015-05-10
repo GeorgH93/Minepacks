@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 4;
+	private static final int CONFIG_VERSION = 5;
 	
 	public Config(MinePacks mp)
 	{
@@ -83,6 +83,7 @@ public class Config
 	{
 		config = new YamlConfiguration();
 		config.set("BackpackTitle", ChatColor.AQUA + "%s Backpack");
+		config.set("command_cooldown", -1);
 		config.set("drop_on_death", true);
 		config.set("Language","en");
 		config.set("LanguageUpdateMode","Overwrite");
@@ -127,10 +128,9 @@ public class Config
 				config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
 				config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
 				config.set("Database.Tables.Fields.Backpack.Version", "version");
-			case 2:
-				config.set("Database.UseUUIDSeparators", false);
-			case 3:
-				config.set("auto-update", true);
+			case 2: config.set("Database.UseUUIDSeparators", false);
+			case 3: config.set("auto-update", true);
+			case 4: config.set("command_cooldown", -1);
 			break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -232,5 +232,10 @@ public class Config
 	public boolean getAutoUpdate()
 	{
 		return config.getBoolean("auto-update", true);
+	}
+	
+	public int getCommandCooldown()
+	{
+		return config.getInt("command_cooldown", -1);
 	}
 }
