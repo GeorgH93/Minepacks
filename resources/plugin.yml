@@ -20,6 +20,7 @@ permissions:
       backpack.KeepOnDeath: true
       backpack.clean: true
       backpack.clean.other: true
+      backpack.noCooldown: true
   backpack.use:
     description: Allows a player to open the backpack.
     children:
@@ -63,4 +64,7 @@ permissions:
       backpack.others: true
   backpack.KeepOnDeath:
     description: Allows the player to keep their items in their backpack on death.
-    defautl: op
+    default: op
+  backpack.noCooldown:
+    description: Allows to bypass the cooldown to open the backpack.
+    default: op

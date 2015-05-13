@@ -236,6 +236,6 @@ public class Config
 	
 	public int getCommandCooldown()
 	{
-		return config.getInt("command_cooldown", -1);
+		return config.getInt("command_cooldown", -1) * 1000;
 	}
 }

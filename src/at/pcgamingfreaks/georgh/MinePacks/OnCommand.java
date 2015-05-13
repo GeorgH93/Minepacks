@@ -62,23 +62,23 @@ public class OnCommand implements CommandExecutor
 			sender.sendMessage(Message_NotFromConsole);
 			return true;
 		}
-		if(cooldown > 0)
-		{
-			if(plugin.cooldowns.containsKey(player))
-			{
-				if(((new Date()).getTime() - plugin.cooldowns.get(player).longValue()) < cooldown)
-				{
-					sender.sendMessage(Message_Cooldown);
-					return true;
-				}
-			}
-			plugin.cooldowns.put(player, new Long((new Date()).getTime()));
-		}
 		if(args.length == 0)
 		{
 			// Open player backpack
 			if(player.hasPermission("backpack"))
 			{
+				if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
+				{
+					if(plugin.cooldowns.containsKey(player))
+					{
+						if(((new Date()).getTime() - plugin.cooldowns.get(player).longValue()) < cooldown)
+						{
+							sender.sendMessage(Message_Cooldown);
+							return true;
+						}
+					}
+					plugin.cooldowns.put(player, new Long((new Date()).getTime()));
+				}
 				Backpack bp = plugin.DB.getBackpack(player, false);
 				if(bp == null)
 				{
