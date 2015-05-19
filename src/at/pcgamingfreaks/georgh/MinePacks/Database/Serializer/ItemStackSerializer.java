@@ -28,6 +28,10 @@ public class ItemStackSerializer
 					{
 						serializer = new MC_1_8_R2();
 					}
+					else if(version[2].equals("R3"))
+					{
+						serializer = new MC_1_8_R3();
+					}
 				}
 			}
 		}
