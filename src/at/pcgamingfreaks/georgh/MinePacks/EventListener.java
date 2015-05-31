@@ -51,15 +51,17 @@ public class EventListener implements Listener
 		Player player = event.getEntity();
 		if (drop_on_death && !player.hasPermission("backpack.KeepOnDeath"))
 		{
-			Inventory BP = plugin.DB.getBackpack(player, false).getBackpack();
-			for (ItemStack i : BP.getContents())
+			Backpack backpack = plugin.DB.getBackpack(player, false);
+			Inventory bpinv = backpack.getBackpack();
+			for (ItemStack i : bpinv.getContents())
 			{
 			    if (i != null)
 			    {
 			        player.getWorld().dropItemNaturally(player.getLocation(), i);
-			        BP.remove(i);
+			        bpinv.remove(i);
 			    }
 			}
+			plugin.DB.SaveBackpack(backpack);
 		}
 	}
 	
