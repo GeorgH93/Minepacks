@@ -34,7 +34,7 @@ public class SQL extends Database
 	protected Connection conn = null;
 	
 	protected String Table_Players, Table_Backpacks; // Table Names
-	protected String Field_Name, Field_PlayerID, Field_UUID, Field_BPOwner, Field_BPITS, Field_BPVersion; // Table Fields
+	protected String Field_Name, Field_PlayerID, Field_UUID, Field_BPOwner, Field_BPITS, Field_BPVersion, Field_BPLastUpdate; // Table Fields
 	protected String Query_UpdatePlayerGet, Query_UpdatePlayerUUID, Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP; // DB Querys
 	protected boolean UpdatePlayer;
 	
@@ -42,15 +42,16 @@ public class SQL extends Database
 	{
 		super(mp);
 		// Load Settings
-		Table_Players = plugin.config.getUserTable();
-		Table_Backpacks = plugin.config.getBackpackTable();
-		Field_PlayerID = plugin.config.getDBFields("User.Player_ID");
-		Field_Name = plugin.config.getDBFields("User.Name");
-		Field_UUID = plugin.config.getDBFields("User.UUID");
-		Field_BPOwner = plugin.config.getDBFields("Backpack.Owner_ID");
-		Field_BPITS = plugin.config.getDBFields("Backpack.ItemStacks");
-		Field_BPVersion = plugin.config.getDBFields("Backpack.Version");
-		UpdatePlayer = plugin.config.getUpdatePlayer();
+		Table_Players		= plugin.config.getUserTable();
+		Table_Backpacks		= plugin.config.getBackpackTable();
+		Field_PlayerID		= plugin.config.getDBFields("User.Player_ID");
+		Field_Name			= plugin.config.getDBFields("User.Name");
+		Field_UUID			= plugin.config.getDBFields("User.UUID");
+		Field_BPOwner		= plugin.config.getDBFields("Backpack.Owner_ID");
+		Field_BPITS			= plugin.config.getDBFields("Backpack.ItemStacks");
+		Field_BPVersion		= plugin.config.getDBFields("Backpack.Version");
+		Field_BPLastUpdate	= plugin.config.getDBFields("Backpack.LastUpdate");
+		UpdatePlayer		= plugin.config.getUpdatePlayer();
 	}
 	
 	public void Close()
@@ -79,8 +80,24 @@ public class SQL extends Database
 			Query_GetPlayerID = "SELECT `" + Field_PlayerID + "` FROM `" + Table_Players + "` WHERE `" + Field_Name + "`=?;";
 			Query_GetBP = "SELECT `" + Field_BPOwner + "`,`" + Field_BPITS + "`,`" + Field_BPVersion + "` FROM `" + Table_Backpacks + "` INNER JOIN `" + Table_Players + "` ON `" + Table_Backpacks + "`.`" + Field_BPOwner + "`=`" + Table_Players + "`.`" + Field_PlayerID + "` WHERE `" + Field_Name + "`=?;";
 		}
-		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + Field_BPOwner + "`, `" + Field_BPITS + "`, `" + Field_BPVersion + "`) VALUES (?,?,?);";
-		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + Field_BPITS + "`=?,`" + Field_BPVersion + "`=? WHERE `" + Field_BPOwner + "`=?;";
+		Query_InsertBP = "INSERT INTO `" + Table_Backpacks + "` (`" + Field_BPOwner + "`, `" + Field_BPITS + "`, `" + Field_BPVersion + "`";
+		Query_UpdateBP = "UPDATE `" + Table_Backpacks + "` SET `" + Field_BPITS + "`=?,`" + Field_BPVersion + "`=?";
+		if(maxAge < 1)
+		{
+			Query_InsertBP += ") VALUES (";
+		}
+		else
+		{
+			AddDateFieldToQuery();
+		}
+		Query_InsertBP += "?,?,?);";
+		Query_UpdateBP += " WHERE `" + Field_BPOwner + "`=?;";
+	}
+	
+	protected void AddDateFieldToQuery() // Will be overwriten by the used DB System
+	{
+		Query_InsertBP = ", `" + Field_BPLastUpdate + "`) VALUES (?,";
+		Query_UpdateBP = ",`" + Field_BPLastUpdate + "`=?";
 	}
 	
 	protected void CheckUUIDs() { }

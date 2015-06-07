@@ -31,6 +31,7 @@ public class Database
 	protected MinePacks plugin;
 	
 	protected boolean UseUUIDs, UseUUIDSeparators;
+	protected long maxAge;
 	
 	private HashSet<Backpack> backpacks = new HashSet<Backpack>();
 	protected ItemStackSerializer itsSerializer = new ItemStackSerializer();
@@ -38,8 +39,9 @@ public class Database
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
-		UseUUIDSeparators = plugin.config.getUseUUIDSeparators();
-		UseUUIDs = plugin.config.UseUUIDs();
+		UseUUIDSeparators	= plugin.config.getUseUUIDSeparators();
+		UseUUIDs			= plugin.config.UseUUIDs();
+		maxAge				= plugin.config.GetAutoCleanupMaxInactiveDays();
 	}
 	
 	public void Close() { }

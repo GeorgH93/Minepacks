@@ -46,6 +46,18 @@ public class MySQL extends SQL
 		// Fire DB request every 10 minutes to keep database connection alive
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){ @Override public void run() { try { GetConnection().createStatement().execute("SELECT 1"); }
 		catch(Exception e) { } }}, 600*20, 600*20);
+		
+		if(maxAge > 0)
+		{
+			try
+			{
+				GetConnection().createStatement().execute("DELETE FROM `" + Table_Backpacks + "` WHERE `" + Field_BPLastUpdate + "` + INTERVAL " + maxAge + " day < NOW()");
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	protected void CheckUUIDs()
@@ -143,7 +155,8 @@ public class MySQL extends SQL
 		{
 			Statement stmt = GetConnection().createStatement();
 			ResultSet res;
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL UNIQUE" + ((UseUUIDs) ? ",`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL UNIQUE"
+					+ ((UseUUIDs) ? ",`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
 			if(UseUUIDs)
 			{
 				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
@@ -162,11 +175,21 @@ public class MySQL extends SQL
 				}
 				res.close();
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, `" + Field_BPVersion + "` INT DEFAULT 0, PRIMARY KEY (`" + Field_BPOwner + "`));");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, `"
+					+ Field_BPVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + Field_BPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + Field_BPOwner + "`));");
 			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPVersion + "';");
 			if(!res.next())
 			{
 				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPVersion + "` INT DEFAULT 0;");
+			}
+			if(maxAge > 0)
+			{
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPLastUpdate + "';");
+				if(!res.next())
+				{
+					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP;");
+				}
+				res.close();
 			}
 			stmt.close();
 		}
@@ -174,6 +197,12 @@ public class MySQL extends SQL
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	protected void AddDateFieldToQuery()
+	{
+		Query_InsertBP = ") VALUES (";
+		Query_UpdateBP = ",`" + Field_BPLastUpdate + "`=NOW()";
 	}
 	
 	// Plugin Functions

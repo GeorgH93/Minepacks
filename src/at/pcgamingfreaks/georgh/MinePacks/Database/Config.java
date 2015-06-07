@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 5;
+	private static final int CONFIG_VERSION = 6;
 	
 	public Config(MinePacks mp)
 	{
@@ -85,24 +85,26 @@ public class Config
 		config.set("BackpackTitle", ChatColor.AQUA + "%s Backpack");
 		config.set("command_cooldown", -1);
 		config.set("drop_on_death", true);
-		config.set("Language","en");
+		config.set("Language", "en");
 		config.set("LanguageUpdateMode","Overwrite");
 		config.set("Database.Type","sqlite");
 		config.set("Database.UpdatePlayer", true);
+		config.set("Database.AutoCleanup.MaxInactiveDays", -1);
 		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && UUIDComp());
 		config.set("Database.UseUUIDSeparators", false);
-		config.set("Database.MySQL.Host", "localhost:3306");
-		config.set("Database.MySQL.Database", "minecraft");
-		config.set("Database.MySQL.User", "minecraft");
-		config.set("Database.MySQL.Password", "minecraft");
-		config.set("Database.Tables.User", "backpack_players");
-		config.set("Database.Tables.Backpack", "backpacks");
-		config.set("Database.Tables.Fields.User.Player_ID", "player_id");
-		config.set("Database.Tables.Fields.User.Name", "name");
-		config.set("Database.Tables.Fields.User.UUID", "uuid");
-		config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
-		config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
-		config.set("Database.Tables.Fields.Backpack.Version", "version");
+		config.set("Database.MySQL.Host",		"localhost:3306");
+		config.set("Database.MySQL.Database",	"minecraft");
+		config.set("Database.MySQL.User",		"minecraft");
+		config.set("Database.MySQL.Password",	"minecraft");
+		config.set("Database.Tables.User",		"backpack_players");
+		config.set("Database.Tables.Backpack",	"backpacks");
+		config.set("Database.Tables.Fields.User.Player_ID",			"player_id");
+		config.set("Database.Tables.Fields.User.Name",				"name");
+		config.set("Database.Tables.Fields.User.UUID",				"uuid");
+		config.set("Database.Tables.Fields.Backpack.Owner_ID",		"owner");
+		config.set("Database.Tables.Fields.Backpack.ItemStacks",	"itemstacks");
+		config.set("Database.Tables.Fields.Backpack.Version",		"version");
+		config.set("Database.Tables.Fields.Backpack.LastUpdate",	"lastupdate");
 		config.set("auto-update", true);
 		config.set("Version",CONFIG_VERSION);
 		
@@ -128,10 +130,16 @@ public class Config
 				config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
 				config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
 				config.set("Database.Tables.Fields.Backpack.Version", "version");
-			case 2: config.set("Database.UseUUIDSeparators", false);
-			case 3: config.set("auto-update", true);
-			case 4: config.set("command_cooldown", -1);
-			break;
+			case 2:
+				config.set("Database.UseUUIDSeparators", false);
+			case 3:
+				config.set("auto-update", true);
+			case 4:
+				config.set("command_cooldown", -1);
+			case 5:
+				config.set("Database.AutoCleanup.MaxInactiveDays", -1);
+				config.set("Database.Tables.Fields.Backpack.LastUpdate", "lastupdate");
+				break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
 		}
@@ -157,6 +165,11 @@ public class Config
 	public String GetLanguageUpdateMode()
 	{
 		return config.getString("LanguageUpdateMode");
+	}
+	
+	public int GetAutoCleanupMaxInactiveDays()
+	{
+		return config.getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
 	
 	public String GetDatabaseType()

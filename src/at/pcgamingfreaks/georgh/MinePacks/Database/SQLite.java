@@ -40,6 +40,7 @@ public class SQLite extends SQL
 		Field_BPOwner = "owner";
 		Field_BPITS = "itemstacks";
 		Field_BPVersion = "version";
+		Field_BPLastUpdate = "lastupdate";
 		Table_Players = "backpack_players";
 		Table_Backpacks = "backpacks";
 		
@@ -51,6 +52,18 @@ public class SQLite extends SQL
 		if(UseUUIDs && UpdatePlayer)
 		{
 			CheckUUIDs(); // Check if there are user accounts without UUID
+		}
+		
+		if(maxAge > 0)
+		{
+			try
+			{
+				GetConnection().createStatement().execute("DELETE FROM `" + Table_Backpacks + "` WHERE `" + Field_BPLastUpdate + "` < DATE('now', '-" + maxAge + " days')");
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -98,6 +111,16 @@ public class SQLite extends SQL
 				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");
 			}
 			catch(SQLException e) { }
+			if(maxAge > 0)
+			{
+				try
+				{
+					ResultSet rs = stmt.executeQuery("SELECT DATE('now');");
+					rs.next();
+					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
+				}
+				catch(SQLException e) { }
+			}
 			stmt.close();
 		}
 		catch (SQLException e)
@@ -134,5 +157,11 @@ public class SQLite extends SQL
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	protected void AddDateFieldToQuery()
+	{
+		Query_InsertBP = ") VALUES (";
+		Query_UpdateBP = ",`" + Field_BPLastUpdate + "`=DATE('now')";
 	}
 }

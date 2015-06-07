@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.util.Date;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -37,6 +38,7 @@ public class Files extends Database
 	public Files(MinePacks mp)
 	{
 		super(mp);
+		maxAge *= 24 * 3600000L;
 		saveFolder = new File(plugin.getDataFolder(), "backpacks");
 		if(!saveFolder.exists())
 		{
@@ -44,16 +46,21 @@ public class Files extends Database
 		}
 		else
 		{
-			CheckFileNames();
+			CheckFiles();
 		}
 	}
 	
-	private void CheckFileNames()
+	private void CheckFiles()
 	{
 		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
 		int len;
 		for (File file : allFiles)
 		{
+			if(maxAge > 0 && (new Date()).getTime() - file.lastModified() > maxAge) // Check if the file is older then x days
+			{
+				file.delete(); // Delete old files
+				continue; // We don't have to check if the file name is correct cause we have the delted the file
+			}
 			len = file.getName().length() - ext.length();
 			if(UseUUIDs) // Use UUID-based saving
 			{
