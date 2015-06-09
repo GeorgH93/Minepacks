@@ -146,6 +146,7 @@ public class OnCommand implements CommandExecutor
 						}
 						Backpack BP = plugin.DB.getBackpack(OP, false);
 						BP.getBackpack().clear();
+						plugin.DB.SaveBackpack(BP);
 						player.sendMessage(Message_BackpackCleaned);
 					}
 					else
