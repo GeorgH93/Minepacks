@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemStack;
 public class EventListener implements Listener
 {
 	private MinePacks plugin;
-	private boolean drop_on_death;
+	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther;
 	
 	private String Message_OwnBPClose, Message_PlayerBPClose;
 	
@@ -40,9 +40,16 @@ public class EventListener implements Listener
 	{
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();
-		
-		Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
-		Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
+		showCloseMessageOther = plugin.lang.Get("Ingame.PlayerBackPackClose") != null && plugin.config.getShowCloseMessage();
+		showCloseMessageOwn = plugin.lang.Get("Ingame.OwnBackPackClose") != null && plugin.config.getShowCloseMessage();
+		if(showCloseMessageOwn)
+		{
+			Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
+		}
+		if(showCloseMessageOther)
+		{
+			Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
+		}
 	}
 	
 	@EventHandler
@@ -81,11 +88,17 @@ public class EventListener implements Listener
 				backpack.Close(closer);
 				if(event.getPlayer().getName().equals(backpack.getOwner().getName()))
 				{
-					closer.sendMessage(Message_OwnBPClose);
+					if(showCloseMessageOwn)
+					{
+						closer.sendMessage(Message_OwnBPClose);
+					}
 				}
 				else
 				{
-					closer.sendMessage(String.format(Message_PlayerBPClose, backpack.getOwner().getName()));
+					if(showCloseMessageOther)
+					{
+						closer.sendMessage(String.format(Message_PlayerBPClose, backpack.getOwner().getName()));
+					}
 				}
 			}
 	    }

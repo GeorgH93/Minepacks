@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 6;
+	private static final int CONFIG_VERSION = 7;
 	
 	public Config(MinePacks mp)
 	{
@@ -139,6 +139,8 @@ public class Config
 			case 5:
 				config.set("Database.AutoCleanup.MaxInactiveDays", -1);
 				config.set("Database.Tables.Fields.Backpack.LastUpdate", "lastupdate");
+			case 6:
+				config.set("show_close_message", true);
 				break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -250,5 +252,10 @@ public class Config
 	public int getCommandCooldown()
 	{
 		return config.getInt("command_cooldown", -1) * 1000;
+	}
+	
+	public boolean getShowCloseMessage()
+	{
+		return config.getBoolean("show_close_message", true);
 	}
 }
