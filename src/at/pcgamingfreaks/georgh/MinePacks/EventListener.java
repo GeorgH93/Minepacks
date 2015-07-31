@@ -40,16 +40,10 @@ public class EventListener implements Listener
 	{
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();
-		showCloseMessageOther = plugin.lang.Get("Ingame.PlayerBackPackClose") != null && plugin.config.getShowCloseMessage();
-		showCloseMessageOwn = plugin.lang.Get("Ingame.OwnBackPackClose") != null && plugin.config.getShowCloseMessage();
-		if(showCloseMessageOwn)
-		{
-			Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
-		}
-		if(showCloseMessageOther)
-		{
-			Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
-		}
+		Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
+		Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
+		showCloseMessageOther = Message_PlayerBPClose != null && plugin.config.getShowCloseMessage();
+		showCloseMessageOwn = Message_OwnBPClose != null && plugin.config.getShowCloseMessage();
 	}
 	
 	@EventHandler
