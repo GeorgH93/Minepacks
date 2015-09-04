@@ -33,7 +33,7 @@ import at.pcgamingfreaks.georgh.MinePacks.Database.*;
 
 public class MinePacks extends JavaPlugin
 {
-	public Logger log;
+	public Logger log = getLogger();
 	public Config config;
 	public Language lang;
 	public Database DB;
@@ -45,7 +45,6 @@ public class MinePacks extends JavaPlugin
 	
 	public void onEnable()
 	{
-		log = getLogger();
 		config = new Config(this);
 		lang = new Language(this);
 		DB = Database.getDatabase(this);
