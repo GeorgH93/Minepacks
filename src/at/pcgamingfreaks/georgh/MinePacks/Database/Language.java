@@ -31,7 +31,7 @@ public class Language
 {
 	private MinePacks MP;
 	private FileConfiguration lang;
-	private static final int LANG_VERSION = 2;
+	private static final int LANG_VERSION = 3;
 
 	public Language(MinePacks mp) 
 	{
@@ -100,6 +100,7 @@ public class Language
 				switch(lang.getInt("Version"))
 				{
 					case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
+					case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
 						break;
 					default: MP.log.warning("Language File Version newer than expected!"); return false;
 				}

@@ -1,4 +1,4 @@
-Version: 2
+Version: 3
 Language:
   Console:
     Enabled: MinePacks has been enabled!
@@ -11,7 +11,7 @@ Language:
     NoPermission: You don't have the Permission to do that.
     OwnBackPackClose: 'Backpack closed!'
     PlayerBackPackClose: "%s's backpack closed!"
-    IvalidBackpack: Invalid backpack.
+    InvalidBackpack: Invalid backpack.
     BackpackCleaned: Backpack cleaned.
     Cooldown: "Please wait till you reopen your backpack."
   Description:

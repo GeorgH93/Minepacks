@@ -1,4 +1,4 @@
-Version: 2
+Version: 3
 Language:
   Console:
     Enabled: MinePacks wurde aktiviert!
@@ -11,7 +11,7 @@ Language:
     NoPermission: 'Dir fehlen die Rechte dafür.'
     OwnBackPackClose: 'Rucksack geschlossen!'
     PlayerBackPackClose: "%s's Rucksack geschlossen!"
-    IvalidBackpack: Rucksack fehlerhaft.
+    InvalidBackpack: Rucksack fehlerhaft.
     BackpackCleaned: Rucksack gelehrt.
     Cooldown: 'Bitte warte etwas bis du deinen Rucksack erneut öffnest.'
   Description:

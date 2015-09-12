@@ -33,50 +33,57 @@ import at.pcgamingfreaks.georgh.MinePacks.Database.*;
 
 public class MinePacks extends JavaPlugin
 {
-	public Logger log = getLogger();
-	public Config config;
+	public final Logger log = getLogger();
+	public final Config config = new Config(this);
 	public Language lang;
 	public Database DB;
 	
 	public HashMap<Player, Long> cooldowns = new HashMap<Player, Long>();
 	
-	static public String BackpackTitle;
-	public String Message_IvalidBackpack;
-	
+	public static String BackpackTitle;
+	public String Message_InvalidBackpack;
+
+	@Override
 	public void onEnable()
 	{
-		config = new Config(this);
 		lang = new Language(this);
 		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		getServer().getPluginManager().registerEvents(new EventListener(this), this);
+
+		if(config.getFullInvCollect())
+		{
+			(new ItemsCollector(this)).runTaskTimerAsynchronously(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
+		}
 		
 		BackpackTitle = config.getBPTitle();
-		Message_IvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + lang.Get("Ingame.IvalidBackpack"));
+		Message_InvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + lang.Get("Ingame.InvalidBackpack"));
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 		log.info(lang.Get("Console.Enabled"));
 	}
-	
+
+	@Override
 	public void onDisable()
 	{
+		getServer().getScheduler().cancelTasks(this);
+		DB.Close();
 		if(config.getAutoUpdate())
 		{
 			new Bukkit_Updater(this, 83445, this.getFile(), UpdateType.DEFAULT, true);
 		}
-		DB.Close();
 		log.info(lang.Get("Console.Disabled"));
 	}
 	
-	public void OpenBackpack(Player opener, OfflinePlayer owener, boolean editable)
+	public void OpenBackpack(Player opener, OfflinePlayer owner, boolean editable)
 	{
-		OpenBackpack(opener, DB.getBackpack(owener, false), editable);
+		OpenBackpack(opener, DB.getBackpack(owner, false), editable);
 	}
 	
 	public void OpenBackpack(Player opener, Backpack backpack, boolean editable)
 	{
 		if(backpack == null)
 		{
-			opener.sendMessage(Message_IvalidBackpack);
+			opener.sendMessage(Message_InvalidBackpack);
 			return;
 		}
 		backpack.Open(opener, editable);
@@ -84,7 +91,19 @@ public class MinePacks extends JavaPlugin
 	
 	public int getBackpackPermSize(Player player)
 	{
-		if(player.hasPermission("backpack.size.6"))
+		if(player.hasPermission("backpack.size.9"))
+		{
+			return 81;
+		}
+		else if(player.hasPermission("backpack.size.8"))
+		{
+			return 72;
+		}
+		else if(player.hasPermission("backpack.size.7"))
+		{
+			return 63;
+		}
+		else if(player.hasPermission("backpack.size.6"))
 		{
 			return 54;
 		}

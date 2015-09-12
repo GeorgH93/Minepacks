@@ -31,7 +31,7 @@ public class Config
 {
 	private MinePacks MP;
 	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 7;
+	private static final int CONFIG_VERSION = 8;
 	
 	public Config(MinePacks mp)
 	{
@@ -85,9 +85,12 @@ public class Config
 		config.set("BackpackTitle", ChatColor.AQUA + "%s Backpack");
 		config.set("command_cooldown", -1);
 		config.set("drop_on_death", true);
+		config.set("full_inventory.collect_items", false);
+		config.set("full_inventory.check_interval", 1); // in seconds
+		config.set("full_inventory.collect_radius", 1); // in blocks
 		config.set("Language", "en");
 		config.set("LanguageUpdateMode","Overwrite");
-		config.set("Database.Type","sqlite");
+		config.set("Database.Type","SQLite");
 		config.set("Database.UpdatePlayer", true);
 		config.set("Database.AutoCleanup.MaxInactiveDays", -1);
 		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && UUIDComp());
@@ -141,6 +144,10 @@ public class Config
 				config.set("Database.Tables.Fields.Backpack.LastUpdate", "lastupdate");
 			case 6:
 				config.set("show_close_message", true);
+			case 7:
+				config.set("full_inventory.collect_items", false);
+				config.set("full_inventory.check_interval", 1); // in seconds
+				config.set("full_inventory.collect_radius", 1.5); // in blocks
 				break;
 			case CONFIG_VERSION: return false;
 			default: MP.log.info("Config File Version newer than expected!"); return false;
@@ -235,8 +242,7 @@ public class Config
 	
 	public String getBPTitle()
 	{
-		String BPTitle = config.getString("BackpackTitle", "%s Backpack");
-		return BPTitle;
+		return config.getString("BackpackTitle", "%s Backpack");
 	}
 	
 	public boolean getDropOnDeath()
@@ -257,5 +263,20 @@ public class Config
 	public boolean getShowCloseMessage()
 	{
 		return config.getBoolean("show_close_message", true);
+	}
+
+	public boolean getFullInvCollect()
+	{
+		return config.getBoolean("full_inventory.collect_items", false);
+	}
+
+	public long getFullInvCheckInterval()
+	{
+		return config.getInt("full_inventory.check_interval", 1) * 20L; // in seconds
+	}
+
+	public double getFullInvRadius()
+	{
+		return config.getDouble("full_inventory.collect_radius", 1.5); // in blocks
 	}
 }
