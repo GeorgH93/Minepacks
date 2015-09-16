@@ -93,7 +93,7 @@ public class Files extends Database
 			{
 				if(len > 16) // We only have to rename it if it's name is more than 16 chars (minecraft max player name length)
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + ext))
+					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + ext));
 				}
 			}
 		}
