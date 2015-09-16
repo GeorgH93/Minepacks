@@ -23,6 +23,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Set;
+
 public class Config extends Configuration
 {
 	private static final int CONFIG_VERSION = 9;
@@ -43,6 +45,18 @@ public class Config extends Configuration
 	protected void doUpdate(int version)
 	{
 		// Nothing to update yet
+	}
+
+	@Override
+	protected void doUpgrade(Configuration oldConfiguration)
+	{
+		Set<String> keys = oldConfiguration.getConfig().getKeys(true);
+		for(String key : keys)
+		{
+			if(key.equals("Database.UseUUIDs") || key.equals("UseUUIDs")) continue;
+			config.set(key, oldConfiguration.getConfig().get(key));
+		}
+		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 	}
 
 	// Getter
@@ -96,13 +110,9 @@ public class Config extends Configuration
 		return config.getBoolean("Database.UpdatePlayer", true);
 	}
 	
-	public boolean UseUUIDs()
+	public boolean getUseUUIDs()
 	{
-		if(config.isSet("Database.UseUUIDs"))
-		{
-			return config.getBoolean("Database.UseUUIDs");
-		}
-		return config.getBoolean("UseUUIDs");
+		return config.getBoolean("Database.UseUUIDs");
 	}
 	
 	public boolean getUseUUIDSeparators()

@@ -40,7 +40,7 @@ public class Database
 	{
 		plugin = mp;
 		UseUUIDSeparators	= plugin.config.getUseUUIDSeparators();
-		UseUUIDs			= plugin.config.UseUUIDs();
+		UseUUIDs			= plugin.config.getUseUUIDs();
 		maxAge				= plugin.config.getAutoCleanupMaxInactiveDays();
 	}
 	
