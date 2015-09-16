@@ -20,7 +20,7 @@ public class ItemStackSerializer
 			{
 				if(version[1].equals("8"))
 				{
-					if(version[2].equals("R1"))
+					/*if(version[2].equals("R1"))
 					{
 						serializer = new MC_1_8_R1();
 					}
@@ -31,11 +31,12 @@ public class ItemStackSerializer
 					else if(version[2].equals("R3"))
 					{
 						serializer = new MC_1_8_R3();
-					}
+					}*/
+					serializer = new MC_1_8();
 				}
 			}
 		}
-		catch(Exception e){}
+		catch(Exception e) {}
 		if(serializer == null)
 		{
 			usedVersion = 0;
@@ -43,17 +44,17 @@ public class ItemStackSerializer
 		}
 	}
 	
-	public byte[] Serialize(Inventory inv)
+	public byte[] serialize(Inventory inv)
 	{
 		return serializer.toByteArray(inv);
 	}
 	
-	public ItemStack[] Deserialize(byte[] data)
+	public ItemStack[] deserialize(byte[] data)
 	{
 		return serializer.toItemStack(data);
 	}
 	
-	public ItemStack[] Deserialize(byte[] data, int version)
+	public ItemStack[] deserialize(byte[] data, int version)
 	{
 		if(version == 0)
 		{

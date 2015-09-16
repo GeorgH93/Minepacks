@@ -31,11 +31,11 @@ import org.bukkit.inventory.ItemStack;
 public class Backpack
 {
 	private OfflinePlayer owner;
-	private HashMap<Player, Boolean> opend = new HashMap<Player, Boolean>();
+	private HashMap<Player, Boolean> opend = new HashMap<>();
 	private Inventory bp;
 	private int size, id;
 	private String title;
-	private boolean inwork;
+	private boolean inWork;
 	
 	public Backpack(OfflinePlayer Owner)
 	{
@@ -44,7 +44,7 @@ public class Backpack
 		id = -1;
 		title = String.format(MinePacks.BackpackTitle, Owner.getName());
 		bp = Bukkit.createInventory(null, size, title);
-		inwork = false;
+		inWork = false;
 	}
 	
 	public Backpack(OfflinePlayer Owner, int Size)
@@ -54,7 +54,7 @@ public class Backpack
 		bp = Bukkit.createInventory(null, Size, title);
 		size = Size;
 		id = -1;
-		inwork = false;
+		inWork = false;
 	}
 	
 	public Backpack(OfflinePlayer Owner, ItemStack[] backpack, int ID)
@@ -65,7 +65,7 @@ public class Backpack
 		bp = Bukkit.createInventory(null, size, title);
 		bp.setContents(backpack);
 		id = ID;
-		inwork = false;
+		inWork = false;
 	}
 	
 	public int getID()
@@ -117,7 +117,7 @@ public class Backpack
 	
 	public boolean inUse()
 	{
-		return inwork;
+		return inWork;
 	}
 	
 	public int getSize()
@@ -127,7 +127,7 @@ public class Backpack
 	
 	public List<ItemStack> setSize(int newSize)
 	{
-		inwork = true;
+		inWork = true;
 		for(Entry<Player, Boolean> e : opend.entrySet())
 		{
 			e.getKey().closeInventory();
@@ -168,7 +168,7 @@ public class Backpack
 		{
 			e.getKey().openInventory(bp);
 		}
-		inwork = false;
+		inWork = false;
 		return RemovedItems;
 	}
 	

@@ -26,6 +26,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
 
 public class SQLite extends SQL
@@ -47,7 +48,7 @@ public class SQLite extends SQL
 		UseUUIDSeparators = false;
 		UpdatePlayer = true;
 		
-		BuildQuerys(); // Build Querys
+		BuildQuerys(); // Build Query's
 		CheckDB(); // Check Database
 		if(UseUUIDs && UpdatePlayer)
 		{
@@ -140,7 +141,7 @@ public class SQLite extends SQL
 			{
 				if(res.isFirst())
 				{
-					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+					plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
 				}
 				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), plugin.getServer().getOnlineMode()) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
 			}
@@ -150,7 +151,7 @@ public class SQLite extends SQL
 				{
 					stmt.execute(string);
 				}
-				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"),converter.size()));
+				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"),converter.size()));
 			}
 		}
 		catch (SQLException e)

@@ -1,0 +1,76 @@
+# Minepacks Config File
+
+# Language settings
+# Language to use, will load the file: /plugins/Minepacks/lang/<your language setting>.yml
+Language: en
+# How outdated language files should be treated. Overwrite/Update
+# Overwrite = old language file will be replaced with new, use this only if you use the language files suplyed from the plugin
+# Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
+LanguageUpdateMode: Overwrite
+
+# Title to be showen for the opened inventory. Musst contain an %s (which will be replaced with the players name)
+BackpackTitle: "&b%s Backpack"
+# Defines how long a player have to wait till he can reopen his backpack.
+# Time is in seconds. Values < 1 disable the cooldown.
+command_cooldown: -1
+# Defines if the content of the backpack get droped on the death of a player.
+# If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
+drop_on_death: true
+
+# Controlls for the auto pickup on full inventory function
+full_inventory:
+  # If items should be collected to the backpack if the players inventory is full
+  collect_items: false
+  # Interval in seconds how often items around the player should be collected, increase it if it lags the server
+  check_interval: 1
+  # Radius in which items get collected, in meter/blocks, allow decimals
+  collect_radius: 1.5
+
+
+# Database settings
+Database:
+  # Database type. MySQL, SQLite or Files
+  Type: SQLite
+  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables sellection
+  UpdatePlayer: true
+  # Auto database cleanup settings
+  AutoCleanup:
+    # Defines the max amount of days backpacks will be stored. -1 to disable auto cleanup
+    MaxInactiveDays: -1
+  # If you would like to use UUIDs, it is recomendet not to change this setting unless you know what you are doing!
+  # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
+  # false: In offline mode or for minecraft version below 1.7.5
+  # Should be configured automaticaly based on your minecraft version and online mode settings
+  UseUUIDs: true
+  # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
+  # true: format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  # false: format: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  UseUUIDSeparators: false
+  # Settings only for MySQL
+  MySQL:
+    Host: localhost:3306
+    Database: minecraft
+    User: minecraft
+    Password: minecraft
+  # Tables settings for shared tables
+  Tables:
+    # Table names
+    User: backpack_players
+    Backpack: backpacks
+    # Field settings for the tables
+    Fields:
+      User:
+        Player_ID: player_id
+        Name: name
+        UUID: uuid
+      Backpack:
+        Owner_ID: owner
+        ItemStacks: itemstacks
+        Version: version
+        LastUpdate: lastupdate
+
+# Enables/Disables the auto-update function of the plugin.
+auto-update: true
+
+# Config File Version. Don't touch it!
+Version: 9

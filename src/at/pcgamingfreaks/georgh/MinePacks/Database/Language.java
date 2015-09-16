@@ -17,106 +17,24 @@
 
 package at.pcgamingfreaks.georgh.MinePacks.Database;
 
-import java.io.File;
-import java.io.IOException;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.google.common.io.Files;
-
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
-
-public class Language
+public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private MinePacks MP;
-	private FileConfiguration lang;
 	private static final int LANG_VERSION = 3;
 
-	public Language(MinePacks mp) 
+	public Language(JavaPlugin plugin)
 	{
-		MP = mp;
-		LoadFile();
+		super(plugin, LANG_VERSION);
 	}
 	
-	public String Get(String Option)
+	protected void doUpdate(int version)
 	{
-		return lang.getString("Language." + Option, "§cMessage not found!");
-	}
-	
-	public void Reload()
-	{
-		LoadFile();
-	}
-	
-	private void LoadFile()
-	{
-		File file = new File(MP.getDataFolder() + File.separator + "Lang", MP.config.GetLanguage()+".yml");
-		if(!file.exists())
+		switch(version)
 		{
-			ExtractLangFile(file);
+			case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
+			case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
+				break;
 		}
-		lang = YamlConfiguration.loadConfiguration(file);
-		UpdateLangFile(file);
-	}
-	
-	private void ExtractLangFile(File Target)
-	{
-		try
-		{
-			MP.saveResource("Lang" + File.separator + MP.config.GetLanguage() + ".yml", true);
-		}
-		catch(Exception ex)
-		{
-			try
-			{
-				File file_en = new File(MP.getDataFolder() + File.separator + "Lang", "en.yml");
-				if(!file_en.exists())
-				{
-					MP.saveResource("Lang" + File.separator + "en.yml", true);
-				}
-				Files.copy(file_en, Target);
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private boolean UpdateLangFile(File file)
-	{
-		if(lang.getInt("Version") != LANG_VERSION)
-		{
-			if(MP.config.GetLanguageUpdateMode().equalsIgnoreCase("overwrite"))
-			{
-				ExtractLangFile(file);
-				LoadFile();
-				MP.log.info(Get("Console.LangUpdated"));
-				return true;
-			}
-			else
-			{
-				switch(lang.getInt("Version"))
-				{
-					case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
-					case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
-						break;
-					default: MP.log.warning("Language File Version newer than expected!"); return false;
-				}
-				lang.set("Version", LANG_VERSION);
-				try 
-				{
-					lang.save(file);
-					MP.log.info(Get("Console.LangUpdated"));
-				}
-		  	  	catch (IOException e) 
-		  	  	{
-		  	  		e.printStackTrace();
-		  	  	}
-				return true;
-			}
-		}
-		return false;
 	}
 }

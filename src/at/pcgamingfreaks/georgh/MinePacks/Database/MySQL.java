@@ -26,6 +26,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
@@ -71,7 +72,7 @@ public class MySQL extends SQL
 			{
 				if(res.isFirst())
 				{
-					plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+					plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
 				}
 				converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + UUIDConverter.getUUIDFromName(res.getString(2), true, UseUUIDSeparators) + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
 			}
@@ -81,7 +82,7 @@ public class MySQL extends SQL
 				{
 					stmt.execute(string);
 				}
-				plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
+				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
 			}
 			res.close();
 			res = null;
@@ -92,7 +93,7 @@ public class MySQL extends SQL
 				{
 					if(res.isFirst())
 					{
-						plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+						plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
 					}
 					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
 				}
@@ -102,7 +103,7 @@ public class MySQL extends SQL
 					{
 						stmt.execute(string);
 					}
-					plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
+					plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
 				}
 			}
 			else
@@ -112,7 +113,7 @@ public class MySQL extends SQL
 				{
 					if(res.isFirst())
 					{
-						plugin.log.info(plugin.lang.Get("Console.UpdateUUIDs"));
+						plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
 					}
 					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("-", "") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
 				}
@@ -122,7 +123,7 @@ public class MySQL extends SQL
 					{
 						stmt.execute(string);
 					}
-					plugin.log.info(String.format(plugin.lang.Get("Console.UpdatedUUIDs"), converter.size()));
+					plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
 				}
 			}
 			res.close();
@@ -139,7 +140,7 @@ public class MySQL extends SQL
 		{
 			if(conn == null || conn.isClosed())
 			{
-				conn = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase() + "?autoReconnect=true&timeBetweenEvictionRunsMillis=300000&testWhileIdle=true", plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());
+				conn = DriverManager.getConnection("jdbc:mysql://" + plugin.config.getMySQLHost() + "/" + plugin.config.getMySQLDatabase() + "?autoReconnect=true&timeBetweenEvictionRunsMillis=300000&testWhileIdle=true", plugin.config.getMySQLUser(), plugin.config.getMySQLPassword());
 			}
 		}
 		catch (SQLException e)
@@ -206,7 +207,7 @@ public class MySQL extends SQL
 	}
 	
 	// Plugin Functions
-	public void UpdatePlayer(final Player player)
+	public void updatePlayer(final Player player)
 	{
 		if(!UpdatePlayer)
 		{
@@ -220,9 +221,9 @@ public class MySQL extends SQL
 				try
 				{
 					PreparedStatement ps;
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.GetMySQLHost() + "/" + plugin.config.GetMySQLDatabase(), plugin.config.GetMySQLUser(), plugin.config.GetMySQLPassword());;
+					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.getMySQLHost() + "/" + plugin.config.getMySQLDatabase(), plugin.config.getMySQLUser(), plugin.config.getMySQLPassword());;
 					ps = con.prepareStatement(Query_UpdatePlayerGet);
-					ps.setString(1, GetPlayerNameOrUUID(player));
+					ps.setString(1, getPlayerNameOrUUID(player));
 					ResultSet rs = ps.executeQuery();
 					if(rs.next())
 					{

@@ -33,7 +33,7 @@ public class Database
 	protected boolean UseUUIDs, UseUUIDSeparators;
 	protected long maxAge;
 	
-	private HashSet<Backpack> backpacks = new HashSet<Backpack>();
+	private HashSet<Backpack> backpacks = new HashSet<>();
 	protected ItemStackSerializer itsSerializer = new ItemStackSerializer();
 	
 	public Database(MinePacks mp)
@@ -41,12 +41,12 @@ public class Database
 		plugin = mp;
 		UseUUIDSeparators	= plugin.config.getUseUUIDSeparators();
 		UseUUIDs			= plugin.config.UseUUIDs();
-		maxAge				= plugin.config.GetAutoCleanupMaxInactiveDays();
+		maxAge				= plugin.config.getAutoCleanupMaxInactiveDays();
 	}
 	
-	public void Close() { }
+	public void close() { }
 	
-	protected String GetPlayerNameOrUUID(OfflinePlayer player)
+	protected String getPlayerNameOrUUID(OfflinePlayer player)
 	{
 		if(UseUUIDs)
 		{
@@ -67,9 +67,10 @@ public class Database
 	
 	public static Database getDatabase(MinePacks Plugin)
 	{
-		switch(Plugin.config.GetDatabaseType().toLowerCase())
+		switch(Plugin.config.getDatabaseType().toLowerCase())
 		{
 			case "mysql": return new MySQL(Plugin);
+			case "flat":
 			case "file":
 			case "files": return new Files(Plugin);
 			case "sqlite":
@@ -101,12 +102,12 @@ public class Database
 		return null;
 	}
 	
-	public Backpack getBackpack(OfflinePlayer player, boolean loadedonly)
+	public Backpack getBackpack(OfflinePlayer player, boolean loadedOnly)
 	{
 		Backpack lbp = findBackpack(player);
-		if(lbp == null && !loadedonly)
+		if(lbp == null && !loadedOnly)
 		{
-			lbp = LoadBackpack(player);
+			lbp = loadBackpack(player);
 			if(lbp == null)
 			{
 				lbp = new Backpack(player);
@@ -123,9 +124,9 @@ public class Database
 	
 	// DB Functions
 	
-	public void UpdatePlayer(Player player) {}
+	public void updatePlayer(Player player) {}
 	
-	public void SaveBackpack(Backpack backpack) {}
+	public void saveBackpack(Backpack backpack) {}
 	
-	public Backpack LoadBackpack(OfflinePlayer player) { return null; }
+	public Backpack loadBackpack(OfflinePlayer player) { return null; }
 }

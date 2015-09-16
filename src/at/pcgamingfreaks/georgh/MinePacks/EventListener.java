@@ -17,7 +17,6 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,16 +33,16 @@ public class EventListener implements Listener
 	private MinePacks plugin;
 	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther;
 	
-	private String Message_OwnBPClose, Message_PlayerBPClose;
+	private String message_OwnBPClose, message_PlayerBPClose;
 	
 	public EventListener(MinePacks mp)
 	{
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();
-		Message_OwnBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.OwnBackPackClose"));
-		Message_PlayerBPClose = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Ingame.PlayerBackPackClose"));
-		showCloseMessageOther = Message_PlayerBPClose != null && plugin.config.getShowCloseMessage();
-		showCloseMessageOwn = Message_OwnBPClose != null && plugin.config.getShowCloseMessage();
+		message_OwnBPClose = plugin.lang.getTranslated("Ingame.OwnBackPackClose");
+		message_PlayerBPClose = plugin.lang.getTranslated("Ingame.PlayerBackPackClose");
+		showCloseMessageOther = message_PlayerBPClose != null && plugin.config.getShowCloseMessage();
+		showCloseMessageOwn = message_OwnBPClose != null && plugin.config.getShowCloseMessage();
 	}
 	
 	@EventHandler
@@ -53,16 +52,16 @@ public class EventListener implements Listener
 		if (drop_on_death && !player.hasPermission("backpack.KeepOnDeath"))
 		{
 			Backpack backpack = plugin.DB.getBackpack(player, false);
-			Inventory bpinv = backpack.getBackpack();
-			for (ItemStack i : bpinv.getContents())
+			Inventory backpackInventory = backpack.getBackpack();
+			for (ItemStack i : backpackInventory.getContents())
 			{
 			    if (i != null)
 			    {
 			        player.getWorld().dropItemNaturally(player.getLocation(), i);
-			        bpinv.remove(i);
+			        backpackInventory.remove(i);
 			    }
 			}
-			plugin.DB.SaveBackpack(backpack);
+			plugin.DB.saveBackpack(backpack);
 		}
 	}
 	
@@ -77,21 +76,21 @@ public class EventListener implements Listener
 				Player closer = (Player)event.getPlayer();
 				if(backpack.canEdit(closer))
 				{
-					plugin.DB.SaveBackpack(backpack);
+					plugin.DB.saveBackpack(backpack);
 				}
 				backpack.Close(closer);
 				if(event.getPlayer().getName().equals(backpack.getOwner().getName()))
 				{
 					if(showCloseMessageOwn)
 					{
-						closer.sendMessage(Message_OwnBPClose);
+						closer.sendMessage(message_OwnBPClose);
 					}
 				}
 				else
 				{
 					if(showCloseMessageOther)
 					{
-						closer.sendMessage(String.format(Message_PlayerBPClose, backpack.getOwner().getName()));
+						closer.sendMessage(String.format(message_PlayerBPClose, backpack.getOwner().getName()));
 					}
 				}
 			}
@@ -114,7 +113,7 @@ public class EventListener implements Listener
 	@EventHandler
 	public void PlayerLoginEvent(PlayerJoinEvent event) 
 	{
-		plugin.DB.UpdatePlayer(event.getPlayer());
+		plugin.DB.updatePlayer(event.getPlayer());
 	}
 	
 	@EventHandler

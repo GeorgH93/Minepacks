@@ -35,10 +35,10 @@ public class MinePacks extends JavaPlugin
 {
 	public final Logger log = getLogger();
 	public final Config config = new Config(this);
-	public Language lang;
+	public final Language lang = new Language(this);
 	public Database DB;
 	
-	public HashMap<Player, Long> cooldowns = new HashMap<Player, Long>();
+	public HashMap<Player, Long> cooldowns = new HashMap<>();
 	
 	public static String BackpackTitle;
 	public String Message_InvalidBackpack;
@@ -46,7 +46,7 @@ public class MinePacks extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		lang = new Language(this);
+		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		getServer().getPluginManager().registerEvents(new EventListener(this), this);
@@ -56,22 +56,22 @@ public class MinePacks extends JavaPlugin
 			(new ItemsCollector(this)).runTaskTimerAsynchronously(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
 		
-		BackpackTitle = config.getBPTitle();
-		Message_InvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + lang.Get("Ingame.InvalidBackpack"));
+		BackpackTitle = (config.getBPTitle().contains("%s") ? config.getBPTitle() : ChatColor.AQUA + "%s Backpack");
+		Message_InvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
-		log.info(lang.Get("Console.Enabled"));
+		log.info(lang.get("Console.Enabled"));
 	}
 
 	@Override
 	public void onDisable()
 	{
 		getServer().getScheduler().cancelTasks(this);
-		DB.Close();
+		DB.close();
 		if(config.getAutoUpdate())
 		{
 			new Bukkit_Updater(this, 83445, this.getFile(), UpdateType.DEFAULT, true);
 		}
-		log.info(lang.Get("Console.Disabled"));
+		log.info(lang.get("Console.Disabled"));
 	}
 	
 	public void OpenBackpack(Player opener, OfflinePlayer owner, boolean editable)
@@ -91,41 +91,13 @@ public class MinePacks extends JavaPlugin
 	
 	public int getBackpackPermSize(Player player)
 	{
-		if(player.hasPermission("backpack.size.9"))
+		for(int i = 9; i > 1; i--)
 		{
-			return 81;
+			if(player.hasPermission("backpack.size." + i))
+			{
+				return i * 9;
+			}
 		}
-		else if(player.hasPermission("backpack.size.8"))
-		{
-			return 72;
-		}
-		else if(player.hasPermission("backpack.size.7"))
-		{
-			return 63;
-		}
-		else if(player.hasPermission("backpack.size.6"))
-		{
-			return 54;
-		}
-		else if(player.hasPermission("backpack.size.5"))
-		{
-			return 45;
-		}
-		else if(player.hasPermission("backpack.size.4"))
-		{
-			return 36;
-		}
-		else if(player.hasPermission("backpack.size.3"))
-		{
-			return 27;
-		}
-		else if(player.hasPermission("backpack.size.2"))
-		{
-			return 18;
-		}
-		else
-		{
-			return 9;
-		}
+		return 9;
 	}
 }

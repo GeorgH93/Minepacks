@@ -54,7 +54,7 @@ public class SQL extends Database
 		UpdatePlayer		= plugin.config.getUpdatePlayer();
 	}
 	
-	public void Close()
+	public void close()
 	{
 		try
 		{
@@ -107,12 +107,12 @@ public class SQL extends Database
 	protected void CheckDB() { }
 	
 	// Plugin Functions
-	public void UpdatePlayer(final Player player)
+	public void updatePlayer(final Player player)
 	{
 		try
 		{
 			PreparedStatement ps = GetConnection().prepareStatement(Query_UpdatePlayerGet);
-			ps.setString(1, GetPlayerNameOrUUID(player));
+			ps.setString(1, getPlayerNameOrUUID(player));
 			ResultSet rs = ps.executeQuery();
 			if(rs.next())
 			{
@@ -147,7 +147,7 @@ public class SQL extends Database
 	    }
 	}
 
-	public void SaveBackpack(Backpack backpack)
+	public void saveBackpack(Backpack backpack)
 	{
 		try
 		{
@@ -156,7 +156,7 @@ public class SQL extends Database
 			if(backpack.getID() <= 0)
 			{
 				ps = GetConnection().prepareStatement(Query_GetPlayerID);
-				ps.setString(1, GetPlayerNameOrUUID(backpack.getOwner()));
+				ps.setString(1, getPlayerNameOrUUID(backpack.getOwner()));
 				ResultSet rs = ps.executeQuery();
 				if(rs.next())
 			    {
@@ -171,7 +171,7 @@ public class SQL extends Database
 				ps.close();
 				ps = GetConnection().prepareStatement(Query_InsertBP);
 				ps.setInt(1, backpack.getID());
-				ps.setBytes(2, itsSerializer.Serialize(backpack.getBackpack()));
+				ps.setBytes(2, itsSerializer.serialize(backpack.getBackpack()));
 				ps.setInt(3, itsSerializer.getUsedVersion());
 				ps.execute();
 				ps.close();
@@ -180,7 +180,7 @@ public class SQL extends Database
 			else
 			{
 				ps = GetConnection().prepareStatement(Query_UpdateBP);
-				ps.setBytes(1, itsSerializer.Serialize(backpack.getBackpack()));
+				ps.setBytes(1, itsSerializer.serialize(backpack.getBackpack()));
 				ps.setInt(2, itsSerializer.getUsedVersion());
 				ps.setInt(3, backpack.getID());
 			}
@@ -193,20 +193,20 @@ public class SQL extends Database
 		}
 	}
 
-	public Backpack LoadBackpack(OfflinePlayer player)
+	public Backpack loadBackpack(OfflinePlayer player)
 	{
 		try
 		{
 			PreparedStatement ps = null; // Statement Variable
 			ps = GetConnection().prepareStatement(Query_GetBP);
-			ps.setString(1, GetPlayerNameOrUUID(player));
+			ps.setString(1, getPlayerNameOrUUID(player));
 			ResultSet rs = ps.executeQuery();
 			if(!rs.next())
 			{
 				return null;
 			}
 			int bpid = rs.getInt(1);
-			ItemStack[] its = itsSerializer.Deserialize(rs.getBytes(2), rs.getInt(3));
+			ItemStack[] its = itsSerializer.deserialize(rs.getBytes(2), rs.getInt(3));
 			rs.close();
 			ps.close();
 			return new Backpack(player, its, bpid);

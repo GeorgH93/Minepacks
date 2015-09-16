@@ -17,191 +17,61 @@
 
 package at.pcgamingfreaks.georgh.MinePacks.Database;
 
-import java.io.File;
-import java.io.IOException;
+import at.pcgamingfreaks.Bukkit.Configuration;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
-
-public class Config
+public class Config extends Configuration
 {
-	private MinePacks MP;
-	private FileConfiguration config;
-	private static final int CONFIG_VERSION = 8;
+	private static final int CONFIG_VERSION = 9;
 	
-	public Config(MinePacks mp)
+	public Config(JavaPlugin plugin)
 	{
-		MP = mp;
-		LoadConfig();
+		super(plugin, CONFIG_VERSION, 9);
 	}
-	
-	public void Reload()
+
+	@Override
+	protected boolean newConfigCreated()
 	{
-		LoadConfig();
-	}
-	
-	private void LoadConfig()
-	{
-		File file = new File(MP.getDataFolder(), "config.yml");
-		if(!file.exists())
-		{
-			NewConfig(file);
-		}
-		else
-		{
-			config = YamlConfiguration.loadConfiguration(file);
-			UpdateConfig(file);
-		}
-	}
-	
-	private boolean UUIDComp()
-	{
-		try
-		{
-			String[] GameVersion = Bukkit.getBukkitVersion().split("-");
-			GameVersion = GameVersion[0].split("\\.");
-			if(Integer.parseInt(GameVersion[1]) > 7 || (Integer.parseInt(GameVersion[1]) == 7 && Integer.parseInt(GameVersion[2]) > 5))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		catch(Exception e)
-		{
-			return false;
-		}
-	}
-	
-	private void NewConfig(File file)
-	{
-		config = new YamlConfiguration();
-		config.set("BackpackTitle", ChatColor.AQUA + "%s Backpack");
-		config.set("command_cooldown", -1);
-		config.set("drop_on_death", true);
-		config.set("full_inventory.collect_items", false);
-		config.set("full_inventory.check_interval", 1); // in seconds
-		config.set("full_inventory.collect_radius", 1); // in blocks
-		config.set("Language", "en");
-		config.set("LanguageUpdateMode","Overwrite");
-		config.set("Database.Type","SQLite");
-		config.set("Database.UpdatePlayer", true);
-		config.set("Database.AutoCleanup.MaxInactiveDays", -1);
-		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && UUIDComp());
-		config.set("Database.UseUUIDSeparators", false);
-		config.set("Database.MySQL.Host",		"localhost:3306");
-		config.set("Database.MySQL.Database",	"minecraft");
-		config.set("Database.MySQL.User",		"minecraft");
-		config.set("Database.MySQL.Password",	"minecraft");
-		config.set("Database.Tables.User",		"backpack_players");
-		config.set("Database.Tables.Backpack",	"backpacks");
-		config.set("Database.Tables.Fields.User.Player_ID",			"player_id");
-		config.set("Database.Tables.Fields.User.Name",				"name");
-		config.set("Database.Tables.Fields.User.UUID",				"uuid");
-		config.set("Database.Tables.Fields.Backpack.Owner_ID",		"owner");
-		config.set("Database.Tables.Fields.Backpack.ItemStacks",	"itemstacks");
-		config.set("Database.Tables.Fields.Backpack.Version",		"version");
-		config.set("Database.Tables.Fields.Backpack.LastUpdate",	"lastupdate");
-		config.set("auto-update", true);
-		config.set("Version",CONFIG_VERSION);
-		
-		try 
-		{
-			config.save(file);
-			MP.log.info("Config File has been generated.");
-		}
-  	  	catch (IOException e) 
-  	  	{
-  	  		e.printStackTrace();
-  	  	}
-	}
-	
-	private boolean UpdateConfig(File file)
-	{
-		switch(config.getInt("Version"))
-		{
-			case 1:
-				config.set("Database.Tables.Fields.User.Player_ID", "player_id");
-				config.set("Database.Tables.Fields.User.Name", "name");
-				config.set("Database.Tables.Fields.User.UUID", "uuid");
-				config.set("Database.Tables.Fields.Backpack.Owner_ID", "owner");
-				config.set("Database.Tables.Fields.Backpack.ItemStacks", "itemstacks");
-				config.set("Database.Tables.Fields.Backpack.Version", "version");
-			case 2:
-				config.set("Database.UseUUIDSeparators", false);
-			case 3:
-				config.set("auto-update", true);
-			case 4:
-				config.set("command_cooldown", -1);
-			case 5:
-				config.set("Database.AutoCleanup.MaxInactiveDays", -1);
-				config.set("Database.Tables.Fields.Backpack.LastUpdate", "lastupdate");
-			case 6:
-				config.set("show_close_message", true);
-			case 7:
-				config.set("full_inventory.collect_items", false);
-				config.set("full_inventory.check_interval", 1); // in seconds
-				config.set("full_inventory.collect_radius", 1.5); // in blocks
-				break;
-			case CONFIG_VERSION: return false;
-			default: MP.log.info("Config File Version newer than expected!"); return false;
-		}
-		config.set("Version", CONFIG_VERSION);
-		try 
-		{
-			config.save(file);
-			MP.log.info("Config File has been updated.");
-		}
-  	  	catch (IOException e) 
-  	  	{
-  	  		e.printStackTrace();
-  	  		return false;
-  	  	}
+		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 		return true;
 	}
 	
-	public String GetLanguage()
+	@Override
+	protected void doUpdate(int version)
 	{
-		return config.getString("Language");
+		// Nothing to update yet
 	}
-	
-	public String GetLanguageUpdateMode()
-	{
-		return config.getString("LanguageUpdateMode");
-	}
-	
-	public int GetAutoCleanupMaxInactiveDays()
+
+	// Getter
+	public int getAutoCleanupMaxInactiveDays()
 	{
 		return config.getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
 	
-	public String GetDatabaseType()
+	public String getDatabaseType()
 	{
 		return config.getString("Database.Type");
 	}
 	
-	public String GetMySQLHost()
+	public String getMySQLHost()
 	{
 		return config.getString("Database.MySQL.Host");
 	}
 	
-	public String GetMySQLDatabase()
+	public String getMySQLDatabase()
 	{
 		return config.getString("Database.MySQL.Database");
 	}
 	
-	public String GetMySQLUser()
+	public String getMySQLUser()
 	{
 		return config.getString("Database.MySQL.User");
 	}
 	
-	public String GetMySQLPassword()
+	public String getMySQLPassword()
 	{
 		return config.getString("Database.MySQL.Password");
 	}
@@ -242,7 +112,7 @@ public class Config
 	
 	public String getBPTitle()
 	{
-		return config.getString("BackpackTitle", "%s Backpack");
+		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitle", "%s Backpack"));
 	}
 	
 	public boolean getDropOnDeath()

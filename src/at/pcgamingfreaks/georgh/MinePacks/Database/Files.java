@@ -25,6 +25,7 @@ import java.util.Date;
 
 import javax.swing.filechooser.FileFilter;
 
+import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
@@ -42,6 +43,7 @@ public class Files extends Database
 		saveFolder = new File(plugin.getDataFolder(), "backpacks");
 		if(!saveFolder.exists())
 		{
+			//noinspection ResultOfMethodCallIgnored
 			saveFolder.mkdirs();
 		}
 		else
@@ -50,6 +52,7 @@ public class Files extends Database
 		}
 	}
 	
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private void CheckFiles()
 	{
 		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
@@ -59,7 +62,7 @@ public class Files extends Database
 			if(maxAge > 0 && (new Date()).getTime() - file.lastModified() > maxAge) // Check if the file is older then x days
 			{
 				file.delete(); // Delete old files
-				continue; // We don't have to check if the file name is correct cause we have the delted the file
+				continue; // We don't have to check if the file name is correct cause we have the deleted the file
 			}
 			len = file.getName().length() - ext.length();
 			if(UseUUIDs) // Use UUID-based saving
@@ -90,7 +93,7 @@ public class Files extends Database
 			{
 				if(len > 16) // We only have to rename it if it's name is more than 16 chars (minecraft max player name length)
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + ext));
+					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + ext))
 				}
 			}
 		}
@@ -98,18 +101,18 @@ public class Files extends Database
 	
 	private String getFileName(OfflinePlayer player)
 	{
-		return GetPlayerNameOrUUID(player) + ext;
+		return getPlayerNameOrUUID(player) + ext;
 	}
 	
 	// DB Functions
-	public void SaveBackpack(Backpack backpack)
+	public void saveBackpack(Backpack backpack)
 	{
 		File save = new File(saveFolder, getFileName(backpack.getOwner()));
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(save);
 			fos.write(itsSerializer.getUsedVersion());
-			fos.write(itsSerializer.Serialize(backpack.getBackpack()));
+			fos.write(itsSerializer.serialize(backpack.getBackpack()));
 			fos.flush();
 			fos.close();
 		}
@@ -119,7 +122,7 @@ public class Files extends Database
 		}
 	}
 	
-	public Backpack LoadBackpack(OfflinePlayer player)
+	public Backpack loadBackpack(OfflinePlayer player)
 	{
 		File save = new File(saveFolder, getFileName(player));
 		try
@@ -129,9 +132,10 @@ public class Files extends Database
 				FileInputStream fis = new FileInputStream(save);
 				int v = fis.read();
 				byte[] out = new byte[(int)(save.length()-1)];
+				//noinspection ResultOfMethodCallIgnored
 				fis.read(out);
 				fis.close();
-				return new Backpack(player, itsSerializer.Deserialize(out, v), -1);
+				return new Backpack(player, itsSerializer.deserialize(out, v), -1);
 			}
 		}
 		catch(Exception e)
@@ -174,11 +178,7 @@ public class Files extends Database
 		@Override
 		public boolean accept(File dir, String name)
 		{
-			if ((name.endsWith(extension) && (name.charAt(name.length() - extension.length() - 1)) == '.'))
-    		{
-    			return true;
-    		}
-			return false;
+			return (name.endsWith(extension) && (name.charAt(name.length() - extension.length() - 1)) == '.');
 		}
 	}
 }

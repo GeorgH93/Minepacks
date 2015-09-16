@@ -33,18 +33,17 @@ public class OnCommand implements CommandExecutor
 {
 	private MinePacks plugin;
 	
-	public String Message_NotFromConsole, Message_NoPermission, Message_IvalidBackpack, Message_BackpackCleaned, Message_Cooldown;
+	public String Message_NotFromConsole, Message_NoPermission, Message_BackpackCleaned, Message_Cooldown;
 	
 	public int cooldown;
 	
 	public OnCommand(MinePacks mp) 
 	{
 		plugin = mp;
-		Message_NotFromConsole = ChatColor.translateAlternateColorCodes('&', plugin.lang.Get("Console.NotFromConsole"));
-		Message_NoPermission = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.NoPermission"));
-		Message_IvalidBackpack = ChatColor.translateAlternateColorCodes('&', ChatColor.RED + plugin.lang.Get("Ingame.IvalidBackpack"));
-		Message_BackpackCleaned = ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.BackpackCleaned"));
-		Message_Cooldown = ChatColor.translateAlternateColorCodes('&', ChatColor.DARK_GREEN + plugin.lang.Get("Ingame.Cooldown"));
+		Message_NotFromConsole = plugin.lang.getTranslated("Console.NotFromConsole");
+		Message_NoPermission = ChatColor.RED + plugin.lang.getTranslated("Ingame.NoPermission");
+		Message_BackpackCleaned = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.BackpackCleaned");
+		Message_Cooldown = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.Cooldown");
 		cooldown = plugin.config.getCommandCooldown();
 	}
 
@@ -52,7 +51,7 @@ public class OnCommand implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) 
 	{
-		Player player = null;
+		Player player;
 		if (sender instanceof Player) 
 		{
 			player = (Player) sender;
@@ -71,18 +70,18 @@ public class OnCommand implements CommandExecutor
 				{
 					if(plugin.cooldowns.containsKey(player))
 					{
-						if(((new Date()).getTime() - plugin.cooldowns.get(player).longValue()) < cooldown)
+						if(((new Date()).getTime() - plugin.cooldowns.get(player)) < cooldown)
 						{
 							sender.sendMessage(Message_Cooldown);
 							return true;
 						}
 					}
-					plugin.cooldowns.put(player, new Long((new Date()).getTime()));
+					plugin.cooldowns.put(player, (new Date()).getTime());
 				}
 				Backpack bp = plugin.DB.getBackpack(player, false);
 				if(bp == null)
 				{
-					player.sendMessage(Message_IvalidBackpack);
+					player.sendMessage(plugin.Message_InvalidBackpack);
 					return true;
 				}
 				int size = plugin.getBackpackPermSize(player);
@@ -106,7 +105,7 @@ public class OnCommand implements CommandExecutor
 		}
 		else
 		{
-			// Subcommands
+			// Sub-commands
 			switch(args[0].toLowerCase())
 			{
 				case "help": // Shows the help for the plugin
@@ -115,18 +114,18 @@ public class OnCommand implements CommandExecutor
 					if(player.hasPermission("backpack"))
 					{
 						player.sendMessage(ChatColor.GOLD + "Minepacks Help:");
-						player.sendMessage(ChatColor.AQUA + "/backpack" + ChatColor.WHITE + " - " + plugin.lang.Get("Description.Backpack"));
+						player.sendMessage(ChatColor.AQUA + "/backpack" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.Backpack"));
 						if(player.hasPermission("backpack.clean"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack clean" + ChatColor.WHITE + " - " + plugin.lang.Get("Description.Clean"));
+							player.sendMessage(ChatColor.AQUA + "/backpack clean" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.Clean"));
 						}
 						if(player.hasPermission("backpack.clean.other"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack clean <playername>" + ChatColor.WHITE + " - " + plugin.lang.Get("Description.CleanOther"));
+							player.sendMessage(ChatColor.AQUA + "/backpack clean <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.CleanOther"));
 						}
 						if(player.hasPermission("backpack.other"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack <playername>" + ChatColor.WHITE + " - " + plugin.lang.Get("Description.View"));
+							player.sendMessage(ChatColor.AQUA + "/backpack <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.View"));
 						}
 					}
 					else
@@ -146,7 +145,7 @@ public class OnCommand implements CommandExecutor
 						}
 						Backpack BP = plugin.DB.getBackpack(OP, false);
 						BP.getBackpack().clear();
-						plugin.DB.SaveBackpack(BP);
+						plugin.DB.saveBackpack(BP);
 						player.sendMessage(Message_BackpackCleaned);
 					}
 					else
