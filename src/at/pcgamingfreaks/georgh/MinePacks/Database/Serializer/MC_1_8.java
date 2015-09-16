@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.georgh.MinePacks.Database.Serializer;
 
-import at.pcgamingfreaks.Bukkit.Refactor;
+import at.pcgamingfreaks.Bukkit.Reflection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,15 +27,15 @@ import java.lang.reflect.Method;
 
 public class MC_1_8 extends Base
 {
-	Class NBTTagCompound = Refactor.getNMSClass("NBTTagCompound"), NBTCompressedStreamTools = Refactor.getNMSClass("NBTCompressedStreamTools");
-	Class CraftItemStack = Refactor.getOBCClass("inventory.CraftItemStack"), NMSItemStack = Refactor.getNMSClass("ItemStack");
+	Class NBTTagCompound = Reflection.getNMSClass("NBTTagCompound"), NBTCompressedStreamTools = Reflection.getNMSClass("NBTCompressedStreamTools");
+	Class CraftItemStack = Reflection.getOBCClass("inventory.CraftItemStack"), NMSItemStack = Reflection.getNMSClass("ItemStack");
 
-	Method setInt = Refactor.getMethod(NBTTagCompound, "setInt", String.class, int.class), a = Refactor.getMethod(NBTCompressedStreamTools, "a", NBTTagCompound, OutputStream.class);
-	Method set = Refactor.getMethod(NBTTagCompound, "set", String.class, Refactor.getNMSClass("NBTBase")), save = Refactor.getMethod(NMSItemStack, "save", NBTTagCompound);
-	Method asNMSCopy = Refactor.getMethod(CraftItemStack, "asNMSCopy", ItemStack.class), getInt = Refactor.getMethod(NBTTagCompound, "getInt", String.class);
-	Method hasKeyOfType = Refactor.getMethod(NBTTagCompound, "hasKeyOfType", String.class, int.class), getCompound = Refactor.getMethod(NBTTagCompound, "getCompound", String.class);
-	Method createStack = Refactor.getMethod(NMSItemStack, "createStack", NBTTagCompound), asBukkitCopy = Refactor.getMethod(CraftItemStack, "asBukkitCopy", NMSItemStack);
-	Method ain = Refactor.getMethod(NBTCompressedStreamTools, "a", InputStream.class);
+	Method setInt = Reflection.getMethod(NBTTagCompound, "setInt", String.class, int.class), a = Reflection.getMethod(NBTCompressedStreamTools, "a", NBTTagCompound, OutputStream.class);
+	Method set = Reflection.getMethod(NBTTagCompound, "set", String.class, Reflection.getNMSClass("NBTBase")), save = Reflection.getMethod(NMSItemStack, "save", NBTTagCompound);
+	Method asNMSCopy = Reflection.getMethod(CraftItemStack, "asNMSCopy", ItemStack.class), getInt = Reflection.getMethod(NBTTagCompound, "getInt", String.class);
+	Method hasKeyOfType = Reflection.getMethod(NBTTagCompound, "hasKeyOfType", String.class, int.class), getCompound = Reflection.getMethod(NBTTagCompound, "getCompound", String.class);
+	Method createStack = Reflection.getMethod(NMSItemStack, "createStack", NBTTagCompound), asBukkitCopy = Reflection.getMethod(CraftItemStack, "asBukkitCopy", NMSItemStack);
+	Method ain = Reflection.getMethod(NBTCompressedStreamTools, "a", InputStream.class);
 
 	public byte[] toByteArray(Inventory inv)
 	{
