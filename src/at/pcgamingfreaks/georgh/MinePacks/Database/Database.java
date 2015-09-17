@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
-import at.pcgamingfreaks.georgh.MinePacks.Database.Serializer.ItemStackSerializer;
+import at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer.ItemStackSerializer;
 
 public class Database
 {

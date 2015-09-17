@@ -1,4 +1,4 @@
-package at.pcgamingfreaks.georgh.MinePacks.Database.Serializer;
+package at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -6,37 +6,27 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemStackSerializer
 {
-	Base serializer, base;
+	Base serializer, base = new Base();
 	int usedVersion = 1;
 	
 	public ItemStackSerializer()
 	{
 		String name = Bukkit.getServer().getClass().getPackage().getName();
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-		base = new Base();
 		try
 		{
 			if(version[0].equals("1"))
 			{
 				if(version[1].equals("8"))
 				{
-					/*if(version[2].equals("R1"))
-					{
-						serializer = new MC_1_8_R1();
-					}
-					else if(version[2].equals("R2"))
-					{
-						serializer = new MC_1_8_R2();
-					}
-					else if(version[2].equals("R3"))
-					{
-						serializer = new MC_1_8_R3();
-					}*/
 					serializer = new MC_1_8();
 				}
 			}
 		}
-		catch(Exception e) {}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		if(serializer == null)
 		{
 			usedVersion = 0;
@@ -48,19 +38,20 @@ public class ItemStackSerializer
 	{
 		return serializer.toByteArray(inv);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public ItemStack[] deserialize(byte[] data)
 	{
-		return serializer.toItemStack(data);
+		return deserialize(data, usedVersion);
 	}
 	
 	public ItemStack[] deserialize(byte[] data, int version)
 	{
-		if(version == 0)
+		switch(version)
 		{
-			return base.toItemStack(data);
+			case 0: return base.toItemStack(data);
+			default: return serializer.toItemStack(data);
 		}
-		return serializer.toItemStack(data);
 	}
 	
 	public int getUsedVersion()

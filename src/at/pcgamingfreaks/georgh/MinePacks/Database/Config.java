@@ -77,22 +77,22 @@ public class Config extends Configuration
 	
 	public String getDatabaseType()
 	{
-		return config.getString("Database.Type");
+		return config.getString("Database.Type", "sqlite");
 	}
 	
 	public String getMySQLHost()
 	{
-		return config.getString("Database.MySQL.Host");
+		return config.getString("Database.MySQL.Host", "localhost");
 	}
 	
 	public String getMySQLDatabase()
 	{
-		return config.getString("Database.MySQL.Database");
+		return config.getString("Database.MySQL.Database", "minecraft");
 	}
 	
 	public String getMySQLUser()
 	{
-		return config.getString("Database.MySQL.User");
+		return config.getString("Database.MySQL.User", "minecraft");
 	}
 	
 	public String getMySQLPassword()
@@ -122,12 +122,12 @@ public class Config extends Configuration
 	
 	public boolean getUseUUIDs()
 	{
-		return config.getBoolean("Database.UseUUIDs");
+		return config.getBoolean("Database.UseUUIDs", true);
 	}
 	
 	public boolean getUseUUIDSeparators()
 	{
-		return config.getBoolean("Database.UseUUIDSeparators");
+		return config.getBoolean("Database.UseUUIDSeparators", false);
 	}
 	
 	public String getBPTitle()

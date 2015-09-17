@@ -31,41 +31,36 @@ import org.bukkit.inventory.ItemStack;
 public class Backpack
 {
 	private OfflinePlayer owner;
-	private HashMap<Player, Boolean> opend = new HashMap<>();
+	private HashMap<Player, Boolean> opened = new HashMap<>();
 	private Inventory bp;
 	private int size, id;
 	private String title;
 	private boolean inWork;
 	
-	public Backpack(OfflinePlayer Owner)
+	public Backpack(OfflinePlayer owner)
 	{
-		owner = Owner;
-		size = 9;
-		id = -1;
-		title = String.format(MinePacks.BackpackTitle, Owner.getName());
-		bp = Bukkit.createInventory(null, size, title);
-		inWork = false;
+		this(owner, 9);
 	}
 	
-	public Backpack(OfflinePlayer Owner, int Size)
+	public Backpack(OfflinePlayer owner, int size)
+	{
+		this(owner, size, -1);
+	}
+
+	public Backpack(OfflinePlayer Owner, int Size, int ID)
 	{
 		owner = Owner;
 		title = String.format(MinePacks.BackpackTitle, Owner.getName());
 		bp = Bukkit.createInventory(null, Size, title);
 		size = Size;
-		id = -1;
+		id = ID;
 		inWork = false;
 	}
 	
-	public Backpack(OfflinePlayer Owner, ItemStack[] backpack, int ID)
+	public Backpack(OfflinePlayer owner, ItemStack[] backpack, int ID)
 	{
-		owner = Owner;
-		size = backpack.length;
-		title = String.format(MinePacks.BackpackTitle, Owner.getName());
-		bp = Bukkit.createInventory(null, size, title);
+		this(owner, backpack.length, ID);
 		bp.setContents(backpack);
-		id = ID;
-		inWork = false;
 	}
 	
 	public int getID()
@@ -85,34 +80,23 @@ public class Backpack
 	
 	public void Open(Player p, boolean editable)
 	{
-		opend.put(p, editable);
+		opened.put(p, editable);
 		p.openInventory(bp);
 	}
 	
 	public void Close(Player p)
 	{
-		opend.remove(p);
+		opened.remove(p);
 	}
 	
 	public boolean isOpen()
 	{
-		if(opend.isEmpty())
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return !opened.isEmpty();
 	}
 	
 	public boolean canEdit(Player p)
 	{
-		if(opend.containsKey(p))
-		{
-			return opend.get(p);
-		}
-		return false;
+		return opened.containsKey(p) && opened.get(p);
 	}
 	
 	public boolean inUse()
@@ -128,23 +112,23 @@ public class Backpack
 	public List<ItemStack> setSize(int newSize)
 	{
 		inWork = true;
-		for(Entry<Player, Boolean> e : opend.entrySet())
+		for(Entry<Player, Boolean> e : opened.entrySet())
 		{
 			e.getKey().closeInventory();
 		}
-		List<ItemStack> RemovedItems = new ArrayList<ItemStack>();
-		ItemStack[] itsa;
+		List<ItemStack> RemovedItems = new ArrayList<>();
+		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{
 			int count = 0;
-			itsa = new ItemStack[newSize];
+			itemStackArray = new ItemStack[newSize];
 			for(ItemStack i : bp.getContents())
 			{
 				if(i != null)
 				{
 					if(count < newSize)
 					{
-						itsa[count] = i;
+						itemStackArray[count] = i;
 						count++;
 					}
 					else
@@ -156,15 +140,15 @@ public class Backpack
 		}
 		else
 		{
-			itsa = bp.getContents();
+			itemStackArray = bp.getContents();
 		}
 		bp = Bukkit.createInventory(null, newSize, title);
-		for(int i = 0; i < itsa.length; i++)
+		for(int i = 0; i < itemStackArray.length; i++)
 		{
-			bp.setItem(i, itsa[i]);
+			bp.setItem(i, itemStackArray[i]);
 		}
 		size = newSize;
-		for(Entry<Player, Boolean> e : opend.entrySet())
+		for(Entry<Player, Boolean> e : opened.entrySet())
 		{
 			e.getKey().openInventory(bp);
 		}

@@ -32,11 +32,6 @@
 
 	<repositories>
 		<repository>
-			<id>in-project</id>
-			<name>In Project Repo</name>
-			<url>file://${project.basedir}/jar_libs</url>
-		</repository>
-		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
@@ -52,13 +47,6 @@
 			<artifactId>bukkit</artifactId>
 			<version>LATEST</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.minecraft</groupId>
-			<artifactId>Minecraft</artifactId>
-			<version>1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/jar_libs/bukkit.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>

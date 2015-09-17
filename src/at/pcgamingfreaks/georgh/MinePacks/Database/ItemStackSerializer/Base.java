@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database.Serializer;
+package at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,32 +34,34 @@ public class Base
 		{
 			ByteArrayOutputStream b = new ByteArrayOutputStream();
 		    BukkitObjectOutputStream output = new BukkitObjectOutputStream(b);
-		    output.writeObject((Object)inv.getContents());
+		    output.writeObject(inv.getContents());
 		    output.close();
 		    ba = b.toByteArray();
 		    output.close();
 		    return ba;
 		}
-		catch(Exception e) {}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return ba;
 	}
 	
 	public ItemStack[] toItemStack(byte[] data)
 	{
-		if(data == null)
+		if(data != null)
 		{
-			return null;
-		}
-		try
-		{
-			BukkitObjectInputStream bois = new BukkitObjectInputStream(new ByteArrayInputStream(data));
-			ItemStack[] its = (ItemStack[]) bois.readObject();
-			bois.close();
-			return its;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			try
+			{
+				BukkitObjectInputStream bukkitObjectInputStream = new BukkitObjectInputStream(new ByteArrayInputStream(data));
+				ItemStack[] its = (ItemStack[]) bukkitObjectInputStream.readObject();
+				bukkitObjectInputStream.close();
+				return its;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}
