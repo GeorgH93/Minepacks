@@ -33,9 +33,9 @@ import at.pcgamingfreaks.georgh.MinePacks.Database.*;
 
 public class MinePacks extends JavaPlugin
 {
-	public final Logger log = getLogger();
-	public final Config config = new Config(this);
-	public final Language lang = new Language(this);
+	public Logger log;
+	public Config config;
+	public Language lang;
 	public Database DB;
 	
 	public HashMap<Player, Long> cooldowns = new HashMap<>();
@@ -46,6 +46,10 @@ public class MinePacks extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
+		log = getLogger();
+		config = new Config(this);
+		lang = new Language(this);
+
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));

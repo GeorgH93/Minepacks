@@ -1,4 +1,3 @@
-Version: 3
 Language:
   Console:
     Enabled: MinePacks wurde aktiviert!
@@ -6,16 +5,19 @@ Language:
     NotFromConsole: Befehlt nicht von der Console aus verwendbar.
     LangUpdated: Sprachdatei wurde aktualisiert.
     UpdateUUIDs: Starte Datenbank Update auf UUIDs ...
-    UpdatedUUIDs: '%s Datensätze wurden auf UUIDs geupdated.'
+    UpdatedUUIDs: '%s Datensï¿½tze wurden auf UUIDs geupdated.'
   Ingame:
-    NoPermission: 'Dir fehlen die Rechte dafür.'
+    NoPermission: 'Dir fehlen die Rechte dafï¿½r.'
     OwnBackPackClose: 'Rucksack geschlossen!'
     PlayerBackPackClose: "%s's Rucksack geschlossen!"
     InvalidBackpack: Rucksack fehlerhaft.
     BackpackCleaned: Rucksack gelehrt.
-    Cooldown: 'Bitte warte etwas bis du deinen Rucksack erneut öffnest.'
+    Cooldown: 'Bitte warte etwas bis du deinen Rucksack erneut ï¿½ffnest.'
   Description:
-    Backpack: Öffnet deinen Rucksack.
+    Backpack: ï¿½ffnet deinen Rucksack.
     Clean: Leert deinen Rucksack.
     CleanOther: Leert den Rucksack von Spielern.
     View: Zeigt den Rucksack von anderen Spielern.
+
+# Language file version. Don't touch it!
+Version: 3

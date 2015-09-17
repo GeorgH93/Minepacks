@@ -37,26 +37,36 @@ public class Config extends Configuration
 	@Override
 	protected boolean newConfigCreated()
 	{
-		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
-		return true;
+		config.set("Database.UseUUIDs", plugin.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+		return !(plugin.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 	}
 	
 	@Override
-	protected void doUpdate(int version)
+	protected void doUpdate()
 	{
 		// Nothing to update yet
 	}
 
 	@Override
-	protected void doUpgrade(Configuration oldConfiguration)
+	protected void doUpgrade(Configuration oldConfig)
 	{
-		Set<String> keys = oldConfiguration.getConfig().getKeys(true);
+		Set<String> keys = oldConfig.getConfig().getKeys(true);
 		for(String key : keys)
 		{
-			if(key.equals("Database.UseUUIDs") || key.equals("UseUUIDs")) continue;
-			config.set(key, oldConfiguration.getConfig().get(key));
+			if(key.equals("UseUUIDs") || key.equals("Version")) continue;
+			config.set(key, oldConfig.getConfig().get(key));
 		}
-		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+		if(!oldConfig.getConfig().isSet("Database.UseUUIDs"))
+		{
+			if(oldConfig.getConfig().isSet("UseUUIDs"))
+			{
+				config.set("Database.UseUUIDs", config.getBoolean("UseUUIDs"));
+			}
+			else
+			{
+				config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+			}
+		}
 	}
 
 	// Getter

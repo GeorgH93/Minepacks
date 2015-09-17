@@ -1,4 +1,3 @@
-Version: 3
 Language:
   Console:
     Enabled: MinePacks has been enabled!
@@ -19,3 +18,6 @@ Language:
     Clean: Cleans your backpack.
     CleanOther: Cleans the backpack of other players.
     View: Shows the backpack of other player.
+
+# Language file version. Don't touch it!
+Version: 3

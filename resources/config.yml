@@ -43,6 +43,7 @@ Database:
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
   # Should be configured automaticaly based on your minecraft version and online mode settings
+  # If you are using BungeeCord please set this setting based on your BungeeCord's online mode.
   UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
   # true: format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -74,5 +75,5 @@ Database:
 # Enables/Disables the auto-update function of the plugin.
 auto-update: true
 
-# Config File Version. Don't touch it!
+# Config file version. Don't touch it!
 Version: 9

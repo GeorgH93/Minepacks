@@ -57,6 +57,3 @@ Temporary Items
 /bin/
 *.iml
 /.idea/
-
-
-jar_libs/bukkit.jar
