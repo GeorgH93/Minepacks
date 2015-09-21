@@ -47,10 +47,10 @@ public class Backpack
 		this(owner, size, -1);
 	}
 
-	public Backpack(OfflinePlayer Owner, int Size, int ID)
+	public Backpack(OfflinePlayer owner, int Size, int ID)
 	{
-		owner = Owner;
-		title = String.format(MinePacks.BackpackTitle, Owner.getName());
+		this.owner = owner;
+		title = String.format(MinePacks.BackpackTitle, owner.getName());
 		bp = Bukkit.createInventory(null, Size, title);
 		size = Size;
 		id = ID;
@@ -78,13 +78,13 @@ public class Backpack
 		return owner;
 	}
 	
-	public void Open(Player p, boolean editable)
+	public void open(Player p, boolean editable)
 	{
 		opened.put(p, editable);
 		p.openInventory(bp);
 	}
 	
-	public void Close(Player p)
+	public void close(Player p)
 	{
 		opened.remove(p);
 	}
@@ -116,7 +116,7 @@ public class Backpack
 		{
 			e.getKey().closeInventory();
 		}
-		List<ItemStack> RemovedItems = new ArrayList<>();
+		List<ItemStack> removedItems = new ArrayList<>();
 		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{
@@ -133,7 +133,7 @@ public class Backpack
 					}
 					else
 					{
-						RemovedItems.add(i);
+						removedItems.add(i);
 					}
 				}
 			}
@@ -142,7 +142,7 @@ public class Backpack
 		{
 			itemStackArray = bp.getContents();
 		}
-		bp = Bukkit.createInventory(null, newSize, title);
+		bp = Bukkit.createInventory(bp.getHolder(), newSize, title);
 		for(int i = 0; i < itemStackArray.length; i++)
 		{
 			bp.setItem(i, itemStackArray[i]);
@@ -153,16 +153,11 @@ public class Backpack
 			e.getKey().openInventory(bp);
 		}
 		inWork = false;
-		return RemovedItems;
+		return removedItems;
 	}
 	
 	public Inventory getBackpack()
 	{
 		return bp;
-	}
-	
-	public String getTitle()
-	{
-		return title;
 	}
 }

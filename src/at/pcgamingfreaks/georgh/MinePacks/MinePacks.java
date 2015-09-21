@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import net.gravitydevelopment.Updater.Bukkit_Updater;
 import net.gravitydevelopment.Updater.UpdateType;
 
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
@@ -60,7 +59,7 @@ public class MinePacks extends JavaPlugin
 			(new ItemsCollector(this)).runTaskTimerAsynchronously(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
 		
-		BackpackTitle = (config.getBPTitle().contains("%s") ? config.getBPTitle() : ChatColor.AQUA + "%s Backpack");
+		BackpackTitle = config.getBPTitle();
 		Message_InvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 		log.info(lang.get("Console.Enabled"));
@@ -90,7 +89,7 @@ public class MinePacks extends JavaPlugin
 			opener.sendMessage(Message_InvalidBackpack);
 			return;
 		}
-		backpack.Open(opener, editable);
+		backpack.open(opener, editable);
 	}
 	
 	public int getBackpackPermSize(Player player)

@@ -8,7 +8,7 @@ Language: en
 # Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
 LanguageUpdateMode: Overwrite
 
-# Title to be showen for the opened inventory. Musst contain an %s (which will be replaced with the players name)
+# Title to be showen for the opened inventory. Can contain %s (which will be replaced with the players name).
 BackpackTitle: "&b%s Backpack"
 # Defines how long a player have to wait till he can reopen his backpack.
 # Time is in seconds. Values < 1 disable the cooldown.

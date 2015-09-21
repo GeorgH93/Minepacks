@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
 import at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer.ItemStackSerializer;
+import org.bukkit.inventory.Inventory;
 
 public class Database
 {
@@ -90,11 +91,11 @@ public class Database
 		return null;
 	}
 	
-	public Backpack getBackpack(String title)
+	public Backpack getBackpack(Inventory inventory)
 	{
 		for(Backpack bp : backpacks)
 		{
-			if(bp.getTitle().equals(title))
+			if(bp.getBackpack().equals(inventory))
 			{
 				return bp;
 			}

@@ -70,7 +70,7 @@ public class EventListener implements Listener
 	{
 		if (event.getInventory() != null && event.getInventory().getTitle() != null && event.getPlayer() instanceof Player)
 	    {
-			Backpack backpack = plugin.DB.getBackpack(event.getInventory().getTitle());
+			Backpack backpack = plugin.DB.getBackpack(event.getInventory());
 			if(backpack != null && !backpack.inUse())
 			{
 				Player closer = (Player)event.getPlayer();
@@ -78,7 +78,7 @@ public class EventListener implements Listener
 				{
 					plugin.DB.saveBackpack(backpack);
 				}
-				backpack.Close(closer);
+				backpack.close(closer);
 				if(event.getPlayer().getName().equals(backpack.getOwner().getName()))
 				{
 					if(showCloseMessageOwn)
@@ -102,7 +102,7 @@ public class EventListener implements Listener
 	{
 		if (event.getInventory() != null && event.getInventory().getTitle() != null && event.getWhoClicked() instanceof Player)
 	    {
-			Backpack backpack = plugin.DB.getBackpack(event.getInventory().getTitle());
+			Backpack backpack = plugin.DB.getBackpack(event.getInventory());
 			if(backpack != null && !backpack.canEdit((Player)event.getWhoClicked()))
 			{
 				event.setCancelled(true);
