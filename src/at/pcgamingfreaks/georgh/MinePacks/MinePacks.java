@@ -32,6 +32,8 @@ import at.pcgamingfreaks.georgh.MinePacks.Database.*;
 
 public class MinePacks extends JavaPlugin
 {
+	private static MinePacks instance = null;
+
 	public Logger log;
 	public Config config;
 	public Language lang;
@@ -42,12 +44,19 @@ public class MinePacks extends JavaPlugin
 	public static String BackpackTitle;
 	public String Message_InvalidBackpack;
 
+	public static MinePacks getInstance()
+	{
+		return instance;
+	}
+
 	@Override
 	public void onEnable()
 	{
 		log = getLogger();
 		config = new Config(this);
 		lang = new Language(this);
+
+		instance = this;
 
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		DB = Database.getDatabase(this);
@@ -56,7 +65,7 @@ public class MinePacks extends JavaPlugin
 
 		if(config.getFullInvCollect())
 		{
-			(new ItemsCollector(this)).runTaskTimerAsynchronously(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
+			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
 		
 		BackpackTitle = config.getBPTitle();
@@ -77,12 +86,23 @@ public class MinePacks extends JavaPlugin
 		log.info(lang.get("Console.Disabled"));
 	}
 	
-	public void OpenBackpack(Player opener, OfflinePlayer owner, boolean editable)
+	public void openBackpack(final Player opener, OfflinePlayer owner, final boolean editable)
 	{
-		OpenBackpack(opener, DB.getBackpack(owner, false), editable);
+		if(owner == null)
+		{
+			return;
+		}
+		DB.getBackpack(owner, new Database.Callback<Backpack>()
+		{
+			@Override
+			public void onResult(Backpack backpack)
+			{
+				openBackpack(opener, backpack, editable);
+			}
+		});
 	}
 	
-	public void OpenBackpack(Player opener, Backpack backpack, boolean editable)
+	public void openBackpack(Player opener, Backpack backpack, boolean editable)
 	{
 		if(backpack == null)
 		{

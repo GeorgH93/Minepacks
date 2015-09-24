@@ -23,18 +23,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
 
 public class SQLite extends SQL
 {
 	public SQLite(MinePacks mp)
 	{
-		super(mp); // Load Settings
-		
+		super(mp);
+	}
+
+	@Override
+	protected void loadSettings()
+	{
+		// Set table and field names to fixed values to prevent users from destroying old databases.
 		Field_PlayerID = "player_id";
 		Field_Name = "name";
 		Field_UUID = "uuid";
@@ -44,83 +46,70 @@ public class SQLite extends SQL
 		Field_BPLastUpdate = "lastupdate";
 		Table_Players = "backpack_players";
 		Table_Backpacks = "backpacks";
-		
-		UseUUIDSeparators = false;
+		// Set fixed settings
+		useUUIDSeparators = false;
 		UpdatePlayer = true;
-		
-		BuildQuerys(); // Build Query's
-		CheckDB(); // Check Database
-		if(UseUUIDs && UpdatePlayer)
-		{
-			CheckUUIDs(); // Check if there are user accounts without UUID
-		}
-		
+	}
+
+	@Override
+	protected void updateQuerysForDialect()
+	{
 		if(maxAge > 0)
 		{
-			try
-			{
-				GetConnection().createStatement().execute("DELETE FROM `" + Table_Backpacks + "` WHERE `" + Field_BPLastUpdate + "` < DATE('now', '-" + maxAge + " days')");
-			}
-			catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
+			Query_InsertBP = Query_InsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		}
+		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
+		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
 	}
-	
-	protected Connection GetConnection()
+
+	@Override
+	protected Connection getConnection()
 	{
 		try
 		{
 			if(conn == null || conn.isClosed())
 			{
-				try
-				{
-					Class.forName("org.sqlite.JDBC");
-					conn = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
-				}
-				catch (ClassNotFoundException e)
-				{
-					e.printStackTrace();
-				}
+				Class.forName("org.sqlite.JDBC"); // Throws an exception if the SQLite driver is not found.
+				conn = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
 			}
 		}
-		catch (SQLException e)
+		catch (ClassNotFoundException | SQLException e)
 		{
 			e.printStackTrace();
 		}
 		return conn;
 	}
-	
-	protected void CheckDB()
+
+	@Override
+	protected void checkDB()
 	{
 		try
 		{
-			Statement stmt = GetConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((UseUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +");");
-			if(UseUUIDs)
+			Statement stmt = getConnection().createStatement();
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((useUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +");");
+			if(useUUIDs)
 			{
 				try
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `uuid` CHAR(32);");
+					stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 				}
-				catch(SQLException e) { }
+				catch(SQLException ignored) {}
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try
 			{
-				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `version` INT DEFAULT 0;");
+				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
-			catch(SQLException e) { }
+			catch(SQLException ignored) {}
 			if(maxAge > 0)
 			{
 				try
 				{
 					ResultSet rs = stmt.executeQuery("SELECT DATE('now');");
 					rs.next();
-					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
+					stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 				}
-				catch(SQLException e) { }
+				catch(SQLException ignored) {}
 			}
 			stmt.close();
 		}
@@ -128,41 +117,5 @@ public class SQLite extends SQL
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	protected void CheckUUIDs()
-	{
-		try
-		{
-			List<String> converter = new ArrayList<String>();
-			Statement stmt = GetConnection().createStatement();
-			ResultSet res = stmt.executeQuery("SELECT `name` FROM `" + Table_Players + "` WHERE `uuid` IS NULL");
-			while(res.next())
-			{
-				if(res.isFirst())
-				{
-					plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
-				}
-				converter.add("UPDATE `" + Table_Players + "` SET `uuid`='" + UUIDConverter.getUUIDFromName(res.getString(1), plugin.getServer().getOnlineMode()) + "' WHERE `name`='" + res.getString(1).replace("\\", "\\\\").replace("'", "\\'") + "'");
-			}
-			if(converter.size() > 0)
-			{
-				for (String string : converter)
-				{
-					stmt.execute(string);
-				}
-				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"),converter.size()));
-			}
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	protected void AddDateFieldToQuery()
-	{
-		Query_InsertBP = ") VALUES (";
-		Query_UpdateBP = ",`" + Field_BPLastUpdate + "`=DATE('now')";
 	}
 }

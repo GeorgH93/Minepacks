@@ -65,24 +65,24 @@ public class Files extends Database
 				continue; // We don't have to check if the file name is correct cause we have the deleted the file
 			}
 			len = file.getName().length() - ext.length();
-			if(UseUUIDs) // Use UUID-based saving
+			if(useUUIDs) // Use UUID-based saving
 			{
 				if(len <= 16) // It's a player name
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, UseUUIDSeparators) + ext));
+					file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + ext));
 				}
 				else // It's an UUID
 				{
 					if(file.getName().contains("-"))
 					{
-						if(!UseUUIDSeparators)
+						if(!useUUIDSeparators)
 						{
 							file.renameTo(new File(saveFolder, file.getName().replaceAll("-", "")));
 						}
 					}
 					else
 					{
-						if(UseUUIDSeparators)
+						if(useUUIDSeparators)
 						{
 							file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + ext, "$1-$2-$3-$4-$5" + ext)));
 						}
@@ -105,14 +105,15 @@ public class Files extends Database
 	}
 	
 	// DB Functions
+	@Override
 	public void saveBackpack(Backpack backpack)
 	{
 		File save = new File(saveFolder, getFileName(backpack.getOwner()));
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(save);
-			fos.write(itsSerializer.getUsedVersion());
-			fos.write(itsSerializer.serialize(backpack.getBackpack()));
+			fos.write(itsSerializer.getUsedSerializer());
+			fos.write(itsSerializer.serialize(backpack.getInventory()));
 			fos.flush();
 			fos.close();
 		}
@@ -121,7 +122,8 @@ public class Files extends Database
 			e.printStackTrace();
 		}
 	}
-	
+
+	@Override
 	public Backpack loadBackpack(OfflinePlayer player)
 	{
 		File save = new File(saveFolder, getFileName(player));

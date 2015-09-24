@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.georgh.MinePacks;
 
+import at.pcgamingfreaks.georgh.MinePacks.Database.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,35 +49,42 @@ public class EventListener implements Listener
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event)
 	{
-		Player player = event.getEntity();
+		final Player player = event.getEntity();
 		if (drop_on_death && !player.hasPermission("backpack.KeepOnDeath"))
 		{
-			Backpack backpack = plugin.DB.getBackpack(player, false);
-			Inventory backpackInventory = backpack.getBackpack();
-			for (ItemStack i : backpackInventory.getContents())
+			plugin.DB.getBackpack(player, new Database.Callback<Backpack>()
 			{
-			    if (i != null)
-			    {
-			        player.getWorld().dropItemNaturally(player.getLocation(), i);
-			        backpackInventory.remove(i);
-			    }
-			}
-			plugin.DB.saveBackpack(backpack);
+				@Override
+				public void onResult(Backpack backpack)
+				{
+					Inventory backpackInventory = backpack.getInventory();
+					for(ItemStack i : backpackInventory.getContents())
+					{
+						if(i != null)
+						{
+							player.getWorld().dropItemNaturally(player.getLocation(), i);
+							backpackInventory.remove(i);
+							backpack.setChanged();
+						}
+					}
+					backpack.save(); // We have to save it now!
+				}
+			});
 		}
 	}
 	
 	@EventHandler
 	public void onClose(InventoryCloseEvent event)
 	{
-		if (event.getInventory() != null && event.getInventory().getTitle() != null && event.getPlayer() instanceof Player)
+		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getPlayer() instanceof Player)
 	    {
-			Backpack backpack = plugin.DB.getBackpack(event.getInventory());
-			if(backpack != null && !backpack.inUse())
+			Backpack backpack = (Backpack)event.getInventory().getHolder();
+			if(!backpack.inUse())
 			{
 				Player closer = (Player)event.getPlayer();
 				if(backpack.canEdit(closer))
 				{
-					plugin.DB.saveBackpack(backpack);
+					backpack.save();
 				}
 				backpack.close(closer);
 				if(event.getPlayer().getName().equals(backpack.getOwner().getName()))
@@ -100,29 +108,34 @@ public class EventListener implements Listener
 	@EventHandler
 	public void onClick(InventoryClickEvent event)
 	{
-		if (event.getInventory() != null && event.getInventory().getTitle() != null && event.getWhoClicked() instanceof Player)
+		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
 	    {
-			Backpack backpack = plugin.DB.getBackpack(event.getInventory());
-			if(backpack != null && !backpack.canEdit((Player)event.getWhoClicked()))
+			Backpack backpack = (Backpack) event.getInventory().getHolder();
+			if(!backpack.canEdit((Player)event.getWhoClicked()))
 			{
 				event.setCancelled(true);
+			}
+		    else
+			{
+				backpack.setChanged();
 			}
 	    }
 	}
 	
 	@EventHandler
-	public void PlayerLoginEvent(PlayerJoinEvent event) 
+	public void onPlayerLoginEvent(PlayerJoinEvent event)
 	{
-		plugin.DB.updatePlayer(event.getPlayer());
+		plugin.DB.updatePlayerAndLoadBackpack(event.getPlayer());
 	}
 	
 	@EventHandler
-	public void PlayerLeaveEvent(PlayerQuitEvent event)
+	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
-		Backpack bp = plugin.DB.getBackpack(event.getPlayer(), true);
-		if(bp != null && !bp.isOpen())
+		Backpack backpack = plugin.DB.getBackpack(event.getPlayer());
+		if(backpack != null && !backpack.isOpen())
 		{
-			plugin.DB.UnloadBackpack(bp);
+			backpack.save();
+			plugin.DB.unloadBackpack(backpack);
 		}
 		if(plugin.cooldowns.containsKey(event.getPlayer()))
 		{

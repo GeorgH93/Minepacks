@@ -23,13 +23,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
-import at.pcgamingfreaks.UUIDConverter;
+import at.pcgamingfreaks.georgh.MinePacks.Backpack;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
+import org.bukkit.inventory.ItemStack;
 
 public class MySQL extends SQL
 {
@@ -37,104 +37,20 @@ public class MySQL extends SQL
 	{
 		super(mp); // Load Settings
 
-		BuildQuerys(); // Build Querys
-		CheckDB(); // Check Database
-		if(UseUUIDs && UpdatePlayer)
-		{
-			CheckUUIDs(); // Check if there are user accounts without UUID
-		}
-		
 		// Fire DB request every 10 minutes to keep database connection alive
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){ @Override public void run() { try { GetConnection().createStatement().execute("SELECT 1"); }
-		catch(Exception e) { } }}, 600*20, 600*20);
-		
-		if(maxAge > 0)
-		{
-			try
-			{
-				GetConnection().createStatement().execute("DELETE FROM `" + Table_Backpacks + "` WHERE `" + Field_BPLastUpdate + "` + INTERVAL " + maxAge + " day < NOW()");
-			}
-			catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){ @Override public void run() { try { getConnection().createStatement().execute("SELECT 1"); }
+		catch(Exception ignored) {} }}, 600*20, 600*20);
 	}
-	
-	protected void CheckUUIDs()
+
+	@Override
+	protected void updateQuerysForDialect()
 	{
-		try
-		{
-			List<String> converter = new ArrayList<String>();
-			Statement stmt = GetConnection().createStatement();
-			ResultSet res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_Name + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` IS NULL");
-			while(res.next())
-			{
-				if(res.isFirst())
-				{
-					plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
-				}
-				converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + UUIDConverter.getUUIDFromName(res.getString(2), true, UseUUIDSeparators) + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
-			}
-			if(converter.size() > 0)
-			{
-				for (String string : converter)
-				{
-					stmt.execute(string);
-				}
-				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
-			}
-			res.close();
-			res = null;
-			if(UseUUIDSeparators)
-			{
-				res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_UUID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` NOT LIKE '%-%'");
-				while(res.next())
-				{
-					if(res.isFirst())
-					{
-						plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
-					}
-					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
-				}
-				if(converter.size() > 0)
-				{
-					for (String string : converter)
-					{
-						stmt.execute(string);
-					}
-					plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
-				}
-			}
-			else
-			{
-				res = stmt.executeQuery("SELECT `" + Field_PlayerID + "`,`" + Field_UUID + "` FROM `" + Table_Players + "` WHERE `" + Field_UUID + "` LIKE '%-%'");
-				while(res.next())
-				{
-					if(res.isFirst())
-					{
-						plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
-					}
-					converter.add("UPDATE `" + Table_Players + "` SET `" + Field_UUID + "`='" + res.getString(2).replaceAll("-", "") + "' WHERE `" + Field_PlayerID + "`='" + res.getInt(1) + "'");
-				}
-				if(converter.size() > 0)
-				{
-					for (String string : converter)
-					{
-						stmt.execute(string);
-					}
-					plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
-				}
-			}
-			res.close();
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
+		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "NOW()");
 	}
-	
-	protected Connection GetConnection()
+
+	@Override
+	protected Connection getConnection()
 	{
 		try
 		{
@@ -149,30 +65,59 @@ public class MySQL extends SQL
 		}
 		return conn;
 	}
-	
-	protected void CheckDB()
+
+	protected Connection getNewConnection()
 	{
 		try
 		{
-			Statement stmt = GetConnection().createStatement();
+			return DriverManager.getConnection("jdbc:mysql://" + plugin.config.getMySQLHost() + "/" + plugin.config.getMySQLDatabase() + "?autoReconnect=true&timeBetweenEvictionRunsMillis=300000&testWhileIdle=true", plugin.config.getMySQLUser(), plugin.config.getMySQLPassword());
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	protected void checkDB()
+	{
+		try
+		{
+			Statement stmt = getConnection().createStatement();
 			ResultSet res;
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL UNIQUE"
-					+ ((UseUUIDs) ? ",`" + Field_UUID + "` CHAR(36) UNIQUE" : "") + ", PRIMARY KEY (`" + Field_PlayerID + "`));");
-			if(UseUUIDs)
+			if(useUUIDs)
 			{
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL,`" + Field_UUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + Field_PlayerID + "`));");
 				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
 				if(!res.next())
 				{
 					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + Field_UUID + "` CHAR(36) UNIQUE;");
 				}
 				res.close();
-			}
-			if(UseUUIDSeparators)
-			{
-				res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
-				if(res.next() && res.getInt(1) < 36)
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_Name + "' AND COLUMN_KEY='UNI';");
+				if(res.next())
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
+					stmt.execute("ALTER TABLE `" + Table_Players + "` DROP INDEX `" + Field_Name + "_UNIQUE`;");
+				}
+				res.close();
+				if(useUUIDSeparators)
+				{
+					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+					if(res.next() && res.getInt(1) < 36)
+					{
+						stmt.execute("ALTER TABLE `" + Table_Players + "` MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
+					}
+					res.close();
+				}
+			}
+			else
+			{
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + Field_PlayerID + "`));");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_Name + "' AND COLUMN_KEY='UNI';");
+				if(!res.next())
+				{
+					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD UNIQUE INDEX `" + Field_Name + "_UNIQUE` (`" + Field_Name + "` ASC);");
 				}
 				res.close();
 			}
@@ -200,13 +145,8 @@ public class MySQL extends SQL
 		}
 	}
 	
-	protected void AddDateFieldToQuery()
-	{
-		Query_InsertBP = ") VALUES (";
-		Query_UpdateBP = ",`" + Field_BPLastUpdate + "`=NOW()";
-	}
-	
 	// Plugin Functions
+	@Override
 	public void updatePlayer(final Player player)
 	{
 		if(!UpdatePlayer)
@@ -217,61 +157,144 @@ public class MySQL extends SQL
 		{
 			@Override
 			public void run()
-		    {
+			{
 				try
 				{
-					PreparedStatement ps;
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + plugin.config.getMySQLHost() + "/" + plugin.config.getMySQLDatabase(), plugin.config.getMySQLUser(), plugin.config.getMySQLPassword());;
-					ps = con.prepareStatement(Query_UpdatePlayerGet);
-					ps.setString(1, getPlayerNameOrUUID(player));
-					ResultSet rs = ps.executeQuery();
-					if(rs.next())
+					Connection con = getNewConnection();
+					PreparedStatement ps = con.prepareStatement(Query_UpdatePlayerAdd);
+					ps.setString(1, player.getName());
+					if(useUUIDs)
 					{
-						rs.close();
-						ps.close();
-						if(!UseUUIDs)
-						{
-							con.close();
-							return;
-						}
-						ps = con.prepareStatement(Query_UpdatePlayerUUID);
-						ps.setString(1, player.getName());
-						if(UseUUIDSeparators)
-						{
-							ps.setString(2, player.getUniqueId().toString());
-						}
-						else
-						{
-							ps.setString(2, player.getUniqueId().toString().replace("-", ""));
-						}
-					}
-					else
-					{
-						rs.close();
-						ps.close();
-						ps = con.prepareStatement(Query_UpdatePlayerAdd);
-						ps.setString(1, player.getName());
-						if(UseUUIDs)
-						{
-							if(UseUUIDSeparators)
-							{
-								ps.setString(2, player.getUniqueId().toString());
-							}
-							else
-							{
-								ps.setString(2, player.getUniqueId().toString().replace("-", ""));
-							}
-						}
+						String uuid = getPlayerFormattedUUID(player);
+						ps.setString(2, uuid);
+						ps.setString(3, player.getName());
 					}
 					ps.execute();
 					ps.close();
 					con.close();
 				}
-				catch (SQLException e)
-			    {
-			        plugin.log.info("Failed to add user: " + player.getName());
-			        e.printStackTrace();
-			    }
-		    }});
+				catch(SQLException e)
+				{
+					plugin.log.info("Failed to add/update user: " + player.getName());
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	@Override
+	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	{
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
+			public void run()
+			{
+				try
+				{
+					Connection conn = getNewConnection();
+					PreparedStatement ps = getConnection().prepareStatement(Query_GetBP);
+					ps.setString(1, getPlayerNameOrUUID(player));
+					ResultSet rs = ps.executeQuery();
+					final int bpID, version;
+					final byte[] data;
+					if(rs.next())
+					{
+						bpID = rs.getInt(1);
+						version = rs.getInt(3);
+						data = rs.getBytes(2);
+					}
+					else
+					{
+						bpID = -1;
+						version = 0;
+						data = null;
+					}
+					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
+							callback.onResult((its != null) ? new Backpack(player, its, bpID) : null);
+						}
+					});
+					rs.close();
+					ps.close();
+					conn.close();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	@Override
+	public void saveBackpack(final Backpack backpack)
+	{
+		final byte[] data = itsSerializer.serialize(backpack.getInventory());
+		final int id = backpack.getOwnerID();
+		final String nameOrUUID = getPlayerNameOrUUID(backpack.getOwner()), name = backpack.getOwner().getName();
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
+			public void run()
+			{
+				try
+				{
+					Connection conn = getNewConnection();
+					PreparedStatement ps; // Statement Variable
+					// Building the mysql statement
+					if(id <= 0)
+					{
+						final int newID;
+						ps = conn.prepareStatement(Query_GetPlayerID);
+						ps.setString(1, nameOrUUID);
+						ResultSet rs = ps.executeQuery();
+						if(rs.next())
+						{
+							newID = rs.getInt(1);
+							plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+								@Override
+								public void run()
+								{
+									backpack.setOwnerID(newID);
+								}
+							});
+						}
+						else
+						{
+							newID = -1;
+						}
+						rs.close();
+						ps.close();
+						if(newID <= 0)
+						{
+							plugin.log.warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
+							conn.close();
+							return;
+						}
+						ps = conn.prepareStatement(Query_InsertBP);
+						ps.setInt(1, newID);
+						ps.setBytes(2, data);
+						ps.setInt(3, itsSerializer.getUsedSerializer());
+					}
+					else
+					{
+						ps = conn.prepareStatement(Query_UpdateBP);
+						ps.setBytes(1, data);
+						ps.setInt(2, itsSerializer.getUsedSerializer());
+						ps.setInt(3, id);
+					}
+					ps.execute();
+					ps.close();
+					conn.close();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

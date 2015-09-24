@@ -26,16 +26,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-public class Backpack
+public class Backpack implements InventoryHolder
 {
 	private OfflinePlayer owner;
 	private HashMap<Player, Boolean> opened = new HashMap<>();
 	private Inventory bp;
-	private int size, id;
+	private int size, ownerID;
 	private String title;
-	private boolean inWork;
+	private boolean inWork, hasChanged;
 	
 	public Backpack(OfflinePlayer owner)
 	{
@@ -51,9 +52,9 @@ public class Backpack
 	{
 		this.owner = owner;
 		title = String.format(MinePacks.BackpackTitle, owner.getName());
-		bp = Bukkit.createInventory(null, Size, title);
+		bp = Bukkit.createInventory(this, Size, title);
 		size = Size;
-		id = ID;
+		ownerID = ID;
 		inWork = false;
 	}
 	
@@ -63,14 +64,14 @@ public class Backpack
 		bp.setContents(backpack);
 	}
 	
-	public int getID()
+	public int getOwnerID()
 	{
-		return id;
+		return ownerID;
 	}
 	
-	public void setID(int ID)
+	public void setOwnerID(int id)
 	{
-		id = ID;
+		ownerID = id;
 	}
 	
 	public OfflinePlayer getOwner()
@@ -80,6 +81,25 @@ public class Backpack
 	
 	public void open(Player p, boolean editable)
 	{
+		if(owner.isOnline())
+		{
+			Player player = owner.getPlayer();
+			if(player != null)
+			{
+				int size = MinePacks.getInstance().getBackpackPermSize(player);
+				if(size != bp.getSize())
+				{
+					List<ItemStack> items = setSize(size);
+					for(ItemStack i : items)
+					{
+						if (i != null)
+						{
+							player.getWorld().dropItemNaturally(player.getLocation(), i);
+						}
+					}
+				}
+			}
+		}
 		opened.put(p, editable);
 		p.openInventory(bp);
 	}
@@ -103,7 +123,8 @@ public class Backpack
 	{
 		return inWork;
 	}
-	
+
+	@SuppressWarnings("unused")
 	public int getSize()
 	{
 		return size;
@@ -155,9 +176,34 @@ public class Backpack
 		inWork = false;
 		return removedItems;
 	}
-	
-	public Inventory getBackpack()
+
+	/**
+	 * Get the object's inventory.
+	 *
+	 * @return The inventory.
+	 */
+	public Inventory getInventory()
 	{
 		return bp;
+	}
+
+	@SuppressWarnings("unused")
+	public boolean hasChanged()
+	{
+		return hasChanged;
+	}
+
+	public void setChanged()
+	{
+		hasChanged = true;
+	}
+
+	public void save()
+	{
+		if(hasChanged)
+		{
+			MinePacks.getInstance().DB.saveBackpack(this);
+			hasChanged = false;
+		}
 	}
 }

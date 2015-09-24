@@ -43,9 +43,10 @@ public class ItemsCollector extends BukkitRunnable
 	{
 		for(Player player : Bukkit.getServer().getOnlinePlayers())
 		{
-			if(player.getInventory().firstEmpty() == -1 && player.hasPermission("backpack.fullpickup"))
+			if(player.getInventory().firstEmpty() == -1 && player.hasPermission("backpack") && player.hasPermission("backpack.fullpickup"))
 			{
-				Backpack backpack = plugin.DB.getBackpack(player, false);
+				// Only check loaded backpacks (loading them would take to much time for a repeating task, the will be loaded async soon enough)
+				Backpack backpack = plugin.DB.getBackpack(player);
 				if(backpack == null)
 				{
 					continue;
@@ -58,7 +59,8 @@ public class ItemsCollector extends BukkitRunnable
 						Item item = (Item) entity;
 						if(!item.isDead() && item.getPickupDelay() <= 0)
 						{
-							HashMap<Integer, ItemStack> full = backpack.getBackpack().addItem(item.getItemStack());
+							HashMap<Integer, ItemStack> full = backpack.getInventory().addItem(item.getItemStack());
+							backpack.setChanged();
 							if(!full.isEmpty())
 							{
 								item.setItemStack(full.get(0));

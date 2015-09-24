@@ -43,7 +43,7 @@ Database:
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
   # Should be configured automaticaly based on your minecraft version and online mode settings
-  # If you are using BungeeCord please set this setting based on your BungeeCord's online mode.
+  # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
   UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
   # true: format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -55,12 +55,18 @@ Database:
     Database: minecraft
     User: minecraft
     Password: minecraft
-  # Tables settings for shared tables
+  # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
+  # Use these settings only if you know what you are doing!!!!
+  # Do only change this settings if you know what you are doing and have some basic MySQL knowlage!!!
+  # Changing settings down here after you have used this plugin may result in data inconsitency!!!
   Tables:
     # Table names
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsitency.
     User: backpack_players
     Backpack: backpacks
     # Field settings for the tables
+    # Do not change them after the tables have been generated!
+    # If you like to change them after the tables have been generated alter the tables manualy or delete them (the system then will regenerate them).
     Fields:
       User:
         Player_ID: player_id

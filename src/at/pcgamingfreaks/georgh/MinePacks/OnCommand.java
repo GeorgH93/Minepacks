@@ -18,8 +18,8 @@
 package at.pcgamingfreaks.georgh.MinePacks;
 
 import java.util.Date;
-import java.util.List;
 
+import at.pcgamingfreaks.georgh.MinePacks.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -27,7 +27,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public class OnCommand implements CommandExecutor 
 {
@@ -51,7 +50,7 @@ public class OnCommand implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) 
 	{
-		Player player;
+		final Player player;
 		if (sender instanceof Player) 
 		{
 			player = (Player) sender;
@@ -78,25 +77,7 @@ public class OnCommand implements CommandExecutor
 					}
 					plugin.cooldowns.put(player, (new Date()).getTime());
 				}
-				Backpack bp = plugin.DB.getBackpack(player, false);
-				if(bp == null)
-				{
-					player.sendMessage(plugin.Message_InvalidBackpack);
-					return true;
-				}
-				int size = plugin.getBackpackPermSize(player);
-				if(size != bp.getSize())
-				{
-					List<ItemStack> items = bp.setSize(size);
-					for(ItemStack i : items)
-					{
-						if (i != null)
-					    {
-					        player.getWorld().dropItemNaturally(player.getLocation(), i);
-					    }
-					}
-				}
-				plugin.OpenBackpack(player, bp, true);
+				plugin.openBackpack(player, player, true);
 			}
 			else
 			{
@@ -138,15 +119,24 @@ public class OnCommand implements CommandExecutor
 				case "clear":
 					if(player.hasPermission("backpack.clean"))
 					{
-						OfflinePlayer OP = player;
-						if(player.hasPermission("backpack.clean.other") && args.length == 2)
+						final OfflinePlayer OP = (args.length == 2 && player.hasPermission("backpack.clean.other")) ? Bukkit.getOfflinePlayer(args[1]) : player;
+						plugin.DB.getBackpack(OP, new Database.Callback<Backpack>()
 						{
-							OP = Bukkit.getOfflinePlayer(args[1]);
-						}
-						Backpack BP = plugin.DB.getBackpack(OP, false);
-						BP.getBackpack().clear();
-						plugin.DB.saveBackpack(BP);
-						player.sendMessage(Message_BackpackCleaned);
+							@Override
+							public void onResult(Backpack backpack)
+							{
+								if(backpack != null)
+								{
+									backpack.getInventory().clear();
+									backpack.save();
+									player.sendMessage(Message_BackpackCleaned);
+								}
+								else
+								{
+									player.sendMessage(plugin.Message_InvalidBackpack);
+								}
+							}
+						});
 					}
 					else
 					{
@@ -156,7 +146,7 @@ public class OnCommand implements CommandExecutor
 				default: // Shows the backpack of an other player
 					if(player.hasPermission("backpack.others"))
 					{
-						plugin.OpenBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission("backpack.others.edit"));
+						plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission("backpack.others.edit"));
 					}
 					else
 					{

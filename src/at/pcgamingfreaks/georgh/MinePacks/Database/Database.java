@@ -17,55 +17,33 @@
 
 package at.pcgamingfreaks.georgh.MinePacks.Database;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import at.pcgamingfreaks.georgh.MinePacks.Backpack;
 import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
-import at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer.ItemStackSerializer;
-import org.bukkit.inventory.Inventory;
+import at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer.InventorySerializer;
 
 public class Database
 {
 	protected MinePacks plugin;
 	
-	protected boolean UseUUIDs, UseUUIDSeparators;
+	protected boolean useUUIDs, useUUIDSeparators;
 	protected long maxAge;
 	
-	private HashSet<Backpack> backpacks = new HashSet<>();
-	protected ItemStackSerializer itsSerializer = new ItemStackSerializer();
+	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
+	protected InventorySerializer itsSerializer = new InventorySerializer();
 	
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
-		UseUUIDSeparators	= plugin.config.getUseUUIDSeparators();
-		UseUUIDs			= plugin.config.getUseUUIDs();
+		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
+		useUUIDs = plugin.config.getUseUUIDs();
 		maxAge				= plugin.config.getAutoCleanupMaxInactiveDays();
 	}
-	
-	public void close() { }
-	
-	protected String getPlayerNameOrUUID(OfflinePlayer player)
-	{
-		if(UseUUIDs)
-		{
-			if(UseUUIDSeparators)
-			{
-				return player.getUniqueId().toString();
-			}
-			else
-			{
-				return player.getUniqueId().toString().replace("-", "");
-			}
-		}
-		else
-		{
-			return player.getName();
-		}
-	}
-	
+
 	public static Database getDatabase(MinePacks Plugin)
 	{
 		switch(Plugin.config.getDatabaseType().toLowerCase())
@@ -79,33 +57,44 @@ public class Database
 		}
 	}
 	
-	private Backpack findBackpack(OfflinePlayer player)
+	protected String getPlayerNameOrUUID(OfflinePlayer player)
 	{
-		for(Backpack bp : backpacks)
+		if(useUUIDs)
 		{
-			if(bp.getOwner().equals(player))
-			{
-				return bp;
-			}
+			return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
+		}
+		else
+		{
+			return player.getName();
+		}
+	}
+
+	protected String getPlayerFormattedUUID(OfflinePlayer player)
+	{
+		if(useUUIDs)
+		{
+			return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
 		}
 		return null;
 	}
-	
-	public Backpack getBackpack(Inventory inventory)
+
+	public Backpack getBackpack(OfflinePlayer player)
 	{
-		for(Backpack bp : backpacks)
+		if(player == null)
 		{
-			if(bp.getBackpack().equals(inventory))
-			{
-				return bp;
-			}
+			return null;
 		}
-		return null;
+		return backpacks.get(player);
 	}
-	
+
+	@SuppressWarnings("unused")
 	public Backpack getBackpack(OfflinePlayer player, boolean loadedOnly)
 	{
-		Backpack lbp = findBackpack(player);
+		if(player == null)
+		{
+			return null;
+		}
+		Backpack lbp = backpacks.get(player);
 		if(lbp == null && !loadedOnly)
 		{
 			lbp = loadBackpack(player);
@@ -113,21 +102,86 @@ public class Database
 			{
 				lbp = new Backpack(player);
 			}
-			backpacks.add(lbp);
+			backpacks.put(player, lbp);
 		}
 		return lbp;
 	}
-	
-	public void UnloadBackpack(Backpack backpack)
+
+	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
-		backpacks.remove(backpack);
+		if(player == null)
+		{
+			return;
+		}
+		Backpack lbp = backpacks.get(player);
+		if(lbp == null)
+		{
+			loadBackpack(player, new Callback<Backpack>()
+			{
+				@Override
+				public void onResult(Backpack backpack)
+				{
+					if(backpack == null)
+					{
+						backpack = new Backpack(player);
+					}
+					backpacks.put(player, backpack);
+					callback.onResult(backpack);
+				}
+			});
+		}
+		else
+		{
+			callback.onResult(lbp);
+		}
+	}
+	
+	public void unloadBackpack(Backpack backpack)
+	{
+		backpacks.remove(backpack.getOwner());
+	}
+
+	public void asyncLoadBackpack(final OfflinePlayer player)
+	{
+		if(player != null && backpacks.get(player) == null)
+		{
+			loadBackpack(player, new Callback<Backpack>()
+			{
+				@Override
+				public void onResult(Backpack backpack)
+				{
+					if(backpack == null)
+					{
+						backpack = new Backpack(player);
+					}
+					backpacks.put(player, backpack);
+				}
+			});
+		}
 	}
 	
 	// DB Functions
+	public void close() { }
+
+	public void updatePlayerAndLoadBackpack(Player player)
+	{
+		updatePlayer(player);
+		asyncLoadBackpack(player);
+	}
 	
 	public void updatePlayer(Player player) {}
 	
 	public void saveBackpack(Backpack backpack) {}
 	
-	public Backpack loadBackpack(OfflinePlayer player) { return null; }
+	protected Backpack loadBackpack(OfflinePlayer player) { return null; }
+
+	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	{
+		callback.onResult(loadBackpack(player));
+	}
+
+	public interface Callback<T>
+	{
+		void onResult(T done);
+	}
 }
