@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 

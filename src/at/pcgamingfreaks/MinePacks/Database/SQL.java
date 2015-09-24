@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import at.pcgamingfreaks.georgh.MinePacks.Backpack;
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
+import at.pcgamingfreaks.MinePacks.Backpack;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public abstract class SQL extends Database
 {

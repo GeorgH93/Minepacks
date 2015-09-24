@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks;
+package at.pcgamingfreaks.MinePacks;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import at.pcgamingfreaks.georgh.MinePacks.Database.*;
+import at.pcgamingfreaks.MinePacks.Database.*;
 
 public class MinePacks extends JavaPlugin
 {

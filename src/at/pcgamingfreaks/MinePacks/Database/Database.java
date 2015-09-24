@@ -15,16 +15,15 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import java.util.HashMap;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import at.pcgamingfreaks.georgh.MinePacks.Backpack;
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
-import at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer.InventorySerializer;
+import at.pcgamingfreaks.MinePacks.Backpack;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public class Database
 {

@@ -15,9 +15,9 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks;
+package at.pcgamingfreaks.MinePacks;
 
-import at.pcgamingfreaks.georgh.MinePacks.Database.Database;
+import at.pcgamingfreaks.MinePacks.Database.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

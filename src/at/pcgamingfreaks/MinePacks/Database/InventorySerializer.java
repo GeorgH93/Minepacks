@@ -1,4 +1,4 @@
-package at.pcgamingfreaks.georgh.MinePacks.Database.ItemStackSerializer;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;

@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import java.io.File;
 import java.sql.Connection;
@@ -24,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public class SQLite extends SQL
 {

@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks.Database;
+package at.pcgamingfreaks.MinePacks.Database;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,8 +28,8 @@ import javax.swing.filechooser.FileFilter;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
 
-import at.pcgamingfreaks.georgh.MinePacks.Backpack;
-import at.pcgamingfreaks.georgh.MinePacks.MinePacks;
+import at.pcgamingfreaks.MinePacks.Backpack;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public class Files extends Database
 {

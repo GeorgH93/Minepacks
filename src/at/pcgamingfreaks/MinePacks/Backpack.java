@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.georgh.MinePacks;
+package at.pcgamingfreaks.MinePacks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
