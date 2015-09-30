@@ -17,7 +17,7 @@ command_cooldown: -1
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 drop_on_death: true
 # Defines if the message that the backpack has been closed should be shown
-show_close_message: true
+show_close_message: flase
 
 # Controlls for the auto pickup on full inventory function
 full_inventory:

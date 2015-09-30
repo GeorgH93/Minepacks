@@ -28,7 +28,7 @@ import java.util.Set;
 public class Config extends Configuration
 {
 	private static final int CONFIG_VERSION = 9;
-	
+
 	public Config(JavaPlugin plugin)
 	{
 		super(plugin, CONFIG_VERSION, 9);
@@ -37,10 +37,10 @@ public class Config extends Configuration
 	@Override
 	protected boolean newConfigCreated()
 	{
-		config.set("Database.UseUUIDs", plugin.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
-		return !(plugin.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+		return !(Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 	}
-	
+
 	@Override
 	protected void doUpdate()
 	{
@@ -48,19 +48,27 @@ public class Config extends Configuration
 	}
 
 	@Override
-	protected void doUpgrade(Configuration oldConfig)
+	protected void doUpgrade(at.pcgamingfreaks.Configuration oldConfig)
 	{
-		Set<String> keys = oldConfig.getConfig().getKeys(true);
+		Set<String> keys = oldConfig.getConfig().getKeys();
 		for(String key : keys)
 		{
-			if(key.equals("UseUUIDs") || key.equals("Version")) continue;
-			config.set(key, oldConfig.getConfig().get(key));
+			if(key.equals("UseUUIDs") || key.equals("Version"))
+				continue;
+			try
+			{
+				config.set(key, oldConfig.getConfig().getString(key));
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 		if(!oldConfig.getConfig().isSet("Database.UseUUIDs"))
 		{
 			if(oldConfig.getConfig().isSet("UseUUIDs"))
 			{
-				config.set("Database.UseUUIDs", config.getBoolean("UseUUIDs"));
+				config.set("Database.UseUUIDs", config.getBoolean("UseUUIDs", true));
 			}
 			else
 			{
@@ -74,82 +82,82 @@ public class Config extends Configuration
 	{
 		return config.getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
-	
+
 	public String getDatabaseType()
 	{
 		return config.getString("Database.Type", "sqlite");
 	}
-	
+
 	public String getMySQLHost()
 	{
 		return config.getString("Database.MySQL.Host", "localhost");
 	}
-	
+
 	public String getMySQLDatabase()
 	{
 		return config.getString("Database.MySQL.Database", "minecraft");
 	}
-	
+
 	public String getMySQLUser()
 	{
 		return config.getString("Database.MySQL.User", "minecraft");
 	}
-	
+
 	public String getMySQLPassword()
 	{
-		return config.getString("Database.MySQL.Password");
+		return config.getString("Database.MySQL.Password", "");
 	}
-	
+
 	public String getUserTable()
 	{
 		return config.getString("Database.Tables.User", "backpack_players");
 	}
-	
+
 	public String getBackpackTable()
 	{
 		return config.getString("Database.Tables.Backpack", "backpacks");
 	}
-	
+
 	public String getDBFields(String sub)
 	{
-		return config.getString("Database.Tables.Fields." + sub);
+		return config.getString("Database.Tables.Fields." + sub, "");
 	}
-	
+
 	public boolean getUpdatePlayer()
 	{
 		return config.getBoolean("Database.UpdatePlayer", true);
 	}
-	
+
 	public boolean getUseUUIDs()
 	{
 		return config.getBoolean("Database.UseUUIDs", true);
 	}
-	
+
 	public boolean getUseUUIDSeparators()
 	{
 		return config.getBoolean("Database.UseUUIDSeparators", false);
 	}
-	
+
 	public String getBPTitle()
 	{
 		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitle", "%s Backpack"));
 	}
-	
+
 	public boolean getDropOnDeath()
 	{
 		return config.getBoolean("drop_on_death", true);
 	}
-	
+
 	public boolean getAutoUpdate()
 	{
 		return config.getBoolean("auto-update", true);
 	}
-	
+
 	public int getCommandCooldown()
 	{
 		return config.getInt("command_cooldown", -1) * 1000;
 	}
-	
+
 	public boolean getShowCloseMessage()
 	{
 		return config.getBoolean("show_close_message", true);
