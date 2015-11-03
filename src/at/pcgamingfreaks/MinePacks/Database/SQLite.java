@@ -60,6 +60,7 @@ public class SQLite extends SQL
 		}
 		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
 		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
+		Query_UpdatePlayerAdd = Query_UpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
 	}
 
 	@Override

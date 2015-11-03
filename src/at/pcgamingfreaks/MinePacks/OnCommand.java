@@ -136,6 +136,12 @@ public class OnCommand implements CommandExecutor
 									player.sendMessage(plugin.Message_InvalidBackpack);
 								}
 							}
+
+							@Override
+							public void onFail()
+							{
+								player.sendMessage(plugin.Message_InvalidBackpack);
+							}
 						});
 					}
 					else

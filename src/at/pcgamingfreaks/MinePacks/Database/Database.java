@@ -120,10 +120,14 @@ public class Database
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					if(backpack == null)
-					{
-						backpack = new Backpack(player);
-					}
+					backpacks.put(player, backpack);
+					callback.onResult(backpack);
+				}
+
+				@Override
+				public void onFail()
+				{
+					Backpack backpack = new Backpack(player);
 					backpacks.put(player, backpack);
 					callback.onResult(backpack);
 				}
@@ -149,11 +153,13 @@ public class Database
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					if(backpack == null)
-					{
-						backpack = new Backpack(player);
-					}
 					backpacks.put(player, backpack);
+				}
+
+				@Override
+				public void onFail()
+				{
+					backpacks.put(player, new Backpack(player));
 				}
 			});
 		}
@@ -176,11 +182,21 @@ public class Database
 
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
-		callback.onResult(loadBackpack(player));
+		Backpack loadedBackpack = loadBackpack(player);
+		if(loadedBackpack == null)
+		{
+			callback.onFail();
+		}
+		else
+		{
+			callback.onResult(loadedBackpack);
+		}
 	}
 
 	public interface Callback<T>
 	{
 		void onResult(T done);
+
+		void onFail();
 	}
 }

@@ -215,7 +215,14 @@ public class MySQL extends SQL
 						public void run()
 						{
 							ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
-							callback.onResult((its != null) ? new Backpack(player, its, bpID) : null);
+							if(its != null)
+							{
+								callback.onResult(new Backpack(player, its, bpID));
+							}
+							else
+							{
+								callback.onFail();
+							}
 						}
 					});
 					rs.close();

@@ -99,6 +99,12 @@ public class MinePacks extends JavaPlugin
 			{
 				openBackpack(opener, backpack, editable);
 			}
+
+			@Override
+			public void onFail()
+			{
+
+			}
 		});
 	}
 	
