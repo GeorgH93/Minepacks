@@ -1,23 +1,23 @@
 Language:
   Console:
-    Enabled: MinePacks wurde aktiviert!
+    Enabled: MinePacks wurde aktiviert.
     Disabled: MinePacks wurde deaktiviert.
-    NotFromConsole: Befehlt nicht von der Console aus verwendbar.
-    LangUpdated: Sprachdatei wurde aktualisiert.
-    UpdateUUIDs: Starte Datenbank Update auf UUIDs ...
-    UpdatedUUIDs: '%s Datens�tze wurden auf UUIDs geupdated.'
+    NotFromConsole: Dieser Befehl kann nicht in der Console ausgeführt werden.
+    LangUpdated: Die Sprachdatei wurde aktualisiert.
+    UpdateUUIDs: Beginne die Spielernamen in UUIDs umzuwandeln...
+    UpdatedUUIDs: 'Es wurden %d Spielernamen in UUIDs umgewandelt.'
   Ingame:
-    NoPermission: 'Dir fehlen die Rechte daf�r.'
-    OwnBackPackClose: 'Rucksack geschlossen!'
-    PlayerBackPackClose: "%s's Rucksack geschlossen!"
+    NoPermission: 'Dir fehlen die Rechte dafür.'
+    OwnBackPackClose: 'Rucksack geschlossen.'
+    PlayerBackPackClose: "%s's Rucksack geschlossen."
     InvalidBackpack: Rucksack fehlerhaft.
     BackpackCleaned: Rucksack gelehrt.
-    Cooldown: 'Bitte warte etwas bis du deinen Rucksack erneut �ffnest.'
+    Cooldown: 'Bitte warte kurz bis du deinen Rucksack wieder öffnest.'
   Description:
-    Backpack: �ffnet deinen Rucksack.
+    Backpack: Öffent deinen Rucksack.
     Clean: Leert deinen Rucksack.
-    CleanOther: Leert den Rucksack von Spielern.
-    View: Zeigt den Rucksack von anderen Spielern.
+    CleanOther: Leert den Rucksack eines anderen Spielers.
+    View:     Öffnet den Rucksack eines anderen Spielers.
 
 # Language file version. Don't touch it!
 Version: 3
