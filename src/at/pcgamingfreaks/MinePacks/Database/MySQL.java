@@ -232,6 +232,7 @@ public class MySQL extends SQL
 				catch(Exception e)
 				{
 					e.printStackTrace();
+					callback.onFail();
 				}
 			}
 		});
