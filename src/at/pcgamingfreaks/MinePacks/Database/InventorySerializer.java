@@ -37,7 +37,7 @@ public class InventorySerializer
 		{
 			if(version[0].equals("1"))
 			{
-				if(version[1].equals("8"))
+				if(version[1].equals("8") || version[1].equals("9"))
 				{
 					serializer = new NBTItemStackSerializer();
 				}
