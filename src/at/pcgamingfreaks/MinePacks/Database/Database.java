@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,45 +17,48 @@
 
 package at.pcgamingfreaks.MinePacks.Database;
 
-import java.util.HashMap;
+import at.pcgamingfreaks.MinePacks.Backpack;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import at.pcgamingfreaks.MinePacks.Backpack;
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import java.util.HashMap;
 
 public class Database
 {
 	protected MinePacks plugin;
-	
+
 	protected boolean useUUIDs, useUUIDSeparators;
 	protected long maxAge;
-	
+
 	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
 	protected InventorySerializer itsSerializer = new InventorySerializer();
-	
+
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
 		useUUIDs = plugin.config.getUseUUIDs();
-		maxAge				= plugin.config.getAutoCleanupMaxInactiveDays();
+		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
 	}
 
 	public static Database getDatabase(MinePacks Plugin)
 	{
 		switch(Plugin.config.getDatabaseType().toLowerCase())
 		{
-			case "mysql": return new MySQL(Plugin);
+			case "mysql":
+				return new MySQL(Plugin);
 			case "flat":
 			case "file":
-			case "files": return new Files(Plugin);
+			case "files":
+				return new Files(Plugin);
 			case "sqlite":
-			default: return new SQLite(Plugin);
+			default:
+				return new SQLite(Plugin);
 		}
 	}
-	
+
 	protected String getPlayerNameOrUUID(OfflinePlayer player)
 	{
 		if(useUUIDs)
@@ -79,11 +82,7 @@ public class Database
 
 	public Backpack getBackpack(OfflinePlayer player)
 	{
-		if(player == null)
-		{
-			return null;
-		}
-		return backpacks.get(player);
+		return (player == null) ? null : backpacks.get(player);
 	}
 
 	@SuppressWarnings("unused")
@@ -138,7 +137,7 @@ public class Database
 			callback.onResult(lbp);
 		}
 	}
-	
+
 	public void unloadBackpack(Backpack backpack)
 	{
 		backpacks.remove(backpack.getOwner());
@@ -164,7 +163,7 @@ public class Database
 			});
 		}
 	}
-	
+
 	// DB Functions
 	public void close() { }
 
@@ -173,11 +172,11 @@ public class Database
 		updatePlayer(player);
 		asyncLoadBackpack(player);
 	}
-	
+
 	public void updatePlayer(Player player) {}
-	
+
 	public void saveBackpack(Backpack backpack) {}
-	
+
 	protected Backpack loadBackpack(OfflinePlayer player) { return null; }
 
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)

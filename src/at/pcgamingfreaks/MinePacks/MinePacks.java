@@ -101,10 +101,7 @@ public class MinePacks extends JavaPlugin
 			}
 
 			@Override
-			public void onFail()
-			{
-
-			}
+			public void onFail() {}
 		});
 	}
 	

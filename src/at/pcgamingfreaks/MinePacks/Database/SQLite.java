@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,14 +17,15 @@
 
 package at.pcgamingfreaks.MinePacks.Database;
 
+import at.pcgamingfreaks.MinePacks.MinePacks;
+
+import com.zaxxer.hikari.HikariConfig;
+
 import java.io.File;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public class SQLite extends SQL
 {
@@ -52,6 +53,24 @@ public class SQLite extends SQL
 	}
 
 	@Override
+	protected HikariConfig getPoolConfig()
+	{
+		try
+		{
+			Class.forName("org.sqlite.JDBC");
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		HikariConfig poolConfig = new HikariConfig();
+		poolConfig.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
+		poolConfig.setConnectionTestQuery("SELECT 1;");
+		return poolConfig;
+	}
+
+	@Override
 	protected void updateQuerysForDialect()
 	{
 		if(maxAge > 0)
@@ -64,44 +83,29 @@ public class SQLite extends SQL
 	}
 
 	@Override
-	protected Connection getConnection()
-	{
-		try
-		{
-			if(conn == null || conn.isClosed())
-			{
-				Class.forName("org.sqlite.JDBC"); // Throws an exception if the SQLite driver is not found.
-				conn = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
-			}
-		}
-		catch (ClassNotFoundException | SQLException e)
-		{
-			e.printStackTrace();
-		}
-		return conn;
-	}
-
-	@Override
 	protected void checkDB()
 	{
-		try
+		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			Statement stmt = getConnection().createStatement();
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((useUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") +");");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((useUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") + ");");
 			if(useUUIDs)
 			{
 				try
 				{
 					stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 				}
-				catch(SQLException ignored) {}
+				catch(SQLException ignored)
+				{
+				}
 			}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try
 			{
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
-			catch(SQLException ignored) {}
+			catch(SQLException ignored)
+			{
+			}
 			if(maxAge > 0)
 			{
 				try
@@ -110,11 +114,12 @@ public class SQLite extends SQL
 					rs.next();
 					stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 				}
-				catch(SQLException ignored) {}
+				catch(SQLException ignored)
+				{
+				}
 			}
-			stmt.close();
 		}
-		catch (SQLException e)
+		catch(SQLException e)
 		{
 			e.printStackTrace();
 		}

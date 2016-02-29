@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,30 +17,39 @@
 
 package at.pcgamingfreaks.MinePacks.Database;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import at.pcgamingfreaks.MinePacks.Backpack;
+import at.pcgamingfreaks.MinePacks.MinePacks;
 import at.pcgamingfreaks.UUIDConverter;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import at.pcgamingfreaks.MinePacks.Backpack;
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SQL extends Database
 {
-	protected Connection conn = null;
-	
+	private HikariDataSource dataSource;
+
 	protected String Table_Players, Table_Backpacks; // Table Names
 	protected String Field_Name, Field_PlayerID, Field_UUID, Field_BPOwner, Field_BPITS, Field_BPVersion, Field_BPLastUpdate; // Table Fields
 	protected String Query_UpdatePlayerAdd, Query_GetPlayerID, Query_InsertBP, Query_UpdateBP, Query_GetBP, Query_DeleteOldBackpacks, Query_GetUnsetOrInvalidUUIDs, Query_FixUUIDs; // DB Querys
 	protected boolean UpdatePlayer;
-	
+
 	public SQL(MinePacks mp)
 	{
 		super(mp);
+
+		dataSource = new HikariDataSource(getPoolConfig());
 
 		loadSettings();
 		buildQuerys();
@@ -57,35 +66,33 @@ public abstract class SQL extends Database
 			{
 				getConnection().createStatement().execute(Query_DeleteOldBackpacks);
 			}
-			catch (SQLException e)
+			catch(SQLException e)
 			{
 				e.printStackTrace();
 			}
 		}
 	}
 
+	protected abstract HikariConfig getPoolConfig();
+
 	protected void loadSettings()
 	{
 		// Load table and field names
-		Table_Players		= plugin.config.getUserTable();
-		Table_Backpacks		= plugin.config.getBackpackTable();
-		Field_PlayerID		= plugin.config.getDBFields("User.Player_ID");
-		Field_Name			= plugin.config.getDBFields("User.Name");
-		Field_UUID			= plugin.config.getDBFields("User.UUID");
-		Field_BPOwner		= plugin.config.getDBFields("Backpack.Owner_ID");
-		Field_BPITS			= plugin.config.getDBFields("Backpack.ItemStacks");
-		Field_BPVersion		= plugin.config.getDBFields("Backpack.Version");
-		Field_BPLastUpdate	= plugin.config.getDBFields("Backpack.LastUpdate");
-		UpdatePlayer		= plugin.config.getUpdatePlayer();
+		Table_Players = plugin.config.getUserTable();
+		Table_Backpacks = plugin.config.getBackpackTable();
+		Field_PlayerID = plugin.config.getDBFields("User.Player_ID");
+		Field_Name = plugin.config.getDBFields("User.Name");
+		Field_UUID = plugin.config.getDBFields("User.UUID");
+		Field_BPOwner = plugin.config.getDBFields("Backpack.Owner_ID");
+		Field_BPITS = plugin.config.getDBFields("Backpack.ItemStacks");
+		Field_BPVersion = plugin.config.getDBFields("Backpack.Version");
+		Field_BPLastUpdate = plugin.config.getDBFields("Backpack.LastUpdate");
+		UpdatePlayer = plugin.config.getUpdatePlayer();
 	}
-	
+
 	public void close()
 	{
-		try
-		{
-			conn.close();
-		}
-		catch(Exception ignored) { }
+		dataSource.close();
 	}
 
 	protected void checkUUIDs()
@@ -94,7 +101,13 @@ public abstract class SQL extends Database
 		{
 			int id;
 			String name, uuid;
-			public UpdateData(String name, String uuid, int id) { this.id = id; this.name = name; this.uuid = uuid; }
+
+			public UpdateData(String name, String uuid, int id)
+			{
+				this.id = id;
+				this.name = name;
+				this.uuid = uuid;
+			}
 		}
 		try
 		{
@@ -112,7 +125,7 @@ public abstract class SQL extends Database
 			res.close();
 			if(converter.size() > 0)
 			{
-				for (UpdateData data : converter)
+				for(UpdateData data : converter)
 				{
 					if(data.uuid == null)
 					{
@@ -128,16 +141,19 @@ public abstract class SQL extends Database
 			}
 			ps.close();
 		}
-		catch (SQLException e)
+		catch(SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	protected abstract Connection getConnection();
+	protected Connection getConnection() throws SQLException
+	{
+		return dataSource.getConnection();
+	}
 
 	protected abstract void checkDB();
-	
+
 	protected final void buildQuerys()
 	{
 		// Build the SQL querys with placeholders for the table and field names
@@ -177,9 +193,9 @@ public abstract class SQL extends Database
 		// Replace the table and filed names with the names from the config
 		Query_UpdatePlayerAdd = Query_UpdatePlayerAdd.replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldName\\}", Field_Name).replaceAll("\\{FieldUUID\\}", Field_UUID).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID);
 		Query_GetPlayerID = Query_GetPlayerID.replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldName\\}", Field_Name).replaceAll("\\{FieldUUID\\}", Field_UUID).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID);
-		Query_GetBP = Query_GetBP.replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}",Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID).replaceAll("\\{FieldName\\}", Field_Name).replaceAll("\\{FieldUUID\\}", Field_UUID);
-		Query_InsertBP = Query_InsertBP.replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}",Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{FieldBPLastUpdate\\}", Field_BPLastUpdate);
-		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}",Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{FieldBPLastUpdate\\}", Field_BPLastUpdate);
+		Query_GetBP = Query_GetBP.replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}", Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID).replaceAll("\\{FieldName\\}", Field_Name).replaceAll("\\{FieldUUID\\}", Field_UUID);
+		Query_InsertBP = Query_InsertBP.replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}", Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{FieldBPLastUpdate\\}", Field_BPLastUpdate);
+		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{FieldBPOwner\\}", Field_BPOwner).replaceAll("\\{FieldBPITS\\}", Field_BPITS).replaceAll("\\{FieldBPVersion\\}", Field_BPVersion).replaceAll("\\{FieldBPLastUpdate\\}", Field_BPLastUpdate);
 		Query_DeleteOldBackpacks = Query_DeleteOldBackpacks.replaceAll("\\{TableBackpacks\\}", Table_Backpacks).replaceAll("\\{FieldBPLastUpdate\\}", Field_BPLastUpdate).replaceAll("\\{VarMaxAge\\}", maxAge + "");
 		Query_GetUnsetOrInvalidUUIDs = Query_GetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldName\\}", Field_Name).replaceAll("\\{FieldUUID\\}", Field_UUID).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID);
 		Query_FixUUIDs = Query_FixUUIDs.replaceAll("\\{TablePlayers\\}", Table_Players).replaceAll("\\{FieldUUID\\}", Field_UUID).replaceAll("\\{FieldPlayerID\\}", Field_PlayerID);
@@ -187,105 +203,185 @@ public abstract class SQL extends Database
 
 	protected abstract void updateQuerysForDialect();
 
+	private void runStatementAsync(final String query, final Object... args)
+	{
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				runStatement(query, args);
+			}
+		});
+	}
+
+	private void runStatement(final String query, final Object... args)
+	{
+		try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query))
+		{
+			for(int i = 0; args != null && i < args.length; i++)
+			{
+				preparedStatement.setObject(i + 1, args[i]);
+			}
+			preparedStatement.execute();
+		}
+		catch(SQLException e)
+		{
+			System.out.print("Query: " + query);
+			e.printStackTrace();
+		}
+	}
+
 	// Plugin Functions
 	public void updatePlayer(final Player player)
 	{
-		try
+		if(useUUIDs)
 		{
-			PreparedStatement ps = getConnection().prepareStatement(Query_UpdatePlayerAdd);
-			ps.setString(1, player.getName());
-			if(useUUIDs)
-			{
-				String uuid = getPlayerFormattedUUID(player);
-				ps.setString(2, uuid);
-				ps.setString(3, player.getName());
-			}
-			ps.execute();
-			ps.close();
+			runStatementAsync(Query_UpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player), player.getName());
 		}
-		catch (SQLException e)
-	    {
-	        plugin.log.info("Failed to add/update user: " + player.getName());
-	        e.printStackTrace();
-	    }
+		else
+		{
+			runStatementAsync(Query_UpdatePlayerAdd, player.getName());
+		}
 	}
 
-	public int getPlayerID(OfflinePlayer player)
+	public void saveBackpack(final Backpack backpack)
 	{
-		int id = -1;
-		try
-		{
-			PreparedStatement ps = getConnection().prepareStatement(Query_GetPlayerID);
-			ps.setString(1, getPlayerNameOrUUID(player));
-			ResultSet rs = ps.executeQuery();
-			if(rs.next())
-			{
-				id = rs.getInt(1);
-			}
-			rs.close();
-			ps.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return id;
-	}
+		final byte[] data = itsSerializer.serialize(backpack.getInventory());
+		final int id = backpack.getOwnerID(), usedSerializer = itsSerializer.getUsedSerializer();
+		final String nameOrUUID = getPlayerNameOrUUID(backpack.getOwner()), name = backpack.getOwner().getName();
 
-	public void saveBackpack(Backpack backpack)
-	{
-		try
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable()
 		{
-			PreparedStatement ps; // Statement Variable
-			// Building the mysql statement
-			if(backpack.getOwnerID() <= 0)
+			@Override
+			public void run()
 			{
-				backpack.setOwnerID(getPlayerID(backpack.getOwner()));
-				if(backpack.getOwnerID() <= 0)
+				try(Connection connection = getConnection())
 				{
-					plugin.log.warning("Failed saving backpack for: " + backpack.getOwner().getName() + " (Unable to get players ID from database)");
-					return;
+					if(id <= 0)
+					{
+						final int newID;
+						try(PreparedStatement ps = connection.prepareStatement(Query_GetPlayerID))
+						{
+							ps.setString(1, nameOrUUID);
+							try(ResultSet rs = ps.executeQuery())
+							{
+								if(rs.next())
+								{
+									newID = rs.getInt(1);
+									plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+									{
+										@Override
+										public void run()
+										{
+											backpack.setOwnerID(newID);
+										}
+									});
+								}
+								else
+								{
+									newID = -1;
+								}
+							}
+						}
+						if(newID <= 0)
+						{
+							plugin.log.warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
+							return;
+						}
+						try(PreparedStatement ps = connection.prepareStatement(Query_InsertBP))
+						{
+							ps.setInt(1, newID);
+							ps.setBytes(2, data);
+							ps.setInt(3, usedSerializer);
+							ps.execute();
+						}
+					}
+					else
+					{
+						try(PreparedStatement ps = connection.prepareStatement(Query_UpdateBP))
+						{
+							ps.setBytes(1, data);
+							ps.setInt(2, usedSerializer);
+							ps.setInt(3, id);
+							ps.execute();
+						}
+					}
 				}
-				ps = getConnection().prepareStatement(Query_InsertBP);
-				ps.setInt(1, backpack.getOwnerID());
-				ps.setBytes(2, itsSerializer.serialize(backpack.getInventory()));
-				ps.setInt(3, itsSerializer.getUsedSerializer());
-				ps.execute();
-				ps.close();
-				return;
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
-			else
-			{
-				ps = getConnection().prepareStatement(Query_UpdateBP);
-				ps.setBytes(1, itsSerializer.serialize(backpack.getInventory()));
-				ps.setInt(2, itsSerializer.getUsedSerializer());
-				ps.setInt(3, backpack.getOwnerID());
-			}
-			ps.execute();
-			ps.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		});
 	}
 
-	public Backpack loadBackpack(OfflinePlayer player)
+	@Override
+	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
-		try
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable()
 		{
-			PreparedStatement ps = getConnection().prepareStatement(Query_GetBP);
-			ps.setString(1, getPlayerNameOrUUID(player));
-			ResultSet rs = ps.executeQuery();
-			if(!rs.next())
+			@Override
+			public void run()
 			{
-				return null;
+				try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(Query_GetBP))
+				{
+					ps.setString(1, getPlayerNameOrUUID(player));
+					final int bpID, version;
+					final byte[] data;
+					try(ResultSet rs = ps.executeQuery())
+					{
+						if(rs.next())
+						{
+							bpID = rs.getInt(1);
+							version = rs.getInt(3);
+							data = rs.getBytes(2);
+						}
+						else
+						{
+							bpID = -1;
+							version = 0;
+							data = null;
+						}
+					}
+					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
+							if(its != null)
+							{
+								callback.onResult(new Backpack(player, its, bpID));
+							}
+							else
+							{
+								callback.onFail();
+							}
+						}
+					});
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+					callback.onFail();
+				}
 			}
-			int bpID = rs.getInt(1);
-			ItemStack[] its = itsSerializer.deserialize(rs.getBytes(2), rs.getInt(3));
-			rs.close();
-			ps.close();
-			return new Backpack(player, its, bpID);
+		});
+	}
+
+	public Backpack loadBackpack(OfflinePlayer player) // The sync function shouldn't be called at all
+	{
+		try(Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement(Query_GetBP))
+		{
+			ps.setString(1, getPlayerNameOrUUID(player));
+			try(ResultSet rs = ps.executeQuery())
+			{
+				if(rs.next())
+				{
+					return new Backpack(player, itsSerializer.deserialize(rs.getBytes(2), rs.getInt(3)), rs.getInt(1));
+				}
+			}
 		}
 		catch(Exception e)
 		{

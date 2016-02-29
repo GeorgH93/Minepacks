@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,10 +27,11 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	{
 		super(plugin, LANG_VERSION);
 	}
-	
-	protected void doUpdate(int version)
+
+	@Override
+	protected void doUpdate()
 	{
-		switch(version)
+		switch(getVersion())
 		{
 			case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
 			case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));

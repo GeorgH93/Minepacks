@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.14-SNAPSHOT</version>
+	<version>1.14</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Bukkit_Minepacks.git</connection>
@@ -45,13 +45,23 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>LATEST</version>
+			<version>1.9-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>Bukkit_Bungee_PluginLib</artifactId>
 			<version>LATEST</version>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>2.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.4</version>
 		</dependency>
 	</dependencies>
 
@@ -97,6 +107,8 @@
 							<artifactSet>
 								<includes>
 									<include>at.pcgamingfreaks:Bukkit_Bungee_PluginLib</include>
+									<include>com.zaxxer:HikariCP</include>
+									<include>org.slf4j:*</include>
 								</includes>
 							</artifactSet>
 						</configuration>
