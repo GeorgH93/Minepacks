@@ -21,6 +21,9 @@ import at.pcgamingfreaks.MinePacks.MinePacks;
 
 import com.zaxxer.hikari.HikariConfig;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -79,7 +82,14 @@ public class SQLite extends SQL
 		}
 		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
 		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
-		Query_UpdatePlayerAdd = Query_UpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
+		if(useUUIDs)
+		{
+			Query_UpdatePlayerAdd = "INSERT OR IGNORE INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?);";
+		}
+		else
+		{
+			Query_UpdatePlayerAdd = Query_UpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
+		}
 	}
 
 	@Override
@@ -87,25 +97,21 @@ public class SQLite extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE" + ((useUUIDs) ? ", `uuid` CHAR(32) UNIQUE" : "") + ");");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32) UNIQUE" : " UNIQUE") + ");");
 			if(useUUIDs)
 			{
 				try
 				{
 					stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 				}
-				catch(SQLException ignored)
-				{
-				}
+				catch(SQLException ignored) {}
 			}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try
 			{
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
-			catch(SQLException ignored)
-			{
-			}
+			catch(SQLException ignored) {}
 			if(maxAge > 0)
 			{
 				try
@@ -122,6 +128,26 @@ public class SQLite extends SQL
 		catch(SQLException e)
 		{
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updatePlayer(final Player player)
+	{
+		if(useUUIDs)
+		{
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+				@Override
+				public void run()
+				{
+					runStatement(Query_UpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
+					runStatement("UPDATE `" + Table_Players + "` SET `" + Field_Name + "`=? WHERE `" + Field_UUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
+				}
+			});
+		}
+		else
+		{
+			runStatementAsync(Query_UpdatePlayerAdd, player.getName());
 		}
 	}
 }

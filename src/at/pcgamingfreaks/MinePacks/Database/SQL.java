@@ -203,7 +203,7 @@ public abstract class SQL extends Database
 
 	protected abstract void updateQuerysForDialect();
 
-	private void runStatementAsync(final String query, final Object... args)
+	protected void runStatementAsync(final String query, final Object... args)
 	{
 		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable()
 		{
@@ -215,7 +215,7 @@ public abstract class SQL extends Database
 		});
 	}
 
-	private void runStatement(final String query, final Object... args)
+	protected void runStatement(final String query, final Object... args)
 	{
 		try(Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query))
 		{

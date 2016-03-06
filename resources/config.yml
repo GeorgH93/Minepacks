@@ -55,6 +55,8 @@ Database:
     Database: minecraft
     User: minecraft
     Password: minecraft
+    #The max amount of connections to the database the connection pool will open
+    MaxConnections: 4
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
   # Use these settings only if you know what you are doing!!!!
   # Do only change this settings if you know what you are doing and have some basic MySQL knowlage!!!
@@ -82,4 +84,4 @@ Database:
 auto-update: true
 
 # Config file version. Don't touch it!
-Version: 9
+Version: 10

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,11 +27,11 @@ import java.util.Set;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 9;
+	private static final int CONFIG_VERSION = 10;
 
 	public Config(JavaPlugin plugin)
 	{
-		super(plugin, CONFIG_VERSION, 9);
+		super(plugin, CONFIG_VERSION, 10);
 	}
 
 	@Override
@@ -106,6 +106,11 @@ public class Config extends Configuration
 	public String getMySQLPassword()
 	{
 		return config.getString("Database.MySQL.Password", "");
+	}
+
+	public int getMySQLMaxConnections()
+	{
+		return config.getInt("Database.MySQL.MaxConnections", 4);
 	}
 
 	public String getUserTable()

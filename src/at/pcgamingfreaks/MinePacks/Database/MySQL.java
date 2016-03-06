@@ -41,7 +41,7 @@ public class MySQL extends SQL
 		poolConfig.setUsername(plugin.config.getMySQLUser());
 		poolConfig.setPassword(plugin.config.getMySQLPassword());
 		poolConfig.setMinimumIdle(1);
-		poolConfig.setMaximumPoolSize(8);
+		poolConfig.setMaximumPoolSize(plugin.config.getMySQLMaxConnections());
 		return poolConfig;
 	}
 
