@@ -97,7 +97,7 @@ public class SQLite extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32) UNIQUE" : " UNIQUE") + ");");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32)" : "") + " UNIQUE);");
 			if(useUUIDs)
 			{
 				try
