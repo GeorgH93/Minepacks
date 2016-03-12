@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,18 +17,22 @@
 
 package at.pcgamingfreaks.MinePacks;
 
-import java.util.HashMap;
-import java.util.logging.Logger;
+import at.pcgamingfreaks.MinePacks.Database.Config;
+import at.pcgamingfreaks.MinePacks.Database.Database;
+import at.pcgamingfreaks.MinePacks.Database.Language;
 
 import net.gravitydevelopment.Updater.Bukkit_Updater;
 import net.gravitydevelopment.Updater.UpdateType;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import at.pcgamingfreaks.MinePacks.Database.*;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class MinePacks extends JavaPlugin
 {
@@ -38,9 +42,9 @@ public class MinePacks extends JavaPlugin
 	public Config config;
 	public Language lang;
 	public Database DB;
-	
+
 	public HashMap<Player, Long> cooldowns = new HashMap<>();
-	
+
 	public static String BackpackTitle;
 	public String Message_InvalidBackpack;
 
@@ -53,6 +57,16 @@ public class MinePacks extends JavaPlugin
 	public void onEnable()
 	{
 		log = getLogger();
+
+		String name = Bukkit.getServer().getClass().getPackage().getName();
+		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
+		if((version[0].equals("1") && Integer.valueOf(version[1]) > 9) || Integer.valueOf(version[0]) > 1)
+		{
+			MinePacks.getInstance().warnOnVersionIncompatibility(version[0] + "." + version[1]);
+			this.setEnabled(false);
+			return;
+		}
+
 		config = new Config(this);
 		lang = new Language(this);
 
@@ -67,7 +81,7 @@ public class MinePacks extends JavaPlugin
 		{
 			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
-		
+
 		BackpackTitle = config.getBPTitle();
 		Message_InvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
@@ -85,7 +99,22 @@ public class MinePacks extends JavaPlugin
 		}
 		log.info(lang.get("Console.Disabled"));
 	}
-	
+
+	public void warnOnVersionIncompatibility(String version)
+	{
+		log.warning(ChatColor.RED + "################################");
+		log.warning(ChatColor.RED + String.format(MinePacks.getInstance().lang.getTranslated("Console.MinecraftVersionNotCompatible"), version));
+		log.warning(ChatColor.RED + "################################");
+		try
+		{
+			Thread.sleep(5000L);
+		}
+		catch(InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public void openBackpack(final Player opener, OfflinePlayer owner, final boolean editable)
 	{
 		if(owner == null)
@@ -104,7 +133,7 @@ public class MinePacks extends JavaPlugin
 			public void onFail() {}
 		});
 	}
-	
+
 	public void openBackpack(Player opener, Backpack backpack, boolean editable)
 	{
 		if(backpack == null)
@@ -114,7 +143,7 @@ public class MinePacks extends JavaPlugin
 		}
 		backpack.open(opener, editable);
 	}
-	
+
 	public int getBackpackPermSize(Player player)
 	{
 		for(int i = 9; i > 1; i--)
