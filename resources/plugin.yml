@@ -21,6 +21,7 @@ permissions:
       backpack.clean: true
       backpack.clean.other: true
       backpack.noCooldown: true
+      backpack.fullpickup: true
   backpack.use:
     description: Allows a player to open the backpack.
     children:
