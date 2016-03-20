@@ -28,6 +28,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 		super(plugin, LANG_VERSION);
 	}
 
+	@SuppressWarnings("SpellCheckingInspection")
 	@Override
 	protected void doUpdate()
 	{

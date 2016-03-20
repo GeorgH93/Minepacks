@@ -29,12 +29,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 public abstract class SQL extends Database
 {
@@ -109,37 +105,54 @@ public abstract class SQL extends Database
 				this.uuid = uuid;
 			}
 		}
-		try
+		try(Connection connection = getConnection())
 		{
-			List<UpdateData> converter = new ArrayList<>();
-			PreparedStatement ps = getConnection().prepareStatement(Query_FixUUIDs);
-			ResultSet res = getConnection().createStatement().executeQuery(Query_GetUnsetOrInvalidUUIDs);
-			while(res.next())
+			Map<String, UpdateData> toConvert = new HashMap<>();
+			List<UpdateData> toUpdate = new LinkedList<>();
+			try(Statement stmt = connection.createStatement(); ResultSet res = stmt.executeQuery(Query_GetUnsetOrInvalidUUIDs))
 			{
-				if(res.isFirst())
+				while(res.next())
 				{
-					plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
-				}
-				converter.add(new UpdateData(res.getString(2), res.getString(3), res.getInt(1)));
-			}
-			res.close();
-			if(converter.size() > 0)
-			{
-				for(UpdateData data : converter)
-				{
-					if(data.uuid == null)
+					if(res.isFirst())
 					{
-						ps.setString(1, UUIDConverter.getUUIDFromName(data.name, true, useUUIDSeparators, false));
+						plugin.log.info(plugin.lang.get("Console.UpdateUUIDs"));
+					}
+					String uuid = res.getString(Field_UUID);
+					if(uuid == null)
+					{
+						toConvert.put(res.getString(Field_Name) ,new UpdateData(res.getString(Field_Name), null, res.getInt(Field_PlayerID)));
 					}
 					else
 					{
-						ps.setString(1, (useUUIDSeparators) ? data.uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") : data.uuid.replaceAll("-", ""));
+						uuid = (useUUIDSeparators) ? uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") : uuid.replaceAll("-", "");
+						toUpdate.add(new UpdateData(res.getString(Field_Name), uuid, res.getInt(Field_PlayerID)));
 					}
-					ps.setInt(2, data.id);
 				}
-				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), converter.size()));
 			}
-			ps.close();
+			if(toConvert.size() > 0 || toUpdate.size() > 0)
+			{
+				if(toConvert.size() > 0)
+				{
+					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), true, useUUIDSeparators);
+					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
+					{
+						UpdateData updateData = toConvert.get(entry.getKey());
+						updateData.uuid = entry.getValue();
+						toUpdate.add(updateData);
+					}
+				}
+				try(PreparedStatement ps = connection.prepareStatement(Query_FixUUIDs))
+				{
+					for(UpdateData updateData : toUpdate)
+					{
+						ps.setString(1, updateData.uuid);
+						ps.setInt(2, updateData.id);
+						ps.addBatch();
+						ps.executeBatch();
+					}
+				}
+				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), toUpdate.size()));
+			}
 		}
 		catch(SQLException e)
 		{
