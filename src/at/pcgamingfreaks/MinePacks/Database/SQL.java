@@ -120,7 +120,7 @@ public abstract class SQL extends Database
 					String uuid = res.getString(Field_UUID);
 					if(uuid == null)
 					{
-						toConvert.put(res.getString(Field_Name) ,new UpdateData(res.getString(Field_Name), null, res.getInt(Field_PlayerID)));
+						toConvert.put(res.getString(Field_Name).toLowerCase(), new UpdateData(res.getString(Field_Name), null, res.getInt(Field_PlayerID)));
 					}
 					else
 					{
@@ -136,7 +136,7 @@ public abstract class SQL extends Database
 					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), true, useUUIDSeparators);
 					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
 					{
-						UpdateData updateData = toConvert.get(entry.getKey());
+						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase());
 						updateData.uuid = entry.getValue();
 						toUpdate.add(updateData);
 					}
