@@ -27,11 +27,11 @@ import java.util.Set;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 10;
+	private static final int CONFIG_VERSION = 11;
 
 	public Config(JavaPlugin plugin)
 	{
-		super(plugin, CONFIG_VERSION, 10);
+		super(plugin, CONFIG_VERSION, CONFIG_VERSION);
 	}
 
 	@Override
@@ -53,8 +53,7 @@ public class Config extends Configuration
 		Set<String> keys = oldConfig.getConfig().getKeys();
 		for(String key : keys)
 		{
-			if(key.equals("UseUUIDs") || key.equals("Version"))
-				continue;
+			if(key.equals("UseUUIDs") || key.equals("Version") || (key.equals("BackpackTitle") && oldConfig.getVersion() < 11)) continue;
 			try
 			{
 				config.set(key, oldConfig.getConfig().getString(key));
@@ -68,12 +67,16 @@ public class Config extends Configuration
 		{
 			if(oldConfig.getConfig().isSet("UseUUIDs"))
 			{
-				config.set("Database.UseUUIDs", config.getBoolean("UseUUIDs", true));
+				config.set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
 			}
 			else
 			{
 				config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 			}
+		}
+		if(oldConfig.getVersion() < 11)
+		{
+			config.set("BackpackTitleOther", oldConfig.getConfig().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
 		}
 	}
 
@@ -143,9 +146,14 @@ public class Config extends Configuration
 		return config.getBoolean("Database.UseUUIDSeparators", false);
 	}
 
+	public String getBPTitleOther()
+	{
+		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName\\}", "%s"));
+	}
+
 	public String getBPTitle()
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitle", "%s Backpack"));
+		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitle", "Backpack"));
 	}
 
 	public boolean getDropOnDeath()

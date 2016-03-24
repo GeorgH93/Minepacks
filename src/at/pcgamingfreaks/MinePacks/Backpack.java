@@ -17,6 +17,11 @@
 
 package at.pcgamingfreaks.MinePacks;
 
+import at.pcgamingfreaks.Bukkit.Reflection;
+import at.pcgamingfreaks.Bukkit.Utils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,11 +36,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class Backpack implements InventoryHolder
 {
+	private final static Method METHOD_GET_INVENTORY = Reflection.getMethod(Reflection.getOBCClass("inventory.CraftInventory"), "getInventory");
+	private final static Field FIELD_TITLE = Reflection.getField(Reflection.getOBCClass("inventory.CraftInventoryCustom$MinecraftInventory"), "title");
+
 	private OfflinePlayer owner;
 	private HashMap<Player, Boolean> opened = new HashMap<>();
 	private Inventory bp;
 	private int size, ownerID;
-	private String title;
+	private final String titleOther;
 	private boolean inWork, hasChanged;
 	
 	public Backpack(OfflinePlayer owner)
@@ -51,8 +59,8 @@ public class Backpack implements InventoryHolder
 	public Backpack(OfflinePlayer owner, int Size, int ID)
 	{
 		this.owner = owner;
-		title = String.format(MinePacks.BackpackTitle, owner.getName());
-		bp = Bukkit.createInventory(this, Size, title);
+		titleOther = Utils.limitLength(String.format(MinePacks.backpackTitleOther, owner.getName()), 32);
+		bp = Bukkit.createInventory(this, Size, titleOther);
 		size = Size;
 		ownerID = ID;
 		inWork = false;
@@ -86,7 +94,7 @@ public class Backpack implements InventoryHolder
 			Player player = owner.getPlayer();
 			if(player != null)
 			{
-				int size = MinePacks.getInstance().getBackpackPermSize(player);
+				int size = MinePacks.getBackpackPermSize(player);
 				if(size != bp.getSize())
 				{
 					List<ItemStack> items = setSize(size);
@@ -101,6 +109,21 @@ public class Backpack implements InventoryHolder
 			}
 		}
 		opened.put(p, editable);
+
+		// It's not perfect, but it is the only way of doing this.
+		// This sets the title of the inventory based on the person who is opening it.
+		// The owner will se an other title then everyone else.
+		// This way we can add owner name to the tile for everyone else.
+		try
+		{
+			FIELD_TITLE.setAccessible(true);
+			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
 		p.openInventory(bp);
 	}
 	
@@ -163,7 +186,7 @@ public class Backpack implements InventoryHolder
 		{
 			itemStackArray = bp.getContents();
 		}
-		bp = Bukkit.createInventory(bp.getHolder(), newSize, title);
+		bp = Bukkit.createInventory(bp.getHolder(), newSize, titleOther);
 		for(int i = 0; i < itemStackArray.length; i++)
 		{
 			bp.setItem(i, itemStackArray[i]);

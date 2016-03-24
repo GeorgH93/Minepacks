@@ -8,8 +8,10 @@ Language: en
 # Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
 LanguageUpdateMode: Overwrite
 
-# Title to be showen for the opened inventory. Can contain %s (which will be replaced with the players name).
-BackpackTitle: "&b%s Backpack"
+# Title to be showen for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
+BackpackTitleOther: "&b{OwnerName}'s Backpack"
+# The title of the inventory for the owner of the backpack.
+BackpackTitle: "&bBackpack"
 # Defines how long a player have to wait till he can reopen his backpack.
 # Time is in seconds. Values < 1 disable the cooldown.
 command_cooldown: -1
@@ -84,4 +86,4 @@ Database:
 auto-update: true
 
 # Config file version. Don't touch it!
-Version: 10
+Version: 11
