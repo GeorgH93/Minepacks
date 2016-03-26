@@ -45,8 +45,10 @@ public class SQLite extends SQL
 		Field_Name = "name";
 		Field_UUID = "uuid";
 		Field_BPOwner = "owner";
+		//noinspection SpellCheckingInspection
 		Field_BPITS = "itemstacks";
 		Field_BPVersion = "version";
+		//noinspection SpellCheckingInspection
 		Field_BPLastUpdate = "lastupdate";
 		Table_Players = "backpack_players";
 		Table_Backpacks = "backpacks";

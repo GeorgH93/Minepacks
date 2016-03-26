@@ -86,6 +86,7 @@ public abstract class SQL extends Database
 		UpdatePlayer = plugin.config.getUpdatePlayer();
 	}
 
+	@Override
 	public void close()
 	{
 		dataSource.close();
@@ -246,6 +247,7 @@ public abstract class SQL extends Database
 	}
 
 	// Plugin Functions
+	@Override
 	public void updatePlayer(final Player player)
 	{
 		if(useUUIDs)
@@ -258,6 +260,7 @@ public abstract class SQL extends Database
 		}
 	}
 
+	@Override
 	public void saveBackpack(final Backpack backpack)
 	{
 		final byte[] data = itsSerializer.serialize(backpack.getInventory());
@@ -383,6 +386,7 @@ public abstract class SQL extends Database
 		});
 	}
 
+	@Override
 	public Backpack loadBackpack(OfflinePlayer player) // The sync function shouldn't be called at all
 	{
 		try(Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement(Query_GetBP))
