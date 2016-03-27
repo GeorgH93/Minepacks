@@ -18,13 +18,12 @@
 package at.pcgamingfreaks.MinePacks;
 
 import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.MinePacks.Database.Config;
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import at.pcgamingfreaks.MinePacks.Database.Language;
-
-import net.gravitydevelopment.Updater.Bukkit_Updater;
-import net.gravitydevelopment.Updater.UpdateType;
+import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -97,7 +96,7 @@ public class MinePacks extends JavaPlugin
 		DB.close();
 		if(config.getAutoUpdate())
 		{
-			new Bukkit_Updater(this, 83445, this.getFile(), UpdateType.DEFAULT, true);
+			new Updater(this, this.getFile(), true, new BukkitUpdateProvider(83445));
 		}
 		log.info(lang.get("Console.Disabled"));
 	}
