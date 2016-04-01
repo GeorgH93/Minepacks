@@ -23,7 +23,6 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.MinePacks.Database.Config;
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import at.pcgamingfreaks.MinePacks.Database.Language;
-import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -57,7 +56,8 @@ public class MinePacks extends JavaPlugin
 	public void onEnable()
 	{
 		log = getLogger();
-
+		instance = this;
+		//region Check compatibility with used minecraft version
 		String name = Bukkit.getServer().getClass().getPackage().getName();
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		if((version[0].equals("1") && Integer.valueOf(version[1]) > 9) || Integer.valueOf(version[0]) > 1)
@@ -66,11 +66,9 @@ public class MinePacks extends JavaPlugin
 			this.setEnabled(false);
 			return;
 		}
-
+		//endregion
 		config = new Config(this);
 		lang = new Language(this);
-
-		instance = this;
 
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		DB = Database.getDatabase(this);
@@ -92,12 +90,16 @@ public class MinePacks extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
-		getServer().getScheduler().cancelTasks(this);
-		DB.close();
-		if(config.getAutoUpdate())
+		Updater updater = null;
+		if(config.getAutoUpdate()) // Lets check for updates
 		{
-			new Updater(this, this.getFile(), true, new BukkitUpdateProvider(83445));
+			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
+			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
 		}
+		getServer().getScheduler().cancelTasks(this); // Stop the listener, we don't need them any longer
+		DB.close(); // Close the DB connection, we won't need them any longer
+		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
+		instance = null;
 		log.info(lang.get("Console.Disabled"));
 	}
 
