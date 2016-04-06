@@ -20,6 +20,8 @@ command_cooldown: -1
 drop_on_death: true
 # Defines if the message that the backpack has been closed should be shown
 show_close_message: flase
+# Defines the max amount of colums for a backpack
+max_size: 6
 
 # Controlls for the auto pickup on full inventory function
 full_inventory:
@@ -86,4 +88,4 @@ Database:
 auto-update: true
 
 # Config file version. Don't touch it!
-Version: 11
+Version: 12

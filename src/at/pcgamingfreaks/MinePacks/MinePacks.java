@@ -45,7 +45,9 @@ public class MinePacks extends JavaPlugin
 	public HashMap<Player, Long> cooldowns = new HashMap<>();
 
 	public static String backpackTitleOther, backpackTitle;
-	public String Message_InvalidBackpack;
+	public String messageInvalidBackpack;
+
+	private static int maxSize;
 
 	public static MinePacks getInstance()
 	{
@@ -69,7 +71,6 @@ public class MinePacks extends JavaPlugin
 		//endregion
 		config = new Config(this);
 		lang = new Language(this);
-
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		DB = Database.getDatabase(this);
 		getCommand("backpack").setExecutor(new OnCommand(this));
@@ -80,9 +81,10 @@ public class MinePacks extends JavaPlugin
 			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
 
+		maxSize = config.getBackpackMaxSize();
 		backpackTitleOther = config.getBPTitleOther();
 		backpackTitle = Utils.limitLength(config.getBPTitle(), 32);
-		Message_InvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
+		messageInvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 		log.info(lang.get("Console.Enabled"));
 	}
@@ -141,7 +143,7 @@ public class MinePacks extends JavaPlugin
 	{
 		if(backpack == null)
 		{
-			opener.sendMessage(Message_InvalidBackpack);
+			opener.sendMessage(messageInvalidBackpack);
 			return;
 		}
 		backpack.open(opener, editable);
@@ -149,7 +151,7 @@ public class MinePacks extends JavaPlugin
 
 	public static int getBackpackPermSize(Player player)
 	{
-		for(int i = 9; i > 1; i--)
+		for(int i = maxSize; i > 1; i--)
 		{
 			if(player.hasPermission("backpack.size." + i))
 			{

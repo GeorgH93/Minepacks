@@ -27,7 +27,7 @@ import java.util.Set;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 11;
+	private static final int CONFIG_VERSION = 12;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -159,6 +159,11 @@ public class Config extends Configuration
 	public boolean getDropOnDeath()
 	{
 		return config.getBoolean("drop_on_death", true);
+	}
+
+	public int getBackpackMaxSize()
+	{
+		return config.getInt("max_size", 6);
 	}
 
 	public boolean getAutoUpdate()
