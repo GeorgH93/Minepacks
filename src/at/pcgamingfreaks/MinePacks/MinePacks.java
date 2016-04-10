@@ -58,6 +58,7 @@ public class MinePacks extends JavaPlugin
 	public void onEnable()
 	{
 		log = getLogger();
+		Utils.warnOnJava_1_7(log);
 		instance = this;
 		//region Check compatibility with used minecraft version
 		String name = Bukkit.getServer().getClass().getPackage().getName();
