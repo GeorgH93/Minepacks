@@ -111,14 +111,7 @@ public class MinePacks extends JavaPlugin
 		log.warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		log.warning(ConsoleColor.RED + String.format(lang.getTranslated("Console.MinecraftVersionNotCompatible"), version, getDescription().getVersion()) + ConsoleColor.RESET);
 		log.warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
-		try
-		{
-			Thread.sleep(5000L);
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		Utils.blockThread(5);
 	}
 
 	public void openBackpack(final Player opener, OfflinePlayer owner, final boolean editable)
