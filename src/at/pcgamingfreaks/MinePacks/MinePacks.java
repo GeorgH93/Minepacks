@@ -18,11 +18,12 @@
 package at.pcgamingfreaks.MinePacks;
 
 import at.pcgamingfreaks.Bukkit.Utils;
-import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.MinePacks.Database.Config;
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import at.pcgamingfreaks.MinePacks.Database.Language;
+import at.pcgamingfreaks.MinePacks.Updater.UpdateResult;
+import at.pcgamingfreaks.MinePacks.Updater.Updater;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -87,6 +88,23 @@ public class MinePacks extends JavaPlugin
 		backpackTitle = Utils.limitLength(config.getBPTitle(), 32);
 		messageInvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
+
+		if(config.getAutoUpdate()) // Lets check for updates
+		{
+			log.info("Checking for updates ...");
+			Updater updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
+			updater.update(new at.pcgamingfreaks.MinePacks.Updater.Updater.UpdaterResponse() {
+				@Override
+				public void onDone(UpdateResult updateResult)
+				{
+					if(updateResult == UpdateResult.UPDATE_AVAILABLE_V2)
+					{
+						new MinepacksV2IsOut(MinePacks.this);
+					}
+				}
+			}); // Starts the update, if there is a new update available it will download while we close the rest
+		}
+
 		log.info(lang.get("Console.Enabled"));
 	}
 
@@ -96,6 +114,7 @@ public class MinePacks extends JavaPlugin
 		Updater updater = null;
 		if(config.getAutoUpdate()) // Lets check for updates
 		{
+			log.info("Checking for updates ...");
 			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
 			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
 		}
