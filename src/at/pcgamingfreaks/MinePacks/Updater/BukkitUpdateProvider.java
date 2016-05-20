@@ -124,14 +124,13 @@ public class BukkitUpdateProvider
 	//region getter for the latest version
 	public String getLatestVersion() throws NotSuccessfullyQueriedException
 	{
-		/*String name = getLatestName();
+		String name = getLatestName();
 		String[] help = name.split(VERSION_DELIMITER);
 		if(help.length == 2)
 		{
 			return help[1].split("\\s+")[0];
 		}
-		return null;*/
-		return "2";
+		return null;
 	}
 
 	public String getLatestVersionFileName() throws NotSuccessfullyQueriedException
