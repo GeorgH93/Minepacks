@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.MinePacks;
 
-import at.pcgamingfreaks.Bukkit.Reflection;
+import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.Bukkit.Utils;
 
 import java.lang.reflect.Field;
@@ -36,8 +36,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class Backpack implements InventoryHolder
 {
-	private final static Method METHOD_GET_INVENTORY = Reflection.getMethod(Reflection.getOBCClass("inventory.CraftInventory"), "getInventory");
-	private final static Field FIELD_TITLE = Reflection.getField(Reflection.getOBCClass("inventory.CraftInventoryCustom$MinecraftInventory"), "title");
+	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
+	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
 
 	private OfflinePlayer owner;
 	private HashMap<Player, Boolean> opened = new HashMap<>();
@@ -205,6 +205,7 @@ public class Backpack implements InventoryHolder
 	 *
 	 * @return The inventory.
 	 */
+	@Override
 	public Inventory getInventory()
 	{
 		return bp;
