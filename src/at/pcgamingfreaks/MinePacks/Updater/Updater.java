@@ -26,6 +26,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -182,6 +183,11 @@ public class Updater
 
 	protected void download(URL url, String fileName) // Saves file into servers update directory
 	{
+		download(url, fileName, 0);
+	}
+
+	protected void download(URL url, String fileName, int movedCount) // Saves file into servers update directory
+	{
 		if(!updateFolder.exists())
 		{
 			//noinspection ResultOfMethodCallIgnored
@@ -189,10 +195,29 @@ public class Updater
 		}
 		try
 		{
-			int fileLength = url.openConnection().getContentLength(), count, percent, percentHelper = -1;
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setInstanceFollowRedirects(false);
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
+			switch (connection.getResponseCode())
+			{
+				case HttpURLConnection.HTTP_MOVED_PERM:
+				case HttpURLConnection.HTTP_MOVED_TEMP:
+					if(movedCount == 5)
+					{
+						logger.warning("Target url moved more than 5 times. Abort.");
+						result = UpdateResult.FAIL_DOWNLOAD;
+						return;
+					}
+					download(new URL(url, connection.getHeaderField("Location")), fileName, ++movedCount);
+					return;
+			}
+			//endregion
+			long fileLength = connection.getContentLengthLong();
+			int count, percent, percentHelper = -1;
 			File downloadFile = new File(updateFolder.getAbsolutePath() + File.separator + fileName);
 			MessageDigest md5HashGenerator = updateProvider.provideMD5Checksum() ? MessageDigest.getInstance("MD5") : null;
-			try(InputStream inputStream = (md5HashGenerator != null) ? new DigestInputStream(new BufferedInputStream(url.openStream()), md5HashGenerator) : new BufferedInputStream(url.openStream());
+			try(InputStream inputStream = (md5HashGenerator != null) ? new DigestInputStream(new BufferedInputStream(connection.getInputStream()), md5HashGenerator) : new BufferedInputStream(url.openStream());
 			    FileOutputStream outputStream = new FileOutputStream(downloadFile))
 			{
 				byte[] buffer = new byte[BUFFER_SIZE];
@@ -214,6 +239,7 @@ public class Updater
 				}
 				outputStream.flush();
 			}
+			connection.disconnect();
 			if(md5HashGenerator != null)
 			{
 				String MD5Download = byteArrayToHex(md5HashGenerator.digest()).toLowerCase(), MD5Target = updateProvider.getLatestChecksum().toLowerCase();

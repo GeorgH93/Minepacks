@@ -36,12 +36,9 @@ public class InventorySerializer
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		try
 		{
-			if(version[0].equals("1"))
+			if(version[0].equals("1") && Integer.parseInt(version[1]) > 7)
 			{
-				if(Integer.parseInt(version[1]) > 7)
-				{
-					serializer = new NBTItemStackSerializer();
-				}
+				serializer = new NBTItemStackSerializer();
 			}
 		}
 		catch(Exception e)
