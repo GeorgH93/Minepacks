@@ -7,4 +7,4 @@
 [Spigot](https://www.spigotmc.org/resources/minepacks.19286/)</br>
 [Dev Bukkit](http://dev.bukkit.org/bukkit-plugins/minepacks/)</br>
 [Issue tracker](https://github.com/GeorgH93/Bukkit_Minepacks/issues)</br>
-[Build Server ![Build Status](http://ci.pcgamingfreaks.at/job/Bukkit_Minepacks/badge/icon)](http://ci.pcgamingfreaks.at/job/Bukkit_Minepacks/)
+[Build Server ![Build Status](http://ci.pcgamingfreaks.at/job/Minepacks/badge/icon)](http://ci.pcgamingfreaks.at/job/Minepacks/)

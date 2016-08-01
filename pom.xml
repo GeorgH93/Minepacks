@@ -16,7 +16,7 @@
 	</issueManagement>
 	<ciManagement>
 		<system>jenkins</system>
-		<url>http://ci.pcgamingfreaks.at/job/Bukkit_Minepacks/</url>
+		<url>http://ci.pcgamingfreaks.at/job/Minepacks/</url>
 	</ciManagement>
 
 	<name>Bukkit Minepacks</name>
