@@ -3,7 +3,7 @@ author: GeorgH93
 website: http://dev.bukkit.org/bukkit-plugins/minepacks/
 main: at.pcgamingfreaks.MinePacks.MinePacks
 description: Minepacks is a backpack plugin with different backpack sizes, multilanguage and MySQL storage support. It is a simple plugin, but still has a lot of functions.
-version: ${version}
+version: ${project.version}
 commands:
   backpack:
     description: Main command
