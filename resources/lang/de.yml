@@ -1,24 +1,18 @@
 Language:
-  Console:
-    Enabled: MinePacks wurde aktiviert.
-    Disabled: MinePacks wurde deaktiviert.
-    NotFromConsole: Dieser Befehl kann nicht in der Console ausgeführt werden.
-    LangUpdated: Die Sprachdatei wurde aktualisiert.
-    UpdateUUIDs: Beginne die Spielernamen in UUIDs umzuwandeln...
-    UpdatedUUIDs: 'Es wurden %d Spielernamen in UUIDs umgewandelt.'
-    MinecraftVersionNotCompatible: "Deine Minecraft Version (MC %1$s) ist mit der Version des Plugins (%2$s) nicht kompatibel! Bitte prüfe ob ein update verfügbar ist!"
+  NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
   Ingame:
-    NoPermission: 'Dir fehlen die Rechte dafür.'
-    OwnBackPackClose: 'Rucksack geschlossen.'
+    NoPermission: "Dir fehlen die Rechte dafür."
+    OwnBackPackClose: "Rucksack geschlossen."
     PlayerBackPackClose: "%s's Rucksack geschlossen."
-    InvalidBackpack: Rucksack fehlerhaft.
-    BackpackCleaned: Rucksack gelehrt.
-    Cooldown: 'Bitte warte kurz bis du deinen Rucksack wieder öffnest.'
-  Description:
-    Backpack: Öffent deinen Rucksack.
-    Clean: Leert deinen Rucksack.
-    CleanOther: Leert den Rucksack eines anderen Spielers.
-    View:     Öffnet den Rucksack eines anderen Spielers.
+    InvalidBackpack: "Rucksack fehlerhaft."
+    BackpackCleaned: "Rucksack gelehrt."
+    Cooldown: "&2Bitte warte kurz bis du deinen Rucksack wieder öffnest."
+  Commands:
+    Description:
+      Backpack: "Öffent deinen Rucksack."
+      Clean: "Leert deinen Rucksack."
+      CleanOther: "Leert den Rucksack eines anderen Spielers."
+      View: "Öffnet den Rucksack eines anderen Spielers."
 
 # Language file version. Don't touch it!
-Version: 4
+Version: 10

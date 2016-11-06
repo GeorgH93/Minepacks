@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014-2015 GeorgH93
+ * Copyright (C) 2014-2016 GeorgH93
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,13 +29,13 @@ import java.util.List;
 
 public class ItemsCollector extends BukkitRunnable
 {
-	private double radius = 1.5;
-	private MinePacks plugin;
+	private final MinePacks plugin;
+	private final double radius;
 
-	public ItemsCollector(MinePacks mp)
+	public ItemsCollector(MinePacks plugin)
 	{
-		plugin = mp;
-		radius = plugin.config.getFullInvRadius();
+		this.plugin = plugin;
+		radius = this.plugin.config.getFullInvRadius();
 	}
 
 	@Override

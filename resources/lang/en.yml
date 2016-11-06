@@ -1,24 +1,18 @@
 Language:
-  Console:
-    Enabled: MinePacks has been enabled!
-    Disabled: MinePacks has been disabled.
-    NotFromConsole: Command not useable from console.
-    LangUpdated: Language File has been updated.
-    UpdateUUIDs: Start updating database to UUIDs ...
-    UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
-    MinecraftVersionNotCompatible: "Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). Please check for updates!"
+  NotFromConsole: "&cCommand not useable from console."
   Ingame:
-    NoPermission: You don't have the Permission to do that.
-    OwnBackPackClose: 'Backpack closed!'
+    NoPermission: "&cYou don't have the Permission to do that."
+    OwnBackPackClose: "Backpack closed!"
     PlayerBackPackClose: "%s's backpack closed!"
-    InvalidBackpack: Invalid backpack.
-    BackpackCleaned: Backpack cleaned.
-    Cooldown: "Please wait till you reopen your backpack."
-  Description:
-    Backpack: Opens your backpack.
-    Clean: Cleans your backpack.
-    CleanOther: Cleans the backpack of other players.
-    View: Shows the backpack of other player.
+    InvalidBackpack: "Invalid backpack."
+    BackpackCleaned: "Backpack cleaned."
+    Cooldown: "&2Please wait till you reopen your backpack."
+  Commands:
+    Description:
+      Backpack: "Opens your backpack."
+      Clean: "Cleans your backpack."
+      CleanOther: "Cleans the backpack of other players."
+      View: "Shows the backpack of other player."
 
 # Language file version. Don't touch it!
-Version: 4
+Version: 10

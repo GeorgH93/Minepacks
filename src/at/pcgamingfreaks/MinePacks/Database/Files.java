@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -33,43 +33,50 @@ import at.pcgamingfreaks.MinePacks.MinePacks;
 
 public class Files extends Database
 {
+	private static final String EXT =  ".backpack", EXT_REGEX =  "\\.backpack";
+
 	private File saveFolder;
-	private final String ext =  ".backpack";
 	
-	public Files(MinePacks mp)
+	public Files(MinePacks plugin)
 	{
-		super(mp);
+		super(plugin);
 		maxAge *= 24 * 3600000L;
-		saveFolder = new File(plugin.getDataFolder(), "backpacks");
+		saveFolder = new File(this.plugin.getDataFolder(), "backpacks");
 		if(!saveFolder.exists())
 		{
-			//noinspection ResultOfMethodCallIgnored
-			saveFolder.mkdirs();
+			if(!saveFolder.mkdirs())
+			{
+				plugin.getLogger().warning("Failed to create save folder (" + saveFolder.getAbsolutePath() + ").");
+			}
 		}
 		else
 		{
-			CheckFiles();
+			checkFiles();
 		}
 	}
 	
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private void CheckFiles()
+	private void checkFiles()
 	{
 		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
+		if(allFiles == null) return;
 		int len;
 		for (File file : allFiles)
 		{
 			if(maxAge > 0 && (new Date()).getTime() - file.lastModified() > maxAge) // Check if the file is older then x days
 			{
-				file.delete(); // Delete old files
+				if(!file.delete())
+				{
+					plugin.getLogger().warning("Failed to delete file (" + file.getAbsolutePath() + ").");
+				}
 				continue; // We don't have to check if the file name is correct cause we have the deleted the file
 			}
-			len = file.getName().length() - ext.length();
+			len = file.getName().length() - EXT.length();
 			if(useUUIDs) // Use UUID-based saving
 			{
 				if(len <= 16) // It's a player name
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + ext));
+					file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT));
 				}
 				else // It's an UUID
 				{
@@ -84,7 +91,7 @@ public class Files extends Database
 					{
 						if(useUUIDSeparators)
 						{
-							file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + ext, "$1-$2-$3-$4-$5" + ext)));
+							file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT)));
 						}
 					}
 				}
@@ -93,7 +100,7 @@ public class Files extends Database
 			{
 				if(len > 16) // We only have to rename it if it's name is more than 16 chars (minecraft max player name length)
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + ext));
+					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + EXT));
 				}
 			}
 		}
@@ -101,7 +108,7 @@ public class Files extends Database
 	
 	private String getFileName(OfflinePlayer player)
 	{
-		return getPlayerNameOrUUID(player) + ext;
+		return getPlayerNameOrUUID(player) + EXT;
 	}
 	
 	// DB Functions
@@ -109,13 +116,11 @@ public class Files extends Database
 	public void saveBackpack(Backpack backpack)
 	{
 		File save = new File(saveFolder, getFileName(backpack.getOwner()));
-		try
+		try(FileOutputStream fos = new FileOutputStream(save))
 		{
-			FileOutputStream fos = new FileOutputStream(save);
 			fos.write(itsSerializer.getUsedSerializer());
 			fos.write(itsSerializer.serialize(backpack.getInventory()));
 			fos.flush();
-			fos.close();
 		}
 		catch(Exception e)
 		{
@@ -131,13 +136,17 @@ public class Files extends Database
 		{
 			if(save.exists())
 			{
-				FileInputStream fis = new FileInputStream(save);
-				int v = fis.read();
-				byte[] out = new byte[(int)(save.length()-1)];
-				//noinspection ResultOfMethodCallIgnored
-				fis.read(out);
-				fis.close();
-				return new Backpack(player, itsSerializer.deserialize(out, v), -1);
+				try(FileInputStream fis = new FileInputStream(save))
+				{
+					int v = fis.read();
+					byte[] out = new byte[(int) (save.length() - 1)];
+					int c = fis.read(out);
+					if(v != c)
+					{
+						plugin.getLogger().warning("Problem reading file, only read " + c + " of " + v + " bytes.");
+					}
+					return new Backpack(player, itsSerializer.deserialize(out, v), -1);
+				}
 			}
 		}
 		catch(Exception e)
@@ -147,14 +156,14 @@ public class Files extends Database
 		return null;
 	}
 	
-	class BackpackFileFilter extends FileFilter implements FilenameFilter
+	private static class BackpackFileFilter extends FileFilter implements FilenameFilter
 	{
 		String description, extension;
 
 		public BackpackFileFilter()
 		{
 		    description = "Filters for Minepack backpack files.";
-		    extension = "backpack";
+		    extension = EXT.substring(1);
 		}
 
 		@Override

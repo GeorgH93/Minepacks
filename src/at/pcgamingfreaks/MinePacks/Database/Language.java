@@ -17,27 +17,96 @@
 
 package at.pcgamingfreaks.MinePacks.Database;
 
+import at.pcgamingfreaks.yaml.YAML;
+
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 4;
+	private static final int LANG_VERSION = 10, UPGRADE_THRESHOLD = 10;
 
 	public Language(JavaPlugin plugin)
 	{
-		super(plugin, LANG_VERSION);
+		super(plugin, LANG_VERSION, UPGRADE_THRESHOLD);
 	}
 
-	@SuppressWarnings("SpellCheckingInspection")
 	@Override
-	protected void doUpdate()
+	protected void doUpdate() {}
+
+	@Override
+	protected void doUpgrade(at.pcgamingfreaks.Language oldLang)
 	{
-		switch(getVersion())
+		if(oldLang.getVersion() < UPGRADE_THRESHOLD)
 		{
-			case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
-			case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
-			case 3: lang.set("Language.Console.MinecraftVersionNotCompatible", "Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). Please check for updates!");
-				break;
+			YAML oldYAML = oldLang.getLang(), newYAML = getLang();
+			Map<String, String> simpleConverter = new LinkedHashMap<>(), advancedConverter = new LinkedHashMap<>();
+			String[] keys;
+			String helper;
+			for(String key : oldYAML.getKeys(true))
+			{
+				try
+				{
+					keys = key.split("\\.");
+					if(keys.length == 3)
+					{
+						switch(keys[1])
+						{
+							case "Console":
+								switch(keys[2])
+								{
+									case "NotFromConsole": advancedConverter.put("Language.NotFromConsole", ChatColor.RED + oldYAML.getString(key)); break;
+								}
+								break;
+							case "Ingame":
+								switch(keys[3])
+								{
+									case "NoPermission": advancedConverter.put(key, ChatColor.RED + oldYAML.getString(key)); break;
+									case "OwnBackPackClose": simpleConverter.put(key, key); break;
+									case "PlayerBackPackClose": simpleConverter.put(key, key); break;
+									case "InvalidBackpack": simpleConverter.put(key, key); break;
+									case "BackpackCleaned": simpleConverter.put(key, key); break;
+									case "Cooldown": advancedConverter.put(key, ChatColor.DARK_GREEN + oldYAML.getString(key)); break;
+								}
+								break;
+							case "Description":
+								helper = "Language.Commands.Description.";
+								simpleConverter.put(helper + keys[2], key);
+								break;
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					plugin.getLogger().warning("Failed to convert the old \"" + key + "\" language value into the corresponding new one.");
+					e.printStackTrace();
+				}
+			}
+
+			// Patch them into the lang file
+			try
+			{
+				for(Map.Entry<String, String> entry : advancedConverter.entrySet())
+				{
+					newYAML.set(entry.getKey(), entry.getValue());
+				}
+				for(Map.Entry<String, String> entry : simpleConverter.entrySet())
+				{
+					newYAML.set(entry.getKey(), oldYAML.getString(entry.getValue()));
+				}
+			}
+			catch(Exception e)
+			{
+				plugin.getLogger().warning("Failed to write the old language values into the new language file.");
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			super.doUpgrade(oldLang);
 		}
 	}
 }

@@ -41,20 +41,20 @@ public class SQLite extends SQL
 	protected void loadSettings()
 	{
 		// Set table and field names to fixed values to prevent users from destroying old databases.
-		Field_PlayerID = "player_id";
-		Field_Name = "name";
-		Field_UUID = "uuid";
-		Field_BPOwner = "owner";
+		fieldPlayerID = "player_id";
+		fieldName = "name";
+		fieldUUID = "uuid";
+		fieldBpOwner = "owner";
 		//noinspection SpellCheckingInspection
-		Field_BPITS = "itemstacks";
-		Field_BPVersion = "version";
+		fieldBpIts = "itemstacks";
+		fieldBpVersion = "version";
 		//noinspection SpellCheckingInspection
-		Field_BPLastUpdate = "lastupdate";
-		Table_Players = "backpack_players";
-		Table_Backpacks = "backpacks";
+		fieldBpLastUpdate = "lastupdate";
+		tablePlayers = "backpack_players";
+		tableBackpacks = "backpacks";
 		// Set fixed settings
 		useUUIDSeparators = false;
-		UpdatePlayer = true;
+		updatePlayer = true;
 	}
 
 	@Override
@@ -80,17 +80,17 @@ public class SQLite extends SQL
 	{
 		if(maxAge > 0)
 		{
-			Query_InsertBP = Query_InsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
+			queryInsertBP = queryInsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		}
-		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
-		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
+		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
+		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
 		if(useUUIDs)
 		{
-			Query_UpdatePlayerAdd = "INSERT OR IGNORE INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?);";
+			queryUpdatePlayerAdd = "INSERT OR IGNORE INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?);";
 		}
 		else
 		{
-			Query_UpdatePlayerAdd = Query_UpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
+			queryUpdatePlayerAdd = queryUpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
 		}
 	}
 
@@ -142,14 +142,14 @@ public class SQLite extends SQL
 				@Override
 				public void run()
 				{
-					runStatement(Query_UpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
-					runStatement("UPDATE `" + Table_Players + "` SET `" + Field_Name + "`=? WHERE `" + Field_UUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
+					runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
+					runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldName + "`=? WHERE `" + fieldUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
 				}
 			});
 		}
 		else
 		{
-			runStatementAsync(Query_UpdatePlayerAdd, player.getName());
+			runStatementAsync(queryUpdatePlayerAdd, player.getName());
 		}
 	}
 }

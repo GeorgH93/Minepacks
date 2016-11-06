@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 package at.pcgamingfreaks.MinePacks;
 
 import at.pcgamingfreaks.Bukkit.NMSReflection;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ public class Backpack implements InventoryHolder
 	public Backpack(OfflinePlayer owner, int Size, int ID)
 	{
 		this.owner = owner;
-		titleOther = Utils.limitLength(String.format(MinePacks.backpackTitleOther, owner.getName()), 32);
+		titleOther = StringUtils.limitLength(String.format(MinePacks.getInstance().backpackTitleOther, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, Size, titleOther);
 		size = Size;
 		ownerID = ID;
@@ -94,7 +94,7 @@ public class Backpack implements InventoryHolder
 			Player player = owner.getPlayer();
 			if(player != null)
 			{
-				int size = MinePacks.getBackpackPermSize(player);
+				int size = MinePacks.getInstance().getBackpackPermSize(player);
 				if(size != bp.getSize())
 				{
 					List<ItemStack> items = setSize(size);
@@ -117,7 +117,7 @@ public class Backpack implements InventoryHolder
 		try
 		{
 			FIELD_TITLE.setAccessible(true);
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
+			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.getInstance().backpackTitle : titleOther);
 		}
 		catch(Exception e)
 		{

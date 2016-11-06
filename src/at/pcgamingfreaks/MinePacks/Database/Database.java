@@ -27,13 +27,13 @@ import java.util.HashMap;
 
 public class Database
 {
-	protected MinePacks plugin;
+	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 
+	protected MinePacks plugin;
 	protected boolean useUUIDs, useUUIDSeparators;
 	protected long maxAge;
-
-	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
 	protected InventorySerializer itsSerializer = new InventorySerializer();
+	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
 
 	public Database(MinePacks mp)
 	{

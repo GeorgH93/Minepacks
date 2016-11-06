@@ -48,8 +48,8 @@ public class MySQL extends SQL
 	@Override
 	protected void updateQuerysForDialect()
 	{
-		Query_DeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
-		Query_UpdateBP = Query_UpdateBP.replaceAll("\\{NOW\\}", "NOW()");
+		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
+		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "NOW()");
 	}
 
 	@Override
@@ -60,52 +60,52 @@ public class MySQL extends SQL
 			ResultSet res;
 			if(useUUIDs)
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL,`" + Field_UUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + Field_PlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL,`" + fieldUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
 				if(!res.next())
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD COLUMN `" + Field_UUID + "` CHAR(36) UNIQUE;");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD COLUMN `" + fieldUUID + "` CHAR(36) UNIQUE;");
 				}
 				res.close();
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_Name + "' AND COLUMN_KEY='UNI';");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
 				if(res.next())
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` DROP INDEX `" + Field_Name + "_UNIQUE`;");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` DROP INDEX `" + fieldName + "_UNIQUE`;");
 				}
 				res.close();
 				if(useUUIDSeparators)
 				{
-					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_UUID + "';");
+					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
 					if(res.next() && res.getInt(1) < 36)
 					{
-						stmt.execute("ALTER TABLE `" + Table_Players + "` MODIFY `" + Field_UUID + "` CHAR(36) UNIQUE;");
+						stmt.execute("ALTER TABLE `" + tablePlayers + "` MODIFY `" + fieldUUID + "` CHAR(36) UNIQUE;");
 					}
 					res.close();
 				}
 			}
 			else
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Players + "` (`" + Field_PlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + Field_Name + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + Field_PlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Players + "' AND COLUMN_NAME = '" + Field_Name + "' AND COLUMN_KEY='UNI';");
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
 				if(!res.next())
 				{
-					stmt.execute("ALTER TABLE `" + Table_Players + "` ADD UNIQUE INDEX `" + Field_Name + "_UNIQUE` (`" + Field_Name + "` ASC);");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD UNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "` ASC);");
 				}
 				res.close();
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + Table_Backpacks + "` (`" + Field_BPOwner + "` INT UNSIGNED NOT NULL, `" + Field_BPITS + "` BLOB, `"
-					+ Field_BPVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + Field_BPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + Field_BPOwner + "`));");
-			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPVersion + "';");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (`" + fieldBpOwner + "` INT UNSIGNED NOT NULL, `" + fieldBpIts + "` BLOB, `"
+					+ fieldBpVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + fieldBpLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + fieldBpOwner + "`));");
+			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBpVersion + "';");
 			if(!res.next())
 			{
-				stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPVersion + "` INT DEFAULT 0;");
+				stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBpVersion + "` INT DEFAULT 0;");
 			}
 			if(maxAge > 0)
 			{
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + Table_Backpacks + "' AND COLUMN_NAME = '" + Field_BPLastUpdate + "';");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBpLastUpdate + "';");
 				if(!res.next())
 				{
-					stmt.execute("ALTER TABLE `" + Table_Backpacks + "` ADD COLUMN `" + Field_BPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP;");
+					stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBpLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP;");
 				}
 				res.close();
 			}

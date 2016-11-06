@@ -17,13 +17,14 @@
 
 package at.pcgamingfreaks.MinePacks;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.MinePacks.Database.Config;
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import at.pcgamingfreaks.MinePacks.Database.Language;
-import at.pcgamingfreaks.MinePacks.Updater.UpdateResult;
-import at.pcgamingfreaks.MinePacks.Updater.Updater;
+import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -45,10 +46,10 @@ public class MinePacks extends JavaPlugin
 
 	public HashMap<Player, Long> cooldowns = new HashMap<>();
 
-	public static String backpackTitleOther, backpackTitle;
+	public String backpackTitleOther, backpackTitle;
 	public String messageInvalidBackpack;
 
-	private static int maxSize;
+	private int maxSize;
 
 	public static MinePacks getInstance()
 	{
@@ -62,11 +63,11 @@ public class MinePacks extends JavaPlugin
 		Utils.warnOnJava_1_7(log);
 		instance = this;
 		//region Check compatibility with used minecraft version
-		String name = Bukkit.getServer().getClass().getPackage().getName();
-		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-		if((version[0].equals("1") && Integer.valueOf(version[1]) > 10) || Integer.valueOf(version[0]) > 1)
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_10_R1))
 		{
-			MinePacks.getInstance().warnOnVersionIncompatibility(version[0] + "." + version[1]);
+			String name = Bukkit.getServer().getClass().getPackage().getName();
+			String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
+			this.warnOnVersionIncompatibility(version[0] + "." + version[1]);
 			this.setEnabled(false);
 			return;
 		}
@@ -85,7 +86,7 @@ public class MinePacks extends JavaPlugin
 
 		maxSize = config.getBackpackMaxSize();
 		backpackTitleOther = config.getBPTitleOther();
-		backpackTitle = Utils.limitLength(config.getBPTitle(), 32);
+		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
 		messageInvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 
@@ -93,19 +94,10 @@ public class MinePacks extends JavaPlugin
 		{
 			log.info("Checking for updates ...");
 			Updater updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
-			updater.update(new at.pcgamingfreaks.MinePacks.Updater.Updater.UpdaterResponse() {
-				@Override
-				public void onDone(UpdateResult updateResult)
-				{
-					if(updateResult == UpdateResult.UPDATE_AVAILABLE_V2)
-					{
-						new MinepacksV2IsOut(MinePacks.this);
-					}
-				}
-			}); // Starts the update, if there is a new update available it will download while we close the rest
+			updater.update(); // Starts the update
 		}
 
-		log.info(lang.get("Console.Enabled"));
+		log.info(lang.get(ConsoleColor.GREEN + "MinePacks has been enabled! " + ConsoleColor.YELLOW + ":)"));
 	}
 
 	@Override
@@ -122,13 +114,13 @@ public class MinePacks extends JavaPlugin
 		DB.close(); // Close the DB connection, we won't need them any longer
 		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
 		instance = null;
-		log.info(lang.get("Console.Disabled"));
+		log.info(lang.get(ConsoleColor.RED + "MinePacks has been disabled. " + ConsoleColor.YELLOW + ":)"));
 	}
 
 	public void warnOnVersionIncompatibility(String version)
 	{
 		log.warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
-		log.warning(ConsoleColor.RED + String.format(lang.getTranslated("Console.MinecraftVersionNotCompatible"), version, getDescription().getVersion()) + ConsoleColor.RESET);
+		log.warning(ConsoleColor.RED + String.format("Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). Please check for updates!", version, getDescription().getVersion()) + ConsoleColor.RESET);
 		log.warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		Utils.blockThread(5);
 	}
@@ -162,7 +154,7 @@ public class MinePacks extends JavaPlugin
 		backpack.open(opener, editable);
 	}
 
-	public static int getBackpackPermSize(Player player)
+	public int getBackpackPermSize(Player player)
 	{
 		for(int i = maxSize; i > 1; i--)
 		{

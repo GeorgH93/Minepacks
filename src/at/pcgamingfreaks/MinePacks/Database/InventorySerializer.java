@@ -27,8 +27,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventorySerializer
 {
-	ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
-	int usedSerializer = 1;
+	private ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
+	private int usedSerializer = 1;
 	
 	public InventorySerializer()
 	{

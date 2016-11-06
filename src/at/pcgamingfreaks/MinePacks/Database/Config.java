@@ -195,9 +195,4 @@ public class Config extends Configuration
 	{
 		return config.getDouble("full_inventory.collect_radius", 1.5); // in blocks
 	}
-
-	public boolean isV2InfoDisabled()
-	{
-		return config.getBoolean("Misc.DisableV2Info", false);
-	}
 }

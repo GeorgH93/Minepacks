@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,16 +34,16 @@ public class EventListener implements Listener
 	private MinePacks plugin;
 	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther;
 	
-	private String message_OwnBPClose, message_PlayerBPClose;
+	private String messageOwnBPClose, messagePlayerBPClose;
 	
 	public EventListener(MinePacks mp)
 	{
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();
-		message_OwnBPClose = plugin.lang.getTranslated("Ingame.OwnBackPackClose");
-		message_PlayerBPClose = plugin.lang.getTranslated("Ingame.PlayerBackPackClose");
-		showCloseMessageOther = message_PlayerBPClose != null && plugin.config.getShowCloseMessage();
-		showCloseMessageOwn = message_OwnBPClose != null && plugin.config.getShowCloseMessage();
+		messageOwnBPClose = plugin.lang.getTranslated("Ingame.OwnBackPackClose");
+		messagePlayerBPClose = plugin.lang.getTranslated("Ingame.PlayerBackPackClose");
+		showCloseMessageOther = messagePlayerBPClose != null && plugin.config.getShowCloseMessage();
+		showCloseMessageOwn = messageOwnBPClose != null && plugin.config.getShowCloseMessage();
 	}
 	
 	@EventHandler
@@ -97,14 +97,14 @@ public class EventListener implements Listener
 				{
 					if(showCloseMessageOwn)
 					{
-						closer.sendMessage(message_OwnBPClose);
+						closer.sendMessage(messageOwnBPClose);
 					}
 				}
 				else
 				{
 					if(showCloseMessageOther)
 					{
-						closer.sendMessage(String.format(message_PlayerBPClose, backpack.getOwner().getName()));
+						closer.sendMessage(String.format(messagePlayerBPClose, backpack.getOwner().getName()));
 					}
 				}
 			}

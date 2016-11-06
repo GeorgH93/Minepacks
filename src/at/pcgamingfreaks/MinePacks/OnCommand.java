@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,10 +39,10 @@ public class OnCommand implements CommandExecutor
 	public OnCommand(MinePacks mp) 
 	{
 		plugin = mp;
-		Message_NotFromConsole = plugin.lang.getTranslated("Console.NotFromConsole");
-		Message_NoPermission = ChatColor.RED + plugin.lang.getTranslated("Ingame.NoPermission");
-		Message_BackpackCleaned = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.BackpackCleaned");
-		Message_Cooldown = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.Cooldown");
+		Message_NotFromConsole = plugin.lang.getTranslated("NotFromConsole");
+		Message_NoPermission = plugin.lang.getTranslated("Ingame.NoPermission");
+		Message_BackpackCleaned = plugin.lang.getTranslated("Ingame.BackpackCleaned");
+		Message_Cooldown = plugin.lang.getTranslated("Ingame.Cooldown");
 		cooldown = plugin.config.getCommandCooldown();
 	}
 
@@ -95,18 +95,18 @@ public class OnCommand implements CommandExecutor
 					if(player.hasPermission("backpack"))
 					{
 						player.sendMessage(ChatColor.GOLD + "Minepacks Help:");
-						player.sendMessage(ChatColor.AQUA + "/backpack" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.Backpack"));
+						player.sendMessage(ChatColor.AQUA + "/backpack" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Commands.Description.Backpack"));
 						if(player.hasPermission("backpack.clean"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack clean" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.Clean"));
+							player.sendMessage(ChatColor.AQUA + "/backpack clean" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Commands.Description.Clean"));
 						}
 						if(player.hasPermission("backpack.clean.other"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack clean <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.CleanOther"));
+							player.sendMessage(ChatColor.AQUA + "/backpack clean <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Commands.Description.CleanOther"));
 						}
 						if(player.hasPermission("backpack.other"))
 						{
-							player.sendMessage(ChatColor.AQUA + "/backpack <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.View"));
+							player.sendMessage(ChatColor.AQUA + "/backpack <playername>" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Commands.Description.View"));
 						}
 					}
 					else
