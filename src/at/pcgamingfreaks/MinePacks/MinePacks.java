@@ -24,6 +24,7 @@ import at.pcgamingfreaks.MinePacks.Database.Database;
 import at.pcgamingfreaks.MinePacks.Database.Language;
 import at.pcgamingfreaks.MinePacks.Updater.UpdateResult;
 import at.pcgamingfreaks.MinePacks.Updater.Updater;
+import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -85,7 +86,7 @@ public class MinePacks extends JavaPlugin
 
 		maxSize = config.getBackpackMaxSize();
 		backpackTitleOther = config.getBPTitleOther();
-		backpackTitle = Utils.limitLength(config.getBPTitle(), 32);
+		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
 		messageInvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
 		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
 

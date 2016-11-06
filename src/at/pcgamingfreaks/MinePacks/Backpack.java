@@ -18,7 +18,7 @@
 package at.pcgamingfreaks.MinePacks;
 
 import at.pcgamingfreaks.Bukkit.NMSReflection;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,7 +59,7 @@ public class Backpack implements InventoryHolder
 	public Backpack(OfflinePlayer owner, int Size, int ID)
 	{
 		this.owner = owner;
-		titleOther = Utils.limitLength(String.format(MinePacks.backpackTitleOther, owner.getName()), 32);
+		titleOther = StringUtils.limitLength(String.format(MinePacks.backpackTitleOther, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, Size, titleOther);
 		size = Size;
 		ownerID = ID;
