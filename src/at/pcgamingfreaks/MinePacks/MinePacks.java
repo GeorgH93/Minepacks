@@ -63,7 +63,7 @@ public class MinePacks extends JavaPlugin
 		Utils.warnOnJava_1_7(log);
 		instance = this;
 		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_10_R1))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_11_R1))
 		{
 			String name = Bukkit.getServer().getClass().getPackage().getName();
 			String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
