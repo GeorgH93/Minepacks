@@ -65,7 +65,7 @@ public class MinePacks extends JavaPlugin
 		//region Check compatibility with used minecraft version
 		String name = Bukkit.getServer().getClass().getPackage().getName();
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-		if((version[0].equals("1") && Integer.valueOf(version[1]) > 10) || Integer.valueOf(version[0]) > 1)
+		if((version[0].equals("1") && Integer.valueOf(version[1]) > 11) || Integer.valueOf(version[0]) > 1)
 		{
 			MinePacks.getInstance().warnOnVersionIncompatibility(version[0] + "." + version[1]);
 			this.setEnabled(false);

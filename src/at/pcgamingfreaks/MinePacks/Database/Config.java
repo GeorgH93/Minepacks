@@ -35,13 +35,6 @@ public class Config extends Configuration
 	}
 
 	@Override
-	protected boolean newConfigCreated()
-	{
-		config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
-		return !(Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
-	}
-
-	@Override
 	protected void doUpdate()
 	{
 		// Nothing to update yet
