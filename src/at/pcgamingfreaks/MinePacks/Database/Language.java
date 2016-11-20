@@ -62,7 +62,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 								}
 								break;
 							case "Ingame":
-								switch(keys[3])
+								switch(keys[2])
 								{
 									case "NoPermission": advancedConverter.put(key, ChatColor.RED + oldYAML.getString(key)); break;
 									case "OwnBackPackClose": simpleConverter.put(key, key); break;
