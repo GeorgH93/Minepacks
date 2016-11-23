@@ -15,15 +15,15 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks;
+package at.pcgamingfreaks.Minepacks;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
-import at.pcgamingfreaks.MinePacks.Database.Config;
-import at.pcgamingfreaks.MinePacks.Database.Database;
-import at.pcgamingfreaks.MinePacks.Database.Language;
+import at.pcgamingfreaks.Minepacks.Database.Config;
+import at.pcgamingfreaks.Minepacks.Database.Database;
+import at.pcgamingfreaks.Minepacks.Database.Language;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
@@ -35,9 +35,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-public class MinePacks extends JavaPlugin
+public class Minepacks extends JavaPlugin
 {
-	private static MinePacks instance = null;
+	private static Minepacks instance = null;
 
 	public Logger log;
 	public Config config;
@@ -51,7 +51,7 @@ public class MinePacks extends JavaPlugin
 
 	private int maxSize;
 
-	public static MinePacks getInstance()
+	public static Minepacks getInstance()
 	{
 		return instance;
 	}
@@ -88,7 +88,7 @@ public class MinePacks extends JavaPlugin
 		backpackTitleOther = config.getBPTitleOther();
 		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
 		messageInvalidBackpack = lang.getTranslated("Ingame.InvalidBackpack");
-		getServer().getServicesManager().register(MinePacks.class, this, this, ServicePriority.Normal);
+		getServer().getServicesManager().register(Minepacks.class, this, this, ServicePriority.Normal);
 
 		if(config.getAutoUpdate()) // Lets check for updates
 		{
@@ -97,7 +97,7 @@ public class MinePacks extends JavaPlugin
 			updater.update(); // Starts the update
 		}
 
-		log.info(lang.get(ConsoleColor.GREEN + "MinePacks has been enabled! " + ConsoleColor.YELLOW + ":)"));
+		log.info(lang.get(ConsoleColor.GREEN + "Minepacks has been enabled! " + ConsoleColor.YELLOW + ":)"));
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class MinePacks extends JavaPlugin
 		DB.close(); // Close the DB connection, we won't need them any longer
 		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
 		instance = null;
-		log.info(lang.get(ConsoleColor.RED + "MinePacks has been disabled. " + ConsoleColor.YELLOW + ":)"));
+		log.info(lang.get(ConsoleColor.RED + "Minepacks has been disabled. " + ConsoleColor.YELLOW + ":)"));
 	}
 
 	public void warnOnVersionIncompatibility(String version)

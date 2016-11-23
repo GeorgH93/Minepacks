@@ -15,7 +15,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks;
+package at.pcgamingfreaks.Minepacks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -29,10 +29,10 @@ import java.util.List;
 
 public class ItemsCollector extends BukkitRunnable
 {
-	private final MinePacks plugin;
+	private final Minepacks plugin;
 	private final double radius;
 
-	public ItemsCollector(MinePacks plugin)
+	public ItemsCollector(Minepacks plugin)
 	{
 		this.plugin = plugin;
 		radius = this.plugin.config.getFullInvRadius();

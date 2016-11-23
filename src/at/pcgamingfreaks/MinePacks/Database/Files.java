@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks.Database;
+package at.pcgamingfreaks.Minepacks.Database;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,8 +28,8 @@ import javax.swing.filechooser.FileFilter;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
 
-import at.pcgamingfreaks.MinePacks.Backpack;
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import at.pcgamingfreaks.Minepacks.Backpack;
+import at.pcgamingfreaks.Minepacks.Minepacks;
 
 public class Files extends Database
 {
@@ -37,7 +37,7 @@ public class Files extends Database
 
 	private File saveFolder;
 	
-	public Files(MinePacks plugin)
+	public Files(Minepacks plugin)
 	{
 		super(plugin);
 		maxAge *= 24 * 3600000L;

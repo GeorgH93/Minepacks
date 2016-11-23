@@ -15,9 +15,9 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks;
+package at.pcgamingfreaks.Minepacks;
 
-import at.pcgamingfreaks.MinePacks.Database.Database;
+import at.pcgamingfreaks.Minepacks.Database.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,12 +31,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class EventListener implements Listener
 {
-	private MinePacks plugin;
+	private Minepacks plugin;
 	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther;
 	
 	private String messageOwnBPClose, messagePlayerBPClose;
 	
-	public EventListener(MinePacks mp)
+	public EventListener(Minepacks mp)
 	{
 		plugin = mp;
 		drop_on_death = plugin.config.getDropOnDeath();

@@ -15,10 +15,10 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks.Database;
+package at.pcgamingfreaks.Minepacks.Database;
 
-import at.pcgamingfreaks.MinePacks.Backpack;
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import at.pcgamingfreaks.Minepacks.Backpack;
+import at.pcgamingfreaks.Minepacks.Minepacks;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -29,13 +29,13 @@ public class Database
 {
 	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 
-	protected MinePacks plugin;
+	protected Minepacks plugin;
 	protected boolean useUUIDs, useUUIDSeparators;
 	protected long maxAge;
 	protected InventorySerializer itsSerializer = new InventorySerializer();
 	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
 
-	public Database(MinePacks mp)
+	public Database(Minepacks mp)
 	{
 		plugin = mp;
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
@@ -43,7 +43,7 @@ public class Database
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
 	}
 
-	public static Database getDatabase(MinePacks Plugin)
+	public static Database getDatabase(Minepacks Plugin)
 	{
 		switch(Plugin.config.getDatabaseType().toLowerCase())
 		{

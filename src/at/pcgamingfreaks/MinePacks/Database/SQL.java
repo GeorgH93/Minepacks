@@ -15,10 +15,10 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks.Database;
+package at.pcgamingfreaks.Minepacks.Database;
 
-import at.pcgamingfreaks.MinePacks.Backpack;
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import at.pcgamingfreaks.Minepacks.Backpack;
+import at.pcgamingfreaks.Minepacks.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -41,11 +41,13 @@ public abstract class SQL extends Database
 	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	protected boolean updatePlayer;
 
-	public SQL(MinePacks mp)
+	public SQL(Minepacks mp)
 	{
 		super(mp);
 
-		dataSource = new HikariDataSource(getPoolConfig());
+		HikariConfig poolConfig = getPoolConfig();
+		poolConfig.setPoolName("Minepacks-Connection-Pool");
+		dataSource = new HikariDataSource(poolConfig);
 
 		loadSettings();
 		buildQuerys();

@@ -15,9 +15,9 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks.Database;
+package at.pcgamingfreaks.Minepacks.Database;
 
-import at.pcgamingfreaks.MinePacks.MinePacks;
+import at.pcgamingfreaks.Minepacks.Minepacks;
 
 import com.zaxxer.hikari.HikariConfig;
 
@@ -32,7 +32,7 @@ import java.sql.Statement;
 
 public class SQLite extends SQL
 {
-	public SQLite(MinePacks mp)
+	public SQLite(Minepacks mp)
 	{
 		super(mp);
 	}

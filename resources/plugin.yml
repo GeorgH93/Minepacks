@@ -1,8 +1,8 @@
-name: MinePacks
+name: Minepacks
 author: GeorgH93
 website: http://dev.bukkit.org/bukkit-plugins/minepacks/
-main: at.pcgamingfreaks.MinePacks.MinePacks
-description: Minepacks is a backpack plugin with different backpack sizes, multilanguage and MySQL storage support. It is a simple plugin, but still has a lot of functions.
+main: at.pcgamingfreaks.Minepacks.Minepacks
+description: ${project.description}
 version: ${project.version}
 depend: [PCGF_MC_Plugin_Lib]
 commands:
@@ -12,7 +12,7 @@ commands:
     usage: /backpack
 permissions:
   backpack.*:
-    description: Gives access to the full MinePacks functionality.
+    description: Gives access to the full Minepacks functionality.
     children:
       backpack: true
       backpack.size.6: true

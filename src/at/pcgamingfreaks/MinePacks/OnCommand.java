@@ -15,11 +15,11 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks;
+package at.pcgamingfreaks.Minepacks;
 
 import java.util.Date;
 
-import at.pcgamingfreaks.MinePacks.Database.Database;
+import at.pcgamingfreaks.Minepacks.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -30,13 +30,13 @@ import org.bukkit.entity.Player;
 
 public class OnCommand implements CommandExecutor 
 {
-	private MinePacks plugin;
+	private Minepacks plugin;
 	
 	public String Message_NotFromConsole, Message_NoPermission, Message_BackpackCleaned, Message_Cooldown;
 	
 	public int cooldown;
 	
-	public OnCommand(MinePacks mp) 
+	public OnCommand(Minepacks mp)
 	{
 		plugin = mp;
 		Message_NotFromConsole = plugin.lang.getTranslated("NotFromConsole");

@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks.Database;
+package at.pcgamingfreaks.Minepacks.Database;
 
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;

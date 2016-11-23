@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.MinePacks;
+package at.pcgamingfreaks.Minepacks;
 
 import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.StringUtils;
@@ -59,7 +59,7 @@ public class Backpack implements InventoryHolder
 	public Backpack(OfflinePlayer owner, int Size, int ID)
 	{
 		this.owner = owner;
-		titleOther = StringUtils.limitLength(String.format(MinePacks.getInstance().backpackTitleOther, owner.getName()), 32);
+		titleOther = StringUtils.limitLength(String.format(Minepacks.getInstance().backpackTitleOther, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, Size, titleOther);
 		size = Size;
 		ownerID = ID;
@@ -94,7 +94,7 @@ public class Backpack implements InventoryHolder
 			Player player = owner.getPlayer();
 			if(player != null)
 			{
-				int size = MinePacks.getInstance().getBackpackPermSize(player);
+				int size = Minepacks.getInstance().getBackpackPermSize(player);
 				if(size != bp.getSize())
 				{
 					List<ItemStack> items = setSize(size);
@@ -117,7 +117,7 @@ public class Backpack implements InventoryHolder
 		try
 		{
 			FIELD_TITLE.setAccessible(true);
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.getInstance().backpackTitle : titleOther);
+			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther);
 		}
 		catch(Exception e)
 		{
@@ -226,7 +226,7 @@ public class Backpack implements InventoryHolder
 	{
 		if(hasChanged)
 		{
-			MinePacks.getInstance().DB.saveBackpack(this);
+			Minepacks.getInstance().DB.saveBackpack(this);
 			hasChanged = false;
 		}
 	}
