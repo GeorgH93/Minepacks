@@ -19,8 +19,8 @@
 		<url>http://ci.pcgamingfreaks.at/job/Minepacks/</url>
 	</ciManagement>
 
-	<name>Bukkit Minepacks</name>
-	<description>A backpack plugin for Bukkit.</description>
+	<name>MinePacks</name>
+	<description>Minepacks is a backpack plugin with different backpack sizes, multi language support and SQLite and MySQL storage support.</description>
 	<inceptionYear>2014</inceptionYear>
 	<licenses>
 		<license>
