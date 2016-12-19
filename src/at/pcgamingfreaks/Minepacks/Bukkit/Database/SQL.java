@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,10 +15,12 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Backpack;
-import at.pcgamingfreaks.Minepacks.Minepacks;
+import at.pcgamingfreaks.Database.DBTools;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -37,8 +39,8 @@ public abstract class SQL extends Database
 	private HikariDataSource dataSource;
 
 	protected String tablePlayers, tableBackpacks; // Table Names
-	protected String fieldName, fieldPlayerID, fieldUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate; // Table Fields
-	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
+	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate; // Table Fields
+	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	protected boolean updatePlayer;
 
 	public SQL(Minepacks mp)
@@ -82,8 +84,8 @@ public abstract class SQL extends Database
 		tablePlayers = plugin.config.getUserTable();
 		tableBackpacks = plugin.config.getBackpackTable();
 		fieldPlayerID = plugin.config.getDBFields("User.Player_ID");
-		fieldName = plugin.config.getDBFields("User.Name");
-		fieldUUID = plugin.config.getDBFields("User.UUID");
+		fieldPlayerName = plugin.config.getDBFields("User.Name");
+		fieldPlayerUUID = plugin.config.getDBFields("User.UUID");
 		fieldBpOwner = plugin.config.getDBFields("Backpack.Owner_ID");
 		fieldBpIts = plugin.config.getDBFields("Backpack.ItemStacks");
 		fieldBpVersion = plugin.config.getDBFields("Backpack.Version");
@@ -94,6 +96,7 @@ public abstract class SQL extends Database
 	@Override
 	public void close()
 	{
+		super.close();
 		dataSource.close();
 	}
 
@@ -120,12 +123,12 @@ public abstract class SQL extends Database
 				{
 					if(res.isFirst())
 					{
-						plugin.log.info(START_UUID_UPDATE);
+						plugin.getLogger().info(START_UUID_UPDATE);
 					}
-					String uuid = res.getString(fieldUUID);
+					String uuid = res.getString(fieldPlayerUUID);
 					if(uuid == null)
 					{
-						toConvert.put(res.getString(fieldName).toLowerCase(), new UpdateData(null, res.getInt(fieldPlayerID)));
+						toConvert.put(res.getString(fieldPlayerName).toLowerCase(), new UpdateData(null, res.getInt(fieldPlayerID)));
 					}
 					else
 					{
@@ -156,7 +159,7 @@ public abstract class SQL extends Database
 						ps.executeBatch();
 					}
 				}
-				plugin.log.info(String.format(UUIDS_UPDATED, toUpdate.size()));
+				plugin.getLogger().info(String.format(UUIDS_UPDATED, toUpdate.size()));
 			}
 		}
 		catch(SQLException e)
@@ -188,13 +191,13 @@ public abstract class SQL extends Database
 			queryGetPlayerID = "SELECT `{FieldPlayerID}` FROM `{TablePlayers}` WHERE `{FieldName}`=?;";
 			queryGetBP += "`{FieldName}`=?;";
 		}
-		queryInsertBP = "INSERT INTO `{TableBackpacks}` (`{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}`) VALUES (?,?,?);";
-		queryUpdateBP = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=?";
+		queryInsertBp = "INSERT INTO `{TableBackpacks}` (`{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}`) VALUES (?,?,?);";
+		queryUpdateBp = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=?";
 		if(maxAge > 0)
 		{
-			queryUpdateBP += ",`{FieldBPLastUpdate}`={NOW}";
+			queryUpdateBp += ",`{FieldBPLastUpdate}`={NOW}";
 		}
-		queryUpdateBP += " WHERE `{FieldBPOwner}`=?;";
+		queryUpdateBp += " WHERE `{FieldBPOwner}`=?;";
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
 		if(useUUIDSeparators)
 		{
@@ -208,18 +211,31 @@ public abstract class SQL extends Database
 
 		updateQuerysForDialect();
 
+		setTableAndFieldNames();
+	}
+
+	protected void setTableAndFieldNames()
+	{
 		// Replace the table and filed names with the names from the config
-		queryUpdatePlayerAdd = queryUpdatePlayerAdd.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryGetPlayerID = queryGetPlayerID.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryGetBP = queryGetBP.replaceAll("\\{FieldBPOwner\\}", fieldBpOwner).replaceAll("\\{FieldBPITS\\}", fieldBpIts).replaceAll("\\{FieldBPVersion\\}", fieldBpVersion).replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID);
-		queryInsertBP = queryInsertBP.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPOwner\\}", fieldBpOwner).replaceAll("\\{FieldBPITS\\}", fieldBpIts).replaceAll("\\{FieldBPVersion\\}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate\\}", fieldBpLastUpdate);
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPOwner\\}", fieldBpOwner).replaceAll("\\{FieldBPITS\\}", fieldBpIts).replaceAll("\\{FieldBPVersion\\}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate\\}", fieldBpLastUpdate);
-		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPLastUpdate\\}", fieldBpLastUpdate).replaceAll("\\{VarMaxAge\\}", maxAge + "");
-		queryGetUnsetOrInvalidUUIDs = queryGetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryFixUUIDs = queryFixUUIDs.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
+		queryUpdatePlayerAdd        = replacePlaceholders(queryUpdatePlayerAdd);
+		queryGetPlayerID            = replacePlaceholders(queryGetPlayerID);
+		queryGetBP                  = replacePlaceholders(queryGetBP);
+		queryInsertBp = replacePlaceholders(queryInsertBp);
+		queryUpdateBp = replacePlaceholders(queryUpdateBp);
+		queryFixUUIDs               = replacePlaceholders(queryFixUUIDs);
+		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
+		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
 	}
 
 	protected abstract void updateQuerysForDialect();
+
+	protected String replacePlaceholders(String query)
+	{
+		return query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
+				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
+				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwner).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
+				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate); // Backpacks
+	}
 
 	protected void runStatementAsync(final String query, final Object... args)
 	{
@@ -289,6 +305,7 @@ public abstract class SQL extends Database
 								if(rs.next())
 								{
 									newID = rs.getInt(1);
+									DBTools.runStatement(connection, queryInsertBp, data, usedSerializer, id);
 									plugin.getServer().getScheduler().runTask(plugin, new Runnable()
 									{
 										@Override
@@ -300,32 +317,14 @@ public abstract class SQL extends Database
 								}
 								else
 								{
-									newID = -1;
+									plugin.getLogger().warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
 								}
 							}
-						}
-						if(newID <= 0)
-						{
-							plugin.log.warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
-							return;
-						}
-						try(PreparedStatement ps = connection.prepareStatement(queryInsertBP))
-						{
-							ps.setInt(1, newID);
-							ps.setBytes(2, data);
-							ps.setInt(3, usedSerializer);
-							ps.execute();
 						}
 					}
 					else
 					{
-						try(PreparedStatement ps = connection.prepareStatement(queryUpdateBP))
-						{
-							ps.setBytes(1, data);
-							ps.setInt(2, usedSerializer);
-							ps.setInt(3, id);
-							ps.execute();
-						}
+						DBTools.runStatement(connection, queryUpdateBp, data, usedSerializer, id);
 					}
 				}
 				catch(SQLException e)
@@ -369,7 +368,7 @@ public abstract class SQL extends Database
 						@Override
 						public void run()
 						{
-							ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
+							ItemStack[] its = itsSerializer.deserialize(data, version);
 							if(its != null)
 							{
 								callback.onResult(new Backpack(player, its, bpID));
@@ -384,7 +383,7 @@ public abstract class SQL extends Database
 				catch(SQLException e)
 				{
 					e.printStackTrace();
-					callback.onFail();
+					callback.onFail(); //TODO sync with main thread
 				}
 			}
 		});

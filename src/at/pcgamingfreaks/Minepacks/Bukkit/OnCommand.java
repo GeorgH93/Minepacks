@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,11 +15,11 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks;
+package at.pcgamingfreaks.Minepacks.Bukkit;
 
-import java.util.Date;
+import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 
-import at.pcgamingfreaks.Minepacks.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -28,21 +28,22 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Date;
+
 public class OnCommand implements CommandExecutor 
 {
 	private Minepacks plugin;
 	
-	public String Message_NotFromConsole, Message_NoPermission, Message_BackpackCleaned, Message_Cooldown;
+	public Message messageNotFromConsole, messageBackpackCleaned, messageCooldown;
 	
-	public int cooldown;
+	public final int cooldown;
 	
 	public OnCommand(Minepacks mp)
 	{
 		plugin = mp;
-		Message_NotFromConsole = plugin.lang.getTranslated("NotFromConsole");
-		Message_NoPermission = plugin.lang.getTranslated("Ingame.NoPermission");
-		Message_BackpackCleaned = plugin.lang.getTranslated("Ingame.BackpackCleaned");
-		Message_Cooldown = plugin.lang.getTranslated("Ingame.Cooldown");
+		messageNotFromConsole = plugin.lang.getMessage("NotFromConsole");
+		messageBackpackCleaned = plugin.lang.getMessage("Ingame.BackpackCleaned");
+		messageCooldown = plugin.lang.getMessage("Ingame.Cooldown");
 		cooldown = plugin.config.getCommandCooldown();
 	}
 
@@ -57,7 +58,7 @@ public class OnCommand implements CommandExecutor
 	    }
 		else
 		{
-			sender.sendMessage(Message_NotFromConsole);
+			messageNotFromConsole.send(sender);
 			return true;
 		}
 		if(args.length == 0)
@@ -71,7 +72,7 @@ public class OnCommand implements CommandExecutor
 					{
 						if(((new Date()).getTime() - plugin.cooldowns.get(player)) < cooldown)
 						{
-							sender.sendMessage(Message_Cooldown);
+							messageCooldown.send(sender);
 							return true;
 						}
 					}
@@ -81,7 +82,7 @@ public class OnCommand implements CommandExecutor
 			}
 			else
 			{
-				player.sendMessage(Message_NoPermission);
+				plugin.messageNoPermission.send(player);
 			}
 		}
 		else
@@ -111,7 +112,7 @@ public class OnCommand implements CommandExecutor
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						plugin.messageNoPermission.send(player);
 					}
 					break;
 				case "empty": // Removes all items from the backpack
@@ -120,7 +121,7 @@ public class OnCommand implements CommandExecutor
 					if(player.hasPermission("backpack.clean"))
 					{
 						final OfflinePlayer OP = (args.length == 2 && player.hasPermission("backpack.clean.other")) ? Bukkit.getOfflinePlayer(args[1]) : player;
-						plugin.DB.getBackpack(OP, new Database.Callback<Backpack>()
+						plugin.getBackpack(OP, new Callback<Backpack>()
 						{
 							@Override
 							public void onResult(Backpack backpack)
@@ -129,24 +130,24 @@ public class OnCommand implements CommandExecutor
 								{
 									backpack.getInventory().clear();
 									backpack.save();
-									player.sendMessage(Message_BackpackCleaned);
+									messageBackpackCleaned.send(player);
 								}
 								else
 								{
-									player.sendMessage(plugin.messageInvalidBackpack);
+									plugin.messageInvalidBackpack.send(player);
 								}
 							}
 
 							@Override
 							public void onFail()
 							{
-								player.sendMessage(plugin.messageInvalidBackpack);
+								plugin.messageInvalidBackpack.send(player);
 							}
 						});
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						plugin.messageNoPermission.send(player);
 					}
 					break;
 				default: // Shows the backpack of an other player
@@ -156,7 +157,7 @@ public class OnCommand implements CommandExecutor
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						plugin.messageNoPermission.send(player);
 					}
 					break;
 			}

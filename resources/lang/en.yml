@@ -2,11 +2,14 @@ Language:
   NotFromConsole: "&cCommand not useable from console."
   Ingame:
     NoPermission: "&cYou don't have the Permission to do that."
-    OwnBackPackClose: "Backpack closed!"
-    PlayerBackPackClose: "%s's backpack closed!"
+    OwnBackpackClose: "Backpack closed!"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName}'s backpack closed!"
     InvalidBackpack: "Invalid backpack."
     BackpackCleaned: "Backpack cleaned."
     Cooldown: "&2Please wait till you reopen your backpack."
+    Shulkerboxes:
+      NotAllowedInBackpack: "&cShulkerboxes are not allowed in the backpack."
   Commands:
     Description:
       Backpack: "Opens your backpack."

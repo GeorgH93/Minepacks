@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 
@@ -46,10 +46,16 @@ public class Config extends Configuration
 		Set<String> keys = oldConfig.getConfig().getKeys();
 		for(String key : keys)
 		{
-			if(key.equals("UseUUIDs") || key.equals("Version") || (key.equals("BackpackTitle") && oldConfig.getVersion() < 11)) continue;
+			String newKey = key;
+			if(key.equals("Version")) continue;
+			if(oldConfig.getVersion() < 11)
+			{
+				if(key.equals("UseUUIDs") || key.equals("BackpackTitle")) continue;
+				newKey = key.replace(".MySQL.", ".SQL.");
+			}
 			try
 			{
-				config.set(key, oldConfig.getConfig().getString(key));
+				config.set(newKey, oldConfig.getConfig().getString(key));
 			}
 			catch(Exception e)
 			{
@@ -62,10 +68,6 @@ public class Config extends Configuration
 			{
 				config.set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
 			}
-			else
-			{
-				config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
-			}
 		}
 		if(oldConfig.getVersion() < 11)
 		{
@@ -73,7 +75,8 @@ public class Config extends Configuration
 		}
 	}
 
-	// Getter
+	//region getter
+	//region Database getter
 	public int getAutoCleanupMaxInactiveDays()
 	{
 		return config.getInt("Database.AutoCleanup.MaxInactiveDays", -1);
@@ -86,27 +89,27 @@ public class Config extends Configuration
 
 	public String getMySQLHost()
 	{
-		return config.getString("Database.MySQL.Host", "localhost");
+		return config.getString("Database.SQL.Host", "localhost");
 	}
 
 	public String getMySQLDatabase()
 	{
-		return config.getString("Database.MySQL.Database", "minecraft");
+		return config.getString("Database.SQL.Database", "minecraft");
 	}
 
 	public String getMySQLUser()
 	{
-		return config.getString("Database.MySQL.User", "minecraft");
+		return config.getString("Database.SQL.User", "minecraft");
 	}
 
 	public String getMySQLPassword()
 	{
-		return config.getString("Database.MySQL.Password", "");
+		return config.getString("Database.SQL.Password", "");
 	}
 
 	public int getMySQLMaxConnections()
 	{
-		return config.getInt("Database.MySQL.MaxConnections", 4);
+		return config.getInt("Database.SQL.MaxConnections", 4);
 	}
 
 	public String getUserTable()
@@ -139,6 +142,22 @@ public class Config extends Configuration
 		return config.getBoolean("Database.UseUUIDSeparators", false);
 	}
 
+	public String getUnCacheStrategie()
+	{
+		return config.getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase();
+	}
+
+	public long getUnCacheInterval()
+	{
+		return config.getLong("Database.Cache.UnCache.Interval", 600) * 20L;
+	}
+
+	public long getUnCacheDelay()
+	{
+		return config.getLong("Database.Cache.UnCache.Delay", 600) * 20L;
+	}
+	//endregion
+
 	public String getBPTitleOther()
 	{
 		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName\\}", "%s"));
@@ -169,11 +188,7 @@ public class Config extends Configuration
 		return config.getInt("command_cooldown", -1) * 1000;
 	}
 
-	public boolean getShowCloseMessage()
-	{
-		return config.getBoolean("show_close_message", true);
-	}
-
+	//region Full inventory handling
 	public boolean getFullInvCollect()
 	{
 		return config.getBoolean("full_inventory.collect_items", false);
@@ -188,4 +203,28 @@ public class Config extends Configuration
 	{
 		return config.getDouble("full_inventory.collect_radius", 1.5); // in blocks
 	}
+	//endregion
+
+	//region Shulkerboxes
+	public boolean getShulkerboxesPreventInBackpack()
+	{
+		return config.getBoolean("Shulkerboxes.PreventInBackpack", true);
+	}
+
+	public boolean getShulkerboxesDisableShulkerboxes()
+	{
+		return config.getBoolean("Shulkerboxes.DisableShulkerboxes", false);
+	}
+
+	public boolean getShulkerboxesExistingRemove()
+	{
+		return config.getBoolean("Shulkerboxes.Existing.Remove", true);
+	}
+
+	public boolean getShulkerboxesExistingDestroy()
+	{
+		return config.getBoolean("Shulkerboxes.Existing.Destroy", true);
+	}
+	//endregion
+	//endregion
 }

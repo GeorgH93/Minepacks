@@ -1,7 +1,7 @@
-name: Minepacks
-author: GeorgH93
-website: http://dev.bukkit.org/bukkit-plugins/minepacks/
-main: at.pcgamingfreaks.Minepacks.Minepacks
+name: ${project.name}
+author: ${author}
+website: ${website}
+main: at.pcgamingfreaks.Minepacks.Bukkit.Minepacks
 description: ${project.description}
 version: ${project.version}
 depend: [PCGF_MC_Plugin_Lib]
@@ -18,7 +18,7 @@ permissions:
       backpack.size.6: true
       backpack.others: true
       backpack.others.edit: true
-      backpack.KeepOnDeath: true
+      backpack.keepOnDeath: true
       backpack.clean: true
       backpack.clean.other: true
       backpack.noCooldown: true
@@ -76,7 +76,7 @@ permissions:
     default: op
     children:
       backpack.others: true
-  backpack.KeepOnDeath:
+  backpack.keepOnDeath:
     description: Allows the player to keep their items in their backpack on death.
     default: op
   backpack.noCooldown:

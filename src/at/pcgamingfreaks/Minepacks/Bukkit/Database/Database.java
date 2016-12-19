@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,25 +15,36 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Backpack;
-import at.pcgamingfreaks.Minepacks.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class Database
+public class Database implements Listener
 {
 	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 
-	protected Minepacks plugin;
+	protected final Minepacks plugin;
+	protected final InventorySerializer itsSerializer = new InventorySerializer();
 	protected boolean useUUIDs, useUUIDSeparators;
 	protected long maxAge;
-	protected InventorySerializer itsSerializer = new InventorySerializer();
-	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
+	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
+	private final UnCacheStrategie unCacheStrategie;
 
 	public Database(Minepacks mp)
 	{
@@ -41,22 +52,37 @@ public class Database
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
 		useUUIDs = plugin.config.getUseUUIDs();
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
+		unCacheStrategie = UnCacheStrategie.getUnCacheStrategie(this);
+	}
+
+	public void init()
+	{
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
+	public void close()
+	{
+		HandlerList.unregisterAll(this);
+		unCacheStrategie.close();
 	}
 
 	public static Database getDatabase(Minepacks Plugin)
 	{
+		Database database;
 		switch(Plugin.config.getDatabaseType().toLowerCase())
 		{
 			case "mysql":
-				return new MySQL(Plugin);
+				database = new MySQL(Plugin); break;
 			case "flat":
 			case "file":
 			case "files":
-				return new Files(Plugin);
+				database = new Files(Plugin); break;
 			case "sqlite":
 			default:
-				return new SQLite(Plugin);
+				database = new SQLite(Plugin);
 		}
+		database.init();
+		return database;
 	}
 
 	protected String getPlayerNameOrUUID(OfflinePlayer player)
@@ -80,12 +106,16 @@ public class Database
 		return null;
 	}
 
-	public Backpack getBackpack(OfflinePlayer player)
+	public @NotNull Collection<Backpack> getLoadedBackpacks()
+	{
+		return backpacks.values();
+	}
+
+	public @Nullable Backpack getBackpack(@Nullable OfflinePlayer player)
 	{
 		return (player == null) ? null : backpacks.get(player);
 	}
 
-	@SuppressWarnings("unused")
 	public Backpack getBackpack(OfflinePlayer player, boolean loadedOnly)
 	{
 		if(player == null)
@@ -164,9 +194,13 @@ public class Database
 		}
 	}
 
-	// DB Functions
-	public void close() { }
+	@EventHandler
+	public void onPlayerLoginEvent(PlayerJoinEvent event)
+	{
+		updatePlayerAndLoadBackpack(event.getPlayer());
+	}
 
+	// DB Functions
 	public void updatePlayerAndLoadBackpack(Player player)
 	{
 		updatePlayer(player);
@@ -190,12 +224,5 @@ public class Database
 		{
 			callback.onResult(loadedBackpack);
 		}
-	}
-
-	public interface Callback<T>
-	{
-		void onResult(T done);
-
-		void onFail();
 	}
 }

@@ -29,6 +29,12 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	<properties>
+		<author>GeorgH93</author>
+		<website>http://dev.bukkit.org/bukkit-plugins/minepacks/</website>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
 	<repositories>
 		<repository>
@@ -50,15 +56,10 @@
 		</dependency>
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>Bukkit_Bungee_PluginLib</artifactId>
+			<artifactId>PluginLib</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,11 +25,10 @@ import java.util.Date;
 
 import javax.swing.filechooser.FileFilter;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
-
-import at.pcgamingfreaks.Minepacks.Backpack;
-import at.pcgamingfreaks.Minepacks.Minepacks;
 
 public class Files extends Database
 {

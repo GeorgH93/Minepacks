@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.yaml.YAML;
 
@@ -62,11 +62,12 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 								}
 								break;
 							case "Ingame":
+								helper = keys[0] + "." + keys[1] + ".";
 								switch(keys[2])
 								{
 									case "NoPermission": advancedConverter.put(key, ChatColor.RED + oldYAML.getString(key)); break;
-									case "OwnBackPackClose": simpleConverter.put(key, key); break;
-									case "PlayerBackPackClose": simpleConverter.put(key, key); break;
+									case "OwnBackPackClose": simpleConverter.put(helper + "OwnBackpackClose", key); break;
+									case "PlayerBackPackClose": advancedConverter.put(helper + "PlayerBackpackClose", oldYAML.getString(key).replace("%s", "{OwnerName}")); break;
 									case "InvalidBackpack": simpleConverter.put(key, key); break;
 									case "BackpackCleaned": simpleConverter.put(key, key); break;
 									case "Cooldown": advancedConverter.put(key, ChatColor.DARK_GREEN + oldYAML.getString(key)); break;

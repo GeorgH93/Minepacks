@@ -18,8 +18,6 @@ command_cooldown: -1
 # Defines if the content of the backpack get droped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 drop_on_death: true
-# Defines if the message that the backpack has been closed should be shown
-show_close_message: false
 # Defines the max amount of colums for a backpack
 max_size: 6
 
@@ -46,7 +44,6 @@ Database:
   # If you would like to use UUIDs, it is recomendet not to change this setting unless you know what you are doing!
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
-  # Should be configured automaticaly based on your minecraft version and online mode settings
   # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
   UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
@@ -54,7 +51,7 @@ Database:
   # false: format: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   UseUUIDSeparators: false
   # Settings only for MySQL
-  MySQL:
+  SQL:
     Host: localhost:3306
     Database: minecraft
     User: minecraft
@@ -83,6 +80,30 @@ Database:
         ItemStacks: itemstacks
         Version: version
         LastUpdate: lastupdate
+  # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottelnecks.
+  Cache:
+    UnCache:
+      # The strategie used to uncache offlien players. Options
+      #     interval (offline players get uncached every x seconds)
+      #     intervalChecked (like interval, but also ensures that the player is already offline for atleast the interval time, add's a cpu overhead)
+      #     ondisconnect (player instantly gets uncahed as sone as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstabel connections)
+      #     ondisconnectdelayed (player gets uncached x seconds after he went offline, adds overhead on disconnect, you shouldn't use this with a lot of players joining and leaving.)
+      Strategie: interval
+      # Used for the interval based uncaching algorithems. Also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
+      Interval: 600
+      Delay: 600
+
+Shulkerboxes:
+  # This setting controlles whether players can put shulkerboxes into their backpacks.
+  PreventInBackpack: true
+  # This setting allows to disable shulkerboxes alltogether. Players won't be able to craft or use them.
+  DisableShulkerboxes: false
+  # This settings controlles how existing shulkerboxes are handeled if they are disabled.
+  Existing:
+    # Every existing shunkbox will be removed when a player tries to interact with it. The content will be lost.
+    Remove: false
+    # Every existing shunkbox will be destroyed when a player tries to interact with it. The content will be droped to the ground.
+    Destroy: false
 
 # Enables/Disables the auto-update function of the plugin.
 auto-update: true

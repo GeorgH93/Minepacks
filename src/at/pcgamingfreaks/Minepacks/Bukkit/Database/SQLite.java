@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import com.zaxxer.hikari.HikariConfig;
 
@@ -42,8 +42,8 @@ public class SQLite extends SQL
 	{
 		// Set table and field names to fixed values to prevent users from destroying old databases.
 		fieldPlayerID = "player_id";
-		fieldName = "name";
-		fieldUUID = "uuid";
+		fieldPlayerName = "name";
+		fieldPlayerUUID = "uuid";
 		fieldBpOwner = "owner";
 		//noinspection SpellCheckingInspection
 		fieldBpIts = "itemstacks";
@@ -80,10 +80,10 @@ public class SQLite extends SQL
 	{
 		if(maxAge > 0)
 		{
-			queryInsertBP = queryInsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
+			queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		}
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
+		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW\\}", "DATE('now')");
 		if(useUUIDs)
 		{
 			queryUpdatePlayerAdd = "INSERT OR IGNORE INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?);";
@@ -94,6 +94,7 @@ public class SQLite extends SQL
 		}
 	}
 
+	@SuppressWarnings("SqlResolve")
 	@Override
 	protected void checkDB()
 	{
@@ -122,9 +123,7 @@ public class SQLite extends SQL
 					rs.next();
 					stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 				}
-				catch(SQLException ignored)
-				{
-				}
+				catch(SQLException ignored) {}
 			}
 		}
 		catch(SQLException e)
@@ -143,7 +142,7 @@ public class SQLite extends SQL
 				public void run()
 				{
 					runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
-					runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldName + "`=? WHERE `" + fieldUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
+					runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
 				}
 			});
 		}

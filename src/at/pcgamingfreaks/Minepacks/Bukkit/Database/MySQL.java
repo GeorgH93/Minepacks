@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2016 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import com.zaxxer.hikari.HikariConfig;
 
@@ -49,7 +49,7 @@ public class MySQL extends SQL
 	protected void updateQuerysForDialect()
 	{
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "NOW()");
+		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW\\}", "NOW()");
 	}
 
 	@Override
@@ -60,36 +60,36 @@ public class MySQL extends SQL
 			ResultSet res;
 			if(useUUIDs)
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL,`" + fieldUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldPlayerName + "` CHAR(16) NOT NULL,`" + fieldPlayerUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerUUID + "';");
 				if(!res.next())
 				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD COLUMN `" + fieldUUID + "` CHAR(36) UNIQUE;");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD COLUMN `" + fieldPlayerUUID + "` CHAR(36) UNIQUE;");
 				}
 				res.close();
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerName + "' AND COLUMN_KEY='UNI';");
 				if(res.next())
 				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` DROP INDEX `" + fieldName + "_UNIQUE`;");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` DROP INDEX `" + fieldPlayerName + "_UNIQUE`;");
 				}
 				res.close();
 				if(useUUIDSeparators)
 				{
-					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
+					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerUUID + "';");
 					if(res.next() && res.getInt(1) < 36)
 					{
-						stmt.execute("ALTER TABLE `" + tablePlayers + "` MODIFY `" + fieldUUID + "` CHAR(36) UNIQUE;");
+						stmt.execute("ALTER TABLE `" + tablePlayers + "` MODIFY `" + fieldPlayerUUID + "` CHAR(36) UNIQUE;");
 					}
 					res.close();
 				}
 			}
 			else
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
+				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldPlayerName + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerName + "' AND COLUMN_KEY='UNI';");
 				if(!res.next())
 				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD UNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "` ASC);");
+					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD UNIQUE INDEX `" + fieldPlayerName + "_UNIQUE` (`" + fieldPlayerName + "` ASC);");
 				}
 				res.close();
 			}
