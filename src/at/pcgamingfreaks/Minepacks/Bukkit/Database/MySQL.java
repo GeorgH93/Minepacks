@@ -37,11 +37,11 @@ public class MySQL extends SQL
 	protected HikariConfig getPoolConfig()
 	{
 		HikariConfig poolConfig = new HikariConfig();
-		poolConfig.setJdbcUrl("jdbc:mysql://" + plugin.config.getMySQLHost() + "/" + plugin.config.getMySQLDatabase() + "?allowMultiQueries=true&autoReconnect=true");
-		poolConfig.setUsername(plugin.config.getMySQLUser());
-		poolConfig.setPassword(plugin.config.getMySQLPassword());
+		poolConfig.setJdbcUrl("jdbc:mysql://" + plugin.config.getSQLHost() + "/" + plugin.config.getSQLDatabase() + "?allowMultiQueries=true&autoReconnect=true");
+		poolConfig.setUsername(plugin.config.getSQLUser());
+		poolConfig.setPassword(plugin.config.getSQLPassword());
 		poolConfig.setMinimumIdle(1);
-		poolConfig.setMaximumPoolSize(plugin.config.getMySQLMaxConnections());
+		poolConfig.setMaximumPoolSize(plugin.config.getSQLMaxConnections());
 		return poolConfig;
 	}
 

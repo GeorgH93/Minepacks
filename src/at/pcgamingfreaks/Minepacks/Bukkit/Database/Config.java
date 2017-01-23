@@ -87,27 +87,27 @@ public class Config extends Configuration
 		return config.getString("Database.Type", "sqlite");
 	}
 
-	public String getMySQLHost()
+	public String getSQLHost()
 	{
 		return config.getString("Database.SQL.Host", "localhost");
 	}
 
-	public String getMySQLDatabase()
+	public String getSQLDatabase()
 	{
 		return config.getString("Database.SQL.Database", "minecraft");
 	}
 
-	public String getMySQLUser()
+	public String getSQLUser()
 	{
 		return config.getString("Database.SQL.User", "minecraft");
 	}
 
-	public String getMySQLPassword()
+	public String getSQLPassword()
 	{
 		return config.getString("Database.SQL.Password", "");
 	}
 
-	public int getMySQLMaxConnections()
+	public int getSQLMaxConnections()
 	{
 		return config.getInt("Database.SQL.MaxConnections", 4);
 	}

@@ -383,7 +383,14 @@ public abstract class SQL extends Database
 				catch(SQLException e)
 				{
 					e.printStackTrace();
-					callback.onFail(); //TODO sync with main thread
+					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							callback.onFail();
+						}
+					});
 				}
 			}
 		});
