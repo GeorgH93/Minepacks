@@ -4,26 +4,30 @@
 # Language to use, will load the file: /plugins/Minepacks/lang/<your language setting>.yml
 Language: en
 # How outdated language files should be treated. Overwrite/Update
-# Overwrite = old language file will be replaced with new, use this only if you use the language files suplyed from the plugin
+# Overwrite = old language file will be replaced with new, use this only if you use the language files supplied from the plugin
 # Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
 LanguageUpdateMode: Overwrite
 
-# Title to be showen for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
+# Title to be shown for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
 # Defines how long a player have to wait till he can reopen his backpack.
 # Time is in seconds. Values < 1 disable the cooldown.
 command_cooldown: -1
-# Defines if the content of the backpack get droped on the death of a player.
+# The cooldown will be applied to every player joining the server. Values < 1 disable the join cooldown.
+command_cooldown_after_join: -1
+# Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 drop_on_death: true
 # Defines if the message that the backpack has been closed should be shown
 show_close_message: false
-# Defines the max amount of colums for a backpack
+# Defines the max amount of columns for a backpack
 max_size: 6
+# Defines in which game-modes a player can access his backpack
+allowed_game_modes: [ "SURVIVAL" ]
 
-# Controlls for the auto pickup on full inventory function
+# Controls for the auto pickup on full inventory function
 full_inventory:
   # If items should be collected to the backpack if the players inventory is full
   collect_items: false
@@ -37,16 +41,16 @@ full_inventory:
 Database:
   # Database type. MySQL, SQLite or Files
   Type: SQLite
-  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables sellection
+  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables selection
   UpdatePlayer: true
   # Auto database cleanup settings
   AutoCleanup:
     # Defines the max amount of days backpacks will be stored. -1 to disable auto cleanup
     MaxInactiveDays: -1
-  # If you would like to use UUIDs, it is recomendet not to change this setting unless you know what you are doing!
+  # If you would like to use UUIDs, it is recommended not to change this setting unless you know what you are doing!
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
-  # Should be configured automaticaly based on your minecraft version and online mode settings
+  # Should be configured automatically based on your minecraft version and online mode settings
   # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
   UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
@@ -60,19 +64,19 @@ Database:
     User: minecraft
     Password: minecraft
     #The max amount of connections to the database the connection pool will open
-    MaxConnections: 4
+    MaxConnections: 2
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
   # Use these settings only if you know what you are doing!!!!
-  # Do only change this settings if you know what you are doing and have some basic MySQL knowlage!!!
-  # Changing settings down here after you have used this plugin may result in data inconsitency!!!
+  # Do only change this settings if you know what you are doing and have some basic MySQL knowledge!!!
+  # Changing settings down here after you have used this plugin may result in data inconsistency!!!
   Tables:
     # Table names
-    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsitency.
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsistency.
     User: backpack_players
     Backpack: backpacks
     # Field settings for the tables
     # Do not change them after the tables have been generated!
-    # If you like to change them after the tables have been generated alter the tables manualy or delete them (the system then will regenerate them).
+    # If you like to change them after the tables have been generated alter the tables manually or delete them (the system then will regenerate them).
     Fields:
       User:
         Player_ID: player_id

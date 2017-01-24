@@ -1,7 +1,7 @@
 name: ${project.name}
 author: GeorgH93
 website: http://dev.bukkit.org/bukkit-plugins/minepacks/
-main: at.pcgamingfreaks.MinePacks.MinePacks
+main: ${project.groupId}.${project.artifactId}.${project.artifactId}
 description: ${project.description}
 version: ${project.version}
 commands:
@@ -80,4 +80,7 @@ permissions:
     default: op
   backpack.noCooldown:
     description: Allows to bypass the cooldown to open the backpack.
+    default: op
+  backpack.ignoreGameMode:
+    description: Allows to bypass the game-mode restriction.
     default: op

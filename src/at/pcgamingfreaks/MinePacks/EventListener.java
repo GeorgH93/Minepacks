@@ -20,6 +20,7 @@ package at.pcgamingfreaks.MinePacks;
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -32,8 +33,8 @@ import org.bukkit.inventory.ItemStack;
 public class EventListener implements Listener
 {
 	private MinePacks plugin;
-	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther;
-	
+	private boolean drop_on_death, showCloseMessageOwn, showCloseMessageOther, onJoinCooldown;
+	private long joinCooldown;
 	private String message_OwnBPClose, message_PlayerBPClose;
 	
 	public EventListener(MinePacks mp)
@@ -44,6 +45,8 @@ public class EventListener implements Listener
 		message_PlayerBPClose = plugin.lang.getTranslated("Ingame.PlayerBackPackClose");
 		showCloseMessageOther = message_PlayerBPClose != null && plugin.config.getShowCloseMessage();
 		showCloseMessageOwn = message_OwnBPClose != null && plugin.config.getShowCloseMessage();
+		joinCooldown = plugin.config.getCommandCooldownAfterJoin();
+		onJoinCooldown = joinCooldown > 0;
 	}
 	
 	@EventHandler
@@ -111,7 +114,7 @@ public class EventListener implements Listener
 	    }
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onClick(InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
@@ -128,10 +131,14 @@ public class EventListener implements Listener
 	    }
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLoginEvent(PlayerJoinEvent event)
 	{
 		plugin.DB.updatePlayerAndLoadBackpack(event.getPlayer());
+		if(onJoinCooldown)
+		{
+			plugin.cooldowns.put(event.getPlayer(), joinCooldown);
+		}
 	}
 	
 	@EventHandler

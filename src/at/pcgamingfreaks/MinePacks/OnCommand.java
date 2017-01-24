@@ -17,33 +17,35 @@
 
 package at.pcgamingfreaks.MinePacks;
 
-import java.util.Date;
-
 import at.pcgamingfreaks.MinePacks.Database.Database;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
+
 public class OnCommand implements CommandExecutor 
 {
-	private MinePacks plugin;
-	
-	public String Message_NotFromConsole, Message_NoPermission, Message_BackpackCleaned, Message_Cooldown;
-	
-	public int cooldown;
+	private final MinePacks plugin;
+	private final String messageNotFromConsole, messageNoPermission, messageBackpackCleaned, messageCooldown, messageWrongGameMode;
+	private final long cooldown;
+	private final Collection<GameMode> gameModes;
 	
 	public OnCommand(MinePacks mp) 
 	{
 		plugin = mp;
-		Message_NotFromConsole = plugin.lang.getTranslated("Console.NotFromConsole");
-		Message_NoPermission = ChatColor.RED + plugin.lang.getTranslated("Ingame.NoPermission");
-		Message_BackpackCleaned = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.BackpackCleaned");
-		Message_Cooldown = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.Cooldown");
+		messageNotFromConsole = plugin.lang.getTranslated("Console.NotFromConsole");
+		messageNoPermission = ChatColor.RED + plugin.lang.getTranslated("Ingame.NoPermission");
+		messageBackpackCleaned = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.BackpackCleaned");
+		messageCooldown = ChatColor.DARK_GREEN + plugin.lang.getTranslated("Ingame.Cooldown");
+		messageWrongGameMode = ChatColor.RED + plugin.lang.getTranslated("Ingame.WrongGameMode");
 		cooldown = plugin.config.getCommandCooldown();
+		gameModes = plugin.config.getAllowedGameModes();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -57,7 +59,7 @@ public class OnCommand implements CommandExecutor
 	    }
 		else
 		{
-			sender.sendMessage(Message_NotFromConsole);
+			sender.sendMessage(messageNotFromConsole);
 			return true;
 		}
 		if(args.length == 0)
@@ -65,23 +67,30 @@ public class OnCommand implements CommandExecutor
 			// Open player backpack
 			if(player.hasPermission("backpack"))
 			{
-				if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
+				if(gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode"))
 				{
-					if(plugin.cooldowns.containsKey(player))
+					if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
 					{
-						if(((new Date()).getTime() - plugin.cooldowns.get(player)) < cooldown)
+						if(plugin.cooldowns.containsKey(player))
 						{
-							sender.sendMessage(Message_Cooldown);
-							return true;
+							if((System.currentTimeMillis() - plugin.cooldowns.get(player)) < cooldown)
+							{
+								sender.sendMessage(messageCooldown);
+								return true;
+							}
 						}
+						plugin.cooldowns.put(player, System.currentTimeMillis());
 					}
-					plugin.cooldowns.put(player, (new Date()).getTime());
+					plugin.openBackpack(player, player, true);
 				}
-				plugin.openBackpack(player, player, true);
+				else
+				{
+					player.sendMessage(messageWrongGameMode);
+				}
 			}
 			else
 			{
-				player.sendMessage(Message_NoPermission);
+				player.sendMessage(messageNoPermission);
 			}
 		}
 		else
@@ -111,7 +120,7 @@ public class OnCommand implements CommandExecutor
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						player.sendMessage(messageNoPermission);
 					}
 					break;
 				case "empty": // Removes all items from the backpack
@@ -129,7 +138,7 @@ public class OnCommand implements CommandExecutor
 								{
 									backpack.getInventory().clear();
 									backpack.save();
-									player.sendMessage(Message_BackpackCleaned);
+									player.sendMessage(messageBackpackCleaned);
 								}
 								else
 								{
@@ -146,7 +155,7 @@ public class OnCommand implements CommandExecutor
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						player.sendMessage(messageNoPermission);
 					}
 					break;
 				default: // Shows the backpack of an other player
@@ -156,7 +165,7 @@ public class OnCommand implements CommandExecutor
 					}
 					else
 					{
-						player.sendMessage(Message_NoPermission);
+						player.sendMessage(messageNoPermission);
 					}
 					break;
 			}
