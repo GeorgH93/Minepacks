@@ -14,6 +14,7 @@ Language:
     InvalidBackpack: Invalid backpack.
     BackpackCleaned: Backpack cleaned.
     Cooldown: "Please wait till you reopen your backpack."
+    WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
   Description:
     Backpack: Opens your backpack.
     Clean: Cleans your backpack.
@@ -21,4 +22,4 @@ Language:
     View: Shows the backpack of other player.
 
 # Language file version. Don't touch it!
-Version: 4
+Version: 5

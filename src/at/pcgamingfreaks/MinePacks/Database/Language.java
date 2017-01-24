@@ -21,7 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 4;
+	private static final int LANG_VERSION = 5;
 
 	public Language(JavaPlugin plugin)
 	{
@@ -37,6 +37,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 			case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
 			case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
 			case 3: lang.set("Language.Console.MinecraftVersionNotCompatible", "Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). Please check for updates!");
+			case 4: lang.set("Language.Ingame.WrongGameMode", "You are not allowed to open your backpack in your current game-mode.");
 				break;
 		}
 	}

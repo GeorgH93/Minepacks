@@ -31,7 +31,7 @@ import java.util.Set;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 13;
+	private static final int CONFIG_VERSION = 14;
 
 	public Config(JavaPlugin plugin)
 	{
