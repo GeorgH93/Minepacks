@@ -28,6 +28,7 @@ import java.sql.Statement;
 
 public class MySQL extends SQL
 {
+	//TODO add cooldown sync table
 	public MySQL(Minepacks mp)
 	{
 		super(mp); // Load Settings

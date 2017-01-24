@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,10 +15,12 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit;
+package at.pcgamingfreaks.Minepacks.Bukkit.Commands;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,23 +30,21 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Date;
-
 public class OnCommand implements CommandExecutor 
 {
-	private Minepacks plugin;
-	
-	public Message messageNotFromConsole, messageBackpackCleaned, messageCooldown;
-	
-	public final int cooldown;
+	private final Minepacks plugin;
+	private final Message messageNotFromConsole, messageBackpackCleaned, messageCooldown;
+	private final long cooldown;
+	private final boolean syncCooldown;
 	
 	public OnCommand(Minepacks mp)
 	{
 		plugin = mp;
 		messageNotFromConsole = plugin.lang.getMessage("NotFromConsole");
 		messageBackpackCleaned = plugin.lang.getMessage("Ingame.BackpackCleaned");
-		messageCooldown = plugin.lang.getMessage("Ingame.Cooldown");
+		messageCooldown = plugin.lang.getMessage("Ingame.Cooldown").replaceAll("\\{TimeLeft}", "%1$.1f");
 		cooldown = plugin.config.getCommandCooldown();
+		syncCooldown = plugin.config.isCommandCooldownSyncEnabled();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -70,13 +70,20 @@ public class OnCommand implements CommandExecutor
 				{
 					if(plugin.cooldowns.containsKey(player))
 					{
-						if(((new Date()).getTime() - plugin.cooldowns.get(player)) < cooldown)
+						long cd = plugin.cooldowns.get(player);
+						if(cd < System.currentTimeMillis())
 						{
-							messageCooldown.send(sender);
+							cd = cd - System.currentTimeMillis();
+							messageCooldown.send(sender, cd / 1000f);
 							return true;
 						}
 					}
-					plugin.cooldowns.put(player, (new Date()).getTime());
+					final long cooldownTime = System.currentTimeMillis() + cooldown;
+					if(syncCooldown)
+					{
+						plugin.getDb().syncCooldown(player, cooldownTime);
+					}
+					plugin.cooldowns.put(player, cooldownTime);
 				}
 				plugin.openBackpack(player, player, true);
 			}

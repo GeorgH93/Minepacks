@@ -122,6 +122,11 @@ public class Config extends Configuration
 		return config.getString("Database.Tables.Backpack", "backpacks");
 	}
 
+	public String getCooldownTable()
+	{
+		return config.getString("Database.Tables.Cooldown", "backpack_cooldowns");
+	}
+
 	public String getDBFields(String sub)
 	{
 		return config.getString("Database.Tables.Fields." + sub, "");
@@ -183,9 +188,14 @@ public class Config extends Configuration
 		return config.getBoolean("auto-update", true);
 	}
 
-	public int getCommandCooldown()
+	public long getCommandCooldown()
 	{
 		return config.getInt("command_cooldown", -1) * 1000;
+	}
+
+	public boolean isCommandCooldownSyncEnabled()
+	{
+		return config.getBoolean("sync_cooldown", false);
 	}
 
 	//region Full inventory handling

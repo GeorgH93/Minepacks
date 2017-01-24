@@ -32,6 +32,7 @@ import java.sql.Statement;
 
 public class SQLite extends SQL
 {
+	//TODO add cooldown sync table
 	public SQLite(Minepacks mp)
 	{
 		super(mp);
@@ -41,17 +42,20 @@ public class SQLite extends SQL
 	protected void loadSettings()
 	{
 		// Set table and field names to fixed values to prevent users from destroying old databases.
-		fieldPlayerID = "player_id";
-		fieldPlayerName = "name";
-		fieldPlayerUUID = "uuid";
-		fieldBpOwner = "owner";
+		fieldPlayerID     = "player_id";
+		fieldPlayerName   = "name";
+		fieldPlayerUUID   = "uuid";
+		fieldBpOwner      = "owner";
 		//noinspection SpellCheckingInspection
-		fieldBpIts = "itemstacks";
-		fieldBpVersion = "version";
+		fieldBpIts        = "itemstacks";
+		fieldBpVersion    = "version";
 		//noinspection SpellCheckingInspection
 		fieldBpLastUpdate = "lastupdate";
-		tablePlayers = "backpack_players";
-		tableBackpacks = "backpacks";
+		tablePlayers      = "backpack_players";
+		tableBackpacks    = "backpacks";
+		tableCooldowns    = "backpack_cooldowns";
+		fieldCdPlayer     = "player_id";
+		fieldCdTime       = "time";
 		// Set fixed settings
 		useUUIDSeparators = false;
 		updatePlayer = true;

@@ -8,13 +8,15 @@ Language: en
 # Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
 LanguageUpdateMode: Overwrite
 
-# Title to be showen for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
+# Title to be shown for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
 # Defines how long a player have to wait till he can reopen his backpack.
 # Time is in seconds. Values < 1 disable the cooldown.
 command_cooldown: -1
+# If enabled whe cooldown will be synced between servers. It will also prevent players from leaving and joining to bypass the cooldown.
+sync_cooldown: false
 # Defines if the content of the backpack get droped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 drop_on_death: true
@@ -67,6 +69,7 @@ Database:
     # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsitency.
     User: backpack_players
     Backpack: backpacks
+    Cooldown: backpack_cooldowns
     # Field settings for the tables
     # Do not change them after the tables have been generated!
     # If you like to change them after the tables have been generated alter the tables manualy or delete them (the system then will regenerate them).

@@ -7,7 +7,8 @@ Language:
     PlayerBackpackClose: "{OwnerName}'s backpack closed!"
     InvalidBackpack: "Invalid backpack."
     BackpackCleaned: "Backpack cleaned."
-    Cooldown: "&2Please wait till you reopen your backpack."
+    #Parameter> {TimeLeft} time in seconds till he can reopen his backpack
+    Cooldown: "&2Please wait {TimeLeft} seconds till you reopen your backpack."
     Shulkerboxes:
       NotAllowedInBackpack: "&cShulkerboxes are not allowed in the backpack."
   Commands:

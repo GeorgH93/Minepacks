@@ -24,6 +24,7 @@ import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
+import at.pcgamingfreaks.Minepacks.Bukkit.Commands.OnCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
@@ -45,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
@@ -55,7 +57,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public Language lang;
 	private Database database;
 
-	public HashMap<Player, Long> cooldowns = new HashMap<>();
+	public final Map<Player, Long> cooldowns = new HashMap<>();
 
 	public String backpackTitleOther, backpackTitle;
 	public Message messageNoPermission, messageInvalidBackpack;

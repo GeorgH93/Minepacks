@@ -30,26 +30,31 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.*;
 
 public abstract class SQL extends Database
 {
+	//TODO test sync cooldown
 	private HikariDataSource dataSource;
 
-	protected String tablePlayers, tableBackpacks; // Table Names
-	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate; // Table Fields
-	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
-	protected boolean updatePlayer;
+	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
+	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
+	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, querySyncCooldown; // DB Querys
+	protected boolean updatePlayer, syncCooldown;
 
 	public SQL(Minepacks mp)
 	{
 		super(mp);
 
 		HikariConfig poolConfig = getPoolConfig();
-		poolConfig.setPoolName("Minepacks-Connection-Pool");
-		dataSource = new HikariDataSource(poolConfig);
+		if(poolConfig != null)
+		{
+			poolConfig.setPoolName("Minepacks-Connection-Pool");
+			dataSource = new HikariDataSource(poolConfig);
+		}
 
 		loadSettings();
 		buildQuerys();
@@ -76,21 +81,25 @@ public abstract class SQL extends Database
 		}
 	}
 
-	protected abstract HikariConfig getPoolConfig();
+	protected abstract @Nullable HikariConfig getPoolConfig();
 
 	protected void loadSettings()
 	{
 		// Load table and field names
-		tablePlayers = plugin.config.getUserTable();
-		tableBackpacks = plugin.config.getBackpackTable();
-		fieldPlayerID = plugin.config.getDBFields("User.Player_ID");
-		fieldPlayerName = plugin.config.getDBFields("User.Name");
-		fieldPlayerUUID = plugin.config.getDBFields("User.UUID");
-		fieldBpOwner = plugin.config.getDBFields("Backpack.Owner_ID");
-		fieldBpIts = plugin.config.getDBFields("Backpack.ItemStacks");
-		fieldBpVersion = plugin.config.getDBFields("Backpack.Version");
+		tablePlayers      = plugin.config.getUserTable();
+		tableBackpacks    = plugin.config.getBackpackTable();
+		tableCooldowns    = plugin.config.getCooldownTable();
+		fieldPlayerID     = plugin.config.getDBFields("User.Player_ID");
+		fieldPlayerName   = plugin.config.getDBFields("User.Name");
+		fieldPlayerUUID   = plugin.config.getDBFields("User.UUID");
+		fieldBpOwner      = plugin.config.getDBFields("Backpack.Owner_ID");
+		fieldBpIts        = plugin.config.getDBFields("Backpack.ItemStacks");
+		fieldBpVersion    = plugin.config.getDBFields("Backpack.Version");
 		fieldBpLastUpdate = plugin.config.getDBFields("Backpack.LastUpdate");
-		updatePlayer = plugin.config.getUpdatePlayer();
+		fieldCdPlayer     = plugin.config.getDBFields("Cooldown.Player_ID");
+		fieldCdTime       = plugin.config.getDBFields("Cooldown.Time");
+		updatePlayer      = plugin.config.getUpdatePlayer();
+		syncCooldown      = plugin.config.isCommandCooldownSyncEnabled();
 	}
 
 	@Override
@@ -178,36 +187,38 @@ public abstract class SQL extends Database
 	protected final void buildQuerys()
 	{
 		// Build the SQL querys with placeholders for the table and field names
-		queryGetBP = "SELECT `{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}` FROM `{TableBackpacks}` INNER JOIN `{TablePlayers}` ON `{TableBackpacks}`.`{FieldBPOwner}`=`{TablePlayers}`.`{FieldPlayerID}` WHERE ";
+		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE ";
 		if(useUUIDs)
 		{
-			queryUpdatePlayerAdd = "INSERT INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?) ON DUPLICATE KEY UPDATE `{FieldName}`=?;";
-			queryGetPlayerID = "SELECT `{FieldPlayerID}` FROM `{TablePlayers}` WHERE `{FieldUUID}`=?;";
-			queryGetBP += "`{FieldUUID}`=?;";
+			queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
+			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
+			queryGetBP += "{FieldUUID}=?;";
+			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=?;";
 		}
 		else
 		{
-			queryUpdatePlayerAdd = "INSERT IGNORE INTO `{TablePlayers}` (`{FieldName}`) VALUES (?);";
-			queryGetPlayerID = "SELECT `{FieldPlayerID}` FROM `{TablePlayers}` WHERE `{FieldName}`=?;";
-			queryGetBP += "`{FieldName}`=?;";
+			queryUpdatePlayerAdd = "INSERT IGNORE INTO {TablePlayers} ({FieldName}) VALUES (?);";
+			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?;";
+			queryGetBP += "{FieldName}=?;";
+			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldName}=?;";
 		}
-		queryInsertBp = "INSERT INTO `{TableBackpacks}` (`{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}`) VALUES (?,?,?);";
-		queryUpdateBp = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=?";
+		queryInsertBp = "INSERT INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
+		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?";
 		if(maxAge > 0)
 		{
-			queryUpdateBp += ",`{FieldBPLastUpdate}`={NOW}";
+			queryUpdateBp += ",{FieldBPLastUpdate}={NOW}";
 		}
-		queryUpdateBp += " WHERE `{FieldBPOwner}`=?;";
-		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
+		queryUpdateBp += " WHERE {FieldBPOwner}=?;";
+		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		if(useUUIDSeparators)
 		{
-			queryGetUnsetOrInvalidUUIDs = "SELECT `{FieldPlayerID}`,`{FieldName}`,`{FieldUUID}` FROM `{TablePlayers}` WHERE `{FieldUUID}` IS NULL OR `{FieldUUID}` NOT LIKE '%-%-%-%-%';";
+			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} NOT LIKE '%-%-%-%-%';";
 		}
 		else
 		{
-			queryGetUnsetOrInvalidUUIDs = "SELECT `{FieldPlayerID}`,`{FieldName}`,`{FieldUUID}` FROM `{TablePlayers}` WHERE `{FieldUUID}` IS NULL OR `{FieldUUID}` LIKE '%-%';";
+			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} LIKE '%-%';";
 		}
-		queryFixUUIDs = "UPDATE `{TablePlayers}` SET `{FieldUUID}`=? WHERE `{FieldPlayerID}`=?;";
+		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
 
 		updateQuerysForDialect();
 
@@ -225,6 +236,7 @@ public abstract class SQL extends Database
 		queryFixUUIDs               = replacePlaceholders(queryFixUUIDs);
 		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
 		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
+		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
 	}
 
 	protected abstract void updateQuerysForDialect();
@@ -234,7 +246,8 @@ public abstract class SQL extends Database
 		return query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
 				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
 				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwner).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
-				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate); // Backpacks
+				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
+				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayer).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
 	}
 
 	protected void runStatementAsync(final String query, final Object... args)
@@ -415,5 +428,11 @@ public abstract class SQL extends Database
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@Override
+	public void syncCooldown(Player player, long cooldownTime)
+	{
+		runStatementAsync(querySyncCooldown, new Timestamp(cooldownTime), getPlayerNameOrUUID(player));
 	}
 }

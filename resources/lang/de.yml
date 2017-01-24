@@ -7,7 +7,8 @@ Language:
     PlayerBackpackClose: "{OwnerName}'s Rucksack geschlossen."
     InvalidBackpack: "Rucksack fehlerhaft."
     BackpackCleaned: "Rucksack gelehrt."
-    Cooldown: "&2Bitte warte kurz bis du deinen Rucksack wieder öffnest."
+    #Parameter> {TimeLeft} time in seconds till he can reopen his backpack
+        Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
     Shulkerboxes:
       NotAllowedInBackpack: "&cShulkerboxes sind im Rucksack nicht erlaubt."
   Commands:

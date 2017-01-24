@@ -35,7 +35,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Database implements Listener
+public abstract class Database implements Listener
 {
 	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 
@@ -207,11 +207,13 @@ public class Database implements Listener
 		asyncLoadBackpack(player);
 	}
 
-	public void updatePlayer(Player player) {}
+	public abstract void updatePlayer(Player player);
 
-	public void saveBackpack(Backpack backpack) {}
+	public abstract void saveBackpack(Backpack backpack);
 
-	protected Backpack loadBackpack(OfflinePlayer player) { return null; }
+	public abstract void syncCooldown(Player player, long time);
+
+	protected abstract Backpack loadBackpack(OfflinePlayer player);
 
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{

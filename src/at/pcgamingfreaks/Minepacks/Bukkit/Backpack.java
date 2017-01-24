@@ -20,19 +20,19 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
@@ -88,14 +88,14 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	}
 
 	@Override
-	public void open(@NotNull Player p, boolean editable)
+	public void open(@NotNull Player player, boolean editable)
 	{
 		if(owner.isOnline())
 		{
-			Player player = owner.getPlayer();
-			if(player != null)
+			Player owner = this.owner.getPlayer();
+			if(owner != null)
 			{
-				int size = Minepacks.getInstance().getBackpackPermSize(player);
+				int size = Minepacks.getInstance().getBackpackPermSize(owner);
 				if(size != bp.getSize())
 				{
 					List<ItemStack> items = setSize(size);
@@ -103,13 +103,13 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 					{
 						if (i != null)
 						{
-							player.getWorld().dropItemNaturally(player.getLocation(), i);
+							owner.getWorld().dropItemNaturally(owner.getLocation(), i);
 						}
 					}
 				}
 			}
 		}
-		opened.put(p, editable);
+		opened.put(player, editable);
 
 		// It's not perfect, but it is the only way of doing this.
 		// This sets the title of the inventory based on the person who is opening it.
@@ -118,14 +118,14 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		try
 		{
 			FIELD_TITLE.setAccessible(true);
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther);
+			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), player.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		p.openInventory(bp);
+		player.openInventory(bp);
 	}
 	
 	public void close(Player p)

@@ -45,7 +45,7 @@ public class ItemsCollector extends BukkitRunnable
 		{
 			if(player.getInventory().firstEmpty() == -1 && player.hasPermission("backpack") && player.hasPermission("backpack.fullpickup"))
 			{
-				// Only check loaded backpacks (loading them would take to much time for a repeating task, the will be loaded async soon enough)
+				// Only check loaded backpacks (loading them would take to much time for a repeating task, the backpack will be loaded async soon enough)
 				Backpack backpack = plugin.getBackpackCachedOnly(player);
 				if(backpack == null)
 				{
