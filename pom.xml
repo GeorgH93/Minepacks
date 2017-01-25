@@ -106,7 +106,7 @@
 							<minimizeJar>true</minimizeJar>
 							<artifactSet>
 								<includes>
-									<include>at.pcgamingfreaks:Bukkit_Bungee_PluginLib</include>
+									<include>at.pcgamingfreaks:PluginLib</include>
 									<include>com.zaxxer:HikariCP</include>
 									<include>org.slf4j:*</include>
 								</includes>
