@@ -4,7 +4,7 @@
 # Language to use, will load the file: /plugins/Minepacks/lang/<your language setting>.yml
 Language: en
 # How outdated language files should be treated. Overwrite/Update
-# Overwrite = old language file will be replaced with new, use this only if you use the language files suplyed from the plugin
+# Overwrite = old language file will be replaced with new, use this only if you use the language files supplied from the plugin
 # Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
 LanguageUpdateMode: Overwrite
 
@@ -17,13 +17,13 @@ BackpackTitle: "&bBackpack"
 command_cooldown: -1
 # If enabled whe cooldown will be synced between servers. It will also prevent players from leaving and joining to bypass the cooldown.
 sync_cooldown: false
-# Defines if the content of the backpack get droped on the death of a player.
+# Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 drop_on_death: true
-# Defines the max amount of colums for a backpack
+# Defines the max amount of columns for a backpack
 max_size: 6
 
-# Controlls for the auto pickup on full inventory function
+# Controls for the auto pickup on full inventory function
 full_inventory:
   # If items should be collected to the backpack if the players inventory is full
   collect_items: false
@@ -37,13 +37,13 @@ full_inventory:
 Database:
   # Database type. MySQL, SQLite or Files
   Type: SQLite
-  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables sellection
+  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables selection
   UpdatePlayer: true
   # Auto database cleanup settings
   AutoCleanup:
     # Defines the max amount of days backpacks will be stored. -1 to disable auto cleanup
     MaxInactiveDays: -1
-  # If you would like to use UUIDs, it is recomendet not to change this setting unless you know what you are doing!
+  # If you would like to use UUIDs, it is recommended not to change this setting unless you know what you are doing!
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
   # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
@@ -62,17 +62,17 @@ Database:
     MaxConnections: 4
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
   # Use these settings only if you know what you are doing!!!!
-  # Do only change this settings if you know what you are doing and have some basic MySQL knowlage!!!
-  # Changing settings down here after you have used this plugin may result in data inconsitency!!!
+  # Do only change this settings if you know what you are doing and have some basic MySQL knowledge!!!
+  # Changing settings down here after you have used this plugin may result in data inconsistency!!!
   Tables:
     # Table names
-    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsitency.
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsistency.
     User: backpack_players
     Backpack: backpacks
     Cooldown: backpack_cooldowns
     # Field settings for the tables
     # Do not change them after the tables have been generated!
-    # If you like to change them after the tables have been generated alter the tables manualy or delete them (the system then will regenerate them).
+    # If you like to change them after the tables have been generated alter the tables manually or delete them (the system then will regenerate them).
     Fields:
       User:
         Player_ID: player_id
@@ -83,29 +83,29 @@ Database:
         ItemStacks: itemstacks
         Version: version
         LastUpdate: lastupdate
-  # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottelnecks.
+  # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottlenecks.
   Cache:
     UnCache:
-      # The strategie used to uncache offlien players. Options
+      # The strategie used to uncache offline players. Options
       #     interval (offline players get uncached every x seconds)
-      #     intervalChecked (like interval, but also ensures that the player is already offline for atleast the interval time, add's a cpu overhead)
-      #     ondisconnect (player instantly gets uncahed as sone as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstabel connections)
+      #     intervalChecked (like interval, but also ensures that the player is already offline for at least the interval time, add's a cpu overhead)
+      #     ondisconnect (player instantly gets uncached as soon as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstable connections)
       #     ondisconnectdelayed (player gets uncached x seconds after he went offline, adds overhead on disconnect, you shouldn't use this with a lot of players joining and leaving.)
       Strategie: interval
-      # Used for the interval based uncaching algorithems. Also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
+      # Used for the interval based uncaching algorithms. Also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
       Interval: 600
       Delay: 600
 
 Shulkerboxes:
-  # This setting controlles whether players can put shulkerboxes into their backpacks.
+  # This setting controls whether players can put shulkerboxes into their backpacks.
   PreventInBackpack: true
-  # This setting allows to disable shulkerboxes alltogether. Players won't be able to craft or use them.
+  # This setting allows to disable shulkerboxes all together. Players won't be able to craft or use them.
   DisableShulkerboxes: false
-  # This settings controlles how existing shulkerboxes are handeled if they are disabled.
+  # This settings controls how existing shulkerboxes are handled if they are disabled.
   Existing:
-    # Every existing shunkbox will be removed when a player tries to interact with it. The content will be lost.
+    # Every existing shulker-box will be removed when a player tries to interact with it. The content will be lost.
     Remove: false
-    # Every existing shunkbox will be destroyed when a player tries to interact with it. The content will be droped to the ground.
+    # Every existing shulker-box will be destroyed when a player tries to interact with it. The content will be dropped to the ground.
     Destroy: false
 
 # Enables/Disables the auto-update function of the plugin.
@@ -115,4 +115,4 @@ auto-update: true
 DisableV2Info: false
 
 # Config file version. Don't touch it!
-Version: 12
+Version: 13
