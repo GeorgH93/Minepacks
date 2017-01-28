@@ -4,7 +4,7 @@ website: ${website}
 main: ${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}
 description: ${project.description}
 version: ${project.version}
-depend: [PCGF_MC_Plugin_Lib]
+depend: [PCGF_PluginLib]
 commands:
   backpack:
     description: Main command

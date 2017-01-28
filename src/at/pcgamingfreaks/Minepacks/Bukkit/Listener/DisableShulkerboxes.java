@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,15 +19,22 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Iterator;
 
 public class DisableShulkerboxes extends ShulkerboxesListener implements Listener
 {
+	//TODO remove shulkerboxes
 	public DisableShulkerboxes(final Minepacks plugin)
 	{
 		super(plugin);
@@ -63,7 +70,7 @@ public class DisableShulkerboxes extends ShulkerboxesListener implements Listene
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(SHULKER_BOX_MATERIALS.contains(event.getItem().getType()))
+		if(event.getItem() != null && SHULKER_BOX_MATERIALS.contains(event.getItem().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -72,7 +79,11 @@ public class DisableShulkerboxes extends ShulkerboxesListener implements Listene
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(SHULKER_BOX_MATERIALS.contains(event.getCursor().getType()))
+		if(event.getCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getCursor().getType()))
+		{
+			event.setCancelled(true);
+		}
+		else if(event.getOldCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getOldCursor().getType()))
 		{
 			event.setCancelled(true);
 		}
@@ -147,6 +158,42 @@ public class DisableShulkerboxes extends ShulkerboxesListener implements Listene
 		if(SHULKER_BOX_MATERIALS.contains(event.getBlock().getType()))
 		{
 			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onPrepareItemCraftEvent(PrepareItemCraftEvent event)
+	{
+		Material itemType = event.getRecipe().getResult().getType();
+		if(itemType == Material.SHULKER_SHELL || SHULKER_BOX_MATERIALS.contains(itemType))
+		{
+			event.getInventory().setResult(new ItemStack(Material.AIR));
+			//TODO message
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onDrop(PlayerDropItemEvent event)
+	{
+		//TODO null checks
+		Material itemType = event.getItemDrop().getItemStack().getType();
+		if(itemType == Material.SHULKER_SHELL || SHULKER_BOX_MATERIALS.contains(itemType))
+		{
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onDrop(EntityDeathEvent event)
+	{
+		Iterator<ItemStack> it = event.getDrops().iterator();
+		while(it.hasNext())
+		{
+			Material itemType = it.next().getType();
+			if(itemType == Material.SHULKER_SHELL || SHULKER_BOX_MATERIALS.contains(itemType))
+			{
+				it.remove();
+			}
 		}
 	}
 }

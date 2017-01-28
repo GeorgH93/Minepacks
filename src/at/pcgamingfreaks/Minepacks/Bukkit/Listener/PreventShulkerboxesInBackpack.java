@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,9 +21,11 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 
@@ -42,7 +44,20 @@ public class PreventShulkerboxesInBackpack extends ShulkerboxesListener implemen
 	{
 		if(event.getDestination().getHolder() instanceof Backpack && SHULKER_BOX_MATERIALS.contains(event.getItem().getType()))
 		{
-			//TODO get player and send him a message
+			if(event.getSource().getHolder() instanceof Player)
+			{
+				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder());
+			}
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onItemMove(InventoryClickEvent event)
+	{
+		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && SHULKER_BOX_MATERIALS.contains(event.getCurrentItem().getType()))
+		{
+			messageNotAllowedInBackpack.send(event.getView().getPlayer());
 			event.setCancelled(true);
 		}
 	}
@@ -50,9 +65,9 @@ public class PreventShulkerboxesInBackpack extends ShulkerboxesListener implemen
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && SHULKER_BOX_MATERIALS.contains(event.getCursor().getType()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getOldCursor().getType()))
 		{
-			//TODO get player and send him a message
+			messageNotAllowedInBackpack.send(event.getView().getPlayer());
 			event.setCancelled(true);
 		}
 	}

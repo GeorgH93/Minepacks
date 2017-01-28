@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import org.bukkit.Material;
 import java.util.HashSet;
 import java.util.Set;
 
-class ShulkerboxesListener
+abstract class ShulkerboxesListener
 {
 	protected static final Set<Material> SHULKER_BOX_MATERIALS = new HashSet<>();
 

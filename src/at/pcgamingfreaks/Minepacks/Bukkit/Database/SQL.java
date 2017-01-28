@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -309,7 +309,6 @@ public abstract class SQL extends Database
 				{
 					if(id <= 0)
 					{
-						final int newID;
 						try(PreparedStatement ps = connection.prepareStatement(queryGetPlayerID))
 						{
 							ps.setString(1, nameOrUUID);
@@ -317,8 +316,8 @@ public abstract class SQL extends Database
 							{
 								if(rs.next())
 								{
-									newID = rs.getInt(1);
-									DBTools.runStatement(connection, queryInsertBp, data, usedSerializer, id);
+									final int newID = rs.getInt(1);
+									DBTools.runStatement(connection, queryInsertBp, newID, data, usedSerializer);
 									plugin.getServer().getScheduler().runTask(plugin, new Runnable()
 									{
 										@Override

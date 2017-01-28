@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,8 +39,8 @@ public class EventListener implements Listener
 	public EventListener(Minepacks mp)
 	{
 		plugin = mp;
-		messageOwnBackpackClose = plugin.lang.getMessage("Ingame.OwnBackPackClose");
-		messageOtherBackpackClose = plugin.lang.getMessage("Ingame.PlayerBackPackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
+		messageOwnBackpackClose = plugin.lang.getMessage("Ingame.OwnBackpackClose");
+		messageOtherBackpackClose = plugin.lang.getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
 	}
 	
 	@EventHandler
