@@ -29,12 +29,13 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 public class Files extends Database
 {
 	private static final String EXT =  ".backpack", EXT_REGEX =  "\\.backpack";
 
-	private File saveFolder;
+	private final File saveFolder;
 	
 	public Files(Minepacks plugin)
 	{
@@ -53,7 +54,13 @@ public class Files extends Database
 			checkFiles();
 		}
 	}
-	
+
+	@Override
+	public void updatePlayer(Player player)
+	{
+		// Files are stored with the users name or the uuid, there is no reason to update anything
+	}
+
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private void checkFiles()
 	{
@@ -125,6 +132,12 @@ public class Files extends Database
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void syncCooldown(Player player, long time)
+	{
+		// There is no reason for cooldown syncing in file mode
 	}
 
 	@Override
