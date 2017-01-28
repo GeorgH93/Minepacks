@@ -41,7 +41,8 @@ public abstract class Database implements Listener
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer = new InventorySerializer();
-	protected boolean useUUIDs, useUUIDSeparators;
+	protected final boolean useUUIDs;
+	protected boolean useUUIDSeparators;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
 	private final UnCacheStrategie unCacheStrategie;

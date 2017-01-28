@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.util.Date;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -82,7 +81,10 @@ public class Files extends Database
 			{
 				if(len <= 16) // It's a player name
 				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT));
+					if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT)))
+					{
+						plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+					}
 				}
 				else // It's an UUID
 				{
@@ -90,14 +92,20 @@ public class Files extends Database
 					{
 						if(!useUUIDSeparators)
 						{
-							file.renameTo(new File(saveFolder, file.getName().replaceAll("-", "")));
+							if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("-", ""))))
+							{
+								plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+							}
 						}
 					}
 					else
 					{
 						if(useUUIDSeparators)
 						{
-							file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT)));
+							if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT))))
+							{
+								plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+							}
 						}
 					}
 				}
@@ -170,7 +178,7 @@ public class Files extends Database
 	
 	private static class BackpackFileFilter extends FileFilter implements FilenameFilter
 	{
-		String description, extension;
+		final String description, extension;
 
 		public BackpackFileFilter()
 		{

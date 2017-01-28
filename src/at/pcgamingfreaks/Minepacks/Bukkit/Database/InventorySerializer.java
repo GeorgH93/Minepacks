@@ -27,7 +27,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventorySerializer
 {
-	private ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
+	private static final ItemStackSerializer BUKKIT_ITEM_STACK_SERIALIZER = new BukkitItemStackSerializer();
+	private ItemStackSerializer serializer;
 	private int usedSerializer = 1;
 	
 	public InventorySerializer()
@@ -48,7 +49,7 @@ public class InventorySerializer
 		if(serializer == null)
 		{
 			usedSerializer = 0;
-			serializer = baseItemStackSerializer;
+			serializer = BUKKIT_ITEM_STACK_SERIALIZER;
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class InventorySerializer
 		if(data == null) return null;
 		switch(usedSerializer)
 		{
-			case 0: return baseItemStackSerializer.deserialize(data);
+			case 0: return BUKKIT_ITEM_STACK_SERIALIZER.deserialize(data);
 			default: return serializer.deserialize(data);
 		}
 	}

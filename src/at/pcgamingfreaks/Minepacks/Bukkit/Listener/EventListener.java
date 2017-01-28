@@ -33,9 +33,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class EventListener implements Listener
 {
-	private Minepacks plugin;
-	
-	private Message messageOwnBackpackClose, messageOtherBackpackClose;
+	private final Minepacks plugin;
+	private final Message messageOwnBackpackClose, messageOtherBackpackClose;
 	
 	public EventListener(Minepacks mp)
 	{
