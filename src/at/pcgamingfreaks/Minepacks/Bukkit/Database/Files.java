@@ -69,7 +69,7 @@ public class Files extends Database
 		int len;
 		for (File file : allFiles)
 		{
-			if(maxAge > 0 && (new Date()).getTime() - file.lastModified() > maxAge) // Check if the file is older then x days
+			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older then x days
 			{
 				if(!file.delete())
 				{

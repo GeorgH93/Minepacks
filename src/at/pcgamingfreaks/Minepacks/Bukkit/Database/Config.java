@@ -21,8 +21,12 @@ import at.pcgamingfreaks.Bukkit.Configuration;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 public class Config extends Configuration
@@ -190,12 +194,48 @@ public class Config extends Configuration
 
 	public long getCommandCooldown()
 	{
-		return config.getInt("command_cooldown", -1) * 1000;
+		return config.getInt("command_cooldown", -1) * 1000L;
 	}
 
 	public boolean isCommandCooldownSyncEnabled()
 	{
 		return config.getBoolean("sync_cooldown", false);
+	}
+
+	public Collection<GameMode> getAllowedGameModes()
+	{
+		Collection<GameMode> gameModes = new HashSet<>();
+		for(String string : config.getStringList("allowed_game_modes", new LinkedList<String>()))
+		{
+			GameMode gm = null;
+			try
+			{
+				//noinspection deprecation
+				gm = GameMode.getByValue(Integer.valueOf(string));
+			}
+			catch(NumberFormatException ignored) {}
+			if(gm == null)
+			{
+				try
+				{
+					gm = GameMode.valueOf(string.toUpperCase());
+				}
+				catch(IllegalArgumentException ignored)
+				{
+					logger.warning("Unknown game-mode '" + string + "'");
+				}
+			}
+			if(gm != null)
+			{
+				gameModes.add(gm);
+			}
+		}
+		if(gameModes.size() < 1)
+		{
+			logger.info("No game-mode allowed, allowing " + GameMode.SURVIVAL.name());
+			gameModes.add(GameMode.SURVIVAL);
+		}
+		return gameModes;
 	}
 
 	//region Full inventory handling

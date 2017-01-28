@@ -22,6 +22,8 @@ sync_cooldown: false
 drop_on_death: true
 # Defines the max amount of columns for a backpack
 max_size: 6
+# Defines in which game-modes a player can access his backpack (name or id)
+allowed_game_modes: [ "SURVIVAL" ]
 
 # Controls for the auto pickup on full inventory function
 full_inventory:
@@ -59,7 +61,7 @@ Database:
     User: minecraft
     Password: minecraft
     #The max amount of connections to the database the connection pool will open
-    MaxConnections: 4
+    MaxConnections: 2
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
   # Use these settings only if you know what you are doing!!!!
   # Do only change this settings if you know what you are doing and have some basic MySQL knowledge!!!

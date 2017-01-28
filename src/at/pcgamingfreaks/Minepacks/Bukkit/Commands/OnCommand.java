@@ -24,68 +24,88 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
+
 public class OnCommand implements CommandExecutor 
 {
 	private final Minepacks plugin;
-	private final Message messageNotFromConsole, messageBackpackCleaned, messageCooldown;
+	private final Message messageNotFromConsole, messageBackpackCleaned, messageCooldown, messageWrongGameMode;
 	private final long cooldown;
 	private final boolean syncCooldown;
+	private final Collection<GameMode> gameModes;
+	private final String allowedGameModes;
 	
 	public OnCommand(Minepacks mp)
 	{
 		plugin = mp;
-		messageNotFromConsole = plugin.lang.getMessage("NotFromConsole");
+		messageNotFromConsole  = plugin.lang.getMessage("NotFromConsole");
 		messageBackpackCleaned = plugin.lang.getMessage("Ingame.BackpackCleaned");
-		messageCooldown = plugin.lang.getMessage("Ingame.Cooldown").replaceAll("\\{TimeLeft}", "%1$.1f");
+		messageCooldown        = plugin.lang.getMessage("Ingame.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f");
+		messageWrongGameMode   = plugin.lang.getMessage("Ingame.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
 		cooldown = plugin.config.getCommandCooldown();
 		syncCooldown = plugin.config.isCommandCooldownSyncEnabled();
+		gameModes = plugin.config.getAllowedGameModes();
+		StringBuilder allowedGameModesBuilder = new StringBuilder("");
+		for(GameMode gameMode : gameModes)
+		{
+			if(allowedGameModesBuilder.length() > 1)
+			{
+				allowedGameModesBuilder.append(", ");
+			}
+			allowedGameModesBuilder.append(gameMode.name().toLowerCase());
+		}
+		allowedGameModes = allowedGameModesBuilder.toString();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) 
 	{
-		final Player player;
-		if (sender instanceof Player) 
-		{
-			player = (Player) sender;
-	    }
-		else
+		if (!(sender instanceof Player))
 		{
 			messageNotFromConsole.send(sender);
 			return true;
 		}
+		final Player player = (Player) sender;
 		if(args.length == 0)
 		{
 			// Open player backpack
 			if(player.hasPermission("backpack"))
 			{
-				if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
+				if(gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode"))
 				{
-					if(plugin.cooldowns.containsKey(player))
+					if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
 					{
-						long cd = plugin.cooldowns.get(player);
-						if(cd < System.currentTimeMillis())
+						if(plugin.cooldowns.containsKey(player.getUniqueId()))
 						{
-							cd = cd - System.currentTimeMillis();
-							messageCooldown.send(sender, cd / 1000f);
-							return true;
+							long cd = plugin.cooldowns.get(player.getUniqueId());
+							if(cd < System.currentTimeMillis())
+							{
+								cd = cd - System.currentTimeMillis();
+								messageCooldown.send(sender, cd / 1000f);
+								return true;
+							}
 						}
+						final long cooldownTime = System.currentTimeMillis() + cooldown;
+						if(syncCooldown)
+						{
+							plugin.getDb().syncCooldown(player, cooldownTime);
+						}
+						plugin.cooldowns.put(player.getUniqueId(), cooldownTime);
 					}
-					final long cooldownTime = System.currentTimeMillis() + cooldown;
-					if(syncCooldown)
-					{
-						plugin.getDb().syncCooldown(player, cooldownTime);
-					}
-					plugin.cooldowns.put(player, cooldownTime);
+					plugin.openBackpack(player, player, true);
 				}
-				plugin.openBackpack(player, player, true);
+				else
+				{
+					messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(), allowedGameModes);
+ 				}
 			}
 			else
 			{

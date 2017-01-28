@@ -1,14 +1,18 @@
 Language:
   NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
   Ingame:
-    NoPermission: "Dir fehlen die Rechte dafür."
+    NoPermission: "&cDir fehlen die Rechte dafür."
     OwnBackpackClose: "Rucksack geschlossen."
+    OwnBackpackClose_SendMethod: "action_bar"
     #Parameter: {OwnerName}, {OwnerDisplayName}
     PlayerBackpackClose: "{OwnerName}'s Rucksack geschlossen."
+    PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Rucksack fehlerhaft."
     BackpackCleaned: "Rucksack gelehrt."
-    #Parameter> {TimeLeft} time in seconds till he can reopen his backpack
-        Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
+    #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
+    Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
+    #Parameter: {CurrentGameMode}, {AllowedGameModes}
+    WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
     Shulkerboxes:
       NotAllowedInBackpack: "&cShulkerboxes sind im Rucksack nicht erlaubt."
   Commands:

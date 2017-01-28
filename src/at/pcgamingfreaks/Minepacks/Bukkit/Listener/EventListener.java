@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -67,7 +68,7 @@ public class EventListener implements Listener
 	    }
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onClick(InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
@@ -84,12 +85,12 @@ public class EventListener implements Listener
 	    }
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
-		if(plugin.cooldowns.containsKey(event.getPlayer()))
+		if(plugin.cooldowns.containsKey(event.getPlayer().getUniqueId()))
 		{
-			plugin.cooldowns.remove(event.getPlayer());
+			plugin.cooldowns.remove(event.getPlayer().getUniqueId());
 		}
 	}
 }

@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
@@ -57,7 +58,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public Language lang;
 	private Database database;
 
-	public final Map<Player, Long> cooldowns = new HashMap<>();
+	public final Map<UUID, Long> cooldowns = new HashMap<>();
 
 	public String backpackTitleOther, backpackTitle;
 	public Message messageNoPermission, messageInvalidBackpack;
