@@ -17,14 +17,13 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import com.zaxxer.hikari.HikariConfig;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MySQL extends SQL
 {
@@ -56,60 +55,17 @@ public class MySQL extends SQL
 	@Override
 	protected void checkDB()
 	{
-		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
+		try(Connection connection = getConnection())
 		{
-			ResultSet res;
-			if(useUUIDs)
-			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldPlayerName + "` CHAR(16) NOT NULL,`" + fieldPlayerUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerUUID + "';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD COLUMN `" + fieldPlayerUUID + "` CHAR(36) UNIQUE;");
-				}
-				res.close();
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerName + "' AND COLUMN_KEY='UNI';");
-				if(res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` DROP INDEX `" + fieldPlayerName + "_UNIQUE`;");
-				}
-				res.close();
-				if(useUUIDSeparators)
-				{
-					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerUUID + "';");
-					if(res.next() && res.getInt(1) < 36)
-					{
-						stmt.execute("ALTER TABLE `" + tablePlayers + "` MODIFY `" + fieldPlayerUUID + "` CHAR(36) UNIQUE;");
-					}
-					res.close();
-				}
-			}
-			else
-			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldPlayerName + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldPlayerName + "' AND COLUMN_KEY='UNI';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD UNIQUE INDEX `" + fieldPlayerName + "_UNIQUE` (`" + fieldPlayerName + "` ASC);");
-				}
-				res.close();
-			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (`" + fieldBpOwner + "` INT UNSIGNED NOT NULL, `" + fieldBpIts + "` BLOB, `"
-					+ fieldBpVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + fieldBpLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + fieldBpOwner + "`));");
-			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBpVersion + "';");
-			if(!res.next())
-			{
-				stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBpVersion + "` INT DEFAULT 0;");
-			}
-			if(maxAge > 0)
-			{
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBpLastUpdate + "';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBpLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP;");
-				}
-				res.close();
-			}
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} CHAR(16) NOT NULL,\n{FieldUUID} CHAR(36) DEFAULT NULL," +
+					                                                 "\nPRIMARY KEY ({FieldPlayerID}),\nUNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
+					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
+					                                                 "PRIMARY KEY ({FieldBPOwner}),\nCONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) " +
+					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED,\n{FieldCDTime} LONG NOT NULL\nPRIMARY KEY({FieldCDPlayer}),\n" +
+					                                                 "CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldCDPlayer} FOREIGN KEY ({FieldCDPlayer}) " +
+					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
 		}
 		catch (SQLException e)
 		{

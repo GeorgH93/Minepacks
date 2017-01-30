@@ -37,12 +37,13 @@ import java.util.*;
 
 public abstract class SQL extends Database
 {
-	//TODO test sync cooldown
+	//TODO load cooldown
 	private HikariDataSource dataSource;
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
 	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, querySyncCooldown; // DB Querys
+	protected String queryDeleteOldCooldowns, queryGetCooldown; // DB Querys
 	protected boolean updatePlayer, syncCooldown;
 
 	public SQL(Minepacks mp)
@@ -67,12 +68,21 @@ public abstract class SQL extends Database
 		// Delete old backpacks
 		if(maxAge > 0)
 		{
-			try
+			try(Connection connection = getConnection(); Statement statement = connection.createStatement())
 			{
-				try(Connection connection = getConnection(); Statement statement = connection.createStatement())
-				{
-					statement.execute(queryDeleteOldBackpacks);
-				}
+				statement.execute(queryDeleteOldBackpacks);
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		// Delete old cooldowns
+		if(syncCooldown)
+		{
+			try(Connection connection = getConnection())
+			{
+				DBTools.runStatement(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
 			}
 			catch(SQLException e)
 			{
@@ -203,12 +213,7 @@ public abstract class SQL extends Database
 			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldName}=?;";
 		}
 		queryInsertBp = "INSERT INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
-		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?";
-		if(maxAge > 0)
-		{
-			queryUpdateBp += ",{FieldBPLastUpdate}={NOW}";
-		}
-		queryUpdateBp += " WHERE {FieldBPOwner}=?;";
+		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		if(useUUIDSeparators)
 		{
@@ -219,6 +224,7 @@ public abstract class SQL extends Database
 			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} LIKE '%-%';";
 		}
 		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
+		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 
 		updateQuerysForDialect();
 
@@ -231,12 +237,13 @@ public abstract class SQL extends Database
 		queryUpdatePlayerAdd        = replacePlaceholders(queryUpdatePlayerAdd);
 		queryGetPlayerID            = replacePlaceholders(queryGetPlayerID);
 		queryGetBP                  = replacePlaceholders(queryGetBP);
-		queryInsertBp = replacePlaceholders(queryInsertBp);
-		queryUpdateBp = replacePlaceholders(queryUpdateBp);
+		queryInsertBp               = replacePlaceholders(queryInsertBp);
+		queryUpdateBp               = replacePlaceholders(queryUpdateBp);
 		queryFixUUIDs               = replacePlaceholders(queryFixUUIDs);
 		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
 		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
 		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
+		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
 	}
 
 	protected abstract void updateQuerysForDialect();

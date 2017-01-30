@@ -59,6 +59,7 @@ public class SQLite extends SQL
 		// Set fixed settings
 		useUUIDSeparators = false;
 		updatePlayer = true;
+		syncCooldown = false;
 	}
 
 	@Override
@@ -119,16 +120,13 @@ public class SQLite extends SQL
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
 			catch(SQLException ignored) {}
-			if(maxAge > 0)
+			try
 			{
-				try
-				{
-					ResultSet rs = stmt.executeQuery("SELECT DATE('now');");
-					rs.next();
-					stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
-				}
-				catch(SQLException ignored) {}
+				ResultSet rs = stmt.executeQuery("SELECT DATE('now');");
+				rs.next();
+				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 			}
+			catch(SQLException ignored) {}
 		}
 		catch(SQLException e)
 		{
