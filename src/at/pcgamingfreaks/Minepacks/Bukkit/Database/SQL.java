@@ -99,15 +99,15 @@ public abstract class SQL extends Database
 		tablePlayers      = plugin.config.getUserTable();
 		tableBackpacks    = plugin.config.getBackpackTable();
 		tableCooldowns    = plugin.config.getCooldownTable();
-		fieldPlayerID     = plugin.config.getDBFields("User.Player_ID");
-		fieldPlayerName   = plugin.config.getDBFields("User.Name");
-		fieldPlayerUUID   = plugin.config.getDBFields("User.UUID");
-		fieldBpOwner      = plugin.config.getDBFields("Backpack.Owner_ID");
-		fieldBpIts        = plugin.config.getDBFields("Backpack.ItemStacks");
-		fieldBpVersion    = plugin.config.getDBFields("Backpack.Version");
-		fieldBpLastUpdate = plugin.config.getDBFields("Backpack.LastUpdate");
-		fieldCdPlayer     = plugin.config.getDBFields("Cooldown.Player_ID");
-		fieldCdTime       = plugin.config.getDBFields("Cooldown.Time");
+		fieldPlayerID     = plugin.config.getDBFields("User.Player_ID", "id");
+		fieldPlayerName   = plugin.config.getDBFields("User.Name", "name");
+		fieldPlayerUUID   = plugin.config.getDBFields("User.UUID", "uuid");
+		fieldBpOwner      = plugin.config.getDBFields("Backpack.Owner_ID", "owner");
+		fieldBpIts        = plugin.config.getDBFields("Backpack.ItemStacks", "its");
+		fieldBpVersion    = plugin.config.getDBFields("Backpack.Version", "version");
+		fieldBpLastUpdate = plugin.config.getDBFields("Backpack.LastUpdate", "lastUpdate");
+		fieldCdPlayer     = plugin.config.getDBFields("Cooldown.Player_ID", "id");
+		fieldCdTime       = plugin.config.getDBFields("Cooldown.Time", "time");
 		updatePlayer      = plugin.config.getUpdatePlayer();
 		syncCooldown      = plugin.config.isCommandCooldownSyncEnabled();
 	}

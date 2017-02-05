@@ -130,9 +130,9 @@ public class Config extends Configuration
 		return config.getString("Database.Tables.Cooldown", "backpack_cooldowns");
 	}
 
-	public String getDBFields(String sub)
+	public String getDBFields(String sub, String def)
 	{
-		return config.getString("Database.Tables.Fields." + sub, "");
+		return config.getString("Database.Tables.Fields." + sub, def);
 	}
 
 	public boolean getUpdatePlayer()

@@ -85,6 +85,9 @@ Database:
         ItemStacks: itemstacks
         Version: version
         LastUpdate: lastupdate
+      Cooldown:
+        Player_ID: id
+        Time: time
   # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottlenecks.
   Cache:
     UnCache:

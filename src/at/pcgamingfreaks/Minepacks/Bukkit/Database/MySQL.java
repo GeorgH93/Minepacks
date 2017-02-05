@@ -49,7 +49,7 @@ public class MySQL extends SQL
 	protected void updateQuerysForDialect()
 	{
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
-		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW\\}", "NOW()");
+		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "NOW()");
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class MySQL extends SQL
 					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
 					                                                 "PRIMARY KEY ({FieldBPOwner}),\nCONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) " +
 					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
-			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED,\n{FieldCDTime} LONG NOT NULL\nPRIMARY KEY({FieldCDPlayer}),\n" +
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED,\n{FieldCDTime} LONG NOT NULL,\nPRIMARY KEY ({FieldCDPlayer}),\n" +
 					                                                 "CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldCDPlayer} FOREIGN KEY ({FieldCDPlayer}) " +
 					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
 		}
