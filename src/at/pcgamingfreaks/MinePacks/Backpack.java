@@ -103,6 +103,7 @@ public class Backpack implements InventoryHolder
 						if (i != null)
 						{
 							player.getWorld().dropItemNaturally(player.getLocation(), i);
+                            hasChanged = true;
 						}
 					}
 				}
