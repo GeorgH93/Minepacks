@@ -188,6 +188,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		{
 			bp.setItem(i, itemStackArray[i]);
 		}
+		setChanged();
+		save(); // Make sure the new inventory is saved
 		size = newSize;
 		for(Entry<Player, Boolean> e : opened.entrySet())
 		{

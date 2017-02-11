@@ -61,7 +61,7 @@ public class DisableShulkerboxes extends ShulkerboxesListener implements Listene
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
-		if(event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
+		if(event.getInventory() != null && event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
 		{
 			event.setCancelled(true);
 		}
