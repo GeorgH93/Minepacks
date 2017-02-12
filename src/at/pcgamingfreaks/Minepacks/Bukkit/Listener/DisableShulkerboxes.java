@@ -30,11 +30,35 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
-public class DisableShulkerboxes extends ShulkerboxesListener implements Listener
+//TODO remove shulkerboxes
+public class DisableShulkerboxes extends MinepacksListener
 {
-	//TODO remove shulkerboxes
+	protected static final Collection<Material> SHULKER_BOX_MATERIALS = new HashSet<>();
+
+	static
+	{
+		SHULKER_BOX_MATERIALS.add(Material.BLACK_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.BLUE_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.SILVER_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.BROWN_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.CYAN_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.GREEN_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.GRAY_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.LIGHT_BLUE_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.LIME_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.MAGENTA_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.ORANGE_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.PINK_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.PURPLE_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.RED_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.WHITE_SHULKER_BOX);
+		SHULKER_BOX_MATERIALS.add(Material.YELLOW_SHULKER_BOX);
+	}
+
 	public DisableShulkerboxes(final Minepacks plugin)
 	{
 		super(plugin);

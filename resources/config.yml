@@ -113,6 +113,12 @@ Shulkerboxes:
     # Every existing shulker-box will be destroyed when a player tries to interact with it. The content will be dropped to the ground.
     Destroy: false
 
+ItemFilter:
+  # Enables the item filter. Make sure to define items to be filtered.
+  Enable: false
+  # List off items not allowed in the backpack. Can be name or id.
+  Blacklist: []
+
 # Enables/Disables the auto-update function of the plugin.
 auto-update: true
 
@@ -120,4 +126,4 @@ auto-update: true
 DisableV2Info: false
 
 # Config file version. Don't touch it!
-Version: 13
+Version: 14

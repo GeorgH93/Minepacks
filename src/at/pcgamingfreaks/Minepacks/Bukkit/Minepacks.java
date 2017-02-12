@@ -31,7 +31,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.EventListener;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.PreventShulkerboxesInBackpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Version;
 
@@ -102,8 +102,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new EventListener(this), this);
 		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
-		if(config.getShulkerboxesPreventInBackpack()) pluginManager.registerEvents(new PreventShulkerboxesInBackpack(this), this);
-		if(config.getShulkerboxesDisableShulkerboxes()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
+		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
 
 		if(config.getFullInvCollect())

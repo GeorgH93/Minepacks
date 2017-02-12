@@ -23,18 +23,15 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class DropOnDeath implements Listener
+public class DropOnDeath extends MinepacksListener
 {
-	private final Minepacks plugin;
-
 	public DropOnDeath(Minepacks plugin)
 	{
-		this.plugin = plugin;
+		super(plugin);
 	}
 
 	@EventHandler

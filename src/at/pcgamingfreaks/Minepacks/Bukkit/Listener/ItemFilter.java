@@ -21,28 +21,39 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 
-public class PreventShulkerboxesInBackpack extends ShulkerboxesListener implements Listener
+import java.util.Collection;
+import java.util.HashSet;
+
+public class ItemFilter extends MinepacksListener
 {
 	private final Message messageNotAllowedInBackpack;
+	private final Collection<Material> blockedMaterials = new HashSet<>();
 
-	public PreventShulkerboxesInBackpack(final Minepacks plugin)
+	public ItemFilter(final Minepacks plugin)
 	{
 		super(plugin);
-		messageNotAllowedInBackpack = plugin.lang.getMessage("Ingame.Shulkerboxes.NotAllowedInBackpack");
+
+		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
+		{
+			blockedMaterials.addAll(DisableShulkerboxes.SHULKER_BOX_MATERIALS);
+		}
+		blockedMaterials.addAll(plugin.getConfiguration().getItemFilterBlacklist());
+
+		messageNotAllowedInBackpack = plugin.lang.getMessage("Ingame.Shulkerboxes.NotAllowedInBackpack"); //TODO change message
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(event.getDestination().getHolder() instanceof Backpack && SHULKER_BOX_MATERIALS.contains(event.getItem().getType()))
+		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(event.getItem().getType()))
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
@@ -55,7 +66,7 @@ public class PreventShulkerboxesInBackpack extends ShulkerboxesListener implemen
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryClickEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && SHULKER_BOX_MATERIALS.contains(event.getCurrentItem().getType()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(event.getCurrentItem().getType()))
 		{
 			messageNotAllowedInBackpack.send(event.getView().getPlayer());
 			event.setCancelled(true);
@@ -65,7 +76,7 @@ public class PreventShulkerboxesInBackpack extends ShulkerboxesListener implemen
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getOldCursor().getType()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(event.getOldCursor().getType()))
 		{
 			messageNotAllowedInBackpack.send(event.getView().getPlayer());
 			event.setCancelled(true);

@@ -21,16 +21,14 @@ import at.pcgamingfreaks.Bukkit.Configuration;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 13;
+	private static final int CONFIG_VERSION = 14;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -255,24 +253,43 @@ public class Config extends Configuration
 	//endregion
 
 	//region Shulkerboxes
-	public boolean getShulkerboxesPreventInBackpack()
+	public boolean isShulkerboxesPreventInBackpackEnabled()
 	{
 		return config.getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
-	public boolean getShulkerboxesDisableShulkerboxes()
+	public boolean isShulkerboxesDisable()
 	{
 		return config.getBoolean("Shulkerboxes.DisableShulkerboxes", false);
 	}
 
-	public boolean getShulkerboxesExistingRemove()
+	public boolean isShulkerboxesExistingRemoveEnabled()
 	{
 		return config.getBoolean("Shulkerboxes.Existing.Remove", true);
 	}
 
-	public boolean getShulkerboxesExistingDestroy()
+	public boolean isShulkerboxesExistingDestroyEnabled()
 	{
 		return config.getBoolean("Shulkerboxes.Existing.Destroy", true);
+	}
+	//endregion
+
+	//region Item filter
+	public boolean isItemFilterEnabled()
+	{
+		return config.getBoolean("ItemFilter.Enable", false) || config.getBoolean("Shulkerboxes.PreventInBackpack", true);
+	}
+
+	public Collection<Material> getItemFilterBlacklist()
+	{
+		List<String> stringBlacklist = config.getStringList("ItemFilter.Blacklist", new LinkedList<String>());
+		Collection<Material> blacklist = new LinkedList<>();
+		for(String item : stringBlacklist)
+		{
+			Material mat = Material.matchMaterial(item);
+			if(mat != null) blacklist.add(mat);
+		}
+		return blacklist;
 	}
 	//endregion
 	//endregion

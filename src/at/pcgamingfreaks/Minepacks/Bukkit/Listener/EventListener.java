@@ -26,19 +26,17 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class EventListener implements Listener
+public class EventListener extends MinepacksListener
 {
-	private final Minepacks plugin;
 	private final Message messageOwnBackpackClose, messageOtherBackpackClose;
 	
-	public EventListener(Minepacks mp)
+	public EventListener(Minepacks plugin)
 	{
-		plugin = mp;
+		super(plugin);
 		messageOwnBackpackClose = plugin.lang.getMessage("Ingame.OwnBackpackClose");
 		messageOtherBackpackClose = plugin.lang.getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
 	}
