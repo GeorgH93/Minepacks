@@ -21,6 +21,8 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -40,6 +42,8 @@ public class DropOnDeath extends MinepacksListener
 		final Player player = event.getEntity();
 		if (!player.hasPermission("backpack.keepOnDeath"))
 		{
+			final World world = player.getWorld();
+			final Location location = player.getLocation();
 			plugin.getBackpack(player, new Callback<Backpack>()
 			{
 				@Override
@@ -50,7 +54,7 @@ public class DropOnDeath extends MinepacksListener
 					{
 						if(i != null)
 						{
-							player.getWorld().dropItemNaturally(player.getLocation(), i);
+							world.dropItemNaturally(location, i);
 							backpackInventory.remove(i);
 							backpack.setChanged();
 						}
