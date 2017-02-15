@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
 
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
@@ -77,4 +78,16 @@ public interface Backpack extends InventoryHolder
 	 * Forces the backpack to be saved
 	 */
 	void save();
+
+	/**
+	 * Removes all items from the backpack.
+	 */
+	void clear();
+
+	/**
+	 * Drops the content of the backpack to the ground on a given location.
+	 *
+	 * @param location The location the content of the backpack should be dropped to.
+	 */
+	void drop(Location location);
 }

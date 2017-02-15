@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -224,5 +225,26 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 			Minepacks.getInstance().getDb().saveBackpack(this);
 			hasChanged = false;
 		}
+	}
+
+	@Override
+	public void clear()
+	{
+		bp.clear();
+		setChanged();
+		save();
+	}
+
+	@Override
+	public void drop(Location location)
+	{
+		for(ItemStack i : bp.getContents())
+		{
+			if(i != null)
+			{
+				location.getWorld().dropItemNaturally(location, i);
+			}
+		}
+		clear();
 	}
 }

@@ -155,8 +155,7 @@ public class OnCommand implements CommandExecutor
 							{
 								if(backpack != null)
 								{
-									backpack.getInventory().clear();
-									backpack.save();
+									backpack.clear();
 									messageBackpackCleaned.send(player);
 								}
 								else
