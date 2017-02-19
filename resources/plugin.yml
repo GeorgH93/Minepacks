@@ -25,10 +25,9 @@ permissions:
       backpack.fullpickup: true
   backpack.use:
     description: Allows a player to open the backpack.
-    children:
-      backpack: true
+    default: false
   backpack:
-    description: Allows a player to open the backpack.
+    description: Allows a player to open the backpack. This is a fallback permission since some permission plugins have problems with the backpack.use permission.
     default: false
   backpack.size.1:
     description: Mini size for a backpack, if the player has backpack permission he will also have at least a backpack with the size 1.
