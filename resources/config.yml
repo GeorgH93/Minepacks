@@ -122,8 +122,5 @@ ItemFilter:
 # Enables/Disables the auto-update function of the plugin.
 auto-update: true
 
-# Disables the info that V2 has been released and should be downloaded. You should only use this option if your MC version is not compatible with V2.
-DisableV2Info: false
-
 # Config file version. Don't touch it!
 Version: 14
