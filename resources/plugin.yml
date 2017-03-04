@@ -14,7 +14,7 @@ permissions:
   backpack.*:
     description: Gives access to the full Minepacks functionality.
     children:
-      backpack: true
+      backpack.use: true
       backpack.size.6: true
       backpack.others: true
       backpack.others.edit: true
@@ -28,16 +28,15 @@ permissions:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     children:
       backpack: false
+      backpack.use: false
       backpack.others: false
       backpack.keepOnDeath: true
       backpack.clean: false
-      backpack.fullpickup: false
-
-  backpack.use:
-    description: Allows a player to open the backpack.
-    default: false
   backpack:
     description: Allows a player to open the backpack. This is a fallback permission since some permission plugins have problems with the backpack.use permission.
+    default: false
+  backpack.use:
+    description: Allows a player to open the backpack.
     default: false
   backpack.size.1:
     description: Mini size for a backpack, if the player has backpack permission he will also have at least a backpack with the size 1.
