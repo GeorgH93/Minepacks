@@ -23,6 +23,7 @@ permissions:
       backpack.clean.other: true
       backpack.noCooldown: true
       backpack.fullpickup: true
+      backpack.ignoreGameMode: true
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     children:
