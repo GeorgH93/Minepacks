@@ -13,8 +13,7 @@ Language:
     Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
     #Parameter: {CurrentGameMode}, {AllowedGameModes}
     WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
-    Shulkerboxes:
-      NotAllowedInBackpack: "&cShulkerboxes sind im Rucksack nicht erlaubt."
+    NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
   Commands:
     Description:
       Backpack: "Öffent deinen Rucksack."

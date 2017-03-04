@@ -18,8 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -35,7 +37,7 @@ import java.util.HashSet;
 public class ItemFilter extends MinepacksListener
 {
 	private final Message messageNotAllowedInBackpack;
-	private final Collection<Material> blockedMaterials = new HashSet<>();
+	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
 
 	public ItemFilter(final Minepacks plugin)
 	{
@@ -43,21 +45,24 @@ public class ItemFilter extends MinepacksListener
 
 		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
 		{
-			blockedMaterials.addAll(DisableShulkerboxes.SHULKER_BOX_MATERIALS);
+			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
+			{
+				blockedMaterials.add(new MinecraftMaterial(mat, (short) -1));
+			}
 		}
 		blockedMaterials.addAll(plugin.getConfiguration().getItemFilterBlacklist());
 
-		messageNotAllowedInBackpack = plugin.lang.getMessage("Ingame.Shulkerboxes.NotAllowedInBackpack"); //TODO change message
+		messageNotAllowedInBackpack = plugin.lang.getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(event.getItem().getType()))
+		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(event.getItem()))
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
-				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder());
+				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), ItemNameResolver.getInstance().getName(event.getItem().getType()));
 			}
 			event.setCancelled(true);
 		}
@@ -66,9 +71,9 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryClickEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(event.getCurrentItem().getType()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(event.getCurrentItem()))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer());
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getCurrentItem().getType()));
 			event.setCancelled(true);
 		}
 	}
@@ -76,9 +81,9 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(event.getOldCursor().getType()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(event.getOldCursor()))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer());
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getOldCursor().getType()));
 			event.setCancelled(true);
 		}
 	}

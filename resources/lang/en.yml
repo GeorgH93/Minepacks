@@ -13,8 +13,7 @@ Language:
     Cooldown: "&2Please wait {TimeLeft} seconds till you reopen your backpack."
     #Parameter: {CurrentGameMode}, {AllowedGameModes}
     WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
-    Shulkerboxes:
-      NotAllowedInBackpack: "&cShulkerboxes are not allowed in the backpack."
+    NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
   Commands:
     Description:
       Backpack: "Opens your backpack."

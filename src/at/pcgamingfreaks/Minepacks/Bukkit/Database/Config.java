@@ -18,10 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -280,13 +280,13 @@ public class Config extends Configuration
 		return config.getBoolean("ItemFilter.Enable", false) || config.getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
-	public Collection<Material> getItemFilterBlacklist()
+	public Collection<MinecraftMaterial> getItemFilterBlacklist()
 	{
 		List<String> stringBlacklist = config.getStringList("ItemFilter.Blacklist", new LinkedList<String>());
-		Collection<Material> blacklist = new LinkedList<>();
+		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
 		for(String item : stringBlacklist)
 		{
-			Material mat = Material.matchMaterial(item);
+			MinecraftMaterial mat = MinecraftMaterial.fromInput(item);
 			if(mat != null) blacklist.add(mat);
 		}
 		return blacklist;
