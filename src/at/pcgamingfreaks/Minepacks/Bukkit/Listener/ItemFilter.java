@@ -58,11 +58,11 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(event.getItem()))
+		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(new MinecraftMaterial(event.getItem())))
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
-				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), ItemNameResolver.getInstance().getName(event.getItem().getType()));
+				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), ItemNameResolver.getInstance().getName(event.getItem()));
 			}
 			event.setCancelled(true);
 		}
@@ -71,9 +71,9 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryClickEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(event.getCurrentItem()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getCurrentItem().getType()));
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getCurrentItem()));
 			event.setCancelled(true);
 		}
 	}
@@ -81,9 +81,9 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(event.getOldCursor()))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(new MinecraftMaterial(event.getOldCursor())))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getOldCursor().getType()));
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getOldCursor()));
 			event.setCancelled(true);
 		}
 	}
