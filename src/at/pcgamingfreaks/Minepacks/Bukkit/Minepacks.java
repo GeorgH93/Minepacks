@@ -60,7 +60,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	public final Map<UUID, Long> cooldowns = new HashMap<>();
 
-	public String backpackTitleOther, backpackTitle;
+	public String backpackTitleOther = "%s Backpack", backpackTitle = "Backpack";
 	public Message messageNoPermission, messageInvalidBackpack;
 
 	private int maxSize;
@@ -96,8 +96,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		lang = new Language(this);
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		database = Database.getDatabase(this);
-		getCommand("backpack").setExecutor(new OnCommand(this));
+		maxSize = config.getBackpackMaxSize();
+		backpackTitleOther = config.getBPTitleOther();
+		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
+		messageNoPermission = lang.getMessage("Ingame.NoPermission");
+		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
+		getServer().getServicesManager().register(Minepacks.class, this, this, ServicePriority.Normal);
 
+		getCommand("backpack").setExecutor(new OnCommand(this));
 		//region register events
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new EventListener(this), this);
@@ -105,18 +111,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
-
 		if(config.getFullInvCollect())
 		{
 			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
-
-		maxSize = config.getBackpackMaxSize();
-		backpackTitleOther = config.getBPTitleOther();
-		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
-		messageNoPermission = lang.getMessage("Ingame.NoPermission");
-		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
-		getServer().getServicesManager().register(Minepacks.class, this, this, ServicePriority.Normal);
 
 		if(config.getAutoUpdate()) // Lets check for updates
 		{

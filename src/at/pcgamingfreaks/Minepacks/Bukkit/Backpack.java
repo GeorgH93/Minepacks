@@ -57,12 +57,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		this(owner, size, -1);
 	}
 
-	public Backpack(OfflinePlayer owner, int Size, int ID)
+	public Backpack(OfflinePlayer owner, int size, int ID)
 	{
 		this.owner = owner;
 		titleOther = StringUtils.limitLength(String.format(Minepacks.getInstance().backpackTitleOther, owner.getName()), 32);
-		bp = Bukkit.createInventory(this, Size, titleOther);
-		size = Size;
+		bp = Bukkit.createInventory(this, size, titleOther);
+		this.size = size;
 		ownerID = ID;
 	}
 	
