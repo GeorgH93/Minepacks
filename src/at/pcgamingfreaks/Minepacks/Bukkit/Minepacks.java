@@ -109,7 +109,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		pluginManager.registerEvents(new EventListener(this), this);
 		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
 		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
-		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
 		if(config.getFullInvCollect())
 		{

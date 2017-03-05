@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
@@ -43,7 +44,7 @@ public class ItemFilter extends MinepacksListener
 	{
 		super(plugin);
 
-		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
 		{
 			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
 			{
