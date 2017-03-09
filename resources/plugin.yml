@@ -26,6 +26,7 @@ permissions:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     children:
       backpack: false
+      backpack.use: false
       backpack.others: false
       backpack.keepOnDeath: true
       backpack.clean: false

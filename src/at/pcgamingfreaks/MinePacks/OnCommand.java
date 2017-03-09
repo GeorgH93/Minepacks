@@ -65,7 +65,7 @@ public class OnCommand implements CommandExecutor
 		if(args.length == 0)
 		{
 			// Open player backpack
-			if(player.hasPermission("backpack"))
+			if(player.hasPermission("backpack") || player.hasPermission("backpack.use"))
 			{
 				if(gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode"))
 				{
@@ -101,7 +101,7 @@ public class OnCommand implements CommandExecutor
 				case "help": // Shows the help for the plugin
 				case "hilfe":
 				case "?":
-					if(player.hasPermission("backpack"))
+					if(player.hasPermission("backpack") || player.hasPermission("backpack.use"))
 					{
 						player.sendMessage(ChatColor.GOLD + "Minepacks Help:");
 						player.sendMessage(ChatColor.AQUA + "/backpack" + ChatColor.WHITE + " - " + plugin.lang.getTranslated("Description.Backpack"));
