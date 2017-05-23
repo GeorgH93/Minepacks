@@ -6,7 +6,6 @@ Language:
     LangUpdated: Die Sprachdatei wurde aktualisiert.
     UpdateUUIDs: Beginne die Spielernamen in UUIDs umzuwandeln...
     UpdatedUUIDs: 'Es wurden %d Spielernamen in UUIDs umgewandelt.'
-    MinecraftVersionNotCompatible: "Deine Minecraft Version (MC %1$s) ist mit der Version des Plugins (%2$s) nicht kompatibel! Bitte prüfe ob ein update verfügbar ist!"
   Ingame:
     NoPermission: 'Dir fehlen die Rechte dafür.'
     OwnBackPackClose: 'Rucksack geschlossen.'

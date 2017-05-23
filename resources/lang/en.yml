@@ -6,7 +6,6 @@ Language:
     LangUpdated: Language File has been updated.
     UpdateUUIDs: Start updating database to UUIDs ...
     UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
-    MinecraftVersionNotCompatible: "Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). Please check for updates!"
   Ingame:
     NoPermission: You don't have the Permission to do that.
     OwnBackPackClose: 'Backpack closed!'
