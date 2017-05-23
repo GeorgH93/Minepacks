@@ -1,0 +1,26 @@
+#simple-Chinese
+Language:
+  Console:
+    Enabled: MinePacks插件当前已启用!
+    Disabled: MinePacks插件当前未启用.
+    NotFromConsole: 无法在控制台中使用此命令.
+    LangUpdated: 语言配置文件已更新.
+    UpdateUUIDs: 更新UUID数据中...
+    UpdatedUUIDs: "%s个UUID数据已更新完成."
+    MinecraftVersionNotCompatible: "你的Minecraft版本(MC %1$s)当前不兼容本插件的当前版本(%2$s). 请更新!"
+  Ingame:
+    NoPermission: 您没有权限使用.
+    OwnBackPackClose: 您的背包已关闭.
+    PlayerBackPackClose: "%s的背包已关闭."
+    InvalidBackpack: 无效背包.
+    BackpackCleaned: 背包已清理.
+    Cooldown: 请等待冷却时间结束后再开启您的背包.
+    WrongGameMode: 在当前游戏模式下,您不被允许使用背包.
+  Description:
+    Backpack: 打开您自己的背包.
+    Clean: 清理您自己的背包.
+    CleanOther: 清理其他玩家的背包.
+    View: 查看其他玩家的背包.
+
+# Language file version. Don't touch it!
+Version: 5
