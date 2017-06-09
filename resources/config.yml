@@ -98,4 +98,4 @@ auto-update: true
 DisableV2Info: false
 
 # Config file version. Don't touch it!
-Version: 14
+Version: 15
