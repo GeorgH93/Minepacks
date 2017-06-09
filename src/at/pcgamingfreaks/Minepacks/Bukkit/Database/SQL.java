@@ -54,6 +54,7 @@ public abstract class SQL extends Database
 		if(poolConfig != null)
 		{
 			poolConfig.setPoolName("Minepacks-Connection-Pool");
+			poolConfig.addDataSourceProperty("cachePrepStmts", "true");
 			dataSource = new HikariDataSource(poolConfig);
 		}
 

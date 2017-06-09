@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -110,7 +110,19 @@ public class Config extends Configuration
 
 	public int getSQLMaxConnections()
 	{
-		return config.getInt("Database.SQL.MaxConnections", 4);
+		return config.getInt("Database.SQL.MaxConnections", 2);
+	}
+
+	public String getSQLProperties()
+	{
+		List<String> list = config.getStringList("Database.MySQL.Properties", null);
+		StringBuilder str = new StringBuilder();
+		if(list == null) return "";
+		for(String s : list)
+		{
+			str.append("&").append(s);
+		}
+		return str.toString();
 	}
 
 	public String getUserTable()
