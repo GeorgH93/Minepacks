@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2014-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,10 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class Config extends Configuration
 {
@@ -110,7 +107,19 @@ public class Config extends Configuration
 
 	public int getMySQLMaxConnections()
 	{
-		return config.getInt("Database.MySQL.MaxConnections", 4);
+		return config.getInt("Database.MySQL.MaxConnections", 2);
+	}
+
+	public String getMySQLProperties()
+	{
+		List<String> list = config.getStringList("Database.MySQL.Properties", null);
+		StringBuilder str = new StringBuilder();
+		if(list == null) return "";
+		for(String s : list)
+		{
+			str.append("&").append(s);
+		}
+		return str.toString();
 	}
 
 	public String getUserTable()

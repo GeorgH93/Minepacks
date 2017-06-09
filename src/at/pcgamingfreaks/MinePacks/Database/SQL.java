@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2014-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@ public abstract class SQL extends Database
 
 		HikariConfig poolConfig = getPoolConfig();
 		poolConfig.setPoolName("Minepacks-Connection-Pool");
+		poolConfig.addDataSourceProperty("cachePrepStmts", "true");
 		dataSource = new HikariDataSource(poolConfig);
 
 		loadSettings();
