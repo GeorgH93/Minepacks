@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -94,6 +94,35 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		instance = this;
 		config = new Config(this);
 		lang = new Language(this);
+
+		load();
+
+		if(config.getAutoUpdate()) // Lets check for updates
+		{
+			getLogger().info("Checking for updates ...");
+			Updater updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
+			updater.update(); // Starts the update
+		}
+		StringUtils.getPluginEnabledMessage(getDescription().getName());
+	}
+
+	@Override
+	public void onDisable()
+	{
+		Updater updater = null;
+		if(config.getAutoUpdate()) // Lets check for updates
+		{
+			getLogger().info("Checking for updates ...");
+			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
+			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
+		}
+		unload();
+		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
+		StringUtils.getPluginDisabledMessage(getDescription().getName());
+	}
+
+	private void load()
+	{
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		database = Database.getDatabase(this);
 		maxSize = config.getBackpackMaxSize();
@@ -115,31 +144,20 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
-
-		if(config.getAutoUpdate()) // Lets check for updates
-		{
-			getLogger().info("Checking for updates ...");
-			Updater updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
-			updater.update(); // Starts the update
-		}
-		StringUtils.getPluginEnabledMessage(getDescription().getName());
 	}
 
-	@Override
-	public void onDisable()
+	private void unload()
 	{
-		Updater updater = null;
-		if(config.getAutoUpdate()) // Lets check for updates
-		{
-			getLogger().info("Checking for updates ...");
-			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
-			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
-		}
 		getServer().getScheduler().cancelTasks(this); // Stop the listener, we don't need them any longer
 		database.close(); // Close the DB connection, we won't need them any longer
 		instance = null;
-		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
-		StringUtils.getPluginDisabledMessage(getDescription().getName());
+	}
+
+	public void reload()
+	{
+		unload();
+		config.reload();
+		load();
 	}
 
 	public void warnOnVersionIncompatibility(String version)
