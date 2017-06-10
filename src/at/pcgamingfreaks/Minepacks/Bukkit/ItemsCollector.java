@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class ItemsCollector extends BukkitRunnable
 			if(player.getInventory().firstEmpty() == -1 && (player.hasPermission("backpack.use") || player.hasPermission("backpack")) && player.hasPermission("backpack.fullpickup"))
 			{
 				// Only check loaded backpacks (loading them would take to much time for a repeating task, the backpack will be loaded async soon enough)
-				Backpack backpack = plugin.getBackpackCachedOnly(player);
+				Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
 				if(backpack == null)
 				{
 					continue;

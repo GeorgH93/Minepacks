@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Commands.OnCommand;
@@ -33,14 +34,12 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.EventListener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.StringUtils;
-import at.pcgamingfreaks.Version;
 
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +50,6 @@ import java.util.UUID;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
-	private static Version version = new Version("2.0-SNAPSHOT");
 	private static Minepacks instance = null;
 
 	public Config config;
@@ -71,16 +69,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public Version getVersion()
-	{
-		return version;
-	}
-
-	@Override
 	public void onEnable()
 	{
 		Utils.warnOnJava_1_7(getLogger());
-		version = new Version(getDescription().getVersion());
 		//region Check compatibility with used minecraft version
 		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_12_R1))
 		{
@@ -130,7 +121,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
 		messageNoPermission = lang.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
-		getServer().getServicesManager().register(Minepacks.class, this, this, ServicePriority.Normal);
 
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		//region register events
@@ -183,10 +173,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
 	{
 		Validate.notNull(owner);
-		database.getBackpack(owner, new Callback<Backpack>()
+		database.getBackpack(owner, new Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack>()
 		{
 			@Override
-			public void onResult(Backpack backpack)
+			public void onResult(at.pcgamingfreaks.Minepacks.Bukkit.Backpack backpack)
 			{
 				openBackpack(opener, backpack, editable);
 			}
@@ -221,7 +211,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public void getBackpack(@NotNull OfflinePlayer owner, @NotNull Callback<Backpack> callback)
+	public void getBackpack(@NotNull OfflinePlayer owner, @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback)
 	{
 		database.getBackpack(owner, callback);
 	}
