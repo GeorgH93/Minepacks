@@ -260,14 +260,7 @@ public abstract class SQL extends Database
 
 	protected void runStatementAsync(final String query, final Object... args)
 	{
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				runStatement(query, args);
-			}
-		});
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> runStatement(query, args));
 	}
 
 	protected void runStatement(final String query, final Object... args)
@@ -308,49 +301,37 @@ public abstract class SQL extends Database
 		final int id = backpack.getOwnerID(), usedSerializer = itsSerializer.getUsedSerializer();
 		final String nameOrUUID = getPlayerNameOrUUID(backpack.getOwner()), name = backpack.getOwner().getName();
 
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable()
-		{
-			@Override
-			public void run()
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			try(Connection connection = getConnection())
 			{
-				try(Connection connection = getConnection())
+				if(id <= 0)
 				{
-					if(id <= 0)
+					try(PreparedStatement ps = connection.prepareStatement(queryGetPlayerID))
 					{
-						try(PreparedStatement ps = connection.prepareStatement(queryGetPlayerID))
+						ps.setString(1, nameOrUUID);
+						try(ResultSet rs = ps.executeQuery())
 						{
-							ps.setString(1, nameOrUUID);
-							try(ResultSet rs = ps.executeQuery())
+							if(rs.next())
 							{
-								if(rs.next())
-								{
-									final int newID = rs.getInt(1);
-									DBTools.runStatement(connection, queryInsertBp, newID, data, usedSerializer);
-									plugin.getServer().getScheduler().runTask(plugin, new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											backpack.setOwnerID(newID);
-										}
-									});
-								}
-								else
-								{
-									plugin.getLogger().warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
-								}
+								final int newID = rs.getInt(1);
+								DBTools.runStatement(connection, queryInsertBp, newID, data, usedSerializer);
+								plugin.getServer().getScheduler().runTask(plugin, () -> backpack.setOwnerID(newID));
+							}
+							else
+							{
+								plugin.getLogger().warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
 							}
 						}
 					}
-					else
-					{
-						DBTools.runStatement(connection, queryUpdateBp, data, usedSerializer, id);
-					}
 				}
-				catch(SQLException e)
+				else
 				{
-					e.printStackTrace();
+					DBTools.runStatement(connection, queryUpdateBp, data, usedSerializer, id);
 				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
 			}
 		});
 	}
@@ -358,60 +339,43 @@ public abstract class SQL extends Database
 	@Override
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable()
-		{
-			@Override
-			public void run()
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
 			{
-				try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
+				ps.setString(1, getPlayerNameOrUUID(player));
+				final int bpID, version;
+				final byte[] data;
+				try(ResultSet rs = ps.executeQuery())
 				{
-					ps.setString(1, getPlayerNameOrUUID(player));
-					final int bpID, version;
-					final byte[] data;
-					try(ResultSet rs = ps.executeQuery())
+					if(rs.next())
 					{
-						if(rs.next())
-						{
-							bpID = rs.getInt(1);
-							version = rs.getInt(3);
-							data = rs.getBytes(2);
-						}
-						else
-						{
-							bpID = -1;
-							version = 0;
-							data = null;
-						}
+						bpID = rs.getInt(1);
+						version = rs.getInt(3);
+						data = rs.getBytes(2);
 					}
-					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+					else
 					{
-						@Override
-						public void run()
-						{
-							ItemStack[] its = itsSerializer.deserialize(data, version);
-							if(its != null)
-							{
-								callback.onResult(new Backpack(player, its, bpID));
-							}
-							else
-							{
-								callback.onFail();
-							}
-						}
-					});
+						bpID = -1;
+						version = 0;
+						data = null;
+					}
 				}
-				catch(SQLException e)
-				{
-					e.printStackTrace();
-					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
+				plugin.getServer().getScheduler().runTask(plugin, () -> {
+					ItemStack[] its = itsSerializer.deserialize(data, version);
+					if(its != null)
 					{
-						@Override
-						public void run()
-						{
-							callback.onFail();
-						}
-					});
-				}
+						callback.onResult(new Backpack(player, its, bpID));
+					}
+					else
+					{
+						callback.onFail();
+					}
+				});
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+				plugin.getServer().getScheduler().runTask(plugin, callback::onFail);
 			}
 		});
 	}

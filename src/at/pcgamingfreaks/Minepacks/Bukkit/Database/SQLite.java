@@ -139,13 +139,9 @@ public class SQLite extends SQL
 	{
 		if(useUUIDs)
 		{
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-				@Override
-				public void run()
-				{
-					runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
-					runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
-				}
+			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+				runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
+				runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
 			});
 		}
 		else
