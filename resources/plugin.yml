@@ -28,7 +28,7 @@ permissions:
       backpack: false
       backpack.use: false
       backpack.others: false
-      backpack.keepOnDeath: true
+      backpack.KeepOnDeath: true
       backpack.clean: false
       backpack.fullpickup: false
   backpack.use:
