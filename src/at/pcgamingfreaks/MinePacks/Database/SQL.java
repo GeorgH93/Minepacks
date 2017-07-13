@@ -187,7 +187,7 @@ public abstract class SQL extends Database
 			queryGetPlayerID = "SELECT `{FieldPlayerID}` FROM `{TablePlayers}` WHERE `{FieldName}`=?;";
 			queryGetBP += "`{FieldName}`=?;";
 		}
-		queryInsertBP = "INSERT INTO `{TableBackpacks}` (`{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}`) VALUES (?,?,?);";
+		queryInsertBP = "REPLACE INTO `{TableBackpacks}` (`{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}`) VALUES (?,?,?);";
 		queryUpdateBP = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=?";
 		if(maxAge > 0)
 		{
