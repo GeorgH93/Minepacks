@@ -134,6 +134,7 @@ public class OnCommand implements CommandExecutor
 								if(backpack != null)
 								{
 									backpack.getInventory().clear();
+									backpack.setChanged();
 									backpack.save();
 									player.sendMessage(messageBackpackCleaned);
 								}
