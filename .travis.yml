@@ -1,7 +1,7 @@
 sudo: false
 
 language: java
-jdk: oraclejdk7
+jdk: openjdk7
 
 cache:
   directories:
