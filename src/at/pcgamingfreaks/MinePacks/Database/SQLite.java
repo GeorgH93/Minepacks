@@ -70,6 +70,7 @@ public class SQLite extends SQL
 			return null;
 		}
 		HikariConfig poolConfig = new HikariConfig();
+		poolConfig.setMaximumPoolSize(1);
 		poolConfig.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
 		poolConfig.setConnectionTestQuery("SELECT 1;");
 		return poolConfig;
@@ -83,7 +84,7 @@ public class SQLite extends SQL
 			queryInsertBP = queryInsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		}
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "DATE('now')");
+		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW}", "DATE('now')");
 		if(useUUIDs)
 		{
 			queryUpdatePlayerAdd = "INSERT OR IGNORE INTO `{TablePlayers}` (`{FieldName}`,`{FieldUUID}`) VALUES (?,?);";
@@ -122,9 +123,7 @@ public class SQLite extends SQL
 					rs.next();
 					stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 				}
-				catch(SQLException ignored)
-				{
-				}
+				catch(SQLException ignored) {}
 			}
 		}
 		catch(SQLException e)
