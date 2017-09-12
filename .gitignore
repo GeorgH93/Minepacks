@@ -46,6 +46,9 @@ Temporary Items
 .apdisk
 
 
+# Temp files
+*.tmp
+
 
 # =========================
 # IDE Project Files

@@ -75,6 +75,7 @@ public class SQLite extends SQL
 			return null;
 		}
 		HikariConfig poolConfig = new HikariConfig();
+		poolConfig.setMaximumPoolSize(1);
 		poolConfig.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
 		poolConfig.setConnectionTestQuery("SELECT 1;");
 		return poolConfig;
