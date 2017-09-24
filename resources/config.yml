@@ -25,6 +25,8 @@ show_close_message: false
 # Defines the max amount of columns for a backpack
 max_size: 6
 # Defines in which game-modes a player can access his backpack
+# Options: ADVENTURE, CREATIVE, SPECTATOR, SURVIVAL
+# allowed_game_modes: [ "SURVIVAL", "ADVENTURE" ]
 allowed_game_modes: [ "SURVIVAL" ]
 
 # Controls for the auto pickup on full inventory function
