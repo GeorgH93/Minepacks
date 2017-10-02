@@ -31,7 +31,7 @@ public class CauldronReflection
 	 * names.
 	 */
 	private static Map<String, Map<String, Map<String, String>>> ForgeMethodMappings;
-	private static final boolean isForge = Bukkit.getServer().getName().toLowerCase().contains("cauldron");
+	private static final boolean isForge = Bukkit.getServer().getName().toLowerCase().contains("cauldron") ||  Bukkit.getServer().getName().toLowerCase().contains("uranium");
 	private static Map<Class<?>, String> primitiveTypes;
 
 	static
