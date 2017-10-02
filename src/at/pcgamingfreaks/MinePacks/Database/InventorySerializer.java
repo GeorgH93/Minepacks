@@ -20,7 +20,9 @@ package at.pcgamingfreaks.MinePacks.Database;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializer;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,7 +35,8 @@ public class InventorySerializer
 	{
 		try
 		{
-			if(CauldronNBTItemStackSerializer.isMCVersionCompatible())
+			if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_7) && MCVersion.isOlderOrEqualThan(MCVersion.MC_1_7_10) &&
+					(Bukkit.getServer().getName().toLowerCase().contains("cauldron") || Bukkit.getServer().getName().toLowerCase().contains("uranium")))
 			{
 				serializer = new CauldronNBTItemStackSerializer();
 			}
