@@ -33,7 +33,11 @@ public class InventorySerializer
 	{
 		try
 		{
-			if(NBTItemStackSerializer.isMCVersionCompatible())
+			if(CauldronNBTItemStackSerializer.isMCVersionCompatible())
+			{
+				serializer = new CauldronNBTItemStackSerializer();
+			}
+			else if(NBTItemStackSerializer.isMCVersionCompatible())
 			{
 				serializer = new NBTItemStackSerializer();
 			}
