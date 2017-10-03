@@ -35,17 +35,17 @@ public class CauldronNBTItemStackSerializer implements ItemStackSerializer
 	private static final Class<?> CLASS_NBT_TAG_COMPOUND            = CauldronReflection.getNMSClass("NBTTagCompound");
 	private static final Class<?> CLASS_NBT_COMPRESSED_STREAM_TOOLS = CauldronReflection.getNMSClass("NBTCompressedStreamTools");
 	private static final Class<?> CLASS_NMS_ITEM_STACK              = CauldronReflection.getNMSClass("ItemStack");
-	private static final Method METHOD_NBT_TAG_C_SET_INT  = CauldronReflection.getMethod(CLASS_NBT_TAG_COMPOUND, "setInt", String.class, int.class);
-	private static final Method METHOD_NBT_COMP_STEAM_A   = CauldronReflection.getMethod(CLASS_NBT_COMPRESSED_STREAM_TOOLS, "a", CLASS_NBT_TAG_COMPOUND, OutputStream.class);
-	private static final Method METHOD_NBT_TAG_C_SET2     = CauldronReflection.getMethod(CLASS_NBT_TAG_COMPOUND, "set", String.class, CauldronReflection.getNMSClass("NBTBase"));
-	private static final Method METHOD_SAVE               = CauldronReflection.getMethod(CLASS_NMS_ITEM_STACK, "save", CLASS_NBT_TAG_COMPOUND);
-	private static final Method METHOD_AS_NMS_COPY        = CauldronReflection.getMethod(CLASS_CRAFT_ITEM_STACK, "asNMSCopy", ItemStack.class);
-	private static final Method METHOD_GET_INT            = CauldronReflection.getMethod(CLASS_NBT_TAG_COMPOUND, "getInt", String.class);
-	private static final Method METHOD_HAS_KEY_OF_TYPE    = CauldronReflection.getMethod(CLASS_NBT_TAG_COMPOUND, "hasKeyOfType", String.class, int.class);
-	private static final Method METHOD_GET_COMPOUND       = CauldronReflection.getMethod(CLASS_NBT_TAG_COMPOUND, "getCompound", String.class);
-	private static final Method METHOD_CREATE_STACK       = CauldronReflection.getMethod(CLASS_NMS_ITEM_STACK, "createStack", CLASS_NBT_TAG_COMPOUND);
-	private static final Method METHOD_AS_BUKKIT_COPY     = CauldronReflection.getMethod(CLASS_CRAFT_ITEM_STACK, "asBukkitCopy", CLASS_NMS_ITEM_STACK);
-	private static final Method METHOD_NBT_COMP_STREAM_A2 = CauldronReflection.getMethod(CLASS_NBT_COMPRESSED_STREAM_TOOLS, "a", InputStream.class);
+	private static final Method METHOD_NBT_TAG_C_SET_INT  = CauldronReflection.getNMSMethod(CLASS_NBT_TAG_COMPOUND, "setInt", String.class, int.class);
+	private static final Method METHOD_NBT_COMP_STEAM_A   = CauldronReflection.getNMSMethod(CLASS_NBT_COMPRESSED_STREAM_TOOLS, "a", CLASS_NBT_TAG_COMPOUND, OutputStream.class);
+	private static final Method METHOD_NBT_TAG_C_SET2     = CauldronReflection.getNMSMethod(CLASS_NBT_TAG_COMPOUND, "set", String.class, CauldronReflection.getNMSClass("NBTBase"));
+	private static final Method METHOD_SAVE               = CauldronReflection.getNMSMethod(CLASS_NMS_ITEM_STACK, "save", CLASS_NBT_TAG_COMPOUND);
+	private static final Method METHOD_AS_NMS_COPY        = CauldronReflection.getNMSMethod(CLASS_CRAFT_ITEM_STACK, "asNMSCopy", ItemStack.class);
+	private static final Method METHOD_GET_INT            = CauldronReflection.getNMSMethod(CLASS_NBT_TAG_COMPOUND, "getInt", String.class);
+	private static final Method METHOD_HAS_KEY_OF_TYPE    = CauldronReflection.getNMSMethod(CLASS_NBT_TAG_COMPOUND, "hasKeyOfType", String.class, int.class);
+	private static final Method METHOD_GET_COMPOUND       = CauldronReflection.getNMSMethod(CLASS_NBT_TAG_COMPOUND, "getCompound", String.class);
+	private static final Method METHOD_CREATE_STACK       = CauldronReflection.getNMSMethod(CLASS_NMS_ITEM_STACK, "createStack", CLASS_NBT_TAG_COMPOUND);
+	private static final Method METHOD_AS_BUKKIT_COPY     = CauldronReflection.getNMSMethod(CLASS_CRAFT_ITEM_STACK, "asBukkitCopy", CLASS_NMS_ITEM_STACK);
+	private static final Method METHOD_NBT_COMP_STREAM_A2 = CauldronReflection.getNMSMethod(CLASS_NBT_COMPRESSED_STREAM_TOOLS, "a", InputStream.class);
 	//endregion
 
 	/**
@@ -60,7 +60,7 @@ public class CauldronNBTItemStackSerializer implements ItemStackSerializer
 		if(METHOD_NBT_COMP_STREAM_A2 == null || METHOD_GET_INT == null || METHOD_HAS_KEY_OF_TYPE == null || METHOD_AS_BUKKIT_COPY == null || METHOD_GET_COMPOUND == null || METHOD_CREATE_STACK == null)
 		{
 			System.out.println("It seems like the system wasn't able to find the some of the Bukkit/Minecraft classes and functions.\n" +
-					                   "Is the plugin up-to-date and compatible with the used server version?\nBukkit Version: " + Bukkit.getVersion());
+					                   "Is the plugin up-to-date and compatible with the used server version?\nBukkit Version: " + Bukkit.getVersion() + " (" + Bukkit.getServer().getName() + ")");
 		}
 		else if(data != null)
 		{
@@ -101,7 +101,7 @@ public class CauldronNBTItemStackSerializer implements ItemStackSerializer
 		if(CLASS_NBT_TAG_COMPOUND == null || METHOD_NBT_TAG_C_SET2 == null || METHOD_NBT_TAG_C_SET_INT == null || METHOD_SAVE == null || METHOD_AS_NMS_COPY == null || METHOD_NBT_COMP_STEAM_A == null)
 		{
 			System.out.println("It seems like the system wasn't able to find the some of the Bukkit/Minecraft classes and functions.\n" +
-					                   "Is the plugin up-to-date and compatible with the used server version?\nBukkit Version: " + Bukkit.getVersion());
+					                   "Is the plugin up-to-date and compatible with the used server version?\nBukkit Version: " + Bukkit.getVersion() + " (" + Bukkit.getServer().getName() + ")");
 		}
 		else if(itemStacks != null)
 		{
