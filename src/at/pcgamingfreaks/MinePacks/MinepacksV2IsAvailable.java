@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,12 +24,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class MinepacksV2IsOut implements Listener
+public class MinepacksV2IsAvailable implements Listener
 {
-	public static MinepacksV2IsOut instance = null;
+	public static MinepacksV2IsAvailable instance = null;
 	private MinePacks plugin;
 
-	public MinepacksV2IsOut(MinePacks plugin)
+	public MinepacksV2IsAvailable(MinePacks plugin)
 	{
 		if(plugin.config.isV2InfoDisabled()) return;
 		instance = this;
