@@ -28,7 +28,7 @@ import java.util.*;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 15;
+	private static final int CONFIG_VERSION = 16;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -245,6 +245,11 @@ public class Config extends Configuration
 
 	public boolean isV2InfoDisabled()
 	{
-		return config.getBoolean("Misc.DisableV2Info", false);
+		return config.getBoolean("DisableV2Info", false);
+	}
+
+	public boolean isBungeeCordModeEnabled()
+	{
+		return config.getBoolean("BungeeCordMode", false);
 	}
 }

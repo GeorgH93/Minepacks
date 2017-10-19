@@ -38,6 +38,9 @@ full_inventory:
   # Radius in which items get collected, in meter/blocks, allow decimals
   collect_radius: 1.5
 
+# Enable this option if you are running a bungeecord setup!
+BungeeCordMode: false
+
 
 # Database settings
 Database:

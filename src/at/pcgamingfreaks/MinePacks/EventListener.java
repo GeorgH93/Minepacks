@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -73,10 +73,7 @@ public class EventListener implements Listener
 				}
 
 				@Override
-				public void onFail()
-				{
-
-				}
+				public void onFail() {}
 			});
 		}
 	}
@@ -144,10 +141,10 @@ public class EventListener implements Listener
 	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
 		Backpack backpack = plugin.DB.getBackpack(event.getPlayer());
-		if(backpack != null && !backpack.isOpen())
+		if(backpack != null)
 		{
 			backpack.save();
-			plugin.DB.unloadBackpack(backpack);
+			if(!backpack.isOpen()) plugin.DB.unloadBackpack(backpack);
 		}
 		if(plugin.cooldowns.containsKey(event.getPlayer()))
 		{

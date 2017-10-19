@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2014-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ public class Database
 {
 	protected MinePacks plugin;
 
-	protected boolean useUUIDs, useUUIDSeparators;
+	protected boolean useUUIDs, useUUIDSeparators, bungeeMode;
 	protected long maxAge;
 
 	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
@@ -41,6 +41,7 @@ public class Database
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
 		useUUIDs = plugin.config.getUseUUIDs();
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
+		bungeeMode = plugin.config.isBungeeCordModeEnabled();
 	}
 
 	public static Database getDatabase(MinePacks Plugin)
@@ -170,7 +171,7 @@ public class Database
 	public void updatePlayerAndLoadBackpack(Player player)
 	{
 		updatePlayer(player);
-		asyncLoadBackpack(player);
+		if(!bungeeMode) asyncLoadBackpack(player);
 	}
 
 	public void updatePlayer(Player player) {}

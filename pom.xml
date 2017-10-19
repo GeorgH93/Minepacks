@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.17.4</version>
+	<version>1.17.5-SNAPSHOT</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Bukkit_Minepacks.git</connection>
@@ -121,11 +121,11 @@
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<url>http://repo.pcgamingfreaks.at/repository/releases/</url>
+			<url>http://repo.pcgamingfreaks.at/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<url>http://repo.pcgamingfreaks.at/repository/snapshots/</url>
+			<url>http://repo.pcgamingfreaks.at/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
