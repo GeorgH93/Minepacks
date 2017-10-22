@@ -44,6 +44,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -80,6 +81,17 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			this.warnOnVersionIncompatibility(version[0] + "." + version[1]);
 			this.setEnabled(false);
 			return;
+		}
+		//endregion
+		//region check if a plugin folder exists (was renamed from MinePacks to Minepacks with the V2.0 update)
+		if(!getDataFolder().exists())
+		{
+			File oldPluginFolder = new File(getDataFolder().getParentFile(), "MinePacks");
+			if(oldPluginFolder.exists() && !oldPluginFolder.renameTo(getDataFolder()))
+			{
+				getLogger().warning("Failed to rename the plugins data-folder.\n" +
+						            "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
+			}
 		}
 		//endregion
 		instance = this;
