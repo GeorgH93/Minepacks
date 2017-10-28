@@ -1,38 +1,43 @@
 # Minepacks Config File
 
-# Language settings
-# Language to use, will load the file: /plugins/Minepacks/lang/<your language setting>.yml
-Language: en
-# How outdated language files should be treated. Overwrite/Update
-# Overwrite = old language file will be replaced with new, use this only if you use the language files supplied from the plugin
-# Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
-LanguageUpdateMode: Overwrite
+# Language Settings
+Language:
+  # Defines the used language and the corresponding file used. The corresponding language file will be placed next to the config.yml named: <Language>.yml
+  Language: en
+  # Options:
+  #     Overwrite (deletes all changes from the file and extracts a new language file)
+  #     Upgrade (extracts a new language file and copy's all settings from the old language file)
+  #     Update (adds the default (english) text values for all missing values, just some basic formatting)
+  UpdateMode: Upgrade
 
 # Title to be shown for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
-# Defines how long a player have to wait till he can reopen his backpack.
-# Time is in seconds. Values < 1 disable the cooldown.
-command_cooldown: -1
-# If enabled whe cooldown will be synced between servers. It will also prevent players from leaving and joining to bypass the cooldown.
-sync_cooldown: false
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
-drop_on_death: true
+DropOnDeath: true
 # Defines the max amount of columns for a backpack
-max_size: 6
+MaxSize: 6
 # Defines in which game-modes a player can access his backpack (name or id)
-allowed_game_modes: [ "SURVIVAL" ]
+# Options: ADVENTURE, CREATIVE, SPECTATOR, SURVIVAL
+# AllowedGameModes: [ "SURVIVAL", "ADVENTURE" ]
+AllowedGameModes: [ "SURVIVAL" ]
+
+# Defines how long a player have to wait till he can reopen his backpack.
+# Time is in seconds. Values < 1 disable the cooldown.
+CommandCooldown: -1
+# If enabled whe cooldown will be synced between servers (bungeecord network). It will also prevent players from leaving and joining to bypass the cooldown.
+SyncCooldown: false
 
 # Controls for the auto pickup on full inventory function
-full_inventory:
+FullInventory:
   # If items should be collected to the backpack if the players inventory is full
-  collect_items: false
+  CollectItems: false
   # Interval in seconds how often items around the player should be collected, increase it if it lags the server
-  check_interval: 1
+  CheckInterval: 1
   # Radius in which items get collected, in meter/blocks, allow decimals
-  collect_radius: 1.5
+  CollectRadius: 1.5
 
 
 # Database settings
@@ -122,8 +127,11 @@ ItemFilter:
   # List off items not allowed in the backpack. Can be name or id.
   Blacklist: []
 
-# Enables/Disables the auto-update function of the plugin.
-auto-update: true
+Misc:
+  # Enables/Disables the auto-update function of the plugin.
+  AutoUpdate: true
+  # Enable this option if you are using a BungeeCord setup!
+  UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 14
+Version: 20

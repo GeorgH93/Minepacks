@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -28,11 +29,13 @@ import java.util.*;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 14;
+	private static final int CONFIG_VERSION = 20, UPGRADE_THRESHOLD = 20;
 
 	public Config(JavaPlugin plugin)
 	{
-		super(plugin, CONFIG_VERSION, CONFIG_VERSION);
+		super(plugin, CONFIG_VERSION, UPGRADE_THRESHOLD);
+		languageKey = "Language.Language";
+		languageUpdateKey = "Language.UpdateMode";
 	}
 
 	@Override
@@ -44,35 +47,13 @@ public class Config extends Configuration
 	@Override
 	protected void doUpgrade(at.pcgamingfreaks.Configuration oldConfig)
 	{
-		Set<String> keys = oldConfig.getConfig().getKeys();
-		for(String key : keys)
+		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
 		{
-			String newKey = key;
-			if(key.equals("Version")) continue;
-			if(oldConfig.getVersion() < 11)
-			{
-				if(key.equals("UseUUIDs") || key.equals("BackpackTitle")) continue;
-				newKey = key.replace(".MySQL.", ".SQL.");
-			}
-			try
-			{
-				config.set(newKey, oldConfig.getConfig().getString(key));
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			OldFileUpdater.updateConfig(oldConfig.getConfig(), getConfig());
 		}
-		if(!oldConfig.getConfig().isSet("Database.UseUUIDs"))
+		else
 		{
-			if(oldConfig.getConfig().isSet("UseUUIDs"))
-			{
-				config.set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
-			}
-		}
-		if(oldConfig.getVersion() < 11)
-		{
-			config.set("BackpackTitleOther", oldConfig.getConfig().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
+			super.doUpgrade(oldConfig);
 		}
 	}
 
@@ -188,12 +169,12 @@ public class Config extends Configuration
 
 	public boolean getDropOnDeath()
 	{
-		return config.getBoolean("drop_on_death", true);
+		return config.getBoolean("DropOnDeath", true);
 	}
 
 	public int getBackpackMaxSize()
 	{
-		return config.getInt("max_size", 6);
+		return config.getInt("MaxSize", 6);
 	}
 
 	public boolean getAutoUpdate()
@@ -203,18 +184,18 @@ public class Config extends Configuration
 
 	public long getCommandCooldown()
 	{
-		return config.getInt("command_cooldown", -1) * 1000L;
+		return config.getInt("CommandCooldown", -1) * 1000L;
 	}
 
 	public boolean isCommandCooldownSyncEnabled()
 	{
-		return config.getBoolean("sync_cooldown", false);
+		return config.getBoolean("SyncCooldown", false);
 	}
 
 	public Collection<GameMode> getAllowedGameModes()
 	{
 		Collection<GameMode> gameModes = new HashSet<>();
-		for(String string : config.getStringList("allowed_game_modes", new LinkedList<String>()))
+		for(String string : config.getStringList("AllowedGameModes", new LinkedList<>()))
 		{
 			GameMode gm = null;
 			try
@@ -241,7 +222,7 @@ public class Config extends Configuration
 		}
 		if(gameModes.size() < 1)
 		{
-			logger.info("No game-mode allowed, allowing " + GameMode.SURVIVAL.name());
+			logger.info("No game-mode's allowed, allowing: " + GameMode.SURVIVAL.name());
 			gameModes.add(GameMode.SURVIVAL);
 		}
 		return gameModes;
@@ -250,17 +231,17 @@ public class Config extends Configuration
 	//region Full inventory handling
 	public boolean getFullInvCollect()
 	{
-		return config.getBoolean("full_inventory.collect_items", false);
+		return config.getBoolean("FullInventory.CollectItems", false);
 	}
 
 	public long getFullInvCheckInterval()
 	{
-		return config.getInt("full_inventory.check_interval", 1) * 20L; // in seconds
+		return config.getInt("FullInventory.CheckInterval", 1) * 20L; // in seconds
 	}
 
 	public double getFullInvRadius()
 	{
-		return config.getDouble("full_inventory.collect_radius", 1.5); // in blocks
+		return config.getDouble("FullInventory.CollectRadius", 1.5); // in blocks
 	}
 	//endregion
 
