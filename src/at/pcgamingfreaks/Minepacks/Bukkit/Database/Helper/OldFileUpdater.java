@@ -24,49 +24,43 @@ public class OldFileUpdater
 	public static void updateConfig(YAML oldYAML, YAML newYAML)
 	{
 		int oldVersion = oldYAML.getInt("Version", -1);
-		for(String key : oldYAML.getKeys())
+		for(String key : newYAML.getKeys())
 		{
-			String newKey = key;
+			String oldKey = key;
 			if(key.equals("Version")) continue;
 			if(oldVersion < 11)
 			{
-				if(key.equals("UseUUIDs") || key.equals("BackpackTitle") || key.equals("DisableV2Info")) continue;
-				newKey = key.replace(".MySQL.", ".SQL.");
+				if(key.equals("BackpackTitle") || key.equals("BackpackTitleOther")) continue;
+				oldKey = key.replace(".SQL.", ".MySQL.");
 			}
 			switch(key)
 			{
-				case "command_cooldown": newKey = "CommandCooldown"; break;
-				case "sync_cooldown": newKey = "SyncCooldown"; break;
-				case "drop_on_death": newKey = "DropOnDeath"; break;
-				case "max_size": newKey = "MaxSize"; break;
-				case "allowed_game_modes": newKey = "AllowedGameModes"; break;
-				case "full_inventory.collect_items": newKey = "FullInventory.CollectItems"; break;
-				case "full_inventory.check_interval": newKey = "FullInventory.CheckInterval"; break;
-				case "full_inventory.collect_radius": newKey = "FullInventory.CollectRadius"; break;
-				case "auto-update": newKey = "Misc.AutoUpdate"; break;
-				case "BungeeCordMode": newKey = "Misc.UseBungeeCord"; break;
-				case "Language": newKey = "Language.Language"; break;
-				case "LanguageUpdateMode": newKey = "Language.UpdateMode"; break;
+				case "CommandCooldown": oldKey = "command_cooldown"; break;
+				case "SyncCooldown": oldKey = "sync_cooldown"; break;
+				case "DropOnDeath": oldKey = "drop_on_death"; break;
+				case "MaxSize": oldKey = "max_size"; break;
+				case "AllowedGameModes": oldKey = "allowed_game_modes"; break;
+				case "FullInventory.CollectItems": oldKey = "full_inventory.collect_items"; break;
+				case "FullInventory.CheckInterval": oldKey = "full_inventory.check_interval"; break;
+				case "FullInventory.CollectRadius": oldKey = "full_inventory.collect_radius"; break;
+				case "Misc.AutoUpdate": oldKey = "auto-update"; break;
+				case "Misc.UseBungeeCord": oldKey = "BungeeCordMode"; break;
+				case "Language.Language": oldKey = "Language"; break;
+				case "Language.UpdateMode": oldKey = "LanguageUpdateMode"; break;
+				case "Database.UseUUIDs": if(!oldYAML.isSet("Database.UseUUIDs") && oldYAML.isSet("UseUUIDs")) oldKey = "UseUUIDs"; break;
 			}
 			try
 			{
-				newYAML.set(newKey, oldYAML.getString(key));
+				newYAML.set(key, oldYAML.getString(oldKey));
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		if(!oldYAML.isSet("Database.UseUUIDs"))
-		{
-			if(oldYAML.isSet("UseUUIDs"))
-			{
-				newYAML.set("Database.UseUUIDs", oldYAML.getBoolean("UseUUIDs", true));
-			}
-		}
 		if(oldVersion < 11)
 		{
-			oldYAML.set("BackpackTitleOther", oldYAML.getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
+			newYAML.set("BackpackTitleOther", oldYAML.getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
 		}
 	}
 }
