@@ -77,15 +77,6 @@ public interface MinepacksPlugin
 
 	/**
 	 * Retrieves the backpack for a given player.
-	 * This method runs sync! If the requested backpack is not in the cache it will block you server! Use with extreme care!
-	 *
-	 * @param owner The player who's backpack should be retrieved.
-	 * @return The backpack of the given player.
-	 */
-	@Nullable Backpack getBackpack(@NotNull final OfflinePlayer owner);
-
-	/**
-	 * Retrieves the backpack for a given player.
 	 * This method only returns a backpack if it is in the cache.
 	 *
 	 * @param owner The player who's backpack should be retrieved.

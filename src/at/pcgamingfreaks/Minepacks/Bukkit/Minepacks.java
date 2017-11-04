@@ -211,12 +211,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public @Nullable Backpack getBackpack(@NotNull OfflinePlayer owner)
-	{
-		return database.getBackpack(owner, false);
-	}
-
-	@Override
 	public @Nullable Backpack getBackpackCachedOnly(@NotNull OfflinePlayer owner)
 	{
 		return database.getBackpack(owner);
