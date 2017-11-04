@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -179,7 +179,12 @@ public class Config extends Configuration
 
 	public boolean getAutoUpdate()
 	{
-		return config.getBoolean("auto-update", true);
+		return config.getBoolean("Misc.AutoUpdate", true);
+	}
+
+	public boolean isBungeeCordModeEnabled()
+	{
+		return config.getBoolean("Misc.UseBungeeCord", false);
 	}
 
 	public long getCommandCooldown()

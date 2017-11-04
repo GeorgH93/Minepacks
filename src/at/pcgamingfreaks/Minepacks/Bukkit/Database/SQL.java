@@ -379,27 +379,6 @@ public abstract class SQL extends Database
 			}
 		});
 	}
-
-	@Override
-	public Backpack loadBackpack(OfflinePlayer player) // The sync function shouldn't be called at all
-	{
-		try(Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement(queryGetBP))
-		{
-			ps.setString(1, getPlayerNameOrUUID(player));
-			try(ResultSet rs = ps.executeQuery())
-			{
-				if(rs.next())
-				{
-					return new Backpack(player, itsSerializer.deserialize(rs.getBytes(2), rs.getInt(3)), rs.getInt(1));
-				}
-			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
 	
 	@Override
 	public void syncCooldown(Player player, long cooldownTime)

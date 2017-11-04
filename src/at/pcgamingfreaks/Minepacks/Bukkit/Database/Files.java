@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import java.io.FilenameFilter;
 
 import javax.swing.filechooser.FileFilter;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
@@ -149,7 +150,7 @@ public class Files extends Database
 	}
 
 	@Override
-	public Backpack loadBackpack(OfflinePlayer player)
+	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
 		File save = new File(saveFolder, getFileName(player));
 		try
@@ -165,7 +166,7 @@ public class Files extends Database
 					{
 						plugin.getLogger().warning("Problem reading file, only read " + c + " of " + v + " bytes.");
 					}
-					return new Backpack(player, itsSerializer.deserialize(out, v), -1);
+					callback.onResult(new Backpack(player, itsSerializer.deserialize(out, v), -1));
 				}
 			}
 		}
@@ -173,7 +174,7 @@ public class Files extends Database
 		{
 			e.printStackTrace();
 		}
-		return null;
+		callback.onFail();
 	}
 	
 	private static class BackpackFileFilter extends FileFilter implements FilenameFilter

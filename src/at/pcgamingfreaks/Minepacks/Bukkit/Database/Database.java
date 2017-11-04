@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2017 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -41,7 +42,7 @@ public abstract class Database implements Listener
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer = new InventorySerializer();
-	protected final boolean useUUIDs;
+	protected final boolean useUUIDs, bungeeCordMode;
 	protected boolean useUUIDSeparators;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
@@ -52,8 +53,9 @@ public abstract class Database implements Listener
 		plugin = mp;
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
 		useUUIDs = plugin.config.getUseUUIDs();
+		bungeeCordMode = plugin.config.isBungeeCordModeEnabled();
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
-		unCacheStrategie = UnCacheStrategie.getUnCacheStrategie(this);
+		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
 	}
 
 	public void init()
@@ -112,28 +114,15 @@ public abstract class Database implements Listener
 		return backpacks.values();
 	}
 
+	/**
+	 * Gets a backpack for a player. This only includes backpacks that are cached! Do not use it unless you are sure that you only want to use cached data!
+	 *
+	 * @param player The player who's backpack should be retrieved.
+	 * @return The backpack for the player. null if the backpack is not in the cache.
+	 */
 	public @Nullable Backpack getBackpack(@Nullable OfflinePlayer player)
 	{
 		return (player == null) ? null : backpacks.get(player);
-	}
-
-	public Backpack getBackpack(OfflinePlayer player, boolean loadedOnly)
-	{
-		if(player == null)
-		{
-			return null;
-		}
-		Backpack lbp = backpacks.get(player);
-		if(lbp == null && !loadedOnly)
-		{
-			lbp = loadBackpack(player);
-			if(lbp == null)
-			{
-				lbp = new Backpack(player);
-			}
-			backpacks.put(player, lbp);
-		}
-		return lbp;
 	}
 
 	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
@@ -205,7 +194,7 @@ public abstract class Database implements Listener
 	public void updatePlayerAndLoadBackpack(Player player)
 	{
 		updatePlayer(player);
-		asyncLoadBackpack(player);
+		if(!bungeeCordMode) asyncLoadBackpack(player);
 	}
 
 	public abstract void updatePlayer(Player player);
@@ -214,18 +203,5 @@ public abstract class Database implements Listener
 
 	public abstract void syncCooldown(Player player, long time);
 
-	protected abstract Backpack loadBackpack(OfflinePlayer player);
-
-	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
-	{
-		Backpack loadedBackpack = loadBackpack(player);
-		if(loadedBackpack == null)
-		{
-			callback.onFail();
-		}
-		else
-		{
-			callback.onResult(loadedBackpack);
-		}
-	}
+	protected abstract void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback);
 }

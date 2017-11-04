@@ -89,5 +89,7 @@ public class EventListener extends MinepacksListener
 		{
 			plugin.cooldowns.remove(event.getPlayer().getUniqueId());
 		}
+		Backpack backpack = plugin.getDb().getBackpack(event.getPlayer());
+		if(backpack != null) backpack.save();
 	}
 }
