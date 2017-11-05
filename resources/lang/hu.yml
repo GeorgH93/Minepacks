@@ -1,0 +1,24 @@
+Language:
+  Console:
+    Enabled: A MinePacks engedélyezve!
+    Disabled: A MinePacks letiltva.
+    NotFromConsole: A konzolon nem használható parancs.
+    LangUpdated: A nyelvi fájl frissítve lett.
+    UpdateUUIDs: Indítsd el az adatbázis frissítését az UUID-okhoz ...
+    UpdatedUUIDs: 'Frissítve %s fiókok UUID-okhoz.'
+  Ingame:
+    NoPermission: Nincs jogod ehhez.
+    OwnBackPackClose: 'A hátizsák bezárva!'
+    PlayerBackPackClose: "%s hátizsákja bezárva!"
+    InvalidBackpack: Érvénytelen hátizsák.
+    BackpackCleaned: A hátizsák kitisztítva.
+    Cooldown: "Várjon, amíg újra nem nyitja ki a hátizsákot."
+    WrongGameMode: "A hátizsákot nem lehet megnyitni az aktuális játékmódban."
+  Description:
+    Backpack: Megnyitja a hátizsákod.
+    Clean: Kitisztítja a hátizsákod.
+    CleanOther: Kitisztítja a többi játékos hátizsákját.
+    View: Megmutatja a másik játékos hátizsákját.
+
+# Language file version. Don't touch it!
+Version: 5
