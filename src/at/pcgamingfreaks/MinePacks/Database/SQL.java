@@ -61,9 +61,9 @@ public abstract class SQL extends Database
 		// Delete old backpacks
 		if(maxAge > 0)
 		{
-			try
+			try(Connection connection = getConnection(); Statement statement = connection.createStatement())
 			{
-				getConnection().createStatement().execute(queryDeleteOldBackpacks);
+				statement.execute(queryDeleteOldBackpacks);
 			}
 			catch(SQLException e)
 			{
