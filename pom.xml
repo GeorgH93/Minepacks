@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.17.6</version>
+	<version>1.17.7-SNAPSHOT</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Bukkit_Minepacks.git</connection>
@@ -94,7 +94,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
+				<version>3.1.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -111,6 +111,16 @@
 									<include>org.slf4j:*</include>
 								</includes>
 							</artifactSet>
+							<relocations>
+								<relocation>
+									<pattern>com.zaxxer.hikari</pattern>
+									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.zaxxer.hikari</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>org.slf4j</pattern>
+									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.slf4j.slf4j</shadedPattern>
+								</relocation>
+							</relocations>
 						</configuration>
 					</execution>
 				</executions>
