@@ -27,14 +27,10 @@ permissions:
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     children:
-      backpack: false
       backpack.use: false
       backpack.others: false
       backpack.keepOnDeath: true
       backpack.clean: false
-  backpack:
-    description: Allows a player to open the backpack. This is a fallback permission since some permission plugins have problems with the backpack.use permission.
-    default: false
   backpack.use:
     description: Allows a player to open the backpack.
     default: false
