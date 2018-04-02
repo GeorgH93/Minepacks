@@ -89,7 +89,7 @@ public class SQLite extends SQL
 			queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		}
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
-		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW\\}", "DATE('now')");
+		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
 		if(useUUIDs)
 		{
 			queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";

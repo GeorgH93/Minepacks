@@ -17,7 +17,9 @@ BackpackTitle: "&bBackpack"
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
 DropOnDeath: true
-# Defines the max amount of columns for a backpack
+# Defines the max amount of columns for a backpack.
+# The size of the user's backpack will be defined by the permission, permissions for bigger backpacks than this value will be ignored.
+# Can be set to anything > 0. Backpacks with more than 6 columns will have a broken UI! Sizes bigger than 9 may not work with all permission plugins.
 MaxSize: 6
 # Defines in which game-modes a player can access his backpack (name or id)
 # Options: ADVENTURE, CREATIVE, SPECTATOR, SURVIVAL
@@ -126,6 +128,19 @@ ItemFilter:
   Enable: false
   # List off items not allowed in the backpack. Can be name or id.
   Blacklist: []
+
+# This settings allow control over how the plugin behave in different worlds
+WorldSettings:
+  # All worlds listed here will not have the plugin usable
+  # Blacklist: ["creative_world"]
+  # Blacklist: ["creative_world1", "creative_world2"]
+  Blacklist: []
+  # Defines how the Blacklist will be enforced
+  # Options:
+  #   Message           = The player will see an message that the usage of the backpack is denied in this world.
+  #   MissingPermission = The player will receive the plugins no permission message.
+  #   NoPlugin          = The plugin will not be available at all and act as if it was not installed. This also exclude players with permission to bypass the world restriction from using it!
+  BlacklistMode: "Message"
 
 Misc:
   # Enables/Disables the auto-update function of the plugin.

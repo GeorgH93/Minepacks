@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
+import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -280,7 +282,7 @@ public class Config extends Configuration
 
 	public Collection<MinecraftMaterial> getItemFilterBlacklist()
 	{
-		List<String> stringBlacklist = config.getStringList("ItemFilter.Blacklist", new LinkedList<String>());
+		List<String> stringBlacklist = config.getStringList("ItemFilter.Blacklist", new LinkedList<>());
 		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
 		for(String item : stringBlacklist)
 		{
@@ -288,6 +290,28 @@ public class Config extends Configuration
 			if(mat != null) blacklist.add(mat);
 		}
 		return blacklist;
+	}
+	//endregion
+
+	//region World settings
+	public Collection<String> getWorldBlacklist()
+	{
+		return new HashSet<>(config.getStringList("WorldSettings.Blacklist", new LinkedList<>()));
+	}
+
+	public WorldBlacklistMode getWorldBlacklistMode()
+	{
+		String mode = config.getString("WorldSettings.BlacklistMode", "Message");
+		WorldBlacklistMode blacklistMode = WorldBlacklistMode.Message;
+		try
+		{
+			blacklistMode = WorldBlacklistMode.valueOf(mode);
+		}
+		catch(IllegalArgumentException ignored)
+		{
+			logger.warning(ConsoleColor.YELLOW + "Unsupported mode \"" + mode + "\" for option \"WorldSettings.BlacklistMode\"" + ConsoleColor.RESET);
+		}
+		return blacklistMode;
 	}
 	//endregion
 	//endregion

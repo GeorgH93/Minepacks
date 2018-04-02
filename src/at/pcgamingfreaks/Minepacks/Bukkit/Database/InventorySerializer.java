@@ -37,7 +37,7 @@ public class InventorySerializer
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		try
 		{
-			if(version[0].equals("1") && Integer.parseInt(version[1]) > 7)
+			if(NBTItemStackSerializer.isMCVersionCompatible())
 			{
 				serializer = new NBTItemStackSerializer();
 			}
