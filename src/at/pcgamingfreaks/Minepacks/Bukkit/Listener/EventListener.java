@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -85,10 +85,7 @@ public class EventListener extends MinepacksListener
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
-		if(plugin.cooldowns.containsKey(event.getPlayer().getUniqueId()))
-		{
-			plugin.cooldowns.remove(event.getPlayer().getUniqueId());
-		}
+		plugin.cooldowns.remove(event.getPlayer().getUniqueId());
 		Backpack backpack = plugin.getDb().getBackpack(event.getPlayer());
 		if(backpack != null) backpack.save();
 	}
