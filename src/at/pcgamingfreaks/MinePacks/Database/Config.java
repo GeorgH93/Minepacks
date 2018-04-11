@@ -50,7 +50,7 @@ public class Config extends Configuration
 			if(key.equals("UseUUIDs") || key.equals("Version") || (key.equals("BackpackTitle") && oldConfig.getVersion() < 11)) continue;
 			try
 			{
-				config.set(key, oldConfig.getConfig().getString(key));
+				getConfig().set(key, oldConfig.getConfig().getString(key));
 			}
 			catch(Exception e)
 			{
@@ -61,58 +61,58 @@ public class Config extends Configuration
 		{
 			if(oldConfig.getConfig().isSet("UseUUIDs"))
 			{
-				config.set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
+				getConfig().set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
 			}
 			else
 			{
-				config.set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
+				getConfig().set("Database.UseUUIDs", Bukkit.getServer().getOnlineMode() && isBukkitVersionUUIDCompatible());
 			}
 		}
 		if(oldConfig.getVersion() < 11)
 		{
-			config.set("BackpackTitleOther", oldConfig.getConfig().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
+			getConfig().set("BackpackTitleOther", oldConfig.getConfig().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
 		}
 	}
 
 	// Getter
 	public int getAutoCleanupMaxInactiveDays()
 	{
-		return config.getInt("Database.AutoCleanup.MaxInactiveDays", -1);
+		return getConfig().getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
 
 	public String getDatabaseType()
 	{
-		return config.getString("Database.Type", "sqlite");
+		return getConfig().getString("Database.Type", "sqlite");
 	}
 
 	public String getMySQLHost()
 	{
-		return config.getString("Database.MySQL.Host", "localhost");
+		return getConfig().getString("Database.MySQL.Host", "localhost");
 	}
 
 	public String getMySQLDatabase()
 	{
-		return config.getString("Database.MySQL.Database", "minecraft");
+		return getConfig().getString("Database.MySQL.Database", "minecraft");
 	}
 
 	public String getMySQLUser()
 	{
-		return config.getString("Database.MySQL.User", "minecraft");
+		return getConfig().getString("Database.MySQL.User", "minecraft");
 	}
 
 	public String getMySQLPassword()
 	{
-		return config.getString("Database.MySQL.Password", "");
+		return getConfig().getString("Database.MySQL.Password", "");
 	}
 
 	public int getMySQLMaxConnections()
 	{
-		return config.getInt("Database.MySQL.MaxConnections", 2);
+		return getConfig().getInt("Database.MySQL.MaxConnections", 2);
 	}
 
 	public String getMySQLProperties()
 	{
-		List<String> list = config.getStringList("Database.MySQL.Properties", null);
+		List<String> list = getConfig().getStringList("Database.MySQL.Properties", null);
 		StringBuilder str = new StringBuilder();
 		if(list == null) return "";
 		for(String s : list)
@@ -124,73 +124,73 @@ public class Config extends Configuration
 
 	public String getUserTable()
 	{
-		return config.getString("Database.Tables.User", "backpack_players");
+		return getConfig().getString("Database.Tables.User", "backpack_players");
 	}
 
 	public String getBackpackTable()
 	{
-		return config.getString("Database.Tables.Backpack", "backpacks");
+		return getConfig().getString("Database.Tables.Backpack", "backpacks");
 	}
 
 	public String getDBFields(String sub)
 	{
-		return config.getString("Database.Tables.Fields." + sub, "");
+		return getConfig().getString("Database.Tables.Fields." + sub, "");
 	}
 
 	public boolean getUpdatePlayer()
 	{
-		return config.getBoolean("Database.UpdatePlayer", true);
+		return getConfig().getBoolean("Database.UpdatePlayer", true);
 	}
 
 	public boolean getUseUUIDs()
 	{
-		return config.getBoolean("Database.UseUUIDs", true);
+		return getConfig().getBoolean("Database.UseUUIDs", true);
 	}
 
 	public boolean getUseUUIDSeparators()
 	{
-		return config.getBoolean("Database.UseUUIDSeparators", false);
+		return getConfig().getBoolean("Database.UseUUIDSeparators", false);
 	}
 
 	public String getBPTitleOther()
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName\\}", "%s"));
+		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName\\}", "%s"));
 	}
 
 	public String getBPTitle()
 	{
-		return ChatColor.translateAlternateColorCodes('&', config.getString("BackpackTitle", "Backpack"));
+		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitle", "Backpack"));
 	}
 
 	public boolean getDropOnDeath()
 	{
-		return config.getBoolean("drop_on_death", true);
+		return getConfig().getBoolean("drop_on_death", true);
 	}
 
 	public int getBackpackMaxSize()
 	{
-		return config.getInt("max_size", 6);
+		return getConfig().getInt("max_size", 6);
 	}
 
 	public boolean getAutoUpdate()
 	{
-		return config.getBoolean("auto-update", true);
+		return getConfig().getBoolean("auto-update", true);
 	}
 
 	public long getCommandCooldown()
 	{
-		return config.getInt("command_cooldown", -1) * 1000L;
+		return getConfig().getInt("command_cooldown", -1) * 1000L;
 	}
 
 	public long getCommandCooldownAfterJoin()
 	{
-		return config.getInt("command_cooldown_after_join", -1) * 1000L;
+		return getConfig().getInt("command_cooldown_after_join", -1) * 1000L;
 	}
 
 	public Collection<GameMode> getAllowedGameModes()
 	{
 		Collection<GameMode> gameModes = new HashSet<>();
-		for(String string : config.getStringList("allowed_game_modes", new LinkedList<String>()))
+		for(String string : getConfig().getStringList("allowed_game_modes", new LinkedList<String>()))
 		{
 			GameMode gm = null;
 			try
@@ -225,31 +225,31 @@ public class Config extends Configuration
 
 	public boolean getShowCloseMessage()
 	{
-		return config.getBoolean("show_close_message", true);
+		return getConfig().getBoolean("show_close_message", true);
 	}
 
 	public boolean getFullInvCollect()
 	{
-		return config.getBoolean("full_inventory.collect_items", false);
+		return getConfig().getBoolean("full_inventory.collect_items", false);
 	}
 
 	public long getFullInvCheckInterval()
 	{
-		return config.getInt("full_inventory.check_interval", 1) * 20L; // in seconds
+		return getConfig().getInt("full_inventory.check_interval", 1) * 20L; // in seconds
 	}
 
 	public double getFullInvRadius()
 	{
-		return config.getDouble("full_inventory.collect_radius", 1.5); // in blocks
+		return getConfig().getDouble("full_inventory.collect_radius", 1.5); // in blocks
 	}
 
 	public boolean isV2InfoDisabled()
 	{
-		return config.getBoolean("DisableV2Info", false);
+		return getConfig().getBoolean("DisableV2Info", false);
 	}
 
 	public boolean isBungeeCordModeEnabled()
 	{
-		return config.getBoolean("BungeeCordMode", false);
+		return getConfig().getBoolean("BungeeCordMode", false);
 	}
 }
