@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.17.7-SNAPSHOT</version>
+	<version>1.17.7</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Bukkit_Minepacks.git</connection>
@@ -112,6 +112,13 @@
 								</includes>
 							</artifactSet>
 							<relocations>
+								<relocation>
+									<pattern>at.pcgamingfreaks</pattern>
+									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.at.pcgamingfreaks</shadedPattern>
+									<excludes>
+										<exclude>at.pcgamingfreaks.MinePacks.*</exclude>
+									</excludes>
+								</relocation>
 								<relocation>
 									<pattern>com.zaxxer.hikari</pattern>
 									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.zaxxer.hikari</shadedPattern>
