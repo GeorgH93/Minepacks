@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Commands.OnCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
@@ -45,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -60,9 +62,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public final Map<UUID, Long> cooldowns = new HashMap<>();
 
 	public String backpackTitleOther = "%s Backpack", backpackTitle = "Backpack";
-	public Message messageNoPermission, messageInvalidBackpack;
+	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled;
 
 	private int maxSize;
+	private Collection<String> worldBlacklist;
+	private WorldBlacklistMode worldBlacklistMode;
 
 	public static Minepacks getInstance()
 	{
@@ -133,6 +137,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
 		messageNoPermission = lang.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
+		messageWorldDisabled   = lang.getMessage("Ingame.WorldDisabled");
 
 		getCommand("backpack").setExecutor(new OnCommand(this));
 		//region register events
@@ -145,6 +150,15 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(config.getFullInvCollect())
 		{
 			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
+		}
+		worldBlacklist = config.getWorldBlacklist();
+		if(worldBlacklist.size() == 0)
+		{
+			worldBlacklistMode = WorldBlacklistMode.None;
+		}
+		else
+		{
+			worldBlacklistMode = config.getWorldBlacklistMode();
 		}
 	}
 
@@ -202,6 +216,16 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable)
 	{
 		Validate.notNull(opener);
+		WorldBlacklistMode disabled = isDisabled(opener);
+		if(disabled != WorldBlacklistMode.None)
+		{
+			switch(disabled)
+			{
+				case Message: messageWorldDisabled.send(opener); break;
+				case MissingPermission: messageNoPermission.send(opener); break;
+			}
+			return;
+		}
 		if(backpack == null)
 		{
 			messageInvalidBackpack.send(opener);
@@ -232,5 +256,15 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			}
 		}
 		return 9;
+	}
+
+	public WorldBlacklistMode isDisabled(Player player)
+	{
+		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission("backpack.ignoreWorldBlacklist"))) return WorldBlacklistMode.None;
+		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase()))
+		{
+			return worldBlacklistMode;
+		}
+		return WorldBlacklistMode.None;
 	}
 }

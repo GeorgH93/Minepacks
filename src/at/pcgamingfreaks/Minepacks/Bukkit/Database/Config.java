@@ -31,7 +31,7 @@ import java.util.*;
 
 public class Config extends Configuration
 {
-	private static final int CONFIG_VERSION = 20, UPGRADE_THRESHOLD = 20;
+	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -296,7 +296,12 @@ public class Config extends Configuration
 	//region World settings
 	public Collection<String> getWorldBlacklist()
 	{
-		return new HashSet<>(getConfig().getStringList("WorldSettings.Blacklist", new LinkedList<>()));
+		HashSet<String> blacklist = new HashSet<>();
+		for(String world : getConfig().getStringList("WorldSettings.Blacklist", new LinkedList<>()))
+		{
+			blacklist.add(world.toLowerCase());
+		}
+		return blacklist;
 	}
 
 	public WorldBlacklistMode getWorldBlacklistMode()

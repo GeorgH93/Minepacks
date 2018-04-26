@@ -2,6 +2,7 @@ Language:
   NotFromConsole: "&cCommand not usable from console."
   Ingame:
     NoPermission: "&cYou don't have the Permission to do that."
+    WorldDisabled: "&cThe use of the backpack is not allowed in this world."
     OwnBackpackClose: "Backpack closed!"
     OwnBackpackClose_SendMethod: "action_bar"
     #Parameter: {OwnerName}, {OwnerDisplayName}
@@ -22,4 +23,4 @@ Language:
       View: "Shows the backpack of other player."
 
 # Language file version. Don't touch it!
-Version: 10
+Version: 11

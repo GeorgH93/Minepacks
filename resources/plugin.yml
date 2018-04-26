@@ -101,3 +101,6 @@ permissions:
   backpack.ignoreGameMode:
     description: Allows to bypass the game-mode restriction.
     default: op
+  backpack.ignoreWorldBlacklist:
+    description: Allows to bypass the world blacklist.
+    default: op

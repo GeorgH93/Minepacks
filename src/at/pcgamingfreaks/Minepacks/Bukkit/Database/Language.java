@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 10, UPGRADE_THRESHOLD = 10;
+	private static final int LANG_VERSION = 11, UPGRADE_THRESHOLD = 11;
 
 	public Language(JavaPlugin plugin)
 	{
@@ -40,7 +40,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	@Override
 	protected void doUpgrade(at.pcgamingfreaks.Language oldLang)
 	{
-		if(oldLang.getVersion() < UPGRADE_THRESHOLD)
+		if(oldLang.getVersion() < 10) // Pre v2.0 versions
 		{
 			YAML oldYAML = oldLang.getLang(), newYAML = getLang();
 			Map<String, String> simpleConverter = new LinkedHashMap<>(), advancedConverter = new LinkedHashMap<>();

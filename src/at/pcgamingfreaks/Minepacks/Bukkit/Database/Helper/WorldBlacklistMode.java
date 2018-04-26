@@ -19,5 +19,5 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper;
 
 public enum WorldBlacklistMode
 {
-	Message, MissingPermission, NoPlugin
+	Message, MissingPermission, NoPlugin, None
 }

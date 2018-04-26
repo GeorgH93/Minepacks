@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Location;
@@ -37,6 +38,7 @@ public class DropOnDeath extends MinepacksListener
 	public void onDeath(PlayerDeathEvent event)
 	{
 		final Player player = event.getEntity();
+		if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
 		if (!player.hasPermission("backpack.keepOnDeath"))
 		{
 			final Location location = player.getLocation();

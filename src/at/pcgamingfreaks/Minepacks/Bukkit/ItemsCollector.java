@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
+
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -43,6 +45,7 @@ public class ItemsCollector extends BukkitRunnable
 	{
 		for(Player player : Bukkit.getServer().getOnlinePlayers())
 		{
+			if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
 			if(player.getInventory().firstEmpty() == -1 && player.hasPermission("backpack.use") && player.hasPermission("backpack.fullpickup"))
 			{
 				// Only check loaded backpacks (loading them would take to much time for a repeating task, the backpack will be loaded async soon enough)

@@ -139,7 +139,9 @@ WorldSettings:
   # Options:
   #   Message           = The player will see an message that the usage of the backpack is denied in this world.
   #   MissingPermission = The player will receive the plugins no permission message.
-  #   NoPlugin          = The plugin will not be available at all and act as if it was not installed. This also exclude players with permission to bypass the world restriction from using it!
+  #   NoPlugin          = The plugin will not be available at all and act as if it was not installed.
+  #                       This also exclude players with permission to bypass the world restriction from using it!
+  #                       It will not disable the Shulkerboxes filter!
   BlacklistMode: "Message"
 
 Misc:
@@ -149,4 +151,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 20
+Version: 21

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017 GeorgH93
+ *   Copyright (C) 2017, 2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Commands;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
@@ -52,7 +53,7 @@ public class OnCommand implements CommandExecutor
 		cooldown = plugin.config.getCommandCooldown();
 		syncCooldown = plugin.config.isCommandCooldownSyncEnabled();
 		gameModes = plugin.config.getAllowedGameModes();
-		StringBuilder allowedGameModesBuilder = new StringBuilder("");
+		StringBuilder allowedGameModesBuilder = new StringBuilder();
 		for(GameMode gameMode : gameModes)
 		{
 			if(allowedGameModesBuilder.length() > 1)
@@ -74,6 +75,17 @@ public class OnCommand implements CommandExecutor
 			return true;
 		}
 		final Player player = (Player) sender;
+		WorldBlacklistMode disabled = plugin.isDisabled(player);
+		if(disabled != WorldBlacklistMode.None)
+		{
+			switch(disabled)
+			{
+				case Message: plugin.messageWorldDisabled.send(sender); break;
+				case MissingPermission: plugin.messageNoPermission.send(sender); break;
+				case NoPlugin: return false;
+			}
+			return true;
+		}
 		if(args.length == 0)
 		{
 			// Open player backpack
