@@ -208,14 +208,15 @@ public abstract class SQL extends Database
 		updateQuerysForDialect();
 
 		// Replace the table and filed names with the names from the config
-		queryUpdatePlayerAdd = queryUpdatePlayerAdd.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryGetPlayerID = queryGetPlayerID.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryGetBP = queryGetBP.replaceAll("\\{FieldBPOwner\\}", fieldBPOwner).replaceAll("\\{FieldBPITS\\}", fieldBPITS).replaceAll("\\{FieldBPVersion\\}", fieldBPVersion).replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID);
-		queryInsertBP = queryInsertBP.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPOwner\\}", fieldBPOwner).replaceAll("\\{FieldBPITS\\}", fieldBPITS).replaceAll("\\{FieldBPVersion\\}", fieldBPVersion).replaceAll("\\{FieldBPLastUpdate\\}", fieldBPLastUpdate);
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPOwner\\}", fieldBPOwner).replaceAll("\\{FieldBPITS\\}", fieldBPITS).replaceAll("\\{FieldBPVersion\\}", fieldBPVersion).replaceAll("\\{FieldBPLastUpdate\\}", fieldBPLastUpdate);
-		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{TableBackpacks\\}", tableBackpacks).replaceAll("\\{FieldBPLastUpdate\\}", fieldBPLastUpdate).replaceAll("\\{VarMaxAge\\}", maxAge + "");
-		queryGetUnsetOrInvalidUUIDs = queryGetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldName\\}", fieldName).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
-		queryFixUUIDs = queryFixUUIDs.replaceAll("\\{TablePlayers\\}", tablePlayers).replaceAll("\\{FieldUUID\\}", fieldUUID).replaceAll("\\{FieldPlayerID\\}", fieldPlayerID);
+		queryUpdatePlayerAdd = queryUpdatePlayerAdd.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
+		queryGetPlayerID = queryGetPlayerID.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
+		queryGetBP = queryGetBP.replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion).replaceAll("\\{TableBackpacks}", tableBackpacks)
+				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldPlayerID}", fieldPlayerID).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID);
+		queryInsertBP = queryInsertBP.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBPLastUpdate);
+		queryUpdateBP = queryUpdateBP.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBPLastUpdate);
+		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPLastUpdate}", fieldBPLastUpdate).replaceAll("\\{VarMaxAge}", maxAge + "");
+		queryGetUnsetOrInvalidUUIDs = queryGetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
+		queryFixUUIDs = queryFixUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
 	}
 
 	protected abstract void updateQuerysForDialect();

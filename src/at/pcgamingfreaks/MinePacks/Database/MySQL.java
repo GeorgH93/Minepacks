@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.MinePacks.Database;
 
+import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.MinePacks.MinePacks;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -49,7 +50,7 @@ public class MySQL extends SQL
 	protected void updateQuerysForDialect()
 	{
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
-		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW\\}", "NOW()");
+		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW}", "NOW()");
 	}
 
 	@Override
@@ -57,58 +58,16 @@ public class MySQL extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			ResultSet res;
 			if(useUUIDs)
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL,`" + fieldUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD COLUMN `" + fieldUUID + "` CHAR(36) UNIQUE;");
-				}
-				res.close();
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
-				if(res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` DROP INDEX `" + fieldName + "_UNIQUE`;");
-				}
-				res.close();
-				if(useUUIDSeparators)
-				{
-					res = stmt.executeQuery("SELECT CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldUUID + "';");
-					if(res.next() && res.getInt(1) < 36)
-					{
-						stmt.execute("ALTER TABLE `" + tablePlayers + "` MODIFY `" + fieldUUID + "` CHAR(36) UNIQUE;");
-					}
-					res.close();
-				}
+				DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL,`" + fieldUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
 			}
 			else
 			{
-				stmt.execute("CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL, PRIMARY KEY (`" + fieldPlayerID + "`));");
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tablePlayers + "' AND COLUMN_NAME = '" + fieldName + "' AND COLUMN_KEY='UNI';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tablePlayers + "` ADD UNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "` ASC);");
-				}
-				res.close();
+				DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
 			}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (`" + fieldBPOwner + "` INT UNSIGNED NOT NULL, `" + fieldBPITS + "` BLOB, `"
+			DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (`" + fieldBPOwner + "` INT UNSIGNED NOT NULL, `" + fieldBPITS + "` BLOB, `"
 					+ fieldBPVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + fieldBPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + fieldBPOwner + "`));");
-			res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBPVersion + "';");
-			if(!res.next())
-			{
-				stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBPVersion + "` INT DEFAULT 0;");
-			}
-			if(maxAge > 0)
-			{
-				res = stmt.executeQuery("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '" + tableBackpacks + "' AND COLUMN_NAME = '" + fieldBPLastUpdate + "';");
-				if(!res.next())
-				{
-					stmt.execute("ALTER TABLE `" + tableBackpacks + "` ADD COLUMN `" + fieldBPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP;");
-				}
-				res.close();
-			}
 		}
 		catch (SQLException e)
 		{

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.17.7</version>
+	<version>1.17.8-SNAPSHOT</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Bukkit_Minepacks.git</connection>
@@ -117,6 +117,8 @@
 									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.at.pcgamingfreaks</shadedPattern>
 									<excludes>
 										<exclude>at.pcgamingfreaks.MinePacks.*</exclude>
+										<exclude>at.pcgamingfreaks.MinePacks.Database.*</exclude>
+										<exclude>at.pcgamingfreaks.MinePacks.Updater.*</exclude>
 									</excludes>
 								</relocation>
 								<relocation>
