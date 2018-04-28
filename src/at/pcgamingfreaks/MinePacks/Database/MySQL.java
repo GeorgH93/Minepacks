@@ -23,9 +23,7 @@ import at.pcgamingfreaks.MinePacks.MinePacks;
 import com.zaxxer.hikari.HikariConfig;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MySQL extends SQL
 {
@@ -56,18 +54,20 @@ public class MySQL extends SQL
 	@Override
 	protected void checkDB()
 	{
-		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
+		try(Connection connection = getConnection())
 		{
 			if(useUUIDs)
 			{
-				DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL,`" + fieldUUID + "` CHAR(36) UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n`"
+						+ fieldUUID + "` CHAR(36) DEFAULT NULL,\nPRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldUUID + "_UNIQUE` (`" + fieldUUID + "`)\n);");
 			}
 			else
 			{
-				DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,`" + fieldName + "` CHAR(16) NOT NULL UNIQUE, PRIMARY KEY (`" + fieldPlayerID + "`));");
+				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n"
+						+ "PRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "`)\n);");
 			}
-			DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (`" + fieldBPOwner + "` INT UNSIGNED NOT NULL, `" + fieldBPITS + "` BLOB, `"
-					+ fieldBPVersion + "` INT DEFAULT 0, " + ((maxAge > 0) ? "`" + fieldBPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " : "") + "PRIMARY KEY (`" + fieldBPOwner + "`));");
+			DBTools.updateDB(connection, "CREATE TABLE `" + tableBackpacks + "` (\n`" + fieldBPOwner + "` INT UNSIGNED NOT NULL,\n`" + fieldBPITS + "` BLOB,\n`"
+					+ fieldBPVersion + "` INT DEFAULT 0,\n" + ((maxAge > 0) ? "`" + fieldBPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" : "") + "PRIMARY KEY (`" + fieldBPOwner + "`)\n);");
 		}
 		catch (SQLException e)
 		{
