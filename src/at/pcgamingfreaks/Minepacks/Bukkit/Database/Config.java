@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -47,11 +48,11 @@ public class Config extends Configuration
 	}
 
 	@Override
-	protected void doUpgrade(at.pcgamingfreaks.Configuration oldConfig)
+	protected void doUpgrade(YamlFileManager oldConfig)
 	{
 		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
 		{
-			OldFileUpdater.updateConfig(oldConfig.getConfig(), getConfig());
+			OldFileUpdater.updateConfig(oldConfig.getYaml(), getConfig());
 		}
 		else
 		{
@@ -182,6 +183,12 @@ public class Config extends Configuration
 	public boolean getAutoUpdate()
 	{
 		return getConfig().getBoolean("Misc.AutoUpdate", true);
+	}
+
+	public boolean useUpdaterDevBuilds()
+	{
+		//TODO add config value for final version
+		return true;
 	}
 
 	public boolean isBungeeCordModeEnabled()

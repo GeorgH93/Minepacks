@@ -35,6 +35,9 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.EventListener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
+import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
+import at.pcgamingfreaks.Updater.UpdateProviders.UpdateProvider;
 
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
@@ -53,6 +56,8 @@ import java.util.UUID;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
+	private static final int BUKKIT_PROJECT_ID = 83445;
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2";
 	private static Minepacks instance = null;
 
 	public Config config;
@@ -104,12 +109,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 		load();
 
-		if(config.getAutoUpdate()) // Lets check for updates
-		{
-			getLogger().info("Checking for updates ...");
-			Updater updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
-			updater.update(); // Starts the update
-		}
+		if(config.getAutoUpdate()) update();
 		StringUtils.getPluginEnabledMessage(getDescription().getName());
 	}
 
@@ -117,15 +117,26 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void onDisable()
 	{
 		Updater updater = null;
-		if(config.getAutoUpdate()) // Lets check for updates
-		{
-			getLogger().info("Checking for updates ...");
-			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
-			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
-		}
+		if(config.getAutoUpdate()) updater = update();
 		unload();
-		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
+		if(updater != null) updater.waitForAsyncOperation();
 		StringUtils.getPluginDisabledMessage(getDescription().getName());
+	}
+
+	public Updater update()
+	{
+		UpdateProvider updateProvider;
+		if(config.useUpdaterDevBuilds())
+		{
+			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB, getLogger());
+		}
+		else
+		{
+			updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
+		}
+		Updater updater = new Updater(this, this.getFile(), true, updateProvider);
+		updater.update();
+		return updater;
 	}
 
 	private void load()

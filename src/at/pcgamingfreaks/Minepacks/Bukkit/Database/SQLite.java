@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -121,9 +121,8 @@ public class SQLite extends SQL
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
 			catch(SQLException ignored) {}
-			try
+			try(ResultSet rs = stmt.executeQuery("SELECT DATE('now');"))
 			{
-				ResultSet rs = stmt.executeQuery("SELECT DATE('now');");
 				rs.next();
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
 			}
