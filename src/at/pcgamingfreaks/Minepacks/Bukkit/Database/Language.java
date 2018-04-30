@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.YamlFileManager;
 import at.pcgamingfreaks.yaml.YAML;
 
 import org.bukkit.ChatColor;
@@ -38,11 +39,11 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	protected void doUpdate() {}
 
 	@Override
-	protected void doUpgrade(at.pcgamingfreaks.Language oldLang)
+	protected void doUpgrade(YamlFileManager oldLang)
 	{
 		if(oldLang.getVersion() < 10) // Pre v2.0 versions
 		{
-			YAML oldYAML = oldLang.getLang(), newYAML = getLang();
+			YAML oldYAML = oldLang.getYaml(), newYAML = getLang();
 			Map<String, String> simpleConverter = new LinkedHashMap<>(), advancedConverter = new LinkedHashMap<>();
 			String[] keys;
 			String helper;
