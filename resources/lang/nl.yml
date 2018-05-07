@@ -1,0 +1,24 @@
+Language:
+  Console:
+    Enabled: MinePacks is ingeschakeld!
+    Disabled: MinePacks is uitgeschakeld.
+    NotFromConsole: Commando kan niet in de console worden gebruikt.
+    LangUpdated: Taal Bestand is geüpdatet.
+    UpdateUUIDs: Beginnen met updaten van database naar UUIDs ...
+    UpdatedUUIDs: '%s accounts geüpdatet naar UUIDs.'
+  Ingame:
+    NoPermission: Je bent niet bevoegd om dit te doen.
+    OwnBackPackClose: 'Rugzak gesloten!'
+    PlayerBackPackClose: "%s's rugzak gesloten!"
+    InvalidBackpack: Ongeldige rugzak.
+    BackpackCleaned: Rugzak schoongemaakt.
+    Cooldown: "Wacht alsjeblieft met het heropenen van je rugzak."
+    WrongGameMode: "Je bent niet bevoegd om je rugzak in je huidige spelmodus te openen."
+  Description:
+    Backpack: Opent je rugzak.
+    Clean: Maakt je rugzak schoon.
+    CleanOther: Maakt de rugzak van andere spelers schoon.
+    View: Laat de rugzak van andere spelers zien.
+
+# Taal Bestand versie. Niet aan komen!
+Version: 5
