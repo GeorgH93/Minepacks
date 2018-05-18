@@ -30,6 +30,13 @@
 		</license>
 	</licenses>
 
+	<properties>
+		<author>GeorgH93</author>
+		<website>https://www.spigotmc.org/resources/19286/</website>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -64,11 +71,6 @@
 			<version>1.7.10</version>
 		</dependency>
 	</dependencies>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>

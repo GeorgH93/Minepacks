@@ -1,6 +1,6 @@
 name: ${project.name}
-author: GeorgH93
-website: http://dev.bukkit.org/bukkit-plugins/minepacks/
+author: ${author}
+website: ${website}
 main: ${project.groupId}.${project.artifactId}.${project.artifactId}
 description: ${project.description}
 version: ${project.version}

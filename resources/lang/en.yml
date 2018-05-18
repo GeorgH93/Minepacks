@@ -7,7 +7,7 @@ Language:
     UpdateUUIDs: Start updating database to UUIDs ...
     UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
   Ingame:
-    NoPermission: You don't have the Permission to do that.
+    NoPermission: "You don't have the permission to do that."
     OwnBackPackClose: 'Backpack closed!'
     PlayerBackPackClose: "%s's backpack closed!"
     InvalidBackpack: Invalid backpack.
