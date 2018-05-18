@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,12 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
@@ -34,9 +36,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-//TODO remove shulkerboxes
 public class DisableShulkerboxes extends MinepacksListener
-{
+{ //TODO handle existing shulkerboxes in inventory
 	protected static final Collection<Material> SHULKER_BOX_MATERIALS = new HashSet<>();
 
 	static
@@ -59,9 +60,13 @@ public class DisableShulkerboxes extends MinepacksListener
 		SHULKER_BOX_MATERIALS.add(Material.YELLOW_SHULKER_BOX);
 	}
 
+	private boolean removeExisting, dropExistingContent;
+
 	public DisableShulkerboxes(final Minepacks plugin)
 	{
 		super(plugin);
+		removeExisting = plugin.config.isShulkerboxesExistingDestroyEnabled();
+		dropExistingContent = plugin.config.isShulkerboxesExistingDropEnabled();
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -87,6 +92,19 @@ public class DisableShulkerboxes extends MinepacksListener
 	{
 		if(event.getInventory() != null && event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
 		{
+			if(removeExisting)
+			{
+				Block shulkerBlock = ((ShulkerBox) event.getInventory().getHolder()).getBlock();
+				if(shulkerBlock != null)
+				{
+					if(dropExistingContent)
+					{
+						Utils.dropInventory(event.getInventory(), shulkerBlock.getLocation());
+					}
+					event.getInventory().clear();
+					shulkerBlock.setType(Material.AIR);
+				}
+			}
 			event.setCancelled(true);
 		}
 	}
@@ -136,6 +154,17 @@ public class DisableShulkerboxes extends MinepacksListener
 	{
 		if(SHULKER_BOX_MATERIALS.contains(event.getBlockPlaced().getType()))
 		{
+			event.getItemInHand().setType(Material.AIR);
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockMultiPlace(BlockMultiPlaceEvent event)
+	{
+		if(SHULKER_BOX_MATERIALS.contains(event.getBlock().getType()))
+		{
+			event.getItemInHand().setType(Material.AIR);
 			event.setCancelled(true);
 		}
 	}
@@ -143,10 +172,32 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if(SHULKER_BOX_MATERIALS.contains(event.getBlock().getType()))
+		if(handleShulkerBlock(event.getBlock())) event.setCancelled(true);
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockDamage(BlockDamageEvent event)
+	{
+		if(handleShulkerBlock(event.getBlock())) event.setCancelled(true);
+	}
+
+	private boolean handleShulkerBlock(Block block)
+	{
+		if(SHULKER_BOX_MATERIALS.contains(block.getType()))
 		{
-			event.setCancelled(true);
+			if(removeExisting)
+			{
+				ShulkerBox shulkerBox = (ShulkerBox) block.getState();
+				if(shulkerBox != null)
+				{
+					if(dropExistingContent) Utils.dropInventory(shulkerBox.getInventory(), shulkerBox.getLocation());
+					shulkerBox.getInventory().clear();
+					block.setType(Material.AIR);
+				}
+			}
+			return true;
 		}
+		return false;
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -169,15 +220,6 @@ public class DisableShulkerboxes extends MinepacksListener
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockDispense(BlockDispenseEvent event)
-	{
-		if(SHULKER_BOX_MATERIALS.contains(event.getBlock().getType()))
-		{
-			event.setCancelled(true);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onBlockBreak(BlockMultiPlaceEvent event)
 	{
 		if(SHULKER_BOX_MATERIALS.contains(event.getBlock().getType()))
 		{

@@ -1,7 +1,7 @@
 Language:
   NotFromConsole: "&cCommand not usable from console."
   Ingame:
-    NoPermission: "&cYou don't have the Permission to do that."
+    NoPermission: "&cYou don't have the permission to do that."
     WorldDisabled: "&cThe use of the backpack is not allowed in this world."
     OwnBackpackClose: "Backpack closed!"
     OwnBackpackClose_SendMethod: "action_bar"

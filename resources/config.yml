@@ -117,11 +117,8 @@ Shulkerboxes:
   # This setting allows to disable shulkerboxes all together. Players won't be able to craft or use them.
   DisableShulkerboxes: false
   # This settings controls how existing shulkerboxes are handled if they are disabled.
-  Existing:
-    # Every existing shulker-box will be removed when a player tries to interact with it. The content will be lost.
-    Remove: false
-    # Every existing shulker-box will be destroyed when a player tries to interact with it. The content will be dropped to the ground.
-    Destroy: false
+  # Options: Ignore, Remove = shulker-box will be removed including it's content, Destroy = shulker-box will be destroyed and it's content will be dropped
+  Existing: "Ignore"
 
 ItemFilter:
   # Enables the item filter. Make sure to define items to be filtered.

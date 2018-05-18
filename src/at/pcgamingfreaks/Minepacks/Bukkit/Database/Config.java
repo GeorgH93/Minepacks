@@ -270,14 +270,14 @@ public class Config extends Configuration
 		return getConfig().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
 	}
 
-	public boolean isShulkerboxesExistingRemoveEnabled()
+	public boolean isShulkerboxesExistingDropEnabled()
 	{
-		return getConfig().getBoolean("Shulkerboxes.Existing.Remove", true);
+		return getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy");
 	}
 
 	public boolean isShulkerboxesExistingDestroyEnabled()
 	{
-		return getConfig().getBoolean("Shulkerboxes.Existing.Destroy", true);
+		return getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy") || getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Remove");
 	}
 	//endregion
 
