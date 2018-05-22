@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2016, 2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializer;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,8 +32,6 @@ public class InventorySerializer
 	
 	public InventorySerializer()
 	{
-		String name = Bukkit.getServer().getClass().getPackage().getName();
-		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		try
 		{
 			if(NBTItemStackSerializer.isMCVersionCompatible())

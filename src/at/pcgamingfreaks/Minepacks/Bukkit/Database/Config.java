@@ -215,7 +215,7 @@ public class Config extends Configuration
 			try
 			{
 				//noinspection deprecation
-				gm = GameMode.getByValue(Integer.valueOf(string));
+				gm = GameMode.getByValue(Integer.parseInt(string));
 			}
 			catch(NumberFormatException ignored) {}
 			if(gm == null)

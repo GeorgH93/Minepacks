@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ public interface MinepacksPlugin
 	static @Nullable MinepacksPlugin getInstance()
 	{
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Minepacks");
-		return (plugin != null && plugin instanceof MinepacksPlugin && plugin.isEnabled()) ? (MinepacksPlugin) plugin : null;
+		return (plugin instanceof MinepacksPlugin && plugin.isEnabled()) ? (MinepacksPlugin) plugin : null;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public interface MinepacksPlugin
 	static @NotNull Version getVersion()
 	{
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Minepacks");
-		if(plugin != null && plugin instanceof MinepacksPlugin && plugin.isEnabled())
+		if(plugin instanceof MinepacksPlugin && plugin.isEnabled())
 		{
 			return new Version(plugin.getDescription().getVersion());
 		}
