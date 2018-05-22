@@ -17,11 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
+import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -69,20 +72,36 @@ public abstract class Database implements Listener
 		unCacheStrategie.close();
 	}
 
-	public static Database getDatabase(Minepacks Plugin)
+	public static Database getDatabase(Minepacks plugin)
 	{
 		Database database;
-		switch(Plugin.config.getDatabaseType().toLowerCase())
+		switch(plugin.config.getDatabaseType().toLowerCase())
 		{
 			case "mysql":
-				database = new MySQL(Plugin); break;
+				database = new MySQL(plugin); break;
 			case "flat":
 			case "file":
 			case "files":
-				database = new Files(Plugin); break;
+				database = new Files(plugin); break;
+			case "external":
+			case "global":
+			case "shared":
+				DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
+				if(pool == null)
+				{
+					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+					return null;
+				}
+				switch(pool.getDatabaseType().toLowerCase())
+				{
+					case "mysql": database = new MySQLShared(plugin, pool); break;
+					case "sqlite": database = new SQLiteShared(plugin, pool); break;
+					default: plugin.getLogger().warning(ConsoleColor.RED + "The database type of the shared pool is currently not supported!" + ConsoleColor.RESET); return null;
+				}
+				break;
 			case "sqlite":
 			default:
-				database = new SQLite(Plugin);
+				database = new SQLite(plugin);
 		}
 		database.init();
 		return database;

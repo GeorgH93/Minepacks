@@ -29,7 +29,7 @@ AllowedGameModes: [ "SURVIVAL" ]
 # Defines how long a player have to wait till he can reopen his backpack.
 # Time is in seconds. Values < 1 disable the cooldown.
 CommandCooldown: -1
-# If enabled whe cooldown will be synced between servers (bungeecord network). It will also prevent players from leaving and joining to bypass the cooldown.
+# If enabled whe cooldown will be synced between servers (BungeeCord network). It will also prevent players from leaving and joining to bypass the cooldown.
 SyncCooldown: false
 
 # Controls for the auto pickup on full inventory function
