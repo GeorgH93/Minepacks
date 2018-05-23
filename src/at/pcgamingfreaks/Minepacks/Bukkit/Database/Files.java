@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ import org.bukkit.entity.Player;
 
 public class Files extends Database
 {
-	private static final String EXT =  ".backpack", EXT_REGEX =  "\\.backpack";
+	protected static final String EXT =  ".backpack", EXT_REGEX =  "\\.backpack";
 
 	private final File saveFolder;
 	
@@ -199,10 +199,7 @@ public class Files extends Database
 		    if (!file.isDirectory())
 		    {
 		    	String path = file.getAbsolutePath().toLowerCase();
-	    		if ((path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.'))
-	    		{
-	    			return true;
-	    		}
+			    return (path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.');
 		    }
 		    return false;
 		}
