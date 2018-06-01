@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -113,11 +113,13 @@ public class Backpack implements InventoryHolder
 
 		// It's not perfect, but it is the only way of doing this.
 		// This sets the title of the inventory based on the person who is opening it.
-		// The owner will se an other title then everyone else.
+		// The owner will se an other title, then everyone else.
 		// This way we can add owner name to the tile for everyone else.
 		try
 		{
+			//noinspection ConstantConditions
 			FIELD_TITLE.setAccessible(true);
+			//noinspection ConstantConditions
 			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
 		}
 		catch(Exception e)
@@ -199,6 +201,16 @@ public class Backpack implements InventoryHolder
 		}
 		inWork = false;
 		return removedItems;
+	}
+
+	public void closeAll()
+	{
+		for(Entry<Player, Boolean> e : opened.entrySet())
+		{
+			e.getKey().closeInventory();
+		}
+		opened.clear();
+		save();
 	}
 
 	/**

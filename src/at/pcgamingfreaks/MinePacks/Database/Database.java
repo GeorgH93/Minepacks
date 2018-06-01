@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Database
 {
@@ -166,7 +167,15 @@ public class Database
 	}
 
 	// DB Functions
-	public void close() { }
+	public void close()
+	{
+		// Ensure that all backpacks are closed and saved before killing the database
+		for(Map.Entry<OfflinePlayer, Backpack> backpackEntry : backpacks.entrySet())
+		{
+			backpackEntry.getValue().closeAll();
+		}
+		backpacks.clear();
+	}
 
 	public void updatePlayerAndLoadBackpack(Player player)
 	{

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package at.pcgamingfreaks.MinePacks.Database;
 import at.pcgamingfreaks.MinePacks.Backpack;
 import at.pcgamingfreaks.MinePacks.MinePacks;
 import at.pcgamingfreaks.UUIDConverter;
+import at.pcgamingfreaks.Utils;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -92,6 +93,8 @@ public abstract class SQL extends Database
 	@Override
 	public void close()
 	{
+		super.close();
+		Utils.blockThread(1);
 		dataSource.close();
 	}
 

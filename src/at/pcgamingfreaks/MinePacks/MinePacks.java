@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,11 @@ import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -112,6 +116,13 @@ public class MinePacks extends JavaPlugin
 	@Override
 	public void onDisable()
 	{
+		getCommand("backpack").setExecutor(new CommandExecutor() {
+			@Override
+			public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings)
+			{
+				return false;
+			}
+		});
 		Updater updater = null;
 		if(config != null && config.getAutoUpdate()) // Lets check for updates
 		{
@@ -119,9 +130,10 @@ public class MinePacks extends JavaPlugin
 			updater = new Updater(this, this.getFile(), true, 83445); // Create a new updater with dev.bukkit.org as update provider
 			updater.update(); // Starts the update, if there is a new update available it will download while we close the rest
 		}
-		getServer().getScheduler().cancelTasks(this); // Stop the listener, we don't need them any longer
 		if(DB != null) DB.close(); // Close the DB connection, we won't need them any longer
+		HandlerList.unregisterAll(this); // Stop the listener, they are no longer needed
 		if(updater != null) updater.waitForAsyncOperation(); // The update can download while we kill the listeners and close the DB connections
+		getServer().getScheduler().cancelTasks(this); // Kill all still running tasks
 		instance = null;
 		if(lang != null) log.info(lang.get("Console.Disabled"));
 	}
