@@ -108,7 +108,7 @@ public class OnCommand implements CommandExecutor
 						final long cooldownTime = System.currentTimeMillis() + cooldown;
 						if(syncCooldown)
 						{
-							plugin.getDb().syncCooldown(player, cooldownTime);
+							plugin.getDatabase().syncCooldown(player, cooldownTime);
 						}
 						plugin.cooldowns.put(player.getUniqueId(), cooldownTime);
 					}

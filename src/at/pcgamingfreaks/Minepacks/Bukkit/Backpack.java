@@ -231,7 +231,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	{
 		if(hasChanged())
 		{
-			Minepacks.getInstance().getDb().saveBackpack(this);
+			Minepacks.getInstance().getDatabase().saveBackpack(this);
 			hasChanged = false;
 		}
 	}

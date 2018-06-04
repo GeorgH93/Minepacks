@@ -185,6 +185,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		getServer().getScheduler().cancelTasks(this); // Kill all running task
 		database.close(); // Close the DB connection, we won't need them any longer
 		instance = null;
+		cooldowns.clear();
 	}
 
 	public void reload()
@@ -208,7 +209,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		return config;
 	}
 
-	public Database getDb()
+	public Database getDatabase()
 	{
 		return database;
 	}
@@ -268,10 +269,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		for(int i = maxSize; i > 1; i--)
 		{
-			if(player.hasPermission("backpack.size." + i))
-			{
-				return i * 9;
-			}
+			if(player.hasPermission("backpack.size." + i)) return i * 9;
 		}
 		return 9;
 	}
@@ -279,10 +277,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public WorldBlacklistMode isDisabled(Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission("backpack.ignoreWorldBlacklist"))) return WorldBlacklistMode.None;
-		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase()))
-		{
-			return worldBlacklistMode;
-		}
+		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase())) return worldBlacklistMode;
 		return WorldBlacklistMode.None;
 	}
 }
