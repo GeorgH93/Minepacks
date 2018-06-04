@@ -114,11 +114,13 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 		// It's not perfect, but it is the only way of doing this.
 		// This sets the title of the inventory based on the person who is opening it.
-		// The owner will see an other title then everyone else.
+		// The owner will see an other title, then everyone else.
 		// This way we can add owner name to the tile for everyone else.
 		try
 		{
+			//noinspection ConstantConditions
 			FIELD_TITLE.setAccessible(true);
+			//noinspection ConstantConditions
 			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), player.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther);
 		}
 		catch(Exception e)
@@ -132,6 +134,13 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	public void close(Player p)
 	{
 		opened.remove(p);
+	}
+
+	public void closeAll()
+	{
+		opened.forEach((key, value) -> key.closeInventory());
+		opened.clear();
+		save();
 	}
 
 	@Override

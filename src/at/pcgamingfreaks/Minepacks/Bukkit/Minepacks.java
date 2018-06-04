@@ -43,6 +43,7 @@ import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -72,6 +73,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private int maxSize;
 	private Collection<String> worldBlacklist;
 	private WorldBlacklistMode worldBlacklistMode;
+	private ItemsCollector collector;
 
 	public static Minepacks getInstance()
 	{
@@ -160,7 +162,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		//endregion
 		if(config.getFullInvCollect())
 		{
-			(new ItemsCollector(this)).runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
+			collector = new ItemsCollector(this);
+			collector.runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
 		}
 		worldBlacklist = config.getWorldBlacklist();
 		if(worldBlacklist.size() == 0)
@@ -175,7 +178,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private void unload()
 	{
-		getServer().getScheduler().cancelTasks(this); // Stop the listener, we don't need them any longer
+		//TODO disable command
+		collector.cancel();
+		if(database != null) database.close();
+		HandlerList.unregisterAll(this); // Stop the listeners
+		getServer().getScheduler().cancelTasks(this); // Kill all running task
 		database.close(); // Close the DB connection, we won't need them any longer
 		instance = null;
 	}

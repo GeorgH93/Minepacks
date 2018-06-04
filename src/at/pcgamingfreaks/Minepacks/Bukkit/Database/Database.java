@@ -69,6 +69,8 @@ public abstract class Database implements Listener
 	public void close()
 	{
 		HandlerList.unregisterAll(this);
+		backpacks.forEach((key, value) -> value.closeAll());
+		backpacks.clear();
 		unCacheStrategie.close();
 	}
 

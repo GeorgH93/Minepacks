@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
+import at.pcgamingfreaks.Utils;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -122,6 +123,7 @@ public abstract class SQL extends Database
 	public void close()
 	{
 		super.close();
+		Utils.blockThread(1); // Give the database some time to perform async operations
 		dataSource.close();
 	}
 
