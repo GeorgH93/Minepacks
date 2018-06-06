@@ -22,6 +22,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Backpack extends InventoryHolder
 {
@@ -39,6 +40,15 @@ public interface Backpack extends InventoryHolder
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 */
 	void open(@NotNull Player player, boolean editable);
+
+	/**
+	 * Let a given player open this backpack.
+	 *
+	 * @param player   The player who opens the backpack.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 */
+	void open(@NotNull Player player, boolean editable, @Nullable String title);
 
 	/**
 	 * Checks if the backpack is currently opened by a player.
@@ -60,6 +70,7 @@ public interface Backpack extends InventoryHolder
 	 *
 	 * @return The size of the backpack.
 	 */
+	@SuppressWarnings("unused")
 	int getSize();
 
 	/**

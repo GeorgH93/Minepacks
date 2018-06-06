@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -91,6 +92,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	@Override
 	public void open(@NotNull Player player, boolean editable)
 	{
+		open(player, editable, null);
+	}
+
+	@Override
+	public void open(@NotNull Player player, boolean editable, @Nullable String title)
+	{
 		if(owner.isOnline())
 		{
 			Player owner = this.owner.getPlayer();
@@ -102,7 +109,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 					List<ItemStack> items = setSize(size);
 					for(ItemStack i : items)
 					{
-						if (i != null)
+						if(i != null)
 						{
 							owner.getWorld().dropItemNaturally(owner.getLocation(), i);
 						}
@@ -112,6 +119,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 		opened.put(player, editable);
 
+		if(title == null) title = player.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther;
 		// It's not perfect, but it is the only way of doing this.
 		// This sets the title of the inventory based on the person who is opening it.
 		// The owner will see an other title, then everyone else.
@@ -121,7 +129,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 			//noinspection ConstantConditions
 			FIELD_TITLE.setAccessible(true);
 			//noinspection ConstantConditions
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), player.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther);
+			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), title);
 		}
 		catch(Exception e)
 		{
@@ -130,7 +138,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 		player.openInventory(bp);
 	}
-	
+
 	public void close(Player p)
 	{
 		opened.remove(p);

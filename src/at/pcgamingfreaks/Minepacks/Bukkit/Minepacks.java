@@ -241,13 +241,25 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
 	{
+		openBackpack(opener, owner, editable, null);
+	}
+
+	@Override
+	public void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable)
+	{
+		openBackpack(opener, backpack, editable, null);
+	}
+
+	@Override
+	public void openBackpack(@NotNull Player opener, @NotNull OfflinePlayer owner, boolean editable, @Nullable String title)
+	{
 		Validate.notNull(owner);
 		database.getBackpack(owner, new Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack>()
 		{
 			@Override
 			public void onResult(at.pcgamingfreaks.Minepacks.Bukkit.Backpack backpack)
 			{
-				openBackpack(opener, backpack, editable);
+				openBackpack(opener, backpack, editable, title);
 			}
 
 			@Override
@@ -256,7 +268,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable)
+	public void openBackpack(@NotNull Player opener, @Nullable Backpack backpack, boolean editable, @Nullable String title)
 	{
 		Validate.notNull(opener);
 		WorldBlacklistMode disabled = isDisabled(opener);
