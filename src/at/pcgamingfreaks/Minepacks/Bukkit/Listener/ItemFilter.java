@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ public class ItemFilter extends MinepacksListener
 		}
 		blockedMaterials.addAll(plugin.getConfiguration().getItemFilterBlacklist());
 
-		messageNotAllowedInBackpack = plugin.lang.getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
+		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

@@ -103,20 +103,20 @@ public abstract class SQL extends Database
 	protected void loadSettings()
 	{
 		// Load table and field names
-		tablePlayers      = plugin.config.getUserTable();
-		tableBackpacks    = plugin.config.getBackpackTable();
-		tableCooldowns    = plugin.config.getCooldownTable();
-		fieldPlayerID     = plugin.config.getDBFields("User.Player_ID", "id");
-		fieldPlayerName   = plugin.config.getDBFields("User.Name", "name");
-		fieldPlayerUUID   = plugin.config.getDBFields("User.UUID", "uuid");
-		fieldBpOwner      = plugin.config.getDBFields("Backpack.Owner_ID", "owner");
-		fieldBpIts        = plugin.config.getDBFields("Backpack.ItemStacks", "its");
-		fieldBpVersion    = plugin.config.getDBFields("Backpack.Version", "version");
-		fieldBpLastUpdate = plugin.config.getDBFields("Backpack.LastUpdate", "lastUpdate");
-		fieldCdPlayer     = plugin.config.getDBFields("Cooldown.Player_ID", "id");
-		fieldCdTime       = plugin.config.getDBFields("Cooldown.Time", "time");
-		updatePlayer      = plugin.config.getUpdatePlayer();
-		syncCooldown      = plugin.config.isCommandCooldownSyncEnabled();
+		tablePlayers      = plugin.getConfiguration().getUserTable();
+		tableBackpacks    = plugin.getConfiguration().getBackpackTable();
+		tableCooldowns    = plugin.getConfiguration().getCooldownTable();
+		fieldPlayerID     = plugin.getConfiguration().getDBFields("User.Player_ID", "id");
+		fieldPlayerName   = plugin.getConfiguration().getDBFields("User.Name", "name");
+		fieldPlayerUUID   = plugin.getConfiguration().getDBFields("User.UUID", "uuid");
+		fieldBpOwner      = plugin.getConfiguration().getDBFields("Backpack.Owner_ID", "owner");
+		fieldBpIts        = plugin.getConfiguration().getDBFields("Backpack.ItemStacks", "its");
+		fieldBpVersion    = plugin.getConfiguration().getDBFields("Backpack.Version", "version");
+		fieldBpLastUpdate = plugin.getConfiguration().getDBFields("Backpack.LastUpdate", "lastUpdate");
+		fieldCdPlayer     = plugin.getConfiguration().getDBFields("Cooldown.Player_ID", "id");
+		fieldCdTime       = plugin.getConfiguration().getDBFields("Cooldown.Time", "time");
+		updatePlayer      = plugin.getConfiguration().getUpdatePlayer();
+		syncCooldown      = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 	}
 
 	@Override

@@ -41,7 +41,7 @@ public class ClearCommand extends MinepacksCommand
 	public ClearCommand(Minepacks plugin)
 	{
 		super(plugin, "clear", plugin.getLanguage().getTranslated("Commands.Description.Clean"), "backpack.clean", plugin.getLanguage().getCommandAliases("Clean"));
-		messageBackpackCleaned = plugin.lang.getMessage("Ingame.Clean.BackpackCleaned");
+		messageBackpackCleaned = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleaned");
 		descriptionCleanOthers = plugin.getLanguage().getTranslated("Commands.Description.CleanOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 	}

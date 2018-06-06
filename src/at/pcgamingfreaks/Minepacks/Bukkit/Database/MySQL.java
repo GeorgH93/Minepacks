@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -37,11 +37,11 @@ public class MySQL extends SQL
 	protected HikariConfig getPoolConfig()
 	{
 		HikariConfig poolConfig = new HikariConfig();
-		poolConfig.setJdbcUrl("jdbc:mysql://" + plugin.config.getSQLHost() + "/" + plugin.config.getSQLDatabase() + "?allowMultiQueries=true&autoReconnect=true" + plugin.config.getSQLProperties());
-		poolConfig.setUsername(plugin.config.getSQLUser());
-		poolConfig.setPassword(plugin.config.getSQLPassword());
+		poolConfig.setJdbcUrl("jdbc:mysql://" + plugin.getConfiguration().getSQLHost() + "/" + plugin.getConfiguration().getSQLDatabase() + "?allowMultiQueries=true&autoReconnect=true" + plugin.getConfiguration().getSQLProperties());
+		poolConfig.setUsername(plugin.getConfiguration().getSQLUser());
+		poolConfig.setPassword(plugin.getConfiguration().getSQLPassword());
 		poolConfig.setMinimumIdle(1);
-		poolConfig.setMaximumPoolSize(plugin.config.getSQLMaxConnections());
+		poolConfig.setMaximumPoolSize(plugin.getConfiguration().getSQLMaxConnections());
 		return poolConfig;
 	}
 

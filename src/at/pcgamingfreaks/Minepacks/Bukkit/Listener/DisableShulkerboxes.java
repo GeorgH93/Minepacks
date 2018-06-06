@@ -65,8 +65,8 @@ public class DisableShulkerboxes extends MinepacksListener
 	public DisableShulkerboxes(final Minepacks plugin)
 	{
 		super(plugin);
-		removeExisting = plugin.config.isShulkerboxesExistingDestroyEnabled();
-		dropExistingContent = plugin.config.isShulkerboxesExistingDropEnabled();
+		removeExisting = plugin.getConfiguration().isShulkerboxesExistingDestroyEnabled();
+		dropExistingContent = plugin.getConfiguration().isShulkerboxesExistingDropEnabled();
 	}
 
 	@EventHandler(ignoreCancelled = true)

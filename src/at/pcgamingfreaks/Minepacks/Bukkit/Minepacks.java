@@ -65,8 +65,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2";
 	private static Minepacks instance = null;
 
-	public Config config; //TODO Make private
-	public Language lang; //TODO Make private
+	private Config config;
+	private Language lang;
 	private Database database;
 
 	public final Map<UUID, Long> cooldowns = new HashMap<>();

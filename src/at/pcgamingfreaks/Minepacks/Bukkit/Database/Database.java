@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2017 GeorgH93
+ *   Copyright (C) 2016-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -54,10 +54,10 @@ public abstract class Database implements Listener
 	public Database(Minepacks mp)
 	{
 		plugin = mp;
-		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
-		useUUIDs = plugin.config.getUseUUIDs();
-		bungeeCordMode = plugin.config.isBungeeCordModeEnabled();
-		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
+		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
+		useUUIDs = plugin.getConfiguration().getUseUUIDs();
+		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
+		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
 	}
 
@@ -77,7 +77,7 @@ public abstract class Database implements Listener
 	public static Database getDatabase(Minepacks plugin)
 	{
 		Database database;
-		switch(plugin.config.getDatabaseType().toLowerCase())
+		switch(plugin.getConfiguration().getDatabaseType().toLowerCase())
 		{
 			case "mysql":
 				database = new MySQL(plugin); break;

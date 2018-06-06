@@ -41,16 +41,16 @@ public class OpenCommand extends MinepacksCommand
 
 	public OpenCommand(Minepacks plugin)
 	{
-		super(plugin, "open", plugin.lang.getTranslated("Commands.Description.Backpack"), "backpack.use", true, plugin.getLanguage().getCommandAliases("Open"));
+		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), "backpack.use", true, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
-		messageCooldown        = plugin.lang.getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f");
-		messageWrongGameMode   = plugin.lang.getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
-		descriptionOpenOthers = plugin.lang.getTranslated("Commands.Description.OpenOthers");
+		messageCooldown        = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f");
+		messageWrongGameMode   = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
+		descriptionOpenOthers = plugin.getLanguage().getTranslated("Commands.Description.OpenOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 
-		cooldown = plugin.config.getCommandCooldown();
-		syncCooldown = plugin.config.isCommandCooldownSyncEnabled();
+		cooldown = plugin.getConfiguration().getCommandCooldown();
+		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 
 		StringBuilder allowedGameModesBuilder = new StringBuilder();
 		for(GameMode gameMode : plugin.getConfiguration().getAllowedGameModes())

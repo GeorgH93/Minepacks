@@ -37,8 +37,8 @@ public class EventListener extends MinepacksListener
 	public EventListener(Minepacks plugin)
 	{
 		super(plugin);
-		messageOwnBackpackClose = plugin.lang.getMessage("Ingame.OwnBackpackClose");
-		messageOtherBackpackClose = plugin.lang.getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
+		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
+		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
 	}
 	
 	@EventHandler

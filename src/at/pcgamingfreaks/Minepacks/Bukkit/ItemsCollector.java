@@ -37,7 +37,7 @@ public class ItemsCollector extends BukkitRunnable
 	public ItemsCollector(Minepacks plugin)
 	{
 		this.plugin = plugin;
-		this.radius = plugin.config.getFullInvRadius();
+		this.radius = plugin.getConfiguration().getFullInvRadius();
 	}
 
 	@Override
