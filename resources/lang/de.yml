@@ -9,18 +9,63 @@ Language:
     PlayerBackpackClose: "{OwnerName}'s Rucksack geschlossen."
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Rucksack fehlerhaft."
-    BackpackCleaned: "Rucksack gelehrt."
-    #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
-    Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
-    #Parameter: {CurrentGameMode}, {AllowedGameModes}
-    WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
     NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
+    Clean:
+      BackpackCleaned: "Rucksack gelehrt."
+    Open:
+      #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
+      Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
+    Help:
+      Header: "&6### Minepacks Commands ###"
+      Footer: "&6#############################"
+    Admin:
+      Reloading: "&1Reloading ..."
+      Reloaded: "&1Reloaded!"
+      CheckingForUpdates: "&1Suche nach updates ..."
+      Updated: "[\"\",{\"text\":\"Update wurde heruntergeladen. Es wird beim nächsten neustart aktiviert.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Kein update verfügbar.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Es ist ein fehler aufgetreten!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Es ist ein update verfügbar! Bitte downloade es von: \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\"\"}]"
   Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
     Description:
       Backpack: "Öffent deinen Rucksack."
       Clean: "Leert deinen Rucksack."
-      CleanOther: "Leert den Rucksack eines anderen Spielers."
-      View: "Öffnet den Rucksack eines anderen Spielers."
+      CleanOthers: "Leert den Rucksack eines anderen Spielers."
+      OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
+      Reload: "Lädt die konfigurations Datei neu."
+      Update: "Prüft auf neue plugin updates."
+      Help: "Zeigt die verfügbaren Befehle an."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+    - rucksack
+  Open:
+    - open
+    - öffnen
+  Clean:
+    - clean
+    - clear
+    - empty
+    - leeren
+    - löschen
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Help:
+    - help
+    - hilfe
+
+LanguageName: "German"
+Author: "GeorgH03"
 
 # Language file version. Don't touch it!
-Version: 11
+Version: 12

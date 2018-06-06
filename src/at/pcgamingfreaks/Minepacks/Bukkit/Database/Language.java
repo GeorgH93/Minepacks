@@ -21,10 +21,14 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 11, UPGRADE_THRESHOLD = 11;
+	private static final int LANG_VERSION = 12, UPGRADE_THRESHOLD = 12;
 
 	public Language(JavaPlugin plugin)
 	{
@@ -45,5 +49,16 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 		{
 			super.doUpgrade(oldLang);
 		}
+	}
+
+	public String[] getCommandAliases(final String command)
+	{
+		return getCommandAliases(command, new String[0]);
+	}
+
+	public String[] getCommandAliases(final String command, final @NotNull String[] defaults)
+	{
+		List<String> aliases = getLang().getStringList("Command." + command, new LinkedList<>());
+		return (aliases.size() > 0) ? aliases.toArray(new String[0]) : defaults;
 	}
 }

@@ -5,26 +5,18 @@ main: ${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}
 description: ${project.description}
 version: ${project.version}
 depend: [PCGF_PluginLib]
-commands:
-  backpack:
-    description: Main command
-    aliases: bp
-    usage: /backpack
+
 permissions:
   backpack.*:
     description: Gives access to the full Minepacks functionality.
     children:
       backpack.use: true
       backpack.size.6: true
-      backpack.others: true
-      backpack.others.edit: true
       backpack.keepOnDeath: true
       backpack.clean: true
-      backpack.clean.other: true
-      backpack.noCooldown: true
       backpack.fullpickup: true
-      backpack.ignoreGameMode: true
-      backpack.ignoreWorldBlacklist: true
+      backpack.bypass: true
+      backpack.admin: true
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     children:
@@ -44,6 +36,18 @@ permissions:
       backpack.use: true
       backpack.size.6: true
       backpack.clean: true
+  backpack.bypass:
+    children:
+      backpack.ignoreGameMode: true
+      backpack.ignoreWorldBlacklist: true
+      backpack.noCooldown: true
+  backpack.admin:
+    children:
+      backpack.others: true
+      backpack.others.edit: true
+      backpack.clean.others: true
+      backpack.update: true
+      backpack.reload: true
   backpack.use:
     description: Allows a player to open the backpack.
     default: false
@@ -104,4 +108,10 @@ permissions:
     default: op
   backpack.ignoreWorldBlacklist:
     description: Allows to bypass the world blacklist.
+    default: op
+  backpack.update:
+    description: Allows to update the plugin.
+    default: op
+  backpack.reload:
+    description: Allows to reload the config.
     default: op

@@ -98,8 +98,9 @@ public class OldFileUpdater
 								case "OwnBackPackClose": simpleConverter.put(helper + "OwnBackpackClose", key); break;
 								case "PlayerBackPackClose": advancedConverter.put(helper + "PlayerBackpackClose", oldYAML.getString(key).replace("%s", "{OwnerName}")); break;
 								case "InvalidBackpack": simpleConverter.put(key, key); break;
-								case "BackpackCleaned": simpleConverter.put(key, key); break;
-								case "Cooldown": advancedConverter.put(key, ChatColor.DARK_GREEN + oldYAML.getString(key)); break;
+								case "BackpackCleaned": simpleConverter.put("Language.Ingame.Clean.BackpackCleaned", key); break;
+								case "Cooldown": advancedConverter.put("Language.Ingame.Open.Cooldown", ChatColor.DARK_GREEN + oldYAML.getString(key)); break;
+								case "WrongGameMode": simpleConverter.put("Language.Ingame.Open.WrongGameMode", key); break;
 							}
 							break;
 						case "Description":

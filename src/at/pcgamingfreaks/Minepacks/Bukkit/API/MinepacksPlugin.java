@@ -92,4 +92,19 @@ public interface MinepacksPlugin
 	 * @param callback The callback delivering the result of the request.
 	 */
 	void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback);
+
+	/**
+	 * Gets the command manager of the Minepacks plugin.
+	 *
+	 * @return The command manager instance.
+	 */
+	MinepacksCommandManager getCommandManager();
+
+	/**
+	 * Checks if the player is allowed to open a backpack based on is permissions and current game-mode.
+	 *
+	 * @param player The player to be checked.
+	 * @return True if the player can use a backpack. False if not.
+	 */
+	boolean isPlayerGameModeAllowed(Player player);
 }

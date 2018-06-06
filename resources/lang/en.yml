@@ -9,18 +9,59 @@ Language:
     PlayerBackpackClose: "{OwnerName}'s backpack closed!"
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Invalid backpack."
-    BackpackCleaned: "Backpack cleaned."
-    #Parameter> {TimeLeft} time in seconds till he can reopen his backpack
-    Cooldown: "&2Please wait {TimeLeft} seconds till you reopen your backpack."
-    #Parameter: {CurrentGameMode}, {AllowedGameModes}
-    WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
     NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
+    Open:
+      #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
+      Cooldown: "&2Please wait {TimeLeft} seconds till you reopen your backpack."
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
+    Clean:
+      BackpackCleaned: "Backpack cleaned."
+    Help:
+      Header: "&6### Minepacks Commands ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Reloading ..."
+      Reloaded: "&1Reloaded!"
+    Update:
+      CheckingForUpdates: "&1Checking for updates ..."
+      Updated: "[\"\",{\"text\":\"Plugin updated, will be loaded on next restart/reload.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"No plugin update available.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"There was a problem looking for updates! Please check the console!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"There is an update available! Please go to \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" to download it!\"}]"
   Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
     Description:
       Backpack: "Opens your backpack."
       Clean: "Cleans your backpack."
-      CleanOther: "Cleans the backpack of other players."
-      View: "Shows the backpack of other player."
+      CleanOthers: "Cleans the backpack of another players."
+      OpenOthers: "Shows the backpack of another player."
+      Reload: "Reloads the config of the plugin."
+      Update: "Checks for new plugin updates."
+      Help: "Shows all available commands and their description."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Help:
+    - help
+
+LanguageName: "English"
+Author: "GeorgH03"
 
 # Language file version. Don't touch it!
-Version: 11
+Version: 12

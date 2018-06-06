@@ -24,8 +24,9 @@ import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
-import at.pcgamingfreaks.Minepacks.Bukkit.Commands.OnCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
@@ -34,13 +35,16 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.EventListener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
+import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.UpdateProvider;
+import at.pcgamingfreaks.Version;
 
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
@@ -61,19 +65,21 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2";
 	private static Minepacks instance = null;
 
-	public Config config;
-	public Language lang;
+	public Config config; //TODO Make private
+	public Language lang; //TODO Make private
 	private Database database;
 
 	public final Map<UUID, Long> cooldowns = new HashMap<>();
 
 	public String backpackTitleOther = "%s Backpack", backpackTitle = "Backpack";
-	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled;
+	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole;
 
 	private int maxSize;
 	private Collection<String> worldBlacklist;
 	private WorldBlacklistMode worldBlacklistMode;
 	private ItemsCollector collector;
+	private CommandManager commandManager;
+	private Collection<GameMode> gameModes;
 
 	public static Minepacks getInstance()
 	{
@@ -94,6 +100,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			return;
 		}
 		//endregion
+
+		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.4-SNAPSHOT")))
+		{
+			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
+			setEnabled(false);
+			return;
+		}
+
 		//region check if a plugin folder exists (was renamed from MinePacks to Minepacks with the V2.0 update)
 		if(!getDataFolder().exists())
 		{
@@ -111,21 +125,23 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 		load();
 
-		if(config.getAutoUpdate()) update();
+		if(config.getAutoUpdate()) update(null);
 		StringUtils.getPluginEnabledMessage(getDescription().getName());
 	}
 
 	@Override
 	public void onDisable()
 	{
+		if(config == null) return;
 		Updater updater = null;
-		if(config.getAutoUpdate()) updater = update();
+		if(config.getAutoUpdate()) updater = update(null);
 		unload();
 		if(updater != null) updater.waitForAsyncOperation();
 		StringUtils.getPluginDisabledMessage(getDescription().getName());
+		instance = null;
 	}
 
-	public Updater update()
+	public Updater update(@Nullable at.pcgamingfreaks.Updater.Updater.UpdaterResponse output)
 	{
 		UpdateProvider updateProvider;
 		if(config.useUpdaterDevBuilds())
@@ -137,7 +153,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
 		}
 		Updater updater = new Updater(this, this.getFile(), true, updateProvider);
-		updater.update();
+		updater.update(output);
 		return updater;
 	}
 
@@ -148,11 +164,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		maxSize = config.getBackpackMaxSize();
 		backpackTitleOther = config.getBPTitleOther();
 		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
-		messageNoPermission = lang.getMessage("Ingame.NoPermission");
+		messageNotFromConsole  = lang.getMessage("NotFromConsole");
+		messageNoPermission    = lang.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
 		messageWorldDisabled   = lang.getMessage("Ingame.WorldDisabled");
 
-		getCommand("backpack").setExecutor(new OnCommand(this));
+		commandManager = new CommandManager(this);
+
 		//region register events
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new EventListener(this), this);
@@ -174,17 +192,18 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			worldBlacklistMode = config.getWorldBlacklistMode();
 		}
+
+		gameModes = config.getAllowedGameModes();
 	}
 
 	private void unload()
 	{
-		//TODO disable command
-		collector.cancel();
+		commandManager.close();
+		if(collector != null) collector.cancel();
 		if(database != null) database.close();
 		HandlerList.unregisterAll(this); // Stop the listeners
 		getServer().getScheduler().cancelTasks(this); // Kill all running task
 		database.close(); // Close the DB connection, we won't need them any longer
-		instance = null;
 		cooldowns.clear();
 	}
 
@@ -207,6 +226,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public Config getConfiguration()
 	{
 		return config;
+	}
+
+	public Language getLanguage()
+	{
+		return lang;
 	}
 
 	public Database getDatabase()
@@ -265,6 +289,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		database.getBackpack(owner, callback);
 	}
 
+	@Override
+	public MinepacksCommandManager getCommandManager()
+	{
+		return commandManager;
+	}
+
 	public int getBackpackPermSize(Player player)
 	{
 		for(int i = maxSize; i > 1; i--)
@@ -279,5 +309,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission("backpack.ignoreWorldBlacklist"))) return WorldBlacklistMode.None;
 		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase())) return worldBlacklistMode;
 		return WorldBlacklistMode.None;
+	}
+
+	@Override
+	public boolean isPlayerGameModeAllowed(Player player)
+	{
+		return gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode");
 	}
 }
