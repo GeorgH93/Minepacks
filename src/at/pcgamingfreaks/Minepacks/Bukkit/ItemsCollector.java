@@ -38,6 +38,7 @@ public class ItemsCollector extends BukkitRunnable
 	{
 		this.plugin = plugin;
 		this.radius = plugin.getConfiguration().getFullInvRadius();
+		runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
 	}
 
 	@Override

@@ -30,11 +30,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class EventListener extends MinepacksListener
+public class BackpackEventListener extends MinepacksListener
 {
 	private final Message messageOwnBackpackClose, messageOtherBackpackClose;
 	
-	public EventListener(Minepacks plugin)
+	public BackpackEventListener(Minepacks plugin)
 	{
 		super(plugin);
 		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
@@ -82,10 +82,9 @@ public class EventListener extends MinepacksListener
 	    }
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
-		plugin.cooldowns.remove(event.getPlayer().getUniqueId());
 		Backpack backpack = plugin.getDatabase().getBackpack(event.getPlayer());
 		if(backpack != null) backpack.save();
 	}

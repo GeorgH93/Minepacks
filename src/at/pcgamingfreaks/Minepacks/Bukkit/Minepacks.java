@@ -33,7 +33,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.EventListener;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.BackpackEventListener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.StringUtils;
@@ -169,16 +169,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 		//region register events
 		PluginManager pluginManager = getServer().getPluginManager();
-		pluginManager.registerEvents(new EventListener(this), this);
+		pluginManager.registerEvents(new BackpackEventListener(this), this);
 		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
 		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
-		if(config.getFullInvCollect())
-		{
-			collector = new ItemsCollector(this);
-			collector.runTaskTimer(this, config.getFullInvCheckInterval(), config.getFullInvCheckInterval());
-		}
+		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
 		if(worldBlacklist.size() == 0)
 		{
