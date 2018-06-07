@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -35,8 +36,6 @@ public class OpenCommand extends MinepacksCommand
 {
 	private final Message messageCooldown, messageWrongGameMode;
 	private final String allowedGameModes, descriptionOpenOthers, helpParam;
-	private final long cooldown;
-	private final boolean syncCooldown;
 	private final Minepacks plugin;
 
 	public OpenCommand(Minepacks plugin)
@@ -44,13 +43,10 @@ public class OpenCommand extends MinepacksCommand
 		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), "backpack.use", true, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
-		messageCooldown        = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f");
-		messageWrongGameMode   = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
+		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f").replaceAll("\\{TimeSpanLeft}", "%2\\$s");
+		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
 		descriptionOpenOthers = plugin.getLanguage().getTranslated("Commands.Description.OpenOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
-
-		cooldown = plugin.getConfiguration().getCommandCooldown();
-		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 
 		StringBuilder allowedGameModesBuilder = new StringBuilder();
 		for(GameMode gameMode : plugin.getConfiguration().getAllowedGameModes())
@@ -72,24 +68,16 @@ public class OpenCommand extends MinepacksCommand
 		{
 			if(getMinepacksPlugin().isPlayerGameModeAllowed(player))
 			{
-				if(cooldown > 0 && !player.hasPermission("backpack.noCooldown"))
+				if(plugin.getCooldownManager() != null && !player.hasPermission("backpack.noCooldown"))
 				{
-					if(plugin.cooldowns.containsKey(player.getUniqueId()))
+					long cd = plugin.getCooldownManager().getRemainingCooldown(player);
+					if(cd > 0)
 					{
-						long cd = plugin.cooldowns.get(player.getUniqueId());
-						if(cd < System.currentTimeMillis())
-						{
-							cd = cd - System.currentTimeMillis();
-							messageCooldown.send(sender, cd / 1000f);
-							return;
-						}
+						TimeSpan ts = new TimeSpan(cd, true);
+						messageCooldown.send(sender, cd / 1000f, ts.toString());
+						return;
 					}
-					final long cooldownTime = System.currentTimeMillis() + cooldown;
-					if(syncCooldown)
-					{
-						plugin.getDatabase().syncCooldown(player, cooldownTime);
-					}
-					plugin.cooldowns.put(player.getUniqueId(), cooldownTime);
+					plugin.getCooldownManager().setCooldown(player);
 				}
 				plugin.openBackpack(player, player, true);
 			}

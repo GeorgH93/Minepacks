@@ -40,7 +40,7 @@ import java.sql.*;
 import java.util.*;
 
 public abstract class SQL extends Database
-{ //TODO load cooldown
+{
 	private HikariDataSource dataSource;
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
@@ -212,6 +212,7 @@ public abstract class SQL extends Database
 			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
 			queryGetBP += "{FieldUUID}=?;";
 			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=?;";
+			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
 		}
 		else
 		{
@@ -219,6 +220,7 @@ public abstract class SQL extends Database
 			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?;";
 			queryGetBP += "{FieldName}=?;";
 			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldName}=?;";
+			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?);";
 		}
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
@@ -251,6 +253,7 @@ public abstract class SQL extends Database
 		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
 		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
 		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
+		queryGetCooldown            = replacePlaceholders(queryGetCooldown);
 		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
 	}
 
@@ -320,7 +323,7 @@ public abstract class SQL extends Database
 						{
 							if(rs.next())
 							{
-								final int newID = rs.getInt(1);
+								final int newID = rs.getInt(fieldPlayerID);
 								DBTools.runStatement(connection, queryInsertBp, newID, data, usedSerializer);
 								plugin.getServer().getScheduler().runTask(plugin, () -> backpack.setOwnerID(newID));
 							}
@@ -374,9 +377,9 @@ public abstract class SQL extends Database
 				{
 					if(rs.next())
 					{
-						bpID = rs.getInt(1);
-						version = rs.getInt(3);
-						data = rs.getBytes(2);
+						bpID = rs.getInt(fieldBpOwner);
+						version = rs.getInt(fieldBpVersion);
+						data = rs.getBytes(fieldBpIts);
 					}
 					else
 					{
@@ -409,5 +412,26 @@ public abstract class SQL extends Database
 	public void syncCooldown(Player player, long cooldownTime)
 	{
 		runStatementAsync(querySyncCooldown, new Timestamp(cooldownTime), getPlayerNameOrUUID(player));
+	}
+
+	@Override
+	public void getCooldown(final Player player, final Callback<Long> callback)
+	{
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetCooldown))
+			{
+				ps.setString(1, getPlayerNameOrUUID(player));
+				try(ResultSet rs = ps.executeQuery())
+				{
+					final long time = (rs.next()) ? rs.getLong(fieldCdTime) : 0;
+					plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(time));
+				}
+			}
+			catch(SQLException e)
+			{
+				e.printStackTrace();
+				plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(0L));
+			}
+		});
 	}
 }

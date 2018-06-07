@@ -198,12 +198,27 @@ public class Config extends Configuration
 
 	public long getCommandCooldown()
 	{
-		return getConfig().getInt("CommandCooldown", -1) * 1000L;
+		return getConfig().getInt("Cooldown.Command", -1) * 1000L;
 	}
 
 	public boolean isCommandCooldownSyncEnabled()
 	{
-		return getConfig().getBoolean("SyncCooldown", false);
+		return getConfig().getBoolean("Cooldown.Sync", false);
+	}
+
+	public boolean isCommandCooldownClearOnLeaveEnabled()
+	{
+		return getConfig().getBoolean("Cooldown.ClearOnLeave", false);
+	}
+
+	public boolean isCommandCooldownAddOnJoinEnabled()
+	{
+		return getConfig().getBoolean("Cooldown.AddOnJoin", true);
+	}
+
+	public long getCommandCooldownCleanupInterval()
+	{
+		return getConfig().getInt("Cooldown.CleanupInterval", 600) * 20L;
 	}
 
 	public Collection<GameMode> getAllowedGameModes()

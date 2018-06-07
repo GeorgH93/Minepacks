@@ -55,9 +55,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
@@ -69,8 +66,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private Language lang;
 	private Database database;
 
-	public final Map<UUID, Long> cooldowns = new HashMap<>();
-
 	public String backpackTitleOther = "%s Backpack", backpackTitle = "Backpack";
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole;
 
@@ -80,6 +75,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private ItemsCollector collector;
 	private CommandManager commandManager;
 	private Collection<GameMode> gameModes;
+	private CooldownManager cooldownManager = null;
 
 	public static Minepacks getInstance()
 	{
@@ -194,6 +190,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 
 		gameModes = config.getAllowedGameModes();
+		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
 	}
 
 	private void unload()
@@ -204,7 +201,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		HandlerList.unregisterAll(this); // Stop the listeners
 		getServer().getScheduler().cancelTasks(this); // Kill all running task
 		database.close(); // Close the DB connection, we won't need them any longer
-		cooldowns.clear();
+		if(cooldownManager != null) cooldownManager.close();
+		cooldownManager = null;
 	}
 
 	public void reload()
@@ -327,5 +325,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public boolean isPlayerGameModeAllowed(Player player)
 	{
 		return gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode");
+	}
+
+	public @Nullable CooldownManager getCooldownManager()
+	{
+		return cooldownManager;
 	}
 }

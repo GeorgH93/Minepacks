@@ -41,8 +41,8 @@ public class OldFileUpdater
 			}
 			switch(key)
 			{
-				case "CommandCooldown": oldKey = "command_cooldown"; break;
-				case "SyncCooldown": oldKey = "sync_cooldown"; break;
+				case "Cooldown.Command": oldKey = "command_cooldown"; break;
+				case "Cooldown.Sync": oldKey = "sync_cooldown"; break;
 				case "DropOnDeath": oldKey = "drop_on_death"; break;
 				case "MaxSize": oldKey = "max_size"; break;
 				case "AllowedGameModes": oldKey = "allowed_game_modes"; break;

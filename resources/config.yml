@@ -26,11 +26,18 @@ MaxSize: 6
 # AllowedGameModes: [ "SURVIVAL", "ADVENTURE" ]
 AllowedGameModes: [ "SURVIVAL" ]
 
-# Defines how long a player have to wait till he can reopen his backpack.
-# Time is in seconds. Values < 1 disable the cooldown.
-CommandCooldown: -1
-# If enabled whe cooldown will be synced between servers (BungeeCord network). It will also prevent players from leaving and joining to bypass the cooldown.
-SyncCooldown: false
+Cooldown:
+  # Defines how long a player have to wait till he can reopen his backpack.
+  # Time is in seconds. Values < 1 disable the cooldown.
+  Command: -1
+  # If enabled whe cooldown will be synced between servers (BungeeCord network). It will also allow to keep cooldown through server restarts.
+  # You should only use it with long lasting cooldowns.
+  Sync: false
+  AddOnJoin: true
+  # You can turn this on when using sync to reduce the memory consumption a little bit
+  ClearOnLeave: false
+  # Removes old cooldowns from the cache to free memory. Time in seconds.
+  CleanupInterval: 600
 
 # Controls for the auto pickup on full inventory function
 FullInventory:

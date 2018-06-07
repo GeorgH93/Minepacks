@@ -222,7 +222,9 @@ public abstract class Database implements Listener
 
 	public abstract void saveBackpack(Backpack backpack);
 
-	public abstract void syncCooldown(Player player, long time);
+	public void syncCooldown(Player player, long time) {}
+
+	public void getCooldown(final Player player, final Callback<Long> callback) {}
 
 	protected abstract void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback);
 }

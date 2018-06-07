@@ -144,12 +144,6 @@ public class Files extends Database
 	}
 
 	@Override
-	public void syncCooldown(Player player, long time)
-	{
-		// There is no reason for cooldown syncing in file mode
-	}
-
-	@Override
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
 		File save = new File(saveFolder, getFileName(player));
