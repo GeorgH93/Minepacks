@@ -34,8 +34,6 @@ import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.sql.*;
 import java.util.*;
 
@@ -48,7 +46,6 @@ public abstract class SQL extends Database
 	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
 	protected boolean updatePlayer, syncCooldown;
-	private final File backupFolder;
 
 	public SQL(Minepacks mp)
 	{
@@ -94,8 +91,6 @@ public abstract class SQL extends Database
 				e.printStackTrace();
 			}
 		}
-
-		backupFolder = new File(this.plugin.getDataFolder(), "backups");
 	}
 
 	protected abstract @Nullable HikariConfig getPoolConfig();
@@ -347,21 +342,6 @@ public abstract class SQL extends Database
 				writeBackup(nameOrUUID, usedSerializer, data);
 			}
 		});
-	}
-
-	private void writeBackup(final String userIdentifier, final int usedSerializer, final byte[] data)
-	{
-		File save = new File(backupFolder, userIdentifier + "_" + System.currentTimeMillis() + Files.EXT);
-		try(FileOutputStream fos = new FileOutputStream(save))
-		{
-			fos.write(usedSerializer);
-			fos.write(data);
-			plugin.getLogger().info("Backup of the backpack has been created: " + save.getAbsolutePath());
-		}
-		catch(Exception e2)
-		{
-			plugin.getLogger().warning("Failed to write backup! Error: " + e2.getMessage());
-		}
 	}
 
 	@Override

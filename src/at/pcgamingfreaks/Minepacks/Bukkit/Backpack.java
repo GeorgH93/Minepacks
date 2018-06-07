@@ -244,6 +244,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 	}
 
+	public void backup()
+	{
+		Minepacks.getInstance().getDatabase().backup(this);
+	}
+
 	@Override
 	public void clear()
 	{

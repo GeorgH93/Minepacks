@@ -29,6 +29,9 @@ Language:
       UpdateFail: "[\"\",{\"text\":\"Es ist ein fehler aufgetreten!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
       UpdateAvailable: "[{\"text\":\"Es ist ein update verfügbar! Bitte downloade es von: \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\"\"}]"
+    Backup:
+      Created: "Rucksack wurder gesichert."
+      NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -39,6 +42,7 @@ Language:
       OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
       Reload: "Lädt die konfigurations Datei neu."
       Update: "Prüft auf neue plugin updates."
+      Backup: "Erstellt eine Sicherungskopie eines Rucksackes."
       Help: "Zeigt die verfügbaren Befehle an."
 
 Command:
@@ -60,6 +64,8 @@ Command:
     - restart
   Update:
     - update
+  Backup:
+    - backup
   Help:
     - help
     - hilfe

@@ -90,6 +90,7 @@ public class OpenCommand extends MinepacksCommand
 		{
 			if(player.hasPermission("backpack.others"))
 			{
+				//noinspection deprecation
 				plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission("backpack.others.edit"));
 			}
 			else

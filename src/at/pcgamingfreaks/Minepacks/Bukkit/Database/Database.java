@@ -35,6 +35,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,6 +52,7 @@ public abstract class Database implements Listener
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
 	private final UnCacheStrategie unCacheStrategie;
+	private final File backupFolder;
 
 	public Database(Minepacks mp)
 	{
@@ -59,6 +62,8 @@ public abstract class Database implements Listener
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
+
+		backupFolder = new File(this.plugin.getDataFolder(), "backups");
 	}
 
 	public void init()
@@ -107,6 +112,26 @@ public abstract class Database implements Listener
 		}
 		database.init();
 		return database;
+	}
+
+	public void backup(Backpack backpack)
+	{
+		writeBackup(getPlayerNameOrUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
+	}
+
+	public void writeBackup(final String userIdentifier, final int usedSerializer, final byte[] data)
+	{
+		File save = new File(backupFolder, userIdentifier + "_" + System.currentTimeMillis() + Files.EXT);
+		try(FileOutputStream fos = new FileOutputStream(save))
+		{
+			fos.write(usedSerializer);
+			fos.write(data);
+			plugin.getLogger().info("Backup of the backpack has been created: " + save.getAbsolutePath());
+		}
+		catch(Exception e2)
+		{
+			plugin.getLogger().warning("Failed to write backup! Error: " + e2.getMessage());
+		}
 	}
 
 	protected String getPlayerNameOrUUID(OfflinePlayer player)
