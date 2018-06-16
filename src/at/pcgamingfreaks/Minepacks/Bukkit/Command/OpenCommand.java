@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
+import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -121,7 +122,7 @@ public class OpenCommand extends MinepacksCommand
 	public List<HelpData> getHelp(@NotNull CommandSender requester)
 	{
 		List<HelpData> help = new LinkedList<>();
-		help.add(new HelpData("", null, getDescription()));
+		help.add(new HelpData("", null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
 		if(requester.hasPermission("backpack.open.other"))
 		{
 			//noinspection ConstantConditions

@@ -50,7 +50,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		backpackCommand.setExecutor(this);
 		backpackCommand.setTabCompleter(this);
 
-		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand\\}", "%1\\$s").replaceAll("\\{SubCommand\\}", "%2\\$s").replaceAll("\\{Parameters\\}", "%3\\$s").replaceAll("\\{Description\\}", "%4\\$s");
+		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand\\}", "%1\\$s").replaceAll("\\{SubCommand\\}", "%2\\$s").replaceAll("\\{Parameters\\}", "%3\\$s").replaceAll("\\{Description\\}", "%4\\$s").replaceAll("suggest_command", "%5\\$s");
 
 		// Setting the help format for the marry commands as well as the no permissions and not from console message
 		try
@@ -128,7 +128,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	{
 		for(HelpData d : data)
 		{
-			helpFormat.send(target, mainCommandAlias, d.getTranslatedSubCommand(), d.getParameter(), d.getDescription());
+			helpFormat.send(target, mainCommandAlias, d.getTranslatedSubCommand(), d.getParameter(), d.getDescription(), d.getClickAction().name().toLowerCase());
 		}
 	}
 }
