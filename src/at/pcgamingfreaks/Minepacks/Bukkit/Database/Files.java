@@ -20,9 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-
-import javax.swing.filechooser.FileFilter;
+import java.util.logging.Logger;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
@@ -30,6 +28,9 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Files extends Database
 {
@@ -64,9 +65,8 @@ public class Files extends Database
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private void checkFiles()
 	{
-		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
+		File[] allFiles = saveFolder.listFiles((dir, name) -> name.endsWith(EXT));
 		if(allFiles == null) return;
-		int len;
 		for (File file : allFiles)
 		{
 			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older then x days
@@ -77,7 +77,7 @@ public class Files extends Database
 				}
 				continue; // We don't have to check if the file name is correct cause we have the deleted the file
 			}
-			len = file.getName().length() - EXT.length();
+			int len = file.getName().length() - EXT.length();
 			if(useUUIDs) // Use UUID-based saving
 			{
 				if(len <= 16) // It's a player name
@@ -147,61 +147,34 @@ public class Files extends Database
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
 		File save = new File(saveFolder, getFileName(player));
-		try
+		ItemStack[] itemStacks = readFile(itsSerializer, save, plugin.getLogger());
+		if(itemStacks != null)
 		{
-			if(save.exists())
+			callback.onResult(new Backpack(player, itemStacks, -1));
+		}
+		else
+		{
+			callback.onFail();
+		}
+	}
+
+	protected static @Nullable ItemStack[] readFile(@NotNull InventorySerializer itsSerializer, @NotNull File file, @NotNull Logger logger)
+	{
+		if(file.exists())
+		{
+			try(FileInputStream fis = new FileInputStream(file))
 			{
-				try(FileInputStream fis = new FileInputStream(save))
-				{
-					int v = fis.read();
-					byte[] out = new byte[(int) (save.length() - 1)];
-					int c = fis.read(out);
-					if(v != c)
-					{
-						plugin.getLogger().warning("Problem reading file, only read " + c + " of " + v + " bytes.");
-					}
-					callback.onResult(new Backpack(player, itsSerializer.deserialize(out, v), -1));
-				}
+				int version = fis.read();
+				byte[] out = new byte[(int) (file.length() - 1)];
+				int readCount = fis.read(out);
+				if(file.length() - 1 != readCount) logger.warning("Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
+				return itsSerializer.deserialize(out, version);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		callback.onFail();
-	}
-	
-	private static class BackpackFileFilter extends FileFilter implements FilenameFilter
-	{
-		final String description, extension;
-
-		public BackpackFileFilter()
-		{
-		    description = "Filters for Minepack backpack files.";
-		    extension = EXT.substring(1);
-		}
-
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-
-		@Override
-		public boolean accept(File file)
-		{
-		    if (!file.isDirectory())
-		    {
-		    	String path = file.getAbsolutePath().toLowerCase();
-			    return (path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.');
-		    }
-		    return false;
-		}
-
-		@Override
-		public boolean accept(File dir, String name)
-		{
-			return (name.endsWith(extension) && (name.charAt(name.length() - extension.length() - 1)) == '.');
-		}
+		return null;
 	}
 }
