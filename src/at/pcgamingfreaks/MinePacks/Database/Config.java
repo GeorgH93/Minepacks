@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.MinePacks.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,28 +41,28 @@ public class Config extends Configuration
 	{
 		// Nothing to update yet
 	}
-
+	
 	@Override
-	protected void doUpgrade(at.pcgamingfreaks.Configuration oldConfig)
+	protected void doUpgrade(YamlFileManager oldConfig)
 	{
-		Set<String> keys = oldConfig.getConfig().getKeys();
+		Set<String> keys = oldConfig.getYaml().getKeys();
 		for(String key : keys)
 		{
 			if(key.equals("UseUUIDs") || key.equals("Version") || (key.equals("BackpackTitle") && oldConfig.getVersion() < 11)) continue;
 			try
 			{
-				getConfig().set(key, oldConfig.getConfig().getString(key));
+				getConfig().set(key, oldConfig.getYaml().getString(key));
 			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
 		}
-		if(!oldConfig.getConfig().isSet("Database.UseUUIDs"))
+		if(!oldConfig.getYaml().isSet("Database.UseUUIDs"))
 		{
-			if(oldConfig.getConfig().isSet("UseUUIDs"))
+			if(oldConfig.getYaml().isSet("UseUUIDs"))
 			{
-				getConfig().set("Database.UseUUIDs", oldConfig.getConfig().getBoolean("UseUUIDs", true));
+				getConfig().set("Database.UseUUIDs", oldConfig.getYaml().getBoolean("UseUUIDs", true));
 			}
 			else
 			{
@@ -70,7 +71,7 @@ public class Config extends Configuration
 		}
 		if(oldConfig.getVersion() < 11)
 		{
-			getConfig().set("BackpackTitleOther", oldConfig.getConfig().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
+			getConfig().set("BackpackTitleOther", oldConfig.getYaml().getString("BackpackTitle", "&b{OwnerName} Backpack").replaceAll("%s", "{OwnerName}"));
 		}
 	}
 
@@ -154,7 +155,7 @@ public class Config extends Configuration
 
 	public String getBPTitleOther()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName\\}", "%s"));
+		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName}", "%s"));
 	}
 
 	public String getBPTitle()

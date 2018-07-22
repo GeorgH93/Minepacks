@@ -24,6 +24,7 @@ permissions:
       backpack.fullpickup: true
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
+    default: false
     children:
       backpack: false
       backpack.use: false

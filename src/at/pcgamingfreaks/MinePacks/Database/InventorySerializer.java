@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,18 +21,23 @@ import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.ConsoleColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.logging.Logger;
+
 public class InventorySerializer
 {
-	ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
-	int usedSerializer = 1;
+	private ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
+	private int usedSerializer = 1;
+	private Logger logger;
 	
-	public InventorySerializer()
+	public InventorySerializer(Logger logger)
 	{
+		this.logger = logger;
 		try
 		{
 			if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_7) && MCVersion.isOlderOrEqualThan(MCVersion.MC_1_7_10) &&
@@ -61,17 +66,17 @@ public class InventorySerializer
 		return serializer.serialize(inv.getContents());
 	}
 
-	@SuppressWarnings("unused")
-	public ItemStack[] deserialize(byte[] data)
-	{
-		return deserialize(data, usedSerializer);
-	}
-	
 	public ItemStack[] deserialize(byte[] data, int usedSerializer)
 	{
 		switch(usedSerializer)
 		{
 			case 0: return baseItemStackSerializer.deserialize(data);
+			case 1:
+				if(usedSerializer != this.usedSerializer)
+				{
+					logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
+					return null;
+				}
 			default: return serializer.deserialize(data);
 		}
 	}

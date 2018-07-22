@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,10 +34,10 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	{
 		switch(getVersion())
 		{
-			case 1: lang.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
-			case 2: lang.set("Language.Ingame.InvalidBackpack", lang.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
+			case 1: yaml.set("Language.Ingame.Cooldown", "Please wait till you reopen your backpack.");
+			case 2: yaml.set("Language.Ingame.InvalidBackpack", yaml.getString("Language.Ingame.IvalidBackpack", "Invalid backpack."));
 			case 3:
-			case 4: lang.set("Language.Ingame.WrongGameMode", "You are not allowed to open your backpack in your current game-mode.");
+			case 4: yaml.set("Language.Ingame.WrongGameMode", "You are not allowed to open your backpack in your current game-mode.");
 				break;
 		}
 	}

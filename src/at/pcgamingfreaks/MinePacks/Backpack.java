@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.MinePacks;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.StringUtils;
 
@@ -119,8 +120,15 @@ public class Backpack implements InventoryHolder
 		{
 			//noinspection ConstantConditions
 			FIELD_TITLE.setAccessible(true);
-			//noinspection ConstantConditions
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
+			if(MCVersion.isOlderThan(MCVersion.MC_NMS_1_13_R1))
+			{
+				//noinspection ConstantConditions
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
+			}
+			else
+			{
+				//TODO convert title to IChatBaseComponent
+			}
 		}
 		catch(Exception e)
 		{

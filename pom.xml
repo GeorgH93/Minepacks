@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.17.9</version>
+	<version>1.17.11</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
@@ -52,13 +52,13 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.12-R0.1-SNAPSHOT</version>
+			<version>1.13-pre7-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.0.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>
@@ -114,7 +114,7 @@
 								</includes>
 							</artifactSet>
 							<relocations>
-								<relocation>
+								<!--<relocation>
 									<pattern>at.pcgamingfreaks</pattern>
 									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.at.pcgamingfreaks</shadedPattern>
 									<excludes>
@@ -122,7 +122,7 @@
 										<exclude>at.pcgamingfreaks.MinePacks.Database.*</exclude>
 										<exclude>at.pcgamingfreaks.MinePacks.Updater.*</exclude>
 									</excludes>
-								</relocation>
+								</relocation>-->
 								<relocation>
 									<pattern>com.zaxxer.hikari</pattern>
 									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.zaxxer.hikari</shadedPattern>

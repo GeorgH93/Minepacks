@@ -28,17 +28,17 @@ import java.util.Map;
 
 public class Database
 {
-	protected MinePacks plugin;
+	protected final MinePacks plugin;
+	protected final InventorySerializer itsSerializer;
+	private final HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
 
 	protected boolean useUUIDs, useUUIDSeparators, bungeeMode;
 	protected long maxAge;
 
-	private HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
-	protected InventorySerializer itsSerializer = new InventorySerializer();
-
 	public Database(MinePacks mp)
 	{
 		plugin = mp;
+		itsSerializer = new InventorySerializer(plugin.getLogger());
 		useUUIDSeparators = plugin.config.getUseUUIDSeparators();
 		useUUIDs = plugin.config.getUseUUIDs();
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
