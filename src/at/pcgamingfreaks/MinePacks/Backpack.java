@@ -93,7 +93,7 @@ public class Backpack implements InventoryHolder
 		if(owner.isOnline())
 		{
 			Player player = owner.getPlayer();
-			if(player != null)
+			if(player != null && (player.hasPermission("backpack") || player.hasPermission("backpack.use")))
 			{
 				int size = MinePacks.getBackpackPermSize(player);
 				if(size != bp.getSize())
@@ -101,10 +101,10 @@ public class Backpack implements InventoryHolder
 					List<ItemStack> items = setSize(size);
 					for(ItemStack i : items)
 					{
-						if (i != null)
+						if(i != null)
 						{
 							player.getWorld().dropItemNaturally(player.getLocation(), i);
-                            hasChanged = true;
+							hasChanged = true;
 						}
 					}
 				}
