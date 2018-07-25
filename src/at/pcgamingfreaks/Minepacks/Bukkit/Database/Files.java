@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 public class Files extends Database
 {
-	protected static final String EXT = ".backpack", EXT_REGEX = "\\.backpack";
+	public static final String EXT = ".backpack", EXT_REGEX = "\\.backpack", FOLDER_NAME = "backpacks";
 
 	private final File saveFolder;
 	
@@ -43,7 +43,7 @@ public class Files extends Database
 	{
 		super(plugin);
 		maxAge *= 24 * 3600000L;
-		saveFolder = new File(this.plugin.getDataFolder(), "backpacks");
+		saveFolder = new File(this.plugin.getDataFolder(), FOLDER_NAME);
 		if(!saveFolder.exists())
 		{
 			if(!saveFolder.mkdirs())

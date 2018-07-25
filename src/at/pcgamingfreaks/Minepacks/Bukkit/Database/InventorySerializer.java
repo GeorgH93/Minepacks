@@ -55,12 +55,6 @@ public class InventorySerializer
 		return serializer.serialize(inv.getContents());
 	}
 
-	@SuppressWarnings("unused")
-	public ItemStack[] deserialize(byte[] data)
-	{
-		return deserialize(data, usedSerializer);
-	}
-	
 	public ItemStack[] deserialize(byte[] data, int usedSerializer)
 	{
 		if(data == null) return null;

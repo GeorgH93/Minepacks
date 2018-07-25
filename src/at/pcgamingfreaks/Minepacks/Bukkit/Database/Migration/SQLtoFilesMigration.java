@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
@@ -43,11 +44,8 @@ public class SQLtoFilesMigration extends Migration
 		super(plugin, oldDb);
 		@Language("SQL") String query = "SELECT " + (plugin.getConfiguration().getUseUUIDs() ? "{FieldUUID}" : "{FieldName}") + ",{FieldBPITS},{FieldBPVersion} FROM {TablePlayers} INNER JOIN {TableBackpacks} ON {FieldPlayerID}={FieldBPOwner};";
 		sqlQuery = (String) Reflection.getMethod(SQL.class, "replacePlaceholders", String.class).invoke(plugin.getDatabase(), query);
-		saveFolder = new File(this.plugin.getDataFolder(), "backpacks");
-		if(!saveFolder.exists() && !saveFolder.mkdirs())
-		{
-			plugin.getLogger().warning("Failed to create save folder (" + saveFolder.getAbsolutePath() + ").");
-		}
+		saveFolder = new File(this.plugin.getDataFolder(), Files.FOLDER_NAME);
+		if(!saveFolder.exists() && !saveFolder.mkdirs()) plugin.getLogger().warning("Failed to create save folder (" + saveFolder.getAbsolutePath() + ").");
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class SQLtoFilesMigration extends Migration
 		{
 			while(rs.next())
 			{
-				try(FileOutputStream fos = new FileOutputStream(new File(saveFolder, rs.getString(1) + ".backpack")))
+				try(FileOutputStream fos = new FileOutputStream(new File(saveFolder, rs.getString(1) + Files.EXT)))
 				{
 					fos.write(rs.getInt(3));
 					fos.write(rs.getBytes(2));
