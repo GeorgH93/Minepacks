@@ -32,12 +32,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -62,7 +66,6 @@ public abstract class Database implements Listener
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
-
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
 	}
 
@@ -114,24 +117,47 @@ public abstract class Database implements Listener
 		return database;
 	}
 
-	public void backup(Backpack backpack)
+	public void backup(@NotNull Backpack backpack)
 	{
-		writeBackup(getPlayerNameOrUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
+		writeBackup(backpack.getOwner().getName(), getPlayerNameOrUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
-	public void writeBackup(final String userIdentifier, final int usedSerializer, final byte[] data)
+	protected void writeBackup(@Nullable String userName, @NonNls String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
 	{
-		File save = new File(backupFolder, userIdentifier + "_" + System.currentTimeMillis() + Files.EXT);
+		if(userIdentifier.equalsIgnoreCase(userName)) userName = null;
+		if(userName != null) userIdentifier = userName + "_" + userIdentifier;
+		final File save = new File(backupFolder, userIdentifier + "_" + System.currentTimeMillis() + Files.EXT);
 		try(FileOutputStream fos = new FileOutputStream(save))
 		{
 			fos.write(usedSerializer);
 			fos.write(data);
 			plugin.getLogger().info("Backup of the backpack has been created: " + save.getAbsolutePath());
 		}
-		catch(Exception e2)
+		catch(Exception e)
 		{
-			plugin.getLogger().warning("Failed to write backup! Error: " + e2.getMessage());
+			plugin.getLogger().warning("Failed to write backup! Error: " + e.getMessage());
 		}
+	}
+
+	public @Nullable ItemStack[] loadBackup(final String backupName)
+	{
+		File backup = new File(backupFolder, backupName + Files.EXT);
+		return Files.readFile(itsSerializer, backup, plugin.getLogger());
+	}
+
+	public Collection<String> getBackups()
+	{
+		File[] files = backupFolder.listFiles((dir, name) -> name.endsWith(Files.EXT));
+		List<String> backups = new LinkedList<>();
+		if(files != null)
+		{
+			for(File file : files)
+			{
+				if(!file.isFile()) continue;
+				backups.add(file.getName().replaceAll(Files.EXT_REGEX, ""));
+			}
+		}
+		return backups;
 	}
 
 	protected String getPlayerNameOrUUID(OfflinePlayer player)

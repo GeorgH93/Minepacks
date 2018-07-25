@@ -325,7 +325,7 @@ public abstract class SQL extends Database
 							else
 							{
 								plugin.getLogger().warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
-								writeBackup(nameOrUUID, usedSerializer, data);
+								writeBackup(name, nameOrUUID, usedSerializer, data);
 							}
 						}
 					}
@@ -339,7 +339,7 @@ public abstract class SQL extends Database
 			{
 				plugin.getLogger().warning("Failed to save backpack in database! Error: " + e.getMessage());
 				e.printStackTrace();
-				writeBackup(nameOrUUID, usedSerializer, data);
+				writeBackup(name, nameOrUUID, usedSerializer, data);
 			}
 		});
 	}
