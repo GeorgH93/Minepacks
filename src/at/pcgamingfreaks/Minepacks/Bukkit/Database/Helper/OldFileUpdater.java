@@ -57,7 +57,7 @@ public class OldFileUpdater
 			}
 			try
 			{
-				newYAML.set(key, oldYAML.getString(oldKey));
+				if(oldYAML.isSet(oldKey)) newYAML.set(key, oldYAML.getString(oldKey));
 			}
 			catch(Exception e)
 			{
