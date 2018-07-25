@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 
@@ -50,6 +51,7 @@ public class MigrationManager
 			Reflection.setValue(plugin, "database", null); // Hack to prevent the unload of the database
 			Reflection.getMethod(Minepacks.class, "unload").invoke(plugin); // Unload plugin
 			HandlerList.unregisterAll(db); // Disable events for database
+			Reflection.setValue(plugin, "database", db);
 		}
 		catch(Exception e)
 		{
@@ -70,9 +72,9 @@ public class MigrationManager
 			}
 			catch(Exception e)
 			{
-				plugin.getLogger().warning(ConsoleColor.RED + "There was a problem migrating from " + plugin.getDatabase().getClass().getName() + " to " + targetDatabaseType + ConsoleColor.RESET);
 				e.printStackTrace();
-				callback.onResult(new MigrationResult("There was a problem migrating from " + plugin.getDatabase().getClass().getName() + " to " + targetDatabaseType + ". Please check the console for details.", MigrationResult.MigrationResultType.ERROR));
+				plugin.getLogger().warning(ConsoleColor.RED + "There was a problem migrating from " + db.getClass().getName() + " to " + targetDatabaseType + ConsoleColor.RESET);
+				callback.onResult(new MigrationResult("There was a problem migrating from " + db.getClass().getName() + " to " + targetDatabaseType + ". Please check the console for details.", MigrationResult.MigrationResultType.ERROR));
 			}
 
 			//region Start the plugin again
@@ -100,6 +102,21 @@ public class MigrationManager
 
 	public Migration getMigrationPerformer(final String targetDatabaseType)
 	{
+		try
+		{
+			switch(targetDatabaseType.toLowerCase())
+			{
+				case "flat":
+				case "file":
+				case "files":
+					if(plugin.getDatabase() instanceof Files) return null;
+					return new SQLtoFilesMigration(plugin, plugin.getDatabase());
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return null;
 	}
 }
