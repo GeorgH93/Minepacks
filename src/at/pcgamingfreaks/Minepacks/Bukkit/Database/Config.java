@@ -28,6 +28,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class Config extends Configuration
@@ -70,6 +71,19 @@ public class Config extends Configuration
 	public String getDatabaseType()
 	{
 		return getConfig().getString("Database.Type", "sqlite");
+	}
+
+	public void setDatabaseType(String type)
+	{
+		getConfig().set("Database.Type", type);
+		try
+		{
+			save();
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public String getSQLHost()
