@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2016 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -79,10 +79,7 @@ public class SQLite extends SQL
 	@Override
 	protected void updateQuerysForDialect()
 	{
-		if(maxAge > 0)
-		{
-			queryInsertBP = queryInsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
-		}
+		queryInsertBP = queryInsertBP.replaceAll("\\) VALUES \\(\\?,\\?,\\?", ",{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBP = queryUpdateBP.replaceAll("\\{NOW}", "DATE('now')");
 		if(useUUIDs)
