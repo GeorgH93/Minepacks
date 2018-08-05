@@ -33,9 +33,9 @@ import java.sql.Statement;
 public class SQLite extends SQL
 {
 	//TODO add cooldown sync table
-	public SQLite(Minepacks mp)
+	public SQLite(Minepacks plugin)
 	{
-		super(mp);
+		super(plugin);
 	}
 
 	@Override
@@ -84,10 +84,7 @@ public class SQLite extends SQL
 	@Override
 	protected void updateQuerysForDialect()
 	{
-		if(maxAge > 0)
-		{
-			queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", "{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
-		}
+		queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", ",{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
 		if(useUUIDs)

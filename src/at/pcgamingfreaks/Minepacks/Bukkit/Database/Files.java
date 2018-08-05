@@ -112,12 +112,9 @@ public class Files extends Database
 					}
 				}
 			}
-			else // Use name-based saving
+			else  if(len > 16) // Use name-based saving, we only have to rename it if it's name is more than 16 chars (minecraft max player name length)
 			{
-				if(len > 16) // We only have to rename it if it's name is more than 16 chars (minecraft max player name length)
-				{
-					file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + EXT));
-				}
+				file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + EXT));
 			}
 		}
 	}

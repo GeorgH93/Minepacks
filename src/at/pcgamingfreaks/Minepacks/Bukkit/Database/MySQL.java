@@ -28,9 +28,9 @@ import java.sql.SQLException;
 public class MySQL extends SQL
 {
 	//TODO add cooldown sync table
-	public MySQL(Minepacks mp)
+	public MySQL(Minepacks plugin)
 	{
-		super(mp); // Load Settings
+		super(plugin); // Load Settings
 	}
 
 	@Override

@@ -32,9 +32,9 @@ public class SQLiteShared extends SQLite
 {
 	private DatabaseConnectionPool pool;
 
-	protected SQLiteShared(Minepacks minepacks, DatabaseConnectionPool pool)
+	protected SQLiteShared(Minepacks plugin, DatabaseConnectionPool pool)
 	{
-		super(minepacks);
+		super(plugin);
 		this.pool = pool;
 	}
 

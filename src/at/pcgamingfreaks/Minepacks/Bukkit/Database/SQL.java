@@ -35,7 +35,10 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public abstract class SQL extends Database
 {
@@ -47,9 +50,9 @@ public abstract class SQL extends Database
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
 	protected boolean updatePlayer, syncCooldown;
 
-	public SQL(Minepacks mp)
+	public SQL(Minepacks plugin)
 	{
-		super(mp);
+		super(plugin);
 
 		HikariConfig poolConfig = getPoolConfig();
 		if(poolConfig != null)
@@ -178,8 +181,8 @@ public abstract class SQL extends Database
 						ps.setString(1, updateData.uuid);
 						ps.setInt(2, updateData.id);
 						ps.addBatch();
-						ps.executeBatch();
 					}
+					ps.executeBatch();
 				}
 				plugin.getLogger().info(String.format(UUIDS_UPDATED, toUpdate.size()));
 			}
@@ -190,7 +193,7 @@ public abstract class SQL extends Database
 		}
 	}
 
-	protected Connection getConnection() throws SQLException
+	public Connection getConnection() throws SQLException
 	{
 		return dataSource.getConnection();
 	}

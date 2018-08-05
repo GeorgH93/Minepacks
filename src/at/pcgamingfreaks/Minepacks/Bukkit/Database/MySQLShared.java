@@ -31,9 +31,9 @@ public class MySQLShared extends MySQL
 {
 	private DatabaseConnectionPool pool;
 
-	protected MySQLShared(Minepacks minepacks, DatabaseConnectionPool pool)
+	protected MySQLShared(Minepacks plugin, DatabaseConnectionPool pool)
 	{
-		super(minepacks);
+		super(plugin);
 		this.pool = pool;
 	}
 
@@ -44,8 +44,7 @@ public class MySQLShared extends MySQL
 	}
 
 	@Override
-	@NotNull
-	public Connection getConnection() throws SQLException
+	public @NotNull Connection getConnection() throws SQLException
 	{
 		return pool.getConnection();
 	}
