@@ -18,9 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.ConsoleColor;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
+import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.event.HandlerList;
@@ -100,17 +101,38 @@ public class MigrationManager
 		//endregion
 	}
 
-	public Migration getMigrationPerformer(final String targetDatabaseType)
+	public Migration getMigrationPerformer(String targetDatabaseType)
 	{
 		try
 		{
+			boolean global = false;
+			if(targetDatabaseType.toLowerCase().equals("external") ||targetDatabaseType.toLowerCase().equals("global") || targetDatabaseType.toLowerCase().equals("shared"))
+			{
+				DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
+				if(pool == null)
+				{
+					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+					return null;
+				}
+				targetDatabaseType = pool.getDatabaseType().toLowerCase();
+				global = true;
+			}
 			switch(targetDatabaseType.toLowerCase())
 			{
 				case "flat":
 				case "file":
 				case "files":
-					if(plugin.getDatabase() instanceof Files) return null;
-					return new SQLtoFilesMigration(plugin, plugin.getDatabase());
+					if(!(plugin.getDatabase() instanceof SQL)) return null;
+					return new SQLtoFilesMigration(plugin, (SQL) plugin.getDatabase());
+				case "mysql":
+					if(global && plugin.getDatabase() instanceof MySQLShared || !global && plugin.getDatabase() instanceof MySQL) return null;
+					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "mysql", global);
+					else {} //TODO Files to SQL
+				case "sqlite":
+				default:
+					if(global && plugin.getDatabase() instanceof SQLiteShared || !global && plugin.getDatabase() instanceof SQLite) return null;
+					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "sqlite", global);
+					else {} //TODO Files to SQL
 			}
 		}
 		catch(Exception e)

@@ -17,7 +17,6 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -39,7 +38,7 @@ public class SQLtoFilesMigration extends Migration
 	private final String sqlQuery;
 	private final File saveFolder;
 
-	protected SQLtoFilesMigration(@NotNull Minepacks plugin, @NotNull Database oldDb) throws InvocationTargetException, IllegalAccessException
+	protected SQLtoFilesMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb) throws InvocationTargetException, IllegalAccessException
 	{
 		super(plugin, oldDb);
 		@Language("SQL") String query = "SELECT " + (plugin.getConfiguration().getUseUUIDs() ? "{FieldUUID}" : "{FieldName}") + ",{FieldBPITS},{FieldBPVersion} FROM {TablePlayers} INNER JOIN {TableBackpacks} ON {FieldPlayerID}={FieldBPOwner};";
