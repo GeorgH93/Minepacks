@@ -39,6 +39,7 @@ public class Backpack implements InventoryHolder
 {
 	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
+	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "fromStringOrNull", String.class) : null;
 
 	private OfflinePlayer owner;
 	private HashMap<Player, Boolean> opened = new HashMap<>();
@@ -118,16 +119,16 @@ public class Backpack implements InventoryHolder
 		// This way we can add owner name to the tile for everyone else.
 		try
 		{
-			//noinspection ConstantConditions
-			FIELD_TITLE.setAccessible(true);
+			String title = p.equals(owner) ? MinePacks.backpackTitle : titleOther;
 			if(MCVersion.isOlderThan(MCVersion.MC_NMS_1_13_R1))
 			{
 				//noinspection ConstantConditions
-				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), p.equals(owner) ? MinePacks.backpackTitle : titleOther);
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), title);
 			}
 			else
 			{
-				//TODO convert title to IChatBaseComponent
+				//noinspection ConstantConditions
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL.invoke(null, title));
 			}
 		}
 		catch(Exception e)
