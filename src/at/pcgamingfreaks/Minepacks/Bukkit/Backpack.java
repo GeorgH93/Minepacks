@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
 import at.pcgamingfreaks.StringUtils;
 
@@ -31,23 +32,51 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
 	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
+	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "wrapOrNull", String.class) : null;
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
-
+	private static Object titleOwn;
+	private static String titleOtherFormat, titleOther;
 	private final OfflinePlayer owner;
-	private final String titleOther;
+	private final Object titleOtherOBC;
 	private final HashMap<Player, Boolean> opened = new HashMap<>();
 	private Inventory bp;
 	private int size, ownerID;
 	private boolean hasChanged;
-	
+
+	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
+	{
+		titleOwn = prepareTitle(title);
+		titleOtherFormat = titleOther;
+	}
+
+	private static Object prepareTitle(final @NotNull String title)
+	{
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13))
+		{
+			try
+			{
+				//noinspection ConstantConditions
+				return METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING.invoke(null, title);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			return StringUtils.limitLength(title, 32);
+		}
+		return null;
+	}
+
 	public Backpack(OfflinePlayer owner)
 	{
 		this(owner, 9);
@@ -61,8 +90,19 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	public Backpack(OfflinePlayer owner, int size, int ID)
 	{
 		this.owner = owner;
-		titleOther = StringUtils.limitLength(String.format(Minepacks.getInstance().backpackTitleOther, owner.getName()), 32);
+		titleOther = StringUtils.limitLength(String.format(titleOtherFormat, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, size, titleOther);
+		Object titleOtherOBC = null;
+		try
+		{
+			//noinspection ConstantConditions
+			titleOtherOBC = FIELD_TITLE.get(METHOD_GET_INVENTORY.invoke(bp));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		this.titleOtherOBC = titleOtherOBC;
 		this.size = size;
 		ownerID = ID;
 	}
@@ -96,7 +136,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	}
 
 	@Override
-	public void open(@NotNull Player player, boolean editable, @Nullable String title)
+	public void open(@NotNull Player player, boolean editable, final @Nullable String title)
 	{
 		if(owner.isOnline())
 		{
@@ -119,22 +159,24 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 		opened.put(player, editable);
 
-		if(title == null) title = player.equals(owner) ? Minepacks.getInstance().backpackTitle : titleOther;
+		//region Set backpack title
 		// It's not perfect, but it is the only way of doing this.
 		// This sets the title of the inventory based on the person who is opening it.
 		// The owner will see an other title, then everyone else.
 		// This way we can add owner name to the tile for everyone else.
-		try
+		final Object usedTitle = (title == null) ? (player.equals(owner) ? titleOwn : titleOtherOBC) : prepareTitle(title);
+		if(usedTitle != null && FIELD_TITLE != null && METHOD_GET_INVENTORY != null)
 		{
-			//noinspection ConstantConditions
-			FIELD_TITLE.setAccessible(true);
-			//noinspection ConstantConditions
-			FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), title);
+			try
+			{
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), usedTitle);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		//endregion
 
 		player.openInventory(bp);
 	}
@@ -169,13 +211,10 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		return size;
 	}
 	
-	public List<ItemStack> setSize(int newSize)
+	public @NotNull List<ItemStack> setSize(int newSize)
 	{
-		for(Entry<Player, Boolean> e : opened.entrySet())
-		{
-			e.getKey().closeInventory();
-		}
-		List<ItemStack> removedItems = new ArrayList<>();
+		opened.forEach((key, value) -> key.closeInventory()); // Close all open views of the inventory
+		List<ItemStack> removedItems = new LinkedList<>();
 		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{
@@ -185,15 +224,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 			{
 				if(i != null)
 				{
-					if(count < newSize)
-					{
-						itemStackArray[count] = i;
-						count++;
-					}
-					else
-					{
-						removedItems.add(i);
-					}
+					if(count < newSize) itemStackArray[count++] = i;
+					else removedItems.add(i);
 				}
 			}
 		}
@@ -209,10 +241,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		setChanged();
 		save(); // Make sure the new inventory is saved
 		size = newSize;
-		for(Entry<Player, Boolean> e : opened.entrySet())
-		{
-			e.getKey().openInventory(bp);
-		}
+		opened.forEach((key, value) -> key.openInventory(bp));
 		return removedItems;
 	}
 

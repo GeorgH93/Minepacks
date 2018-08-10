@@ -28,12 +28,12 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.BackpackEventListener;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.StringUtils;
@@ -66,7 +66,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private Language lang;
 	private Database database;
 
-	public String backpackTitleOther = "%s Backpack", backpackTitle = "Backpack";
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole;
 
 	private int maxSize;
@@ -87,7 +86,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		Utils.warnOnJava_1_7(getLogger());
 		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_12_R1))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_13_R1))
 		{
 			String name = Bukkit.getServer().getClass().getPackage().getName();
 			String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
@@ -97,7 +96,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		//endregion
 
-		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.4-SNAPSHOT")))
+		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.5-SNAPSHOT")))
 		{
 			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
 			setEnabled(false);
@@ -122,7 +121,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		load();
 
 		if(config.getAutoUpdate()) update(null);
-		StringUtils.getPluginEnabledMessage(getDescription().getName());
+		getLogger().info(StringUtils.getPluginEnabledMessage(getDescription().getName()));
 	}
 
 	@Override
@@ -133,7 +132,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(config.getAutoUpdate()) updater = update(null);
 		unload();
 		if(updater != null) updater.waitForAsyncOperation();
-		StringUtils.getPluginDisabledMessage(getDescription().getName());
+		getLogger().info(StringUtils.getPluginDisabledMessage(getDescription().getName()));
 		instance = null;
 	}
 
@@ -158,8 +157,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
 		database = Database.getDatabase(this);
 		maxSize = config.getBackpackMaxSize();
-		backpackTitleOther = config.getBPTitleOther();
-		backpackTitle = StringUtils.limitLength(config.getBPTitle(), 32);
+		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.getBPTitle(), config.getBPTitleOther());
 		messageNotFromConsole  = lang.getMessage("NotFromConsole");
 		messageNoPermission    = lang.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");

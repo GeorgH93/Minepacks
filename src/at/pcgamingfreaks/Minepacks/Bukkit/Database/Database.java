@@ -50,7 +50,7 @@ public abstract class Database implements Listener
 	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 
 	protected final Minepacks plugin;
-	protected final InventorySerializer itsSerializer = new InventorySerializer();
+	protected final InventorySerializer itsSerializer;
 	protected final boolean useUUIDs, bungeeCordMode;
 	protected boolean useUUIDSeparators;
 	protected long maxAge;
@@ -61,6 +61,7 @@ public abstract class Database implements Listener
 	public Database(Minepacks mp)
 	{
 		plugin = mp;
+		itsSerializer = new InventorySerializer(plugin.getLogger());
 		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
 		useUUIDs = plugin.getConfiguration().getUseUUIDs();
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
