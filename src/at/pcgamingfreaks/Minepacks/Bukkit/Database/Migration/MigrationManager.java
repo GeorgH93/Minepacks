@@ -50,6 +50,7 @@ public class MigrationManager
 		{
 			plugin.getLogger().info("Unloading plugin for migration");
 			Reflection.setValue(plugin, "database", null); // Hack to prevent the unload of the database
+			//noinspection ConstantConditions
 			Reflection.getMethod(Minepacks.class, "unload").invoke(plugin); // Unload plugin
 			HandlerList.unregisterAll(db); // Disable events for database
 			Reflection.setValue(plugin, "database", db);
@@ -86,6 +87,7 @@ public class MigrationManager
 				try
 				{
 					plugin.getLogger().info("Migration is done, loading the plugin again.");
+					//noinspection ConstantConditions
 					Reflection.getMethod(Minepacks.class, "load").invoke(plugin); // load the plugin again
 					plugin.getLogger().info(ConsoleColor.GREEN + "Plugin loaded successful and is ready to use again." + ConsoleColor.RESET);
 					if(migrationResultFinal != null) callback.onResult(migrationResultFinal);
@@ -127,12 +129,12 @@ public class MigrationManager
 				case "mysql":
 					if(global && plugin.getDatabase() instanceof MySQLShared || !global && plugin.getDatabase() instanceof MySQL) return null;
 					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "mysql", global);
-					else {} //TODO Files to SQL
+					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "mysql", global);
 				case "sqlite":
 				default:
 					if(global && plugin.getDatabase() instanceof SQLiteShared || !global && plugin.getDatabase() instanceof SQLite) return null;
 					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "sqlite", global);
-					else {} //TODO Files to SQL
+					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "sqlite", global);
 			}
 		}
 		catch(Exception e)

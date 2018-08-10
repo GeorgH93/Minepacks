@@ -42,7 +42,8 @@ public class SQLtoFilesMigration extends Migration
 	{
 		super(plugin, oldDb);
 		@Language("SQL") String query = "SELECT " + (plugin.getConfiguration().getUseUUIDs() ? "{FieldUUID}" : "{FieldName}") + ",{FieldBPITS},{FieldBPVersion} FROM {TablePlayers} INNER JOIN {TableBackpacks} ON {FieldPlayerID}={FieldBPOwner};";
-		sqlQuery = (String) Reflection.getMethod(SQL.class, "replacePlaceholders", String.class).invoke(plugin.getDatabase(), query);
+		//noinspection ConstantConditions
+		sqlQuery = (String) Reflection.getMethod(SQL.class, "replacePlaceholders", String.class).invoke(oldDb, query);
 		saveFolder = new File(this.plugin.getDataFolder(), Files.FOLDER_NAME);
 		if(!saveFolder.exists() && !saveFolder.mkdirs()) plugin.getLogger().warning("Failed to create save folder (" + saveFolder.getAbsolutePath() + ").");
 	}
@@ -51,7 +52,7 @@ public class SQLtoFilesMigration extends Migration
 	public @Nullable MigrationResult migrate() throws Exception
 	{
 		int migrated = 0;
-		try(Connection connection = (Connection) Reflection.getMethod(SQL.class, "getConnection").invoke(plugin.getDatabase()); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sqlQuery))
+		try(Connection connection = ((SQL) oldDb).getConnection(); Statement st = connection.createStatement(); ResultSet rs = st.executeQuery(sqlQuery))
 		{
 			while(rs.next())
 			{
@@ -63,6 +64,6 @@ public class SQLtoFilesMigration extends Migration
 				migrated++;
 			}
 		}
-		return new MigrationResult("Migrated " + migrated + " backpacks from SQL to files.", MigrationResult.MigrationResultType.SUCCESS);
+		return new MigrationResult("Migrated " + migrated + " backpacks from " + oldDb.getClass().getSimpleName() + " to Files.", MigrationResult.MigrationResultType.SUCCESS);
 	}
 }

@@ -17,7 +17,6 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class MigrationResult
@@ -27,7 +26,7 @@ public class MigrationResult
 	private final String message;
 	private final MigrationResultType type;
 
-	public MigrationResult(@NonNls String message, @NotNull MigrationResultType type) {
+	public MigrationResult(@NotNull String message, @NotNull MigrationResultType type) {
 		this.message = message;
 		this.type = type;
 	}
@@ -37,7 +36,7 @@ public class MigrationResult
 		return type;
 	}
 
-	public @NonNls String getMessage()
+	public @NotNull String getMessage()
 	{
 		return message;
 	}

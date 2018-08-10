@@ -17,54 +17,26 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
-import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
-import at.pcgamingfreaks.Reflection;
 
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SQLtoSQLMigration extends Migration
+@SuppressWarnings("ConstantConditions")
+public class SQLtoSQLMigration extends ToSQLMigration
 {
-	private static final Method METHOD_REPLACE_PLACEHOLDERS = Reflection.getMethod(SQL.class, "replacePlaceholders", String.class);
-	private static final Field FIELD_PLAYER_ID   = Reflection.getField(SQL.class, "fieldPlayerID");
-	private static final Field FIELD_PLAYER_UUID = Reflection.getField(SQL.class, "fieldPlayerUUID");
-	private static final Field FIELD_PLAYER_NAME = Reflection.getField(SQL.class, "fieldPlayerName");
-	private static final Field FIELD_BP_OWNER       = Reflection.getField(SQL.class, "fieldBpOwner");
-	private static final Field FIELD_BP_ITS         = Reflection.getField(SQL.class, "fieldBpIts");
-	private static final Field FIELD_BP_VERSION     = Reflection.getField(SQL.class, "fieldBpVersion");
-	private static final Field FIELD_BP_LAST_UPDATE = Reflection.getField(SQL.class, "fieldBpLastUpdate");
-	private static final DateFormat SQLITE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
-	private final SQL newDb;
 	private final @Language("SQL") String queryInsertUsers, queryInsertBackpacks;
-	private final boolean uuid;
-	private int autoIndex = 0;
 
-	protected SQLtoSQLMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb, @NonNls String dbType, boolean global) throws Exception
+	protected SQLtoSQLMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb, @NotNull String dbType, boolean global) throws Exception
 	{
-		super(plugin, oldDb);
-		if(global)
-		{
-			newDb = (SQL) Reflection.getConstructor((dbType.equals("mysql")) ? MySQLShared.class : SQLiteShared.class, Minepacks.class, DatabaseConnectionPool.class).newInstance(plugin, PluginLib.getInstance().getDatabaseConnectionPool());
-		}
-		else
-		{
-			newDb = (SQL) Reflection.getConstructor((dbType.equals("mysql")) ? MySQL.class : SQLite.class, Minepacks.class).newInstance(plugin);
-		}
-		uuid = plugin.getConfiguration().getUseUUIDs();
-		//setup insert querys
+		super(plugin, oldDb, dbType, global);
+
 		if(uuid)
 		{
 			queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldPlayerID},{FieldName},{FieldUUID}) VALUES (?,?,?);");
@@ -91,7 +63,7 @@ public class SQLtoSQLMigration extends Migration
 		}
 	}
 
-	private int migrate(@NonNls String type, @NotNull Connection writeConnection, @NotNull Statement readStatement, @Language("SQL") String readQuery, @Language("SQL") String insertQuery) throws Exception
+	private int migrate(@NotNull String type, @NotNull Connection writeConnection, @NotNull Statement readStatement, @Language("SQL") String readQuery, @Language("SQL") String insertQuery) throws Exception
 	{
 		int count = 0;
 		byte mode = (byte) ((type.equals("users")) ? 0 : 1);
@@ -103,8 +75,8 @@ public class SQLtoSQLMigration extends Migration
 			{
 				switch(mode)
 				{
-					case 0: migrateUser(resultSet, preparedStatement);
-					case 1: migrateBackpack(resultSet, preparedStatement);
+					case 0: migrateUser(resultSet, preparedStatement); break;
+					case 1: migrateBackpack(resultSet, preparedStatement); break;
 				}
 				preparedStatement.addBatch();
 				count++;
@@ -121,7 +93,6 @@ public class SQLtoSQLMigration extends Migration
 		preparedStatement.setInt(1, userId);
 		preparedStatement.setString(2, usersResultSet.getString((String) FIELD_PLAYER_NAME.get(oldDb)));
 		if(uuid) preparedStatement.setString(3, usersResultSet.getString((String) FIELD_PLAYER_UUID.get(oldDb)));
-		if(userId > autoIndex) autoIndex = userId;
 	}
 
 	private void migrateBackpack(@NotNull ResultSet backpacksResultSet, @NotNull PreparedStatement preparedStatement) throws Exception
@@ -137,10 +108,5 @@ public class SQLtoSQLMigration extends Migration
 		{
 			preparedStatement.setString(4, SQLITE_DATE_FORMAT.format(new Date(backpacksResultSet.getTimestamp((String) FIELD_BP_LAST_UPDATE.get(oldDb)).getTime())));
 		}
-	}
-
-	private @Language("SQL") String replacePlaceholders(SQL database, @Language("SQL") String query) throws Exception
-	{
-		return (String) METHOD_REPLACE_PLACEHOLDERS.invoke(database, query);
 	}
 }

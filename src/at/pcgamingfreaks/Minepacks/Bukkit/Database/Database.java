@@ -33,7 +33,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -123,7 +122,7 @@ public abstract class Database implements Listener
 		writeBackup(backpack.getOwner().getName(), getPlayerNameOrUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
-	protected void writeBackup(@Nullable String userName, @NonNls String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
+	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
 	{
 		if(userIdentifier.equalsIgnoreCase(userName)) userName = null;
 		if(userName != null) userIdentifier = userName + "_" + userIdentifier;
