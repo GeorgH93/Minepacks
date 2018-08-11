@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2017 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class EventListener implements Listener
 		joinCooldown = plugin.config.getCommandCooldownAfterJoin();
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
 		final Player player = event.getEntity();
@@ -78,7 +78,7 @@ public class EventListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onClose(InventoryCloseEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getPlayer() instanceof Player)
@@ -110,7 +110,7 @@ public class EventListener implements Listener
 	    }
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onClick(InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
@@ -137,7 +137,7 @@ public class EventListener implements Listener
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLeaveEvent(PlayerQuitEvent event)
 	{
 		Backpack backpack = plugin.DB.getBackpack(event.getPlayer());
@@ -146,9 +146,6 @@ public class EventListener implements Listener
 			backpack.save();
 			if(!backpack.isOpen()) plugin.DB.unloadBackpack(backpack);
 		}
-		if(plugin.cooldowns.containsKey(event.getPlayer()))
-		{
-			plugin.cooldowns.remove(event.getPlayer());
-		}
+		plugin.cooldowns.remove(event.getPlayer());
 	}
 }
