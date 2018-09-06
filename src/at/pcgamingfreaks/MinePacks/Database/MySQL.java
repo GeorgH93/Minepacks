@@ -58,12 +58,12 @@ public class MySQL extends SQL
 		{
 			if(useUUIDs)
 			{
-				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n`"
+				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n`"
 						+ fieldUUID + "` CHAR(36) DEFAULT NULL,\nPRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldUUID + "_UNIQUE` (`" + fieldUUID + "`)\n);");
 			}
 			else
 			{
-				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n"
+				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n"
 						+ "PRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "`)\n);");
 			}
 			DBTools.updateDB(connection, "CREATE TABLE `" + tableBackpacks + "` (\n`" + fieldBPOwner + "` INT UNSIGNED NOT NULL,\n`" + fieldBPITS + "` BLOB,\n`"
