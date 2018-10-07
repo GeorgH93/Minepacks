@@ -97,14 +97,18 @@ public class SQLite extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` VARCHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32)" : "") + " UNIQUE);");
 			if(useUUIDs)
 			{
+				stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` VARCHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32)" : "") + " UNIQUE);");
 				try
 				{
 					stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 				}
 				catch(SQLException ignored) {}
+			}
+			else
+			{
+				stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL UNIQUE);");
 			}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try

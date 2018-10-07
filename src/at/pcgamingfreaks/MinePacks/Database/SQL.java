@@ -155,8 +155,8 @@ public abstract class SQL extends Database
 						ps.setString(1, updateData.uuid);
 						ps.setInt(2, updateData.id);
 						ps.addBatch();
-						ps.executeBatch();
 					}
+					ps.executeBatch();
 				}
 				plugin.log.info(String.format(plugin.lang.get("Console.UpdatedUUIDs"), toUpdate.size()));
 			}
