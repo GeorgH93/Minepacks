@@ -39,7 +39,7 @@ public abstract class SQL extends Database
 
 	protected String tablePlayers, tableBackpacks; // Table Names
 	protected String fieldName, fieldPlayerID, fieldUUID, fieldBPOwner, fieldBPITS, fieldBPVersion, fieldBPLastUpdate; // Table Fields
-	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
+	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, queryGetBPs, queryRewriteBPs; // DB Querys
 	protected boolean updatePlayer;
 
 	public SQL(MinePacks mp)
@@ -207,6 +207,8 @@ public abstract class SQL extends Database
 			queryGetUnsetOrInvalidUUIDs = "SELECT `{FieldPlayerID}`,`{FieldName}`,`{FieldUUID}` FROM `{TablePlayers}` WHERE `{FieldUUID}` IS NULL OR `{FieldUUID}` LIKE '%-%';";
 		}
 		queryFixUUIDs = "UPDATE `{TablePlayers}` SET `{FieldUUID}`=? WHERE `{FieldPlayerID}`=?;";
+		queryGetBPs = "SELECT `{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}` FROM `{TableBackpacks}` WHERE `{FieldBPVersion}`<>?;";
+		queryRewriteBPs = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=? WHERE `{FieldBPOwner}`=?;";
 
 		updateQuerysForDialect();
 
@@ -220,6 +222,8 @@ public abstract class SQL extends Database
 		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPLastUpdate}", fieldBPLastUpdate).replaceAll("\\{VarMaxAge}", maxAge + "");
 		queryGetUnsetOrInvalidUUIDs = queryGetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
 		queryFixUUIDs = queryFixUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
+		queryGetBPs = queryGetBPs.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion);
+		queryRewriteBPs = queryRewriteBPs.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion);
 	}
 
 	protected abstract void updateQuerysForDialect();
@@ -412,5 +416,62 @@ public abstract class SQL extends Database
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	private final class Tuple<T, T2>
+	{
+		T o1;
+		T2 o2;
+
+		public Tuple(T o1, T2 o2)
+		{
+			this.o1 = o1;
+			this.o2 = o2;
+		}
+
+		public T getO1() { return o1; }
+		public T2 getO2() { return o2; }
+	}
+
+	@Override
+	public void rewrite()
+	{
+		try(Connection connection = getConnection())
+		{
+			List<Tuple<Integer, byte[]>> backpacks = new LinkedList<>();
+			try(PreparedStatement ps = connection.prepareStatement(queryGetBPs))
+			{
+				ps.setInt(1, itsSerializer.getUsedSerializer());
+				try(ResultSet resultSet = ps.executeQuery())
+				{
+					while(resultSet.next())
+					{
+						byte[] its = itsSerializer.serialize(itsSerializer.deserialize(resultSet.getBytes(fieldBPITS), resultSet.getInt(fieldBPVersion)));
+						backpacks.add(new Tuple<>(resultSet.getInt(fieldBPOwner), its));
+					}
+				}
+			}
+			try(PreparedStatement ps = connection.prepareStatement(queryRewriteBPs))
+			{
+				int c = 0;
+				for(Tuple<Integer, byte[]> backpack : backpacks)
+				{
+					ps.setInt(3, backpack.getO1());
+					ps.setInt(2, itsSerializer.getUsedSerializer());
+					ps.setBytes(1, backpack.getO2());
+					ps.addBatch();
+					if(c++ > 100)
+					{
+						ps.executeBatch();
+						c = 0;
+					}
+				}
+				ps.executeBatch();
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

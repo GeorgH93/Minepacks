@@ -20,6 +20,7 @@ package at.pcgamingfreaks.MinePacks.Database;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializer;
+import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializerGen2;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.ConsoleColor;
 
@@ -31,8 +32,8 @@ import java.util.logging.Logger;
 
 public class InventorySerializer
 {
-	private ItemStackSerializer serializer, baseItemStackSerializer = new BukkitItemStackSerializer();
-	private int usedSerializer = 1;
+	private ItemStackSerializer serializer, serializerGen1, serializerGen2, bukkitItemStackSerializer = new BukkitItemStackSerializer();
+	private int usedSerializer = 2;
 	private Logger logger;
 	
 	public InventorySerializer(Logger logger)
@@ -45,9 +46,20 @@ public class InventorySerializer
 			{
 				serializer = new CauldronNBTItemStackSerializer();
 			}
-			else if(NBTItemStackSerializer.isMCVersionCompatible())
+			else
 			{
-				serializer = new NBTItemStackSerializer();
+				if(NBTItemStackSerializer.isMCVersionCompatible())
+				{
+					serializerGen1 = new NBTItemStackSerializer(logger);
+					usedSerializer = 1;
+					serializer = serializerGen1;
+				}
+				if(NBTItemStackSerializerGen2.isMCVersionCompatible())
+				{
+					serializerGen2 = new NBTItemStackSerializerGen2(logger);
+					usedSerializer = 2;
+					serializer = serializerGen2;
+				}
 			}
 		}
 		catch(Exception e)
@@ -57,7 +69,7 @@ public class InventorySerializer
 		if(serializer == null)
 		{
 			usedSerializer = 0;
-			serializer = baseItemStackSerializer;
+			serializer = bukkitItemStackSerializer;
 		}
 	}
 	
@@ -66,19 +78,21 @@ public class InventorySerializer
 		return serializer.serialize(inv.getContents());
 	}
 
+	public byte[] serialize(ItemStack[] inv)
+	{
+		return serializer.serialize(inv);
+	}
+
 	public ItemStack[] deserialize(byte[] data, int usedSerializer)
 	{
 		switch(usedSerializer)
 		{
-			case 0: return baseItemStackSerializer.deserialize(data);
-			case 1:
-				if(usedSerializer != this.usedSerializer)
-				{
-					logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
-					return null;
-				}
-			default: return serializer.deserialize(data);
+			case 0: return bukkitItemStackSerializer.deserialize(data);
+			case 1: return serializerGen1.deserialize(data);
+			case 2: return serializerGen2.deserialize(data);
+			default: logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
 		}
+		return null;
 	}
 	
 	public int getUsedSerializer()

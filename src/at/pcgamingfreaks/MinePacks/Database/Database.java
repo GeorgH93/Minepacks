@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Database
+public abstract class Database
 {
 	protected final MinePacks plugin;
 	protected final InventorySerializer itsSerializer;
@@ -166,14 +166,19 @@ public class Database
 		}
 	}
 
-	// DB Functions
-	public void close()
+	public void closeAllBackpacks()
 	{
 		// Ensure that all backpacks are closed and saved before killing the database
 		for(Map.Entry<OfflinePlayer, Backpack> backpackEntry : backpacks.entrySet())
 		{
 			backpackEntry.getValue().closeAll();
 		}
+	}
+
+	// DB Functions
+	public void close()
+	{
+		closeAllBackpacks();
 		backpacks.clear();
 	}
 
@@ -208,4 +213,6 @@ public class Database
 
 		void onFail();
 	}
+
+	public abstract void rewrite();
 }

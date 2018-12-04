@@ -94,3 +94,6 @@ permissions:
   backpack.ignoreGameMode:
     description: Allows to bypass the game-mode restriction.
     default: op
+  backpack.rewrite:
+    description: Converts all stored backpacks to the newest format.
+    default: op

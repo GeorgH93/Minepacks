@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.MinePacks;
 
 import at.pcgamingfreaks.MinePacks.Database.Database;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -26,6 +27,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 
 import java.util.Collection;
 
@@ -59,7 +61,11 @@ public class OnCommand implements CommandExecutor
 	    }
 		else
 		{
-			sender.sendMessage(messageNotFromConsole);
+			if(args.length > 0 && args[0].equalsIgnoreCase("rewrite"))
+			{
+				rewriteDb(sender);
+			}
+			else sender.sendMessage(messageNotFromConsole);
 			return true;
 		}
 		if(args.length == 0)
@@ -156,6 +162,16 @@ public class OnCommand implements CommandExecutor
 						player.sendMessage(messageNoPermission);
 					}
 					break;
+				case "rewrite":
+					if(player.hasPermission("backpack.rewrite"))
+					{
+						rewriteDb(sender);
+					}
+					else
+					{
+						player.sendMessage(messageNoPermission);
+					}
+					break;
 				default: // Shows the backpack of an other player
 					if(player.hasPermission("backpack.others"))
 					{
@@ -169,5 +185,34 @@ public class OnCommand implements CommandExecutor
 			}
 		}
 		return true;
+	}
+
+	void rewriteDb(final CommandSender sender)
+	{
+		plugin.log.info("Start backpack rewriting ...");
+		sender.sendMessage("Start backpack rewriting ...");
+		plugin.getCommand("backpack").setExecutor(new CommandExecutor() {
+			@Override
+			public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings)
+			{
+				return false;
+			}
+		});
+		plugin.DB.closeAllBackpacks(); // Close the DB connection, we won't need them any longer
+		HandlerList.unregisterAll(plugin); // Stop the listener, they are no longer needed
+		plugin.getServer().getScheduler().cancelTasks(plugin); // Kill all still running tasks
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
+			public void run()
+			{
+				plugin.DB.rewrite();
+				// Enable the plugin again
+				plugin.getCommand("backpack").setExecutor(new OnCommand(plugin));
+				plugin.getServer().getPluginManager().registerEvents(new EventListener(plugin), plugin);
+				if(plugin.config.getFullInvCollect()) (new ItemsCollector(plugin)).runTaskTimer(plugin, plugin.config.getFullInvCheckInterval(), plugin.config.getFullInvCheckInterval());
+				plugin.log.info("Done backpack rewriting!");
+				sender.sendMessage("Done backpack rewriting!");
+			}
+		});
 	}
 }

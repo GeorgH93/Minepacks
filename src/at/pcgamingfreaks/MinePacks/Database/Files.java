@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2015 GeorgH93
+ *   Copyright (C) 2014-2018 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -146,7 +146,38 @@ public class Files extends Database
 		}
 		return null;
 	}
-	
+
+	@Override
+	public void rewrite()
+	{
+		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
+		if(allFiles == null) return;
+		for (File file : allFiles)
+		{
+			try
+			{
+				FileInputStream fis = new FileInputStream(file);
+				int v = fis.read();
+				byte[] backpackData = new byte[(int) (file.length() - 1)];
+				//noinspection ResultOfMethodCallIgnored
+				fis.read(backpackData);
+				fis.close();
+				if(v != itsSerializer.getUsedSerializer())
+				{
+					FileOutputStream fos = new FileOutputStream(file);
+					fos.write(itsSerializer.getUsedSerializer());
+					fos.write(itsSerializer.serialize(itsSerializer.deserialize(backpackData, v)));
+					fos.flush();
+					fos.close();
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
 	class BackpackFileFilter extends FileFilter implements FilenameFilter
 	{
 		String description, extension;
@@ -169,10 +200,7 @@ public class Files extends Database
 		    if (!file.isDirectory())
 		    {
 		    	String path = file.getAbsolutePath().toLowerCase();
-	    		if ((path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.'))
-	    		{
-	    			return true;
-	    		}
+			    return (path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.');
 		    }
 		    return false;
 		}
