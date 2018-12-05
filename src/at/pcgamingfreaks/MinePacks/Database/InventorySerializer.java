@@ -44,7 +44,9 @@ public class InventorySerializer
 			if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_7) && MCVersion.isOlderOrEqualThan(MCVersion.MC_1_7_10) &&
 					(Bukkit.getServer().getName().toLowerCase().contains("cauldron") || Bukkit.getServer().getName().toLowerCase().contains("uranium")))
 			{
-				serializer = new CauldronNBTItemStackSerializer();
+				serializerGen1 = new CauldronNBTItemStackSerializer();
+				usedSerializer = 1;
+				serializer = serializerGen1;
 			}
 			else
 			{
