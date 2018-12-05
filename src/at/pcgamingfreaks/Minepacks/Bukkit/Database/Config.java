@@ -27,10 +27,15 @@ import at.pcgamingfreaks.YamlFileManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
+@SuppressWarnings("ConstantConditions")
 public class Config extends Configuration
 {
 	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
@@ -49,7 +54,7 @@ public class Config extends Configuration
 	}
 
 	@Override
-	protected void doUpgrade(YamlFileManager oldConfig)
+	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
 		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
 		{

@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
-import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializer;
+import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializerGen2;
 import at.pcgamingfreaks.ConsoleColor;
 
 import org.bukkit.inventory.Inventory;
@@ -32,16 +32,16 @@ public class InventorySerializer
 	private static final ItemStackSerializer BUKKIT_ITEM_STACK_SERIALIZER = new BukkitItemStackSerializer();
 	private final Logger logger;
 	private ItemStackSerializer serializer;
-	private int usedSerializer = 1;
+	private int usedSerializer = 2;
 	
 	public InventorySerializer(Logger logger)
 	{
 		this.logger = logger;
 		try
 		{
-			if(NBTItemStackSerializer.isMCVersionCompatible())
+			if(NBTItemStackSerializerGen2.isMCVersionCompatible())
 			{
-				serializer = new NBTItemStackSerializer(logger);
+				serializer = new NBTItemStackSerializerGen2(logger);
 			}
 		}
 		catch(Exception e)
@@ -66,9 +66,11 @@ public class InventorySerializer
 		switch(usedSerializer)
 		{
 			case 0: return BUKKIT_ITEM_STACK_SERIALIZER.deserialize(data);
-			case 1: if(usedSerializer != this.usedSerializer) { logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET); return null; }
-			default: return serializer.deserialize(data);
+			case 1:
+			case 2: return serializer.deserialize(data);
+			default: logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
 		}
+		return null;
 	}
 	
 	public int getUsedSerializer()
