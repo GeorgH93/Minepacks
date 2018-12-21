@@ -2,6 +2,7 @@ Language:
   NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
   Ingame:
     NoPermission: "&cDir fehlen die Rechte dafür."
+    NaN: "[\"\",{\"text\":\"Die Eingabe ist keine gültige Zahl!\",\"color\":\"red\"}]"
     WorldDisabled: "&cDie Verwendung des Rucksacks ist in dieser Welt deaktiviert!"
     OwnBackpackClose: "Rucksack geschlossen."
     OwnBackpackClose_SendMethod: "action_bar"
@@ -32,6 +33,13 @@ Language:
     Backup:
       Created: "Rucksack wurder gesichert."
       NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Seite {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Vorherige <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Seite {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Nächste >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupsEntry: "{BackupIdentifier}"
+      NoValidBackup: "{BackupIdentifier} ist kein gültiges Backup"
+      NoUserToRestoreToFound: "Kein gültiger Nutzer zum Wiederherstellen gefunden"
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -66,12 +74,16 @@ Command:
     - update
   Backup:
     - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
   Help:
     - help
     - hilfe
 
 LanguageName: "German"
-Author: "GeorgH03"
+Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 13
+Version: 14

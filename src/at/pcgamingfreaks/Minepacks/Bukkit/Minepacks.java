@@ -66,7 +66,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private Language lang;
 	private Database database;
 
-	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole;
+	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
 	private int maxSize;
 	private Collection<String> worldBlacklist;
@@ -162,6 +162,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		messageNoPermission    = lang.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = lang.getMessage("Ingame.InvalidBackpack");
 		messageWorldDisabled   = lang.getMessage("Ingame.WorldDisabled");
+		messageNotANumber      = lang.getMessage("Ingame.NaN");
 
 		commandManager = new CommandManager(this);
 
@@ -290,6 +291,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void getBackpack(@NotNull OfflinePlayer owner, @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback)
 	{
 		database.getBackpack(owner, callback);
+	}
+
+	@Override
+	public void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback, boolean createNewIfNotExists)
+	{
+		database.getBackpack(owner, callback, createNewIfNotExists);
 	}
 
 	@Override

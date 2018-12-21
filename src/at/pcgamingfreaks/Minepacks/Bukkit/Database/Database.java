@@ -38,9 +38,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -145,19 +144,20 @@ public abstract class Database implements Listener
 		return Files.readFile(itsSerializer, backup, plugin.getLogger());
 	}
 
-	public Collection<String> getBackups()
+	public ArrayList<String> getBackups()
 	{
 		File[] files = backupFolder.listFiles((dir, name) -> name.endsWith(Files.EXT));
-		List<String> backups = new LinkedList<>();
 		if(files != null)
 		{
+			ArrayList<String> backups = new ArrayList<>(files.length);
 			for(File file : files)
 			{
 				if(!file.isFile()) continue;
 				backups.add(file.getName().replaceAll(Files.EXT_REGEX, ""));
 			}
+			return backups;
 		}
-		return backups;
+		return new ArrayList<>();
 	}
 
 	protected String getPlayerNameOrUUID(OfflinePlayer player)
@@ -197,7 +197,7 @@ public abstract class Database implements Listener
 		return (player == null) ? null : backpacks.get(player);
 	}
 
-	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback, final boolean createNewOnFail)
 	{
 		if(player == null)
 		{
@@ -218,9 +218,16 @@ public abstract class Database implements Listener
 				@Override
 				public void onFail()
 				{
-					Backpack backpack = new Backpack(player);
-					backpacks.put(player, backpack);
-					callback.onResult(backpack);
+					if(createNewOnFail)
+					{
+						Backpack backpack = new Backpack(player);
+						backpacks.put(player, backpack);
+						callback.onResult(backpack);
+					}
+					else
+					{
+						callback.onFail();
+					}
 				}
 			});
 		}
@@ -228,6 +235,11 @@ public abstract class Database implements Listener
 		{
 			callback.onResult(lbp);
 		}
+	}
+
+	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	{
+		getBackpack(player, callback, true);
 	}
 
 	public void unloadBackpack(Backpack backpack)

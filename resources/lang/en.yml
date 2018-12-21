@@ -3,6 +3,7 @@ Language:
   Ingame:
     NoPermission: "&cYou don't have the permission to do that."
     WorldDisabled: "&cThe use of the backpack is not allowed in this world."
+    NaN: "[\"\",{\"text\":\"The entered value is not a number!\",\"color\":\"red\"}]"
     OwnBackpackClose: "Backpack closed!"
     OwnBackpackClose_SendMethod: "action_bar"
     #Parameter: {OwnerName}, {OwnerDisplayName}
@@ -33,6 +34,13 @@ Language:
     Backup:
       Created: "The backpack has been backed up successful."
       NoBackpack: "The player doesn't have a backpack or his backpack is empty."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Previous <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Showing page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupsEntry: "{BackupIdentifier}"
+      NoValidBackup: "No backup matching {BackupIdentifier} found"
+      NoUserToRestoreToFound: "No valid user to restore backup to found"
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -44,6 +52,7 @@ Language:
       Reload: "Reloads the config of the plugin."
       Update: "Checks for new plugin updates."
       Backup: "Creates a backup of a players backpack."
+      Restore: "Restores a backup to a chest."
       Help: "Shows all available commands and their description."
 
 Command:
@@ -63,11 +72,15 @@ Command:
     - update
   Backup:
     - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
   Help:
     - help
 
 LanguageName: "English"
-Author: "GeorgH03"
+Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 13
+Version: 14

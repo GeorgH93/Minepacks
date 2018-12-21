@@ -37,7 +37,7 @@ public class BackupCommand extends MinepacksCommand
 
 	public BackupCommand(Minepacks plugin)
 	{
-		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), "backpack.backup", plugin.getLanguage().getCommandAliases("backup"));
+		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), "backpack.backup", plugin.getLanguage().getCommandAliases("Backup"));
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 		messageCreated = plugin.getLanguage().getMessage("Ingame.Backup.Created");
 		messageNoBackpack = plugin.getLanguage().getMessage("Ingame.Backup.NoBackpack");
@@ -62,7 +62,7 @@ public class BackupCommand extends MinepacksCommand
 				{
 					messageNoBackpack.send(sender);
 				}
-			});
+			}, false);
 		}
 		else
 		{

@@ -107,11 +107,22 @@ public interface MinepacksPlugin
 	/**
 	 * Retrieves the backpack for a given player.
 	 * This method runs async! The result will be delivered with a callback.
+	 * If no backpack exists a new one will be created.
 	 *
 	 * @param owner The player who's backpack should be retrieved.
 	 * @param callback The callback delivering the result of the request.
 	 */
 	void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback);
+
+	/**
+	 * Retrieves the backpack for a given player.
+	 * This method runs async! The result will be delivered with a callback.
+	 *
+	 * @param owner The player who's backpack should be retrieved.
+	 * @param callback The callback delivering the result of the request.
+	 * @param createNewIfNotExists If set to true, a new backpack will be created if there currently is no backpack for this player.
+	 */
+	void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback, boolean createNewIfNotExists);
 
 	/**
 	 * Gets the command manager of the Minepacks plugin.
