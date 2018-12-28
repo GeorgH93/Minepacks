@@ -1,0 +1,24 @@
+Language:
+  Console:
+    Enabled: ¡MinePacks ha sido actualizado!
+    Disabled: MinePacks ha sido desactivado.
+    NotFromConsole: No puedes usar este comando desde la consola.
+    LangUpdated: Se ha actualizado el archivo de idioma.
+    UpdateUUIDs: Empieza la actualizacion de la base de datos a UUIDs ...
+    UpdatedUUIDs: 'Se han actualizado %s cuentas a UUIDs.'
+  Ingame:
+    NoPermission: "No tienes permiso para hacer eso."
+    OwnBackPackClose: '¡Mochila cerrada!'
+    PlayerBackPackClose: "¡Se ha cerrado la mochila de %s!"
+    InvalidBackpack: Mochila invalida.
+    BackpackCleaned: Se ha limpiado la mochila.
+    Cooldown: "Espera para abrir tu mochila de nuevo."
+    WrongGameMode: "No puedes abrir tu mochila en el modo de juego actual."
+  Description:
+    Backpack: Abre tu mochila.
+    Clean: Limpia tu mochila.
+    CleanOther: Limpia la mochila de otros jugadores.
+    View: Muestra la mochila de otros jugadores.
+
+# Language file version. Don't touch it!
+Version: 5
