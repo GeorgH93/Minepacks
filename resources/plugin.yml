@@ -5,6 +5,7 @@ main: ${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}
 description: ${project.description}
 version: ${project.version}
 depend: [PCGF_PluginLib]
+api-version: 1.13
 
 permissions:
   backpack.*:

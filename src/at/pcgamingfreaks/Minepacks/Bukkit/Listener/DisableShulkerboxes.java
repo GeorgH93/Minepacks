@@ -17,8 +17,10 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -42,22 +44,32 @@ public class DisableShulkerboxes extends MinepacksListener
 
 	static
 	{
-		SHULKER_BOX_MATERIALS.add(Material.BLACK_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.BLUE_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.SILVER_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.BROWN_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.CYAN_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.GREEN_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.GRAY_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.LIGHT_BLUE_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.LIME_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.MAGENTA_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.ORANGE_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.PINK_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.PURPLE_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.RED_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.WHITE_SHULKER_BOX);
-		SHULKER_BOX_MATERIALS.add(Material.YELLOW_SHULKER_BOX);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11))
+		{
+			SHULKER_BOX_MATERIALS.add(Material.BLACK_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.BLUE_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.BROWN_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.CYAN_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.GREEN_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.GRAY_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.LIGHT_BLUE_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.LIME_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.MAGENTA_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.ORANGE_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.PINK_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.PURPLE_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.RED_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.WHITE_SHULKER_BOX);
+			SHULKER_BOX_MATERIALS.add(Material.YELLOW_SHULKER_BOX);
+			if(MCVersion.isOlderThan(MCVersion.MC_1_13))
+			{
+				SHULKER_BOX_MATERIALS.add((Material) Reflection.getEnum(Material.class, "SILVER_SHULKER_BOX"));
+			}
+			else
+			{
+				SHULKER_BOX_MATERIALS.add(Material.LIGHT_GRAY_SHULKER_BOX);
+			}
+		}
 	}
 
 	private boolean removeExisting, dropExistingContent;

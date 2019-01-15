@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 13, UPGRADE_THRESHOLD = 13;
+	private static final int LANG_VERSION = 14, UPGRADE_THRESHOLD = 14;
 
 	public Language(JavaPlugin plugin)
 	{
@@ -39,7 +39,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	protected void doUpdate() {}
 
 	@Override
-	protected void doUpgrade(YamlFileManager oldLang)
+	protected void doUpgrade(@NotNull YamlFileManager oldLang)
 	{
 		if(oldLang.getVersion() < 10) // Pre v2.0 versions
 		{
