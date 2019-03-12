@@ -37,9 +37,14 @@ Language:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Seite {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
       Footer: "[{\"text\":\"<<< Vorherige <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Seite {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Nächste >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
-      BackupsEntry: "{BackupIdentifier}"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nErstellt: {BackupDate}\"}}]"
       NoValidBackup: "{BackupIdentifier} ist kein gültiges Backup"
       NoUserToRestoreToFound: "Kein gültiger Nutzer zum Wiederherstellen gefunden"
+      # NoJSON
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "dd.MM.yyyy HH:mm:ss"
+      Restored: "Backup wurde erfolgreich wiederhergestellt."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -51,6 +56,8 @@ Language:
       Reload: "Lädt die konfigurations Datei neu."
       Update: "Prüft auf neue plugin updates."
       Backup: "Erstellt eine Sicherungskopie eines Rucksackes."
+      Restore: "Stellt eine Sicherungskopie eines Rucksackes wieder her."
+      RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
       Help: "Zeigt die verfügbaren Befehle an."
 
 Command:
@@ -86,4 +93,4 @@ LanguageName: "German"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 14
+Version: 15

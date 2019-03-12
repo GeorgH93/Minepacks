@@ -38,9 +38,14 @@ Language:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
       Footer: "[{\"text\":\"<<< Previous <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Showing page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
-      BackupsEntry: "{BackupIdentifier}"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
       NoValidBackup: "No backup matching {BackupIdentifier} found"
       NoUserToRestoreToFound: "No valid user to restore backup to found"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Backup has been successful restored."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -52,7 +57,8 @@ Language:
       Reload: "Reloads the config of the plugin."
       Update: "Checks for new plugin updates."
       Backup: "Creates a backup of a players backpack."
-      Restore: "Restores a backup to a chest."
+      Restore: "Restores a backup."
+      RestoreList: "Lists all available backups."
       Help: "Shows all available commands and their description."
 
 Command:
@@ -83,4 +89,4 @@ LanguageName: "English"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 14
+Version: 15

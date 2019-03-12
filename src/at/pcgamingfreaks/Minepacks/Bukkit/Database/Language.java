@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 14, UPGRADE_THRESHOLD = 14;
+	private static final int LANG_VERSION = 15, UPGRADE_THRESHOLD = 15;
 
 	public Language(JavaPlugin plugin)
 	{
@@ -56,7 +56,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 		return getCommandAliases(command, new String[0]);
 	}
 
-	public String[] getCommandAliases(final String command, final @NotNull String[] defaults)
+	public String[] getCommandAliases(final String command, final @NotNull String... defaults)
 	{
 		List<String> aliases = getLang().getStringList("Command." + command, new LinkedList<>());
 		return (aliases.size() > 0) ? aliases.toArray(new String[0]) : defaults;
