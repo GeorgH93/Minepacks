@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -122,11 +122,11 @@ public class OpenCommand extends MinepacksCommand
 	public List<HelpData> getHelp(@NotNull CommandSender requester)
 	{
 		List<HelpData> help = new LinkedList<>();
-		help.add(new HelpData("", null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
+		help.add(new HelpData(getTranslatedName(), null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
 		if(requester.hasPermission("backpack.open.other"))
 		{
 			//noinspection ConstantConditions
-			help.add(new HelpData("", helpParam, descriptionOpenOthers));
+			help.add(new HelpData(getTranslatedName(), helpParam, descriptionOpenOthers));
 		}
 		return help;
 	}

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ public abstract class Database implements Listener
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
+		if(!backupFolder.exists()) backupFolder.mkdirs();
 	}
 
 	public void init()
@@ -134,7 +135,7 @@ public abstract class Database implements Listener
 		}
 		catch(Exception e)
 		{
-			plugin.getLogger().warning("Failed to write backup! Error: " + e.getMessage());
+			plugin.getLogger().warning(ConsoleColor.RED + "Failed to write backup! Error: " + e.getMessage() + ConsoleColor.RESET);
 		}
 	}
 
