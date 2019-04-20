@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public abstract class SQL extends Database
 
 	protected String tablePlayers, tableBackpacks; // Table Names
 	protected String fieldName, fieldPlayerID, fieldUUID, fieldBPOwner, fieldBPITS, fieldBPVersion, fieldBPLastUpdate; // Table Fields
-	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, queryGetBPs, queryRewriteBPs; // DB Querys
+	protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBP, queryUpdateBP, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, queryGetOldBPs, queryRewriteBPs; // DB Querys
 	protected boolean updatePlayer;
 
 	public SQL(MinePacks mp)
@@ -71,6 +71,8 @@ public abstract class SQL extends Database
 				e.printStackTrace();
 			}
 		}
+
+		rewrite(); // Make convert all old backpacks into the new format
 	}
 
 	protected abstract HikariConfig getPoolConfig();
@@ -207,7 +209,7 @@ public abstract class SQL extends Database
 			queryGetUnsetOrInvalidUUIDs = "SELECT `{FieldPlayerID}`,`{FieldName}`,`{FieldUUID}` FROM `{TablePlayers}` WHERE `{FieldUUID}` IS NULL OR `{FieldUUID}` LIKE '%-%';";
 		}
 		queryFixUUIDs = "UPDATE `{TablePlayers}` SET `{FieldUUID}`=? WHERE `{FieldPlayerID}`=?;";
-		queryGetBPs = "SELECT `{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}` FROM `{TableBackpacks}` WHERE `{FieldBPVersion}`<>?;";
+		queryGetOldBPs = "SELECT `{FieldBPOwner}`,`{FieldBPITS}`,`{FieldBPVersion}` FROM `{TableBackpacks}` WHERE `{FieldBPVersion}`<>?;";
 		queryRewriteBPs = "UPDATE `{TableBackpacks}` SET `{FieldBPITS}`=?,`{FieldBPVersion}`=? WHERE `{FieldBPOwner}`=?;";
 
 		updateQuerysForDialect();
@@ -222,7 +224,7 @@ public abstract class SQL extends Database
 		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPLastUpdate}", fieldBPLastUpdate).replaceAll("\\{VarMaxAge}", maxAge + "");
 		queryGetUnsetOrInvalidUUIDs = queryGetUnsetOrInvalidUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldName).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
 		queryFixUUIDs = queryFixUUIDs.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldUUID}", fieldUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID);
-		queryGetBPs = queryGetBPs.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion);
+		queryGetOldBPs = queryGetOldBPs.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion);
 		queryRewriteBPs = queryRewriteBPs.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBPOwner).replaceAll("\\{FieldBPITS}", fieldBPITS).replaceAll("\\{FieldBPVersion}", fieldBPVersion);
 	}
 
@@ -371,12 +373,12 @@ public abstract class SQL extends Database
 							data = null;
 						}
 					}
+					final ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
 					plugin.getServer().getScheduler().runTask(plugin, new Runnable()
 					{
 						@Override
 						public void run()
 						{
-							ItemStack[] its = (data != null) ? itsSerializer.deserialize(data, version) : null;
 							if(its != null)
 							{
 								callback.onResult(new Backpack(player, its, bpID));
@@ -439,34 +441,39 @@ public abstract class SQL extends Database
 		try(Connection connection = getConnection())
 		{
 			List<Tuple<Integer, byte[]>> backpacks = new LinkedList<>();
-			try(PreparedStatement ps = connection.prepareStatement(queryGetBPs))
+			try(PreparedStatement ps = connection.prepareStatement(queryGetOldBPs))
 			{
 				ps.setInt(1, itsSerializer.getUsedSerializer());
 				try(ResultSet resultSet = ps.executeQuery())
 				{
 					while(resultSet.next())
 					{
+						if(backpacks.size() == 0) plugin.log.info("Start backpack rewriting ...");
 						byte[] its = itsSerializer.serialize(itsSerializer.deserialize(resultSet.getBytes(fieldBPITS), resultSet.getInt(fieldBPVersion)));
 						backpacks.add(new Tuple<>(resultSet.getInt(fieldBPOwner), its));
 					}
 				}
 			}
-			try(PreparedStatement ps = connection.prepareStatement(queryRewriteBPs))
+			if(backpacks.size() > 0)
 			{
-				int c = 0;
-				for(Tuple<Integer, byte[]> backpack : backpacks)
+				try(PreparedStatement ps = connection.prepareStatement(queryRewriteBPs))
 				{
-					ps.setInt(3, backpack.getO1());
-					ps.setInt(2, itsSerializer.getUsedSerializer());
-					ps.setBytes(1, backpack.getO2());
-					ps.addBatch();
-					if(c++ > 100)
+					int c = 0;
+					for(Tuple<Integer, byte[]> backpack : backpacks)
 					{
-						ps.executeBatch();
-						c = 0;
+						ps.setInt(3, backpack.getO1());
+						ps.setInt(2, itsSerializer.getUsedSerializer());
+						ps.setBytes(1, backpack.getO2());
+						ps.addBatch();
+						if(++c >= 100)
+						{
+							ps.executeBatch();
+							c = 0;
+						}
 					}
+					ps.executeBatch();
 				}
-				ps.executeBatch();
+				plugin.log.info("Done backpack rewriting! " + backpacks.size() + " backpacks have been converted to the new format!");
 			}
 		}
 		catch(Exception e)

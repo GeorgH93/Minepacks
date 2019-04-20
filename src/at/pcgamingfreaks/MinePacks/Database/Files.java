@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -48,6 +48,7 @@ public class Files extends Database
 		else
 		{
 			CheckFiles();
+			rewrite(); // Make convert all old backpacks into the new format
 		}
 	}
 	
@@ -150,25 +151,31 @@ public class Files extends Database
 	@Override
 	public void rewrite()
 	{
+		plugin.log.info("Checking backpack storage format ...");
 		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
 		if(allFiles == null) return;
+		int rewritten = 0, version;
+		byte[] backpackData;
 		for (File file : allFiles)
 		{
 			try
 			{
-				FileInputStream fis = new FileInputStream(file);
-				int v = fis.read();
-				byte[] backpackData = new byte[(int) (file.length() - 1)];
-				//noinspection ResultOfMethodCallIgnored
-				fis.read(backpackData);
-				fis.close();
-				if(v != itsSerializer.getUsedSerializer())
+				try (FileInputStream fis = new FileInputStream(file))
 				{
-					FileOutputStream fos = new FileOutputStream(file);
-					fos.write(itsSerializer.getUsedSerializer());
-					fos.write(itsSerializer.serialize(itsSerializer.deserialize(backpackData, v)));
-					fos.flush();
-					fos.close();
+					version = fis.read();
+					backpackData = new byte[(int) (file.length() - 1)];
+					//noinspection ResultOfMethodCallIgnored
+					fis.read(backpackData);
+				}
+				if(version != itsSerializer.getUsedSerializer())
+				{
+					try(FileOutputStream fos = new FileOutputStream(file))
+					{
+						fos.write(itsSerializer.getUsedSerializer());
+						fos.write(itsSerializer.serialize(itsSerializer.deserialize(backpackData, version)));
+						fos.flush();
+						rewritten++;
+					}
 				}
 			}
 			catch(Exception e)
@@ -176,6 +183,7 @@ public class Files extends Database
 				e.printStackTrace();
 			}
 		}
+		plugin.log.info("Done backpack rewriting! " + rewritten + " backpacks have been converted to the new format!");
 	}
 
 	class BackpackFileFilter extends FileFilter implements FilenameFilter
