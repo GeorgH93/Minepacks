@@ -38,6 +38,7 @@ public class MinepacksV2IsAvailable implements Listener
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "#####################################");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + "Minepacks V2 has been released! " + ChatColor.YELLOW + ":)");
 		Bukkit.getConsoleSender().sendMessage("Please download it form here:" + ChatColor.AQUA + " https://www.spigotmc.org/resources/19286/");
+		Bukkit.getConsoleSender().sendMessage("Please read this out on how to upgrade!:" + ChatColor.AQUA + " https://github.com/GeorgH93/Minepacks/wiki/Upgrade-to-Minepacks-V2.x");
 		Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + "#####################################");
 	}
 
@@ -48,6 +49,7 @@ public class MinepacksV2IsAvailable implements Listener
 			player.sendMessage(ChatColor.GRAY + "#####################################");
 			player.sendMessage(ChatColor.GOLD + "Minepacks V2 has been released! " + ChatColor.YELLOW + ":)");
 			player.sendMessage("Please download it form here:" + ChatColor.AQUA + " https://www.spigotmc.org/resources/19286/");
+			player.sendMessage("Please read this out on how to upgrade!:" + ChatColor.AQUA + " https://github.com/GeorgH93/Minepacks/wiki/Upgrade-to-Minepacks-V2.x");
 			player.sendMessage(ChatColor.GRAY + "#####################################");
 		}
 	}
