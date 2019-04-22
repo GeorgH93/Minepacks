@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ public class MinePacks extends JavaPlugin
 		//region Check compatibility with used minecraft version
 		String name = Bukkit.getServer().getClass().getPackage().getName();
 		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-		if((version[0].equals("1") && Integer.valueOf(version[1]) > 13) || Integer.valueOf(version[0]) > 1)
+		if((version[0].equals("1") && Integer.valueOf(version[1]) > 14) || Integer.valueOf(version[0]) > 1)
 		{
 			MinePacks.getInstance().warnOnVersionIncompatibility(version[0] + "." + version[1]);
 			this.setEnabled(false);

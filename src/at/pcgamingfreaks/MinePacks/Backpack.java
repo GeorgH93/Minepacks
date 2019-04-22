@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class Backpack implements InventoryHolder
 {
 	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
-	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "fromStringOrNull", String.class) : null;
+	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL = MCVersion.isAny(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "fromStringOrNull", String.class) : null;
 
 	private OfflinePlayer owner;
 	private HashMap<Player, Boolean> opened = new HashMap<>();
@@ -120,15 +120,15 @@ public class Backpack implements InventoryHolder
 		try
 		{
 			String title = p.equals(owner) ? MinePacks.backpackTitle : titleOther;
-			if(MCVersion.isOlderThan(MCVersion.MC_NMS_1_13_R1))
+			if(MCVersion.isAny(MCVersion.MC_1_13))
 			{
 				//noinspection ConstantConditions
-				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), title);
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL.invoke(null, title));
 			}
 			else
 			{
 				//noinspection ConstantConditions
-				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING_OR_NULL.invoke(null, title));
+				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), title);
 			}
 		}
 		catch(Exception e)
