@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,11 +23,14 @@ import at.pcgamingfreaks.MinePacks.MinePacks;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Database
 {
+	private final File backupFolder;
 	protected final MinePacks plugin;
 	protected final InventorySerializer itsSerializer;
 	private final HashMap<OfflinePlayer, Backpack> backpacks = new HashMap<>();
@@ -43,6 +46,12 @@ public abstract class Database
 		useUUIDs = plugin.config.getUseUUIDs();
 		maxAge = plugin.config.getAutoCleanupMaxInactiveDays();
 		bungeeMode = plugin.config.isBungeeCordModeEnabled();
+
+		backupFolder = new File(plugin.getDataFolder(), "backups" + File.separator + "oldFormat");
+		if(!backupFolder.exists())
+		{
+			backupFolder.mkdirs();
+		}
 	}
 
 	public static Database getDatabase(MinePacks Plugin)
@@ -214,5 +223,20 @@ public abstract class Database
 		void onFail();
 	}
 
-	public abstract void rewrite();
+	protected abstract void rewrite();
+
+	protected void backup(int version, byte[] data, String name)
+	{
+		try(FileOutputStream fos = new FileOutputStream(new File(backupFolder, name)))
+		{
+			fos.write(version);
+			fos.write(data);
+			fos.flush();
+		}
+		catch(Exception e)
+		{
+			plugin.log.warning("Failed to write backup of backpack: " + name);
+			e.printStackTrace();
+		}
+	}
 }

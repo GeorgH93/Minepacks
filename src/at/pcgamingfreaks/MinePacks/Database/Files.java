@@ -40,6 +40,7 @@ public class Files extends Database
 		super(mp);
 		maxAge *= 24 * 3600000L;
 		saveFolder = new File(plugin.getDataFolder(), "backpacks");
+
 		if(!saveFolder.exists())
 		{
 			//noinspection ResultOfMethodCallIgnored
@@ -132,13 +133,14 @@ public class Files extends Database
 		{
 			if(save.exists())
 			{
-				FileInputStream fis = new FileInputStream(save);
-				int v = fis.read();
-				byte[] out = new byte[(int)(save.length()-1)];
-				//noinspection ResultOfMethodCallIgnored
-				fis.read(out);
-				fis.close();
-				return new Backpack(player, itsSerializer.deserialize(out, v), -1);
+				try(FileInputStream fis = new FileInputStream(save))
+				{
+					int v = fis.read();
+					byte[] out = new byte[(int) (save.length() - 1)];
+					//noinspection ResultOfMethodCallIgnored
+					fis.read(out);
+					return new Backpack(player, itsSerializer.deserialize(out, v), -1);
+				}
 			}
 		}
 		catch(Exception e)
@@ -149,7 +151,7 @@ public class Files extends Database
 	}
 
 	@Override
-	public void rewrite()
+	protected void rewrite()
 	{
 		plugin.log.info("Checking backpack storage format ...");
 		File[] allFiles = saveFolder.listFiles(new BackpackFileFilter());
@@ -169,6 +171,8 @@ public class Files extends Database
 				}
 				if(version != itsSerializer.getUsedSerializer())
 				{
+					backup(version, backpackData, file.getName());
+					//region rewrite
 					try(FileOutputStream fos = new FileOutputStream(file))
 					{
 						fos.write(itsSerializer.getUsedSerializer());
@@ -176,6 +180,7 @@ public class Files extends Database
 						fos.flush();
 						rewritten++;
 					}
+					//end region
 				}
 			}
 			catch(Exception e)

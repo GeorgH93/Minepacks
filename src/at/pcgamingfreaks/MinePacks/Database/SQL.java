@@ -436,8 +436,9 @@ public abstract class SQL extends Database
 	}
 
 	@Override
-	public void rewrite()
+	protected void rewrite()
 	{
+		plugin.log.info("Checking backpack storage format ...");
 		try(Connection connection = getConnection())
 		{
 			List<Tuple<Integer, byte[]>> backpacks = new LinkedList<>();
@@ -448,9 +449,11 @@ public abstract class SQL extends Database
 				{
 					while(resultSet.next())
 					{
-						if(backpacks.size() == 0) plugin.log.info("Start backpack rewriting ...");
-						byte[] its = itsSerializer.serialize(itsSerializer.deserialize(resultSet.getBytes(fieldBPITS), resultSet.getInt(fieldBPVersion)));
-						backpacks.add(new Tuple<>(resultSet.getInt(fieldBPOwner), its));
+						byte[] its = resultSet.getBytes(fieldBPITS);
+						int version = resultSet.getInt(fieldBPVersion), owner = resultSet.getInt(fieldBPOwner);
+						backup(version, its, owner + ".backpack");
+						its = itsSerializer.serialize(itsSerializer.deserialize(its, version));
+						backpacks.add(new Tuple<>(owner, its));
 					}
 				}
 			}
