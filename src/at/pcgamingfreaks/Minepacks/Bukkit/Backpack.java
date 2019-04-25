@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ import java.util.List;
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
 	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
-	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "wrapOrNull", String.class) : null;
+	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING = MCVersion.isAny(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "wrapOrNull", String.class) : null;
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
 	private static Object titleOwn;
 	private static String titleOtherFormat, titleOther;
@@ -58,7 +58,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 	private static Object prepareTitle(final @NotNull String title)
 	{
-		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13))
+		if(MCVersion.isAny(MCVersion.MC_1_13))
 		{
 			try
 			{
@@ -95,7 +95,6 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		Object titleOtherOBC = null;
 		try
 		{
-			//noinspection ConstantConditions
 			titleOtherOBC = FIELD_TITLE.get(METHOD_GET_INVENTORY.invoke(bp));
 		}
 		catch(Exception e)
@@ -246,7 +245,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	}
 
 	@Override
-	public Inventory getInventory()
+	public @NotNull Inventory getInventory()
 	{
 		return bp;
 	}

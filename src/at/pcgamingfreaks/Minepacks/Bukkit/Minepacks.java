@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		Utils.warnOnJava_1_7(getLogger());
 		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_13_R2))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_14_R1))
 		{
 			String name = Bukkit.getServer().getClass().getPackage().getName();
 			String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
@@ -96,7 +96,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		//endregion
 
-		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.5-SNAPSHOT")))
+		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.8-SNAPSHOT")))
 		{
 			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
 			setEnabled(false);
