@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.18.2-SNAPSHOT</version>
+	<version>1.19</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
@@ -132,6 +132,16 @@
 									<shadedPattern>at.pcgamingfreaks.MinePacks.libs.slf4j.slf4j</shadedPattern>
 								</relocation>
 							</relocations>
+							<filters>
+								<filter>
+									<artifact>at.pcgamingfreaks:PluginLib</artifact>
+									<excludes>
+										<exclude>lang/*.yml</exclude>
+										<exclude>*.yml</exclude>
+										<exclude>META-INF/*.txt</exclude>
+									</excludes>
+								</filter>
+							</filters>
 						</configuration>
 					</execution>
 				</executions>
