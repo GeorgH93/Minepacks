@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -371,11 +371,13 @@ public abstract class SQL extends Database
 						data = null;
 					}
 				}
+
+				ItemStack[] its = itsSerializer.deserialize(data, version);
+				final Backpack backpack = (its != null) ? new Backpack(player, its, bpID) : null;
 				plugin.getServer().getScheduler().runTask(plugin, () -> {
-					ItemStack[] its = itsSerializer.deserialize(data, version);
-					if(its != null)
+					if(backpack != null)
 					{
-						callback.onResult(new Backpack(player, its, bpID));
+						callback.onResult(backpack);
 					}
 					else
 					{
