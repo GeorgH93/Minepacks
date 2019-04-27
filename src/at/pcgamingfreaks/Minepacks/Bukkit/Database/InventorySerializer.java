@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016, 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializerGen2;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.ConsoleColor;
 
 import org.bukkit.inventory.Inventory;
@@ -66,7 +67,7 @@ public class InventorySerializer
 		switch(usedSerializer)
 		{
 			case 0: return BUKKIT_ITEM_STACK_SERIALIZER.deserialize(data);
-			case 1:
+			case 1: if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) logger.warning(ConsoleColor.YELLOW + "Backpack was created with an old version of minecraft. There is the chance that some items will disappear from it.");
 			case 2: return serializer.deserialize(data);
 			default: logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
 		}
