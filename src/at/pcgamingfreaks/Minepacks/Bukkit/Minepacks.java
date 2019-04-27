@@ -85,6 +85,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void onEnable()
 	{
 		Utils.warnOnJava_1_7(getLogger());
+
+		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.8-SNAPSHOT")))
+		{
+			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
+			setEnabled(false);
+			return;
+		}
+
 		//region Check compatibility with used minecraft version
 		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_14_R1))
 		{
@@ -95,13 +103,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			return;
 		}
 		//endregion
-
-		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.8-SNAPSHOT")))
-		{
-			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
-			setEnabled(false);
-			return;
-		}
 
 		//region check if a plugin folder exists (was renamed from MinePacks to Minepacks with the V2.0 update)
 		if(!getDataFolder().exists())
