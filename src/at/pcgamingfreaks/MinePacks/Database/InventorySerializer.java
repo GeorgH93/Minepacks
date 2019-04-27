@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class InventorySerializer
 {
 	private ItemStackSerializer serializer, serializerGen1, serializerGen2, bukkitItemStackSerializer = new BukkitItemStackSerializer();
 	private int usedSerializer = 2;
-	private Logger logger;
+	private final Logger logger;
 	
 	public InventorySerializer(Logger logger)
 	{
@@ -87,10 +87,12 @@ public class InventorySerializer
 
 	public ItemStack[] deserialize(byte[] data, int usedSerializer)
 	{
+		if(usedSerializer > this.usedSerializer) logger.warning(ConsoleColor.RED + "The backpack was written using a newer version than the currently used one! It might cause problems." + ConsoleColor.RESET);
 		switch(usedSerializer)
 		{
 			case 0: return bukkitItemStackSerializer.deserialize(data);
-			case 1: return serializerGen1.deserialize(data);
+			case 1: if(serializerGen1 != null) return serializerGen1.deserialize(data);
+					else if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14)) logger.warning(ConsoleColor.RED + "This backpack was saved with an older version of MC! Some items may be lost!" + ConsoleColor.RESET);
 			case 2: return serializerGen2.deserialize(data);
 			default: logger.warning(ConsoleColor.RED + "No compatible serializer for item format available!" + ConsoleColor.RESET);
 		}

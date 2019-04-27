@@ -24,6 +24,8 @@ import java.io.FilenameFilter;
 
 import javax.swing.filechooser.FileFilter;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.UUIDConverter;
 import org.bukkit.OfflinePlayer;
 
@@ -51,6 +53,8 @@ public class Files extends Database
 			CheckFiles();
 			rewrite(); // Make convert all old backpacks into the new format
 		}
+
+		if(MCVersion.isAny(MCVersion.MC_1_14)) plugin.getLogger().warning(ConsoleColor.RED + "The used storage backend might has a negative performance impact on MC 1.14!" + ConsoleColor.RESET);
 	}
 	
 	@SuppressWarnings("ResultOfMethodCallIgnored")

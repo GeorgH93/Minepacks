@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>MinePacks</artifactId>
-	<version>1.19</version>
+	<version>1.19.1</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
