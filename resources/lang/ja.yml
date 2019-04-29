@@ -1,0 +1,24 @@
+Language:
+  Console:
+    Enabled: MinePacksが有効になりました！
+    Disabled: MinePacksが無効になりました。
+    NotFromConsole: コマンドはコンソールから使用できません。
+    LangUpdated: 言語ファイルが更新されました。
+    UpdateUUIDs: データベースのUUIDへの更新を開始しています...
+    UpdatedUUIDs: '%s アカウントをUUIDに更新しました。'
+  Ingame:
+    NoPermission: "あなたはパーミッションを持っていません。"
+    OwnBackPackClose: バックパックを閉じました！
+    PlayerBackPackClose: "%sのバックパックを閉じました！"
+    InvalidBackpack: 無効なバックパック
+    BackpackCleaned: バックパックをクリーンしました。
+    Cooldown: "バックパックを再び開くまでお待ち下さい。"
+    WrongGameMode: "現在のゲームモードでバックパックを開くことは許可されていません。"
+  Description:
+    Backpack: バックパックを開く。
+    Clean: バックパックをクリーンする。
+    CleanOther: 他のプレイヤーのバックパックをクリーンする。
+    View: 他のプレイヤーのバックパックを開く。
+
+# Language file version. Don't touch it!
+Version: 5
