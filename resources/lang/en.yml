@@ -56,6 +56,7 @@ Language:
       OpenOthers: "Shows the backpack of another player."
       Reload: "Reloads the config of the plugin."
       Update: "Checks for new plugin updates."
+      Version: "Prints the version details about the plugin and it's dependencies."
       Backup: "Creates a backup of a players backpack."
       Restore: "Restores a backup."
       RestoreList: "Lists all available backups."
@@ -82,6 +83,8 @@ Command:
     - restore
   ListBackups:
     - listbackups
+  Version:
+    - version
   Help:
     - help
 
