@@ -1,0 +1,24 @@
+Language:
+  Console:
+    Enabled: MinePacks a été activé !
+    Disabled: MinePacks a été désactivé.
+    NotFromConsole: Commande non utilisable depuis la console.
+    LangUpdated: Le fichier de langage a été mis à jour.
+    UpdateUUIDs: Commence la mise à jour de la base de données UUIDs ...
+    UpdatedUUIDs: 'Mise à jour de %s compte vers UUIDs.'
+  Ingame:
+    NoPermission: "Vous n'avez pas la permissions de faire cela."
+    OwnBackPackClose: 'Votre sac à dos a été fermé !'
+    PlayerBackPackClose: "%s's sac à dos ont été fermés !"
+    InvalidBackpack: Sac à dos invalide.
+    BackpackCleaned: Sac à dos nétoyé.
+    Cooldown: "S'il vous plaît veuillez patienter avant de réouvrir votre sac à dos."
+    WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sacà dos dans votre gamemode actuel."
+  Description:
+    Backpack: Ouverture de votre sac à dos.
+    Clean: Nétoyé votre sac à dos.
+    CleanOther: Nétoyé le sac à dos d'autres joueurs.
+    View: Voir le conenu du sac à dos des autres joueurs.
+
+# Version de fichierde langage. A ne pas modifié !
+Version: 5
