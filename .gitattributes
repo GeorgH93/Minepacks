@@ -1,0 +1,13 @@
+﻿# Auto detect text files and perform LF normalization
+* text=auto
+
+*.java text diff=java encoding=utf-8
+*.xml text
+*.yml text encoding=utf-8
+*.md text
+
+# Ignore for export
+.gitattributes export-ignore
+.gitignore export-ignore
+.travis export-ignore
+/.github/ export-ignore
