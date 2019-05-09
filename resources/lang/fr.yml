@@ -16,9 +16,9 @@ Language:
     WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sacà dos dans votre gamemode actuel."
   Description:
     Backpack: Ouverture de votre sac à dos.
-    Clean: Nétoyé votre sac à dos.
-    CleanOther: Nétoyé le sac à dos d'autres joueurs.
-    View: Voir le conenu du sac à dos des autres joueurs.
+    Clean: Nétoyer votre sac à dos.
+    CleanOther: Nétoyer le sac à dos d'autres joueurs.
+    View: Voir le contenu du sac à dos des autres joueurs.
 
 # Version de fichierde langage. A ne pas modifié !
 Version: 5
