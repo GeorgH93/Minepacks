@@ -44,6 +44,19 @@ git checkout --track origin/API
 mvn clean install
 ```
 
+### Get access to the API:
+```java
+public MinepacksPlugin getMinepacks() {
+    Plugin bukkitPlugin = Bukkit.getPluginManager().getPlugin("Minepacks");
+    if(!(bukkitPlugin instanceof MinepacksPlugin)) {
+    	// Do something if Minepacks is not available
+        return null;
+    }
+    return (MinepacksPlugin) bukkitPlugin;
+}
+```
+You can now use the returned `MinepacksPlugin` object to interact with the Minepacks plugin.
+
 ## Links
 * [JavaDoc][apiJavaDoc]
 * [API Build Server][apiBuilds]
