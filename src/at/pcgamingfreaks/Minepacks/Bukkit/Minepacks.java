@@ -247,10 +247,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void openBackpack(@NotNull Player opener, @NotNull OfflinePlayer owner, boolean editable, @Nullable String title)
 	{
 		Validate.notNull(owner);
-		database.getBackpack(owner, new Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack>()
+		database.getBackpack(owner, new Callback<Backpack>()
 		{
 			@Override
-			public void onResult(at.pcgamingfreaks.Minepacks.Bukkit.Backpack backpack)
+			public void onResult(Backpack backpack)
 			{
 				openBackpack(opener, backpack, editable, title);
 			}
@@ -289,13 +289,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public void getBackpack(@NotNull OfflinePlayer owner, @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback)
+	public void getBackpack(@NotNull OfflinePlayer owner, @NotNull Callback<Backpack> callback)
 	{
 		database.getBackpack(owner, callback);
 	}
 
 	@Override
-	public void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<at.pcgamingfreaks.Minepacks.Bukkit.Backpack> callback, boolean createNewIfNotExists)
+	public void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<Backpack> callback, boolean createNewIfNotExists)
 	{
 		database.getBackpack(owner, callback, createNewIfNotExists);
 	}

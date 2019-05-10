@@ -198,7 +198,7 @@ public abstract class Database implements Listener
 		return (player == null) ? null : backpacks.get(player);
 	}
 
-	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback, final boolean createNewOnFail)
+	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback, final boolean createNewOnFail)
 	{
 		if(player == null)
 		{
@@ -238,7 +238,7 @@ public abstract class Database implements Listener
 		}
 	}
 
-	public void getBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback)
 	{
 		getBackpack(player, callback, true);
 	}

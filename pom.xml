@@ -1,20 +1,3 @@
-<!--
-  ~   Copyright (C) 2019 GeorgH93
-  ~
-  ~   This program is free software: you can redistribute it and/or modify
-  ~   it under the terms of the GNU General Public License as published by
-  ~   the Free Software Foundation, either version 3 of the License, or
-  ~   (at your option) any later version.
-  ~
-  ~   This program is distributed in the hope that it will be useful,
-  ~   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  ~   GNU General Public License for more details.
-  ~
-  ~   You should have received a copy of the GNU General Public License
-  ~   along with this program. If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -56,7 +39,7 @@
 	<repositories>
 		<repository>
 			<id>pcgf-repo</id>
-			<url>https://repo.pcgamingfreaks.at/repository/everything/</url>
+			<url>https://repo.pcgamingfreaks.at/repository/maven-everything/</url>
 		</repository>
 		<repository>
 			<id>spigot-nexus</id>
@@ -65,12 +48,30 @@
 	</repositories>
 
 	<dependencies>
+		<!-- Minepacks API -->
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>Minepacks-API</artifactId>
+			<version>2.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.bukkit</groupId>
+					<artifactId>bukkit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>at.pcgamingfreaks</groupId>
+					<artifactId>PluginLib</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Bukkit -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.13.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- PCGF Plugin Lib -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
@@ -79,7 +80,7 @@
 	</dependencies>
 
 	<build>
-		<defaultGoal>clean install</defaultGoal>
+		<defaultGoal>clean package</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
@@ -104,6 +105,29 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<!-- Bundle the API into the JAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<minimizeJar>false</minimizeJar>
+							<artifactSet>
+								<includes>
+									<include>at.pcgamingfreaks:Minepacks-API</include>
+								</includes>
+							</artifactSet>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

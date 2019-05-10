@@ -19,9 +19,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.command.CommandSender;
@@ -53,7 +53,7 @@ public class BackupCommand extends MinepacksCommand
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					backpack.backup();
+					((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
 					messageCreated.send(sender);
 				}
 
