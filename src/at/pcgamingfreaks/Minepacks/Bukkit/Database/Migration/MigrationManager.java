@@ -127,14 +127,14 @@ public class MigrationManager
 					if(!(plugin.getDatabase() instanceof SQL)) return null;
 					return new SQLtoFilesMigration(plugin, (SQL) plugin.getDatabase());
 				case "mysql":
-					if(global && plugin.getDatabase() instanceof MySQLShared || !global && plugin.getDatabase() instanceof MySQL) return null;
+					if(plugin.getDatabase() instanceof MySQL) return null;
 					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "mysql", global);
 					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "mysql", global);
 				case "sqlite":
-				default:
-					if(global && plugin.getDatabase() instanceof SQLiteShared || !global && plugin.getDatabase() instanceof SQLite) return null;
+					if(plugin.getDatabase() instanceof SQLite) return null;
 					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "sqlite", global);
 					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "sqlite", global);
+				default: plugin.getLogger().warning(String.format(Database.MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
 			}
 		}
 		catch(Exception e)

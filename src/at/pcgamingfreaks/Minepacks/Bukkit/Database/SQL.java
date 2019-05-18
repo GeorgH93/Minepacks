@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
@@ -24,15 +25,12 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -42,7 +40,7 @@ import java.util.Map;
 
 public abstract class SQL extends Database
 {
-	private HikariDataSource dataSource;
+	private ConnectionProvider dataSource;
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
@@ -50,17 +48,11 @@ public abstract class SQL extends Database
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
 	protected boolean updatePlayer, syncCooldown;
 
-	public SQL(Minepacks plugin)
+	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider)
 	{
 		super(plugin);
 
-		HikariConfig poolConfig = getPoolConfig();
-		if(poolConfig != null)
-		{
-			poolConfig.setPoolName("Minepacks-Connection-Pool");
-			poolConfig.addDataSourceProperty("cachePrepStmts", "true");
-			dataSource = new HikariDataSource(poolConfig);
-		}
+		dataSource = connectionProvider;
 
 		loadSettings();
 		buildQuerys();
@@ -95,8 +87,6 @@ public abstract class SQL extends Database
 			}
 		}
 	}
-
-	protected abstract @Nullable HikariConfig getPoolConfig();
 
 	protected void loadSettings()
 	{

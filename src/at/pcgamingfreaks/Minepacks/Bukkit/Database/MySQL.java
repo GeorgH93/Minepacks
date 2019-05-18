@@ -17,10 +17,13 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
+import at.pcgamingfreaks.Database.ConnectionProvider.MySQLConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import com.zaxxer.hikari.HikariConfig;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,21 +31,9 @@ import java.sql.SQLException;
 public class MySQL extends SQL
 {
 	//TODO add cooldown sync table
-	public MySQL(Minepacks plugin)
+	public MySQL(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider)
 	{
-		super(plugin); // Load Settings
-	}
-
-	@Override
-	protected HikariConfig getPoolConfig()
-	{
-		HikariConfig poolConfig = new HikariConfig();
-		poolConfig.setJdbcUrl("jdbc:mysql://" + plugin.getConfiguration().getSQLHost() + "/" + plugin.getConfiguration().getSQLDatabase() + "?allowMultiQueries=true&autoReconnect=true" + plugin.getConfiguration().getSQLProperties());
-		poolConfig.setUsername(plugin.getConfiguration().getSQLUser());
-		poolConfig.setPassword(plugin.getConfiguration().getSQLPassword());
-		poolConfig.setMinimumIdle(1);
-		poolConfig.setMaximumPoolSize(plugin.getConfiguration().getSQLMaxConnections());
-		return poolConfig;
+		super(plugin, (connectionProvider == null) ? new MySQLConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), plugin.getConfiguration()) : connectionProvider);
 	}
 
 	@Override

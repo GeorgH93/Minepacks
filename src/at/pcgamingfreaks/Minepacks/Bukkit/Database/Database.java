@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
@@ -46,6 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Database implements Listener
 {
 	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
+	public static final String MESSAGE_UNKNOWN_DB_TYPE = ConsoleColor.RED + "Unknown database type \"%s\"!" + ConsoleColor.RESET;
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer;
@@ -84,34 +86,29 @@ public abstract class Database implements Listener
 
 	public static Database getDatabase(Minepacks plugin)
 	{
-		Database database;
-		switch(plugin.getConfiguration().getDatabaseType().toLowerCase())
+		String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase();
+		ConnectionProvider connectionProvider = null;
+		if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 		{
-			case "mysql":
-				database = new MySQL(plugin); break;
+			DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
+			if(pool == null)
+			{
+				plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+				return null;
+			}
+			dbType = pool.getDatabaseType().toLowerCase();
+			connectionProvider = pool.getConnectionProvider();
+		}
+		Database database;
+		switch(dbType)
+		{
+			case "mysql": database = new MySQL(plugin, connectionProvider); break;
+			case "sqlite": database = new SQLite(plugin, connectionProvider); break;
 			case "flat":
 			case "file":
 			case "files":
 				database = new Files(plugin); break;
-			case "external":
-			case "global":
-			case "shared":
-				DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
-				if(pool == null)
-				{
-					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-					return null;
-				}
-				switch(pool.getDatabaseType().toLowerCase())
-				{
-					case "mysql": database = new MySQLShared(plugin, pool); break;
-					case "sqlite": database = new SQLiteShared(plugin, pool); break;
-					default: plugin.getLogger().warning(ConsoleColor.RED + "The database type of the shared pool is currently not supported!" + ConsoleColor.RESET); return null;
-				}
-				break;
-			case "sqlite":
-			default:
-				database = new SQLite(plugin);
+			default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
 		}
 		database.init();
 		return database;

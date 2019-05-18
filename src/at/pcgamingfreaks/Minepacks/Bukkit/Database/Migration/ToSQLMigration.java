@@ -17,10 +17,13 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MySQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
-import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 import at.pcgamingfreaks.Reflection;
 
 import org.intellij.lang.annotations.Language;
@@ -50,13 +53,12 @@ public abstract class ToSQLMigration extends Migration
 	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull Database oldDb, @NotNull String dbType, boolean global) throws Exception
 	{
 		super(plugin, oldDb);
-		if(global)
+		ConnectionProvider connectionProvider = (global) ? PluginLib.getInstance().getDatabaseConnectionPool().getConnectionProvider() : null;
+		switch(dbType)
 		{
-			newDb = (SQL) Reflection.getConstructor((dbType.equals("mysql")) ? MySQLShared.class : SQLiteShared.class, Minepacks.class, DatabaseConnectionPool.class).newInstance(plugin, PluginLib.getInstance().getDatabaseConnectionPool());
-		}
-		else
-		{
-			newDb = (SQL) Reflection.getConstructor((dbType.equals("mysql")) ? MySQL.class : SQLite.class, Minepacks.class).newInstance(plugin);
+			case "mysql": newDb = new MySQL(plugin, connectionProvider); break;
+			case "sqlite": newDb = new SQLite(plugin, connectionProvider); break;
+			default: newDb = null;
 		}
 		uuid = plugin.getConfiguration().getUseUUIDs();
 	}

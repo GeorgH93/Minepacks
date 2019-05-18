@@ -75,7 +75,8 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.8-SNAPSHOT</version>
+			<version>1.0.10-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

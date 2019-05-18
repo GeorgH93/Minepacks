@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.YamlFileManager;
@@ -36,7 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @SuppressWarnings("ConstantConditions")
-public class Config extends Configuration
+public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
 	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
 
@@ -91,36 +92,41 @@ public class Config extends Configuration
 		}
 	}
 
-	public String getSQLHost()
+	@Override
+	public @NotNull String getSQLHost()
 	{
 		return getConfig().getString("Database.SQL.Host", "localhost");
 	}
 
-	public String getSQLDatabase()
+	@Override
+	public @NotNull String getSQLDatabase()
 	{
 		return getConfig().getString("Database.SQL.Database", "minecraft");
 	}
 
-	public String getSQLUser()
+	@Override
+	public @NotNull String getSQLUser()
 	{
 		return getConfig().getString("Database.SQL.User", "minecraft");
 	}
 
-	public String getSQLPassword()
+	@Override
+	public @NotNull String getSQLPassword()
 	{
 		return getConfig().getString("Database.SQL.Password", "");
 	}
 
+	@Override
 	public int getSQLMaxConnections()
 	{
 		return getConfig().getInt("Database.SQL.MaxConnections", 2);
 	}
 
-	public String getSQLProperties()
+	@Override
+	public @NotNull String getSQLConnectionProperties()
 	{
-		List<String> list = getConfig().getStringList("Database.MySQL.Properties", null);
-		StringBuilder str = new StringBuilder();
-		if(list == null) return "";
+		List<String> list = getConfig().getStringList("Database.SQL.Properties", new LinkedList<>());
+		StringBuilder str = new StringBuilder("?allowMultiQueries=true&autoReconnect=true");
 		for(String s : list)
 		{
 			str.append("&").append(s);

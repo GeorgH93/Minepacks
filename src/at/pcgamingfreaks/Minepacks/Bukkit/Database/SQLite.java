@@ -17,12 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
+import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-
-import com.zaxxer.hikari.HikariConfig;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.sql.Connection;
@@ -33,9 +35,9 @@ import java.sql.Statement;
 public class SQLite extends SQL
 {
 	//TODO add cooldown sync table
-	public SQLite(Minepacks plugin)
+	public SQLite(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider)
 	{
-		super(plugin);
+		super(plugin, (connectionProvider == null) ? new SQLiteConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db") : connectionProvider);
 	}
 
 	@Override
@@ -60,25 +62,6 @@ public class SQLite extends SQL
 		useUUIDSeparators = false;
 		updatePlayer = true;
 		syncCooldown = false;
-	}
-
-	@Override
-	protected HikariConfig getPoolConfig()
-	{
-		try
-		{
-			Class.forName("org.sqlite.JDBC");
-		}
-		catch(ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-		HikariConfig poolConfig = new HikariConfig();
-		poolConfig.setMaximumPoolSize(1);
-		poolConfig.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db");
-		poolConfig.setConnectionTestQuery("SELECT 1;");
-		return poolConfig;
 	}
 
 	@Override
