@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2014-2018 GeorgH93
+ *   Copyright (C) 2014-2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -59,23 +59,23 @@ public class MySQL extends SQL
 			{
 				if(useUUIDSeparators)
 				{
-					DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n`"
+					DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n`"
 							+ fieldUUID + "` CHAR(36) DEFAULT NULL,\nPRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldUUID + "_UNIQUE` (`" + fieldUUID + "`)\n);");
 				}
 				else
 				{
 					// Check if table exists
 					validateUUIDColumn(connection);
-					DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n`"
+					DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` VARCHAR(16) NOT NULL,\n`"
 							+ fieldUUID + "` CHAR(32) DEFAULT NULL,\nPRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldUUID + "_UNIQUE` (`" + fieldUUID + "`)\n);");
 				}
 			}
 			else
 			{
-				DBTools.updateDB(connection, "CREATE TABLE `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n"
+				DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tablePlayers + "` (\n`" + fieldPlayerID + "` INT UNSIGNED NOT NULL AUTO_INCREMENT,\n`" + fieldName + "` CHAR(16) NOT NULL,\n"
 						+ "PRIMARY KEY (`" + fieldPlayerID + "`),\nUNIQUE INDEX `" + fieldName + "_UNIQUE` (`" + fieldName + "`)\n);");
 			}
-			DBTools.updateDB(connection, "CREATE TABLE `" + tableBackpacks + "` (\n`" + fieldBPOwner + "` INT UNSIGNED NOT NULL,\n`" + fieldBPITS + "` BLOB,\n`"
+			DBTools.updateDB(connection, "CREATE TABLE IF NOT EXISTS `" + tableBackpacks + "` (\n`" + fieldBPOwner + "` INT UNSIGNED NOT NULL,\n`" + fieldBPITS + "` BLOB,\n`"
 					+ fieldBPVersion + "` INT DEFAULT 0,\n" + ((maxAge > 0) ? "`" + fieldBPLastUpdate + "` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" : "") + "PRIMARY KEY (`" + fieldBPOwner + "`)\n);");
 		}
 		catch (SQLException e)
