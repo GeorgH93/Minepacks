@@ -42,7 +42,6 @@ import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.UpdateProvider;
 import at.pcgamingfreaks.Version;
 
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -246,7 +245,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public void openBackpack(@NotNull Player opener, @NotNull OfflinePlayer owner, boolean editable, @Nullable String title)
 	{
-		Validate.notNull(owner);
 		database.getBackpack(owner, new Callback<Backpack>()
 		{
 			@Override
@@ -263,7 +261,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public void openBackpack(@NotNull Player opener, @Nullable Backpack backpack, boolean editable, @Nullable String title)
 	{
-		Validate.notNull(opener);
 		WorldBlacklistMode disabled = isDisabled(opener);
 		if(disabled != WorldBlacklistMode.None)
 		{
