@@ -58,6 +58,13 @@ public interface MinepacksPlugin
 	}
 
 	/**
+	 * Checks if the plugin is running in standalone mode. Some features and API functions are not available in standalone mode!
+	 *
+	 * @return True if the plugin is running in standalone mode.
+	 */
+	boolean isRunningInStandaloneMode();
+
+	/**
 	 * Let a given player open the backpack of an other player.
 	 *
 	 * @param opener   The player who opens the backpack.

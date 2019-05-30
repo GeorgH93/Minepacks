@@ -32,6 +32,9 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Only available if the plugin is not running in standalone mode!
+ */
 public abstract class MinepacksCommand extends SubCommand
 {
 	private static MinepacksPlugin minepacksPlugin = null;

@@ -24,6 +24,7 @@ public interface MinepacksCommandManager
 {
 	/**
 	 * Registers a new sub-command for /backpack.
+	 * This function is only available if the plugin is not running in standalone mode!
 	 *
 	 * @param command The command that should be registered.
 	 */
@@ -31,6 +32,7 @@ public interface MinepacksCommandManager
 
 	/**
 	 * Unregisters a sub-command for /backpack.
+	 * This function is only available if the plugin is not running in standalone mode!
 	 *
 	 * @param command The command that should be unregistered.
 	 */
