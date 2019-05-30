@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 import at.pcgamingfreaks.Reflection;
 
@@ -110,12 +109,8 @@ public class MigrationManager
 			boolean global = false;
 			if(targetDatabaseType.toLowerCase().equals("external") ||targetDatabaseType.toLowerCase().equals("global") || targetDatabaseType.toLowerCase().equals("shared"))
 			{
-				DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
-				if(pool == null)
-				{
-					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-					return null;
-				}
+				DatabaseConnectionPool pool = Database.getSharedDatabaseConnectionPool(plugin);
+				if(pool == null) return null;
 				targetDatabaseType = pool.getDatabaseType().toLowerCase();
 				global = true;
 			}

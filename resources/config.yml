@@ -2,7 +2,7 @@
 
 # Language Settings
 Language:
-  # Defines the used language and the corresponding file used. The corresponding language file will be placed next to the config.yml named: <Language>.yml
+  # Defines the used language and the corresponding file used. The corresponding language file will be placed in the lang folder next to the config.yml named: <Language>.yml
   Language: en
   # Options:
   #     Overwrite (deletes all changes from the file and extracts a new language file)

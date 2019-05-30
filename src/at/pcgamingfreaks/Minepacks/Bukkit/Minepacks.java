@@ -58,8 +58,9 @@ import java.util.Collection;
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2";
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.11-SNAPSHOT";
 	private static Minepacks instance = null;
+	private static boolean standalone = false;
 
 	private Config config;
 	private Language lang;
@@ -81,23 +82,39 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
+	public boolean isRunningInStandaloneMode()
+	{
+		return standalone;
+	}
+
+	@Override
 	public void onEnable()
 	{
-		Utils.warnOnJava_1_7(getLogger());
-
-		if(PluginLib.getInstance().getVersion().olderThan(new Version("1.0.8-SNAPSHOT")))
+		// Check if running as standalone edition
+		if(getDescription().getVersion().contains("Standalone"))
 		{
-			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
-			setEnabled(false);
-			return;
+			standalone = true;
+			if(getServer().getPluginManager().isPluginEnabled("PCGF_PluginLib"))
+			{
+				getLogger().info("You do have the PCGF_PluginLib installed. You may consider switching to the default version of the plugin to reduce memory load and unlock additional features.");
+			}
 		}
+		else
+		{
+			// Not standalone so we should check the version of the PluginLib
+			if(PluginLib.getInstance().getVersion().olderThan(new Version(MIN_PCGF_PLUGIN_LIB_VERSION)))
+			{
+				getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
+				setEnabled(false);
+				return;
+			}
+		}
+
 
 		//region Check compatibility with used minecraft version
 		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_14_R1))
 		{
-			String name = Bukkit.getServer().getClass().getPackage().getName();
-			String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-			this.warnOnVersionIncompatibility(version[0] + "." + version[1]);
+			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
 			return;
 		}
@@ -117,7 +134,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		instance = this;
 		config = new Config(this);
 		lang = new Language(this);
-
 		load();
 
 		if(config.getAutoUpdate()) update(null);
@@ -131,12 +147,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		Updater updater = null;
 		if(config.getAutoUpdate()) updater = update(null);
 		unload();
-		if(updater != null) updater.waitForAsyncOperation();
+		if(updater != null) updater.waitForAsyncOperation(); // Wait for updater to finish
 		getLogger().info(StringUtils.getPluginDisabledMessage(getDescription().getName()));
 		instance = null;
 	}
 
-	public Updater update(@Nullable at.pcgamingfreaks.Updater.Updater.UpdaterResponse output)
+	public @NotNull Updater update(@Nullable at.pcgamingfreaks.Updater.Updater.UpdaterResponse output)
 	{
 		UpdateProvider updateProvider;
 		if(config.useUpdaterDevBuilds())
@@ -171,18 +187,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		pluginManager.registerEvents(new BackpackEventListener(this), this);
 		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
 		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
-		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
-		if(worldBlacklist.size() == 0)
-		{
-			worldBlacklistMode = WorldBlacklistMode.None;
-		}
-		else
-		{
-			worldBlacklistMode = config.getWorldBlacklistMode();
-		}
+		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlacklistMode();
 
 		gameModes = config.getAllowedGameModes();
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
@@ -206,11 +215,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		load();
 	}
 
-	public void warnOnVersionIncompatibility(String version)
+	public void warnOnVersionIncompatibility()
 	{
+		String name = Bukkit.getServer().getClass().getPackage().getName();
+		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		getLogger().warning(ConsoleColor.RED + String.format("Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). " +
-				                                                     "Please check for updates!", version, getDescription().getVersion()) + ConsoleColor.RESET);
+				                                                     "Please check for updates!", version[0] + "." + version[1], getDescription().getVersion()) + ConsoleColor.RESET);
 		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		Utils.blockThread(5);
 	}

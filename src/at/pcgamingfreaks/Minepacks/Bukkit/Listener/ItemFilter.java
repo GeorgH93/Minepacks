@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,12 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
+import at.pcgamingfreaks.Bukkit.ItemNameResolver;
+import at.pcgamingfreaks.Bukkit.Language;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver;
+import at.pcgamingfreaks.YamlFileUpdateMethod;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,6 +34,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -39,12 +42,13 @@ public class ItemFilter extends MinepacksListener
 {
 	private final Message messageNotAllowedInBackpack;
 	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
+	private final ItemNameResolver itemNameResolver;
 
 	public ItemFilter(final Minepacks plugin)
 	{
 		super(plugin);
 
-		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
+		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
 		{
 			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
 			{
@@ -54,6 +58,26 @@ public class ItemFilter extends MinepacksListener
 		blockedMaterials.addAll(plugin.getConfiguration().getItemFilterBlacklist());
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
+
+		if(plugin.isRunningInStandaloneMode())
+		{
+			itemNameResolver = new ItemNameResolver();
+			if (MCVersion.isOlderThan(MCVersion.MC_1_13)) {
+				Language itemNameLanguage = new Language(plugin, 1, 1, File.separator + "lang", "items_", "legacy_items_");
+				itemNameLanguage.setFileDescription("item name language");
+				itemNameLanguage.load(plugin.getConfiguration().getLanguage(), YamlFileUpdateMethod.OVERWRITE);
+				itemNameResolver.loadLegacy(itemNameLanguage, plugin.getLogger());
+			} else {
+				Language itemNameLanguage = new Language(plugin, 2, File.separator + "lang", "items_");
+				itemNameLanguage.setFileDescription("item name language");
+				itemNameLanguage.load(plugin.getConfiguration().getLanguage(), YamlFileUpdateMethod.OVERWRITE);
+				itemNameResolver.load(itemNameLanguage, plugin.getLogger());
+			}
+		}
+		else
+		{
+			itemNameResolver = at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver.getInstance();
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -63,7 +87,7 @@ public class ItemFilter extends MinepacksListener
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
-				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), ItemNameResolver.getInstance().getName(event.getItem()));
+				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), itemNameResolver.getName(event.getItem()));
 			}
 			event.setCancelled(true);
 		}
@@ -74,7 +98,7 @@ public class ItemFilter extends MinepacksListener
 	{
 		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getCurrentItem()));
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCurrentItem()));
 			event.setCancelled(true);
 		}
 	}
@@ -84,7 +108,7 @@ public class ItemFilter extends MinepacksListener
 	{
 		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(new MinecraftMaterial(event.getOldCursor())))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), ItemNameResolver.getInstance().getName(event.getOldCursor()));
+			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getOldCursor()));
 			event.setCancelled(true);
 		}
 	}

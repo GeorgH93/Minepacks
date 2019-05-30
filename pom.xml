@@ -32,6 +32,9 @@
 	<properties>
 		<author>GeorgH93</author>
 		<website>https://www.spigotmc.org/resources/19286/</website>
+		<version>${project.version}</version>
+		<dependencies>PCGF_PluginLib</dependencies>
+		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -75,8 +78,7 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.10-SNAPSHOT</version>
-			<scope>provided</scope>
+			<version>1.0.11-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -132,6 +134,78 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>Standalone</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<version>${project.version}-Standalone</version>
+				<dependencies/>
+				<mainClass>${project.groupId}.${project.artifactId}Standalone.Bukkit.${project.artifactId}</mainClass>
+			</properties>
+			<build>
+				<finalName>${project.artifactId}Standalone-${project.version}</finalName>
+				<plugins>
+					<!-- Shades some required libs into the final jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.2.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<createDependencyReducedPom>false</createDependencyReducedPom>
+									<minimizeJar>true</minimizeJar>
+									<artifactSet>
+										<includes>
+											<include>at.pcgamingfreaks:Minepacks-API</include>
+											<include>at.pcgamingfreaks:PluginLib</include>
+										</includes>
+									</artifactSet>
+									<relocations>
+										<relocation>
+											<pattern>at.pcgf.libs</pattern>
+											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs</shadedPattern>
+										</relocation>
+										<relocation>
+											<pattern>at.pcgamingfreaks.Minepacks</pattern>
+											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone</shadedPattern>
+											<excludes>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.*</exclude>
+											</excludes>
+										</relocation>
+										<relocation>
+											<pattern>at.pcgamingfreaks</pattern>
+											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.at.pcgamingfreaks</shadedPattern>
+											<excludes>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.*</exclude>
+											</excludes>
+										</relocation>
+									</relocations>
+									<filters>
+										<filter>
+											<artifact>at.pcgamingfreaks:PluginLib</artifact>
+											<excludes>
+												<exclude>*.yml</exclude>
+												<exclude>META-INF/*.txt</exclude>
+											</excludes>
+										</filter>
+									</filters>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<distributionManagement>
 		<repository>

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
@@ -301,13 +302,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	//region Shulkerboxes
 	public boolean isShulkerboxesPreventInBackpackEnabled()
-	{
-		return getConfig().getBoolean("Shulkerboxes.PreventInBackpack", true);
+	{ // Shulkerboxes are only available in MC 1.11 and newer
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfig().getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
 	public boolean isShulkerboxesDisable()
-	{
-		return getConfig().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
+	{ // Shulkerboxes are only available in MC 1.11 and newer
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfig().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
 	}
 
 	public boolean isShulkerboxesExistingDropEnabled()
