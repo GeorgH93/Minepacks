@@ -3,9 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/Migration/SQLtoSQLMigration.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/MySQL.java" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/MySQLShared.java" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/SQL.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/SQLite.java" dialect="SQLite" />
-    <file url="file://$PROJECT_DIR$/src/at/pcgamingfreaks/Minepacks/Bukkit/Database/SQLiteShared.java" dialect="SQLite" />
   </component>
 </project>
