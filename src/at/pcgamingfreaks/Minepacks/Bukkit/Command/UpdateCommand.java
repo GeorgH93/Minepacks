@@ -45,8 +45,7 @@ public class UpdateCommand extends MinepacksCommand
 	public void execute(@NotNull final CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
 		messageCheckingForUpdates.send(sender);
-		/*if[STANDALONE]
-		else[STANDALONE]*/
+		/*if_not[STANDALONE]*/
 		((at.pcgamingfreaks.PluginLib.Bukkit.PluginLib) at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance()).update(null); // Make the PluginLib check for updates too
 		/*end[STANDALONE]*/
 		((Minepacks) plugin).update(result -> {

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -31,13 +31,15 @@ import java.util.List;
 
 public class HelpCommand extends MinepacksCommand
 {
-	private Collection<MinepacksCommand> commands;
-	private Message messageHeader, messageFooter;
+	private final Collection<MinepacksCommand> commands;
+	private final Message messageHeader, messageFooter;
+	private final CommandManager commandManager;
 
-	public HelpCommand(Minepacks plugin, Collection<MinepacksCommand> commands)
+	public HelpCommand(Minepacks plugin, Collection<MinepacksCommand> commands, CommandManager commandManager)
 	{
 		super(plugin, "help", plugin.getLanguage().getTranslated("Commands.Description.Help"), plugin.getLanguage().getCommandAliases("Help"));
 		this.commands = commands;
+		this.commandManager = commandManager;
 
 		messageHeader = plugin.getLanguage().getMessage("Ingame.Help.Header");
 		messageFooter = plugin.getLanguage().getMessage("Ingame.Help.Footer");
@@ -53,7 +55,7 @@ public class HelpCommand extends MinepacksCommand
 			temp = cmd.doGetHelp(sender);
 			if(temp != null) help.addAll(temp);
 		}
-		((CommandManager) getMinepacksPlugin().getCommandManager()).sendHelp(sender, mainCommandAlias, help);
+		commandManager.sendHelp(sender, mainCommandAlias, help);
 		messageFooter.send(sender);
 		//TODO: pages
 	}

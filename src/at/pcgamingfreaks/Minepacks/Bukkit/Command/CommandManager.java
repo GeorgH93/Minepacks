@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import org.bukkit.entity.Player;
 import java.util.Collection;
 import java.util.List;
 
-public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> implements MinepacksCommandManager
+public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> /*if_not[STANDALONE]*/ implements MinepacksCommandManager /*end[STANDALONE]*/
 {
 	private final Minepacks plugin;
 	private final RegisterablePluginCommand backpackCommand;
@@ -77,7 +77,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		registerSubCommand(new RestoreCommand(plugin));
 		registerSubCommand(new MigrateCommand(plugin));
 		registerSubCommand(new VersionCommand(plugin));
-		registerSubCommand(new HelpCommand(plugin, commands));
+		registerSubCommand(new HelpCommand(plugin, commands, this));
 	}
 
 	@Override

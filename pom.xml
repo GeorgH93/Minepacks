@@ -186,7 +186,10 @@
 											<pattern>at.pcgamingfreaks</pattern>
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.at.pcgamingfreaks</shadedPattern>
 											<excludes>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.*</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Callback</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager</exclude>
 											</excludes>
 										</relocation>
 									</relocations>

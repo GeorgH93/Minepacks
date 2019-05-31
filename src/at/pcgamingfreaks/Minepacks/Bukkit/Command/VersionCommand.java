@@ -37,8 +37,7 @@ public class VersionCommand extends MinepacksCommand
 	{
 		sender.sendMessage("##### Start Minepacks version info #####");
 		sender.sendMessage("Marriage Master: " +  plugin.getDescription().getVersion());
-		/*if[STANDALONE]
-		else[STANDALONE]*/
+		/*if_not[STANDALONE]*/
 		sender.sendMessage("PCGF PluginLib: " + at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion());
 		/*end[STANDALONE]*/
 		sender.sendMessage("Server: " +  plugin.getServer().getVersion());

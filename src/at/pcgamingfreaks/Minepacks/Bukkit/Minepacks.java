@@ -94,6 +94,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		// Check if running as standalone edition
 		/*if[STANDALONE]
+		getLogger().info("Starting Minepacks in standalone mode!");
 		if(getServer().getPluginManager().isPluginEnabled("PCGF_PluginLib"))
 		{
 			getLogger().info("You do have the PCGF_PluginLib installed. You may consider switching to the default version of the plugin to reduce memory load and unlock additional features.");
@@ -309,7 +310,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public MinepacksCommandManager getCommandManager()
 	{
+		/*if[STANDALONE]
+		return null;
+		else[STANDALONE]*/
 		return commandManager;
+		/*end[STANDALONE]*/
 	}
 
 	public int getBackpackPermSize(Player player)
