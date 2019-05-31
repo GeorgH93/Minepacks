@@ -18,13 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.ItemNameResolver;
-import at.pcgamingfreaks.Bukkit.Language;
-import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.YamlFileUpdateMethod;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -34,7 +31,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -59,25 +55,25 @@ public class ItemFilter extends MinepacksListener
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 
-		if(plugin.isRunningInStandaloneMode())
+		/*if[STANDALONE]
+		itemNameResolver = new ItemNameResolver();
+		if (at.pcgamingfreaks.Bukkit.MCVersion.isOlderThan(at.pcgamingfreaks.Bukkit.MCVersion.MC_1_13))
 		{
-			itemNameResolver = new ItemNameResolver();
-			if (MCVersion.isOlderThan(MCVersion.MC_1_13)) {
-				Language itemNameLanguage = new Language(plugin, 1, 1, File.separator + "lang", "items_", "legacy_items_");
-				itemNameLanguage.setFileDescription("item name language");
-				itemNameLanguage.load(plugin.getConfiguration().getLanguage(), YamlFileUpdateMethod.OVERWRITE);
-				itemNameResolver.loadLegacy(itemNameLanguage, plugin.getLogger());
-			} else {
-				Language itemNameLanguage = new Language(plugin, 2, File.separator + "lang", "items_");
-				itemNameLanguage.setFileDescription("item name language");
-				itemNameLanguage.load(plugin.getConfiguration().getLanguage(), YamlFileUpdateMethod.OVERWRITE);
-				itemNameResolver.load(itemNameLanguage, plugin.getLogger());
-			}
+			at.pcgamingfreaks.Bukkit.Language itemNameLanguage = new at.pcgamingfreaks.Bukkit.Language(plugin, 1, 1, java.io.File.separator + "lang", "items_", "legacy_items_");
+			itemNameLanguage.setFileDescription("item name language");
+			itemNameLanguage.load(plugin.getConfiguration().getLanguage(), at.pcgamingfreaks.YamlFileUpdateMethod.OVERWRITE);
+			itemNameResolver.loadLegacy(itemNameLanguage, plugin.getLogger());
 		}
 		else
 		{
-			itemNameResolver = at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver.getInstance();
+			at.pcgamingfreaks.Bukkit.Language itemNameLanguage = new at.pcgamingfreaks.Bukkit.Language(plugin, 2, java.io.File.separator + "lang", "items_");
+			itemNameLanguage.setFileDescription("item name language");
+			itemNameLanguage.load(plugin.getConfiguration().getLanguage(), at.pcgamingfreaks.YamlFileUpdateMethod.OVERWRITE);
+			itemNameResolver.load(itemNameLanguage, plugin.getLogger());
 		}
+		else[STANDALONE]*/
+		itemNameResolver = at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver.getInstance();
+		/*end[STANDALONE]*/
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

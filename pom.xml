@@ -85,6 +85,7 @@
 	<build>
 		<defaultGoal>clean package</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
+		<testSourceDirectory>test/src</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>resources</directory>
@@ -198,6 +199,23 @@
 											</excludes>
 										</filter>
 									</filters>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- Replace all the PCGF-PluginLib code with alternatives -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>munge-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>munge</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>munge</goal>
+								</goals>
+								<configuration>
+									<symbols>STANDALONE</symbols>
 								</configuration>
 							</execution>
 						</executions>

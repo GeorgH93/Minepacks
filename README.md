@@ -57,7 +57,7 @@ git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
 mvn package
 ```
-The final file will be in the target folder
+The final file will be in the `target` folder
 
 ### Standalone version:
 This version works without the PCGF-PluginLib, however some API features are not available.
@@ -66,7 +66,7 @@ git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
 mvn package -P Standalone
 ```
-The final file will be in the target folder
+The final file will be in the `target/munged` folder
 
 ## API:
 Minepacks V2 comes with an API that allows you to interact with this plugin.

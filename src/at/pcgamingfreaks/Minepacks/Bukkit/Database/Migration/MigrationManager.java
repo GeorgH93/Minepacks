@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.event.HandlerList;
@@ -109,10 +108,19 @@ public class MigrationManager
 			boolean global = false;
 			if(targetDatabaseType.toLowerCase().equals("external") ||targetDatabaseType.toLowerCase().equals("global") || targetDatabaseType.toLowerCase().equals("shared"))
 			{
-				DatabaseConnectionPool pool = Database.getSharedDatabaseConnectionPool(plugin);
-				if(pool == null) return null;
+				/*if[STANDALONE]
+				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+				return null;
+				else[STANDALONE]*/
+				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
+				if(pool == null)
+				{
+					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+					return null;
+				}
 				targetDatabaseType = pool.getDatabaseType().toLowerCase();
 				global = true;
+				/*end[STANDALONE]*/
 			}
 			switch(targetDatabaseType.toLowerCase())
 			{

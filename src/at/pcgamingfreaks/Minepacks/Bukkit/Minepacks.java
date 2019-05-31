@@ -35,7 +35,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.BackpackEventListener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
@@ -60,7 +59,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private static final int BUKKIT_PROJECT_ID = 83445;
 	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.11-SNAPSHOT";
 	private static Minepacks instance = null;
-	private static boolean standalone = false;
 
 	private Config config;
 	private Language lang;
@@ -68,6 +66,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
+	private boolean standalone = false;
 	private int maxSize;
 	private Collection<String> worldBlacklist;
 	private WorldBlacklistMode worldBlacklistMode;
@@ -91,24 +90,22 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void onEnable()
 	{
 		// Check if running as standalone edition
-		if(getDescription().getVersion().contains("Standalone"))
+		/*if[STANDALONE]
+		standalone = true;
+		if(getServer().getPluginManager().isPluginEnabled("PCGF_PluginLib"))
 		{
-			standalone = true;
-			if(getServer().getPluginManager().isPluginEnabled("PCGF_PluginLib"))
-			{
-				getLogger().info("You do have the PCGF_PluginLib installed. You may consider switching to the default version of the plugin to reduce memory load and unlock additional features.");
-			}
+			getLogger().info("You do have the PCGF_PluginLib installed. You may consider switching to the default version of the plugin to reduce memory load and unlock additional features.");
 		}
-		else
+		else[STANDALONE]*/
+		// Not standalone so we should check the version of the PluginLib
+		if(at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion().olderThan(new Version(MIN_PCGF_PLUGIN_LIB_VERSION)))
 		{
-			// Not standalone so we should check the version of the PluginLib
-			if(PluginLib.getInstance().getVersion().olderThan(new Version(MIN_PCGF_PLUGIN_LIB_VERSION)))
-			{
-				getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
-				setEnabled(false);
-				return;
-			}
+			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
+			setEnabled(false);
+			return;
 		}
+		standalone = false;
+		/*end[STANDALONE]*/
 
 
 		//region Check compatibility with used minecraft version

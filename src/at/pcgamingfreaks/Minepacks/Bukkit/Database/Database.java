@@ -24,8 +24,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
-import at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -84,32 +82,25 @@ public abstract class Database implements Listener
 		unCacheStrategie.close();
 	}
 
-	public static DatabaseConnectionPool getSharedDatabaseConnectionPool(Minepacks plugin)
-	{
-		if(plugin.isRunningInStandaloneMode())
-		{
-			plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
-			return null;
-		}
-		DatabaseConnectionPool pool = PluginLib.getInstance().getDatabaseConnectionPool();
-		if(pool == null)
-		{
-			plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-			return null;
-		}
-		return pool;
-	}
-
 	public static Database getDatabase(Minepacks plugin)
 	{
 		String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase();
 		ConnectionProvider connectionProvider = null;
 		if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 		{
-			DatabaseConnectionPool pool = getSharedDatabaseConnectionPool(plugin);
-			if(pool == null) return null;
+			/*if[STANDALONE]
+			plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+			return null;
+			else[STANDALONE]*/
+			at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
+			if(pool == null)
+			{
+				plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+				return null;
+			}
 			dbType = pool.getDatabaseType().toLowerCase();
 			connectionProvider = pool.getConnectionProvider();
+			/*end[STANDALONE]*/
 		}
 		Database database;
 		switch(dbType)

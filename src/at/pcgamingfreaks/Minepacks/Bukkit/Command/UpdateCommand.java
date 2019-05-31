@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +45,10 @@ public class UpdateCommand extends MinepacksCommand
 	public void execute(@NotNull final CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
 		messageCheckingForUpdates.send(sender);
-		if(!Minepacks.getInstance().isRunningInStandaloneMode()) ((PluginLib) PluginLib.getInstance()).update(null); // Make the PluginLib check for updates too
+		/*if[STANDALONE]
+		else[STANDALONE]*/
+		((at.pcgamingfreaks.PluginLib.Bukkit.PluginLib) at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance()).update(null); // Make the PluginLib check for updates too
+		/*end[STANDALONE]*/
 		((Minepacks) plugin).update(result -> {
 			switch(result)
 			{

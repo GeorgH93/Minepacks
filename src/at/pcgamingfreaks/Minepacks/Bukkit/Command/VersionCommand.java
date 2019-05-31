@@ -19,7 +19,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -38,9 +37,10 @@ public class VersionCommand extends MinepacksCommand
 	{
 		sender.sendMessage("##### Start Minepacks version info #####");
 		sender.sendMessage("Marriage Master: " +  plugin.getDescription().getVersion());
-		String pluginLibVersion = "Standalone";
-		if(!Minepacks.getInstance().isRunningInStandaloneMode()) pluginLibVersion = PluginLib.getInstance().getVersion().toString();
-		sender.sendMessage("PCGF PluginLib: " +  pluginLibVersion);
+		/*if[STANDALONE]
+		else[STANDALONE]*/
+		sender.sendMessage("PCGF PluginLib: " + at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion());
+		/*end[STANDALONE]*/
 		sender.sendMessage("Server: " +  plugin.getServer().getVersion());
 		sender.sendMessage("#####  End Minepacks version info  #####");
 	}

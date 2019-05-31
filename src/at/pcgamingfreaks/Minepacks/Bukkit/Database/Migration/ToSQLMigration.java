@@ -1,11 +1,11 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
- *  
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -23,7 +23,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.MySQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.PluginLib.Bukkit.PluginLib;
 import at.pcgamingfreaks.Reflection;
 
 import org.intellij.lang.annotations.Language;
@@ -50,10 +49,14 @@ public abstract class ToSQLMigration extends Migration
 	protected final SQL newDb;
 	protected final boolean uuid;
 
-	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull Database oldDb, @NotNull String dbType, boolean global) throws Exception
+	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull Database oldDb, @NotNull String dbType, boolean global)
 	{
 		super(plugin, oldDb);
-		ConnectionProvider connectionProvider = (global) ? PluginLib.getInstance().getDatabaseConnectionPool().getConnectionProvider() : null;
+		/*if[STANDALONE]
+		ConnectionProvider connectionProvider = null;
+		else[STANDALONE]*/
+		ConnectionProvider connectionProvider = (global) ? at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool().getConnectionProvider() : null;
+		/*end[STANDALONE]*/
 		switch(dbType)
 		{
 			case "mysql": newDb = new MySQL(plugin, connectionProvider); break;
