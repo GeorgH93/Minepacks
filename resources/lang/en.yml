@@ -1,3 +1,5 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
   NotFromConsole: "&cCommand not usable from console."
   Ingame:
@@ -88,7 +90,8 @@ Command:
   Help:
     - help
 
-LanguageName: "English"
+# Will be shown in the console during startup
+LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!

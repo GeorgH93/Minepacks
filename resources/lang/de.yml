@@ -1,3 +1,5 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
   NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
   Ingame:
@@ -92,7 +94,8 @@ Command:
     - help
     - hilfe
 
-LanguageName: "German"
+# Will be shown in the console during startup
+LanguageName: "german"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!

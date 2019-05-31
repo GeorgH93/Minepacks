@@ -66,7 +66,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
-	private boolean standalone = false;
 	private int maxSize;
 	private Collection<String> worldBlacklist;
 	private WorldBlacklistMode worldBlacklistMode;
@@ -83,7 +82,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public boolean isRunningInStandaloneMode()
 	{
-		return standalone;
+		/*if[STANDALONE]
+		return true;
+		else[STANDALONE]*/
+		return false;
+		/*end[STANDALONE]*/
 	}
 
 	@Override
@@ -91,7 +94,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		// Check if running as standalone edition
 		/*if[STANDALONE]
-		standalone = true;
 		if(getServer().getPluginManager().isPluginEnabled("PCGF_PluginLib"))
 		{
 			getLogger().info("You do have the PCGF_PluginLib installed. You may consider switching to the default version of the plugin to reduce memory load and unlock additional features.");
@@ -104,7 +106,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			setEnabled(false);
 			return;
 		}
-		standalone = false;
 		/*end[STANDALONE]*/
 
 
