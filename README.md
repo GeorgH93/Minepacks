@@ -74,7 +74,7 @@ This is the version of the plugin published on dev.bukkit.org and spigotmc.org.
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
-mvn clean install -P Standalone
+mvn clean install -P Standalone,ExcludeBadRabbit
 mvn clean package -P Release
 ```
 The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>-Release.jar`.
