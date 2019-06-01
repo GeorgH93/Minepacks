@@ -33,7 +33,7 @@
 		<author>GeorgH93</author>
 		<website>https://www.spigotmc.org/resources/19286/</website>
 		<version>${project.version}</version>
-		<dependencies>PCGF_PluginLib</dependencies>
+		<dependencies>depend: [ PCGF_PluginLib ]</dependencies>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

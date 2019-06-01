@@ -4,8 +4,8 @@ website: "${website}"
 main: "${mainClass}"
 description: "${project.description}"
 version: "${version}"
-depend: [ ${dependencies} ]
 api-version: "1.13"
+${dependencies}
 
 permissions:
   backpack.*:
