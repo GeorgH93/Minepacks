@@ -51,22 +51,33 @@ Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
 * [API][api] for developers
 
 ## Build from source:
+The plugin can be build in 3 different configurations.
 ### Normal version:
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
 mvn package
 ```
-The final file will be in the `target` folder
+The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>.jar`.
 
 ### Standalone version:
 This version works without the PCGF-PluginLib, however some API features are not available.
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
-mvn package -P Standalone
+mvn package -P Standalone,ExcludeBadRabbit
 ```
-The final file will be in the `target/munged` folder
+The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>-Standalone.jar`.
+
+### Release version:
+This is the version of the plugin published on dev.bukkit.org and spigotmc.org.
+```
+git clone https://github.com/GeorgH93/Minepacks.git
+cd Minepacks
+mvn clean install -P Standalone
+mvn clean package -P Release
+```
+The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>-Release.jar`.
 
 ## API:
 Minepacks V2 comes with an API that allows you to interact with this plugin.

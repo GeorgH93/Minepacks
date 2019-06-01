@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>Minepacks</artifactId>
-	<version>2.0-RC1</version>
+	<version>2.0-RC2</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
@@ -80,6 +80,12 @@
 			<artifactId>PluginLib</artifactId>
 			<version>1.0.11-SNAPSHOT</version>
 		</dependency>
+		<!-- BadRabbit -->
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>BadRabbit</artifactId>
+			<version>1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -138,6 +144,34 @@
 
 	<profiles>
 		<profile>
+			<id>ExcludeBadRabbit</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>3.1.2</version>
+						<executions>
+							<execution>
+								<id>default-jar</id>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<excludes>
+										<exclude>at/pcgamingfreaks/Minepacks/Bukkit/MinepacksBadRabbit.class</exclude>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
 			<id>Standalone</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -148,7 +182,6 @@
 				<mainClass>${project.groupId}.${project.artifactId}Standalone.Bukkit.${project.artifactId}</mainClass>
 			</properties>
 			<build>
-				<finalName>${project.artifactId}Standalone-${project.version}</finalName>
 				<plugins>
 					<!-- Shades some required libs into the final jar -->
 					<plugin>
@@ -162,8 +195,11 @@
 									<goal>shade</goal>
 								</goals>
 								<configuration>
+									<shadedArtifactAttached>true</shadedArtifactAttached>
+									<shadedClassifierName>Standalone</shadedClassifierName>
 									<createDependencyReducedPom>false</createDependencyReducedPom>
 									<minimizeJar>true</minimizeJar>
+									<outputDirectory>${project.build.directory}</outputDirectory>
 									<artifactSet>
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
@@ -210,6 +246,7 @@
 					<plugin>
 						<groupId>org.sonatype.plugins</groupId>
 						<artifactId>munge-maven-plugin</artifactId>
+						<version>1.0</version>
 						<executions>
 							<execution>
 								<id>munge</id>
@@ -219,6 +256,61 @@
 								</goals>
 								<configuration>
 									<symbols>STANDALONE</symbols>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<version>${project.version}-Release</version>
+				<dependencies>softdepend: [ PCGF_PluginLib ]</dependencies>
+				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
+			</properties>
+			<dependencies>
+				<dependency>
+					<groupId>at.pcgamingfreaks</groupId>
+					<artifactId>Minepacks</artifactId>
+					<version>${project.version}</version>
+					<classifier>Standalone</classifier>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.2.1</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>shade</goal>
+								</goals>
+								<configuration>
+									<shadedArtifactAttached>true</shadedArtifactAttached>
+									<shadedClassifierName>Release</shadedClassifierName>
+									<createDependencyReducedPom>false</createDependencyReducedPom>
+									<minimizeJar>false</minimizeJar>
+									<artifactSet>
+										<includes>
+											<include>at.pcgamingfreaks:Minepacks-API</include>
+											<include>at.pcgamingfreaks:BadRabbit</include>
+											<include>at.pcgamingfreaks:Minepacks</include>
+										</includes>
+									</artifactSet>
+									<relocations>
+										<relocation>
+											<pattern>at.pcgamingfreaks.BadRabbit</pattern>
+											<shadedPattern>at.pcgamingfreaks.Minepacks</shadedPattern>
+										</relocation>
+									</relocations>
 								</configuration>
 							</execution>
 						</executions>
