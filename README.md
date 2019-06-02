@@ -44,7 +44,7 @@ Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
 * Backpack size controlled by [permissions][wikiPermissions]
 * Auto item-collect on full inventory (can be enabled in the config)
 * SQLite/MySQL database
-* Multi Language (English and German Language File included)
+* Multi language support (english and german language file included)
 * Preserves the NBT data of items (everything that can be stored in a chest can be stored in the backpack)
 * Support for name changing / UUIDs
 * Auto-updater
@@ -82,7 +82,7 @@ The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>
 ## API:
 Minepacks V2 comes with an API that allows you to interact with this plugin.
 If you think there is something missing in the API feel free to open a [feature request][requestFeature].
-Please do not access the data of the plugin over other ways than the provided API, the inner workings will change and I won't keep track of what you are using in your plugin.
+Please do not access data of the plugin in any other way than through the provided API, the inner workings will change and I won't keep track of what you are using in your plugin.
 For more details about the API please check the following links:
 
 [Source Code & Details][api] ⚫ [JavaDoc][apiJavaDoc] ⚫ [Build Server][apiBuilds]

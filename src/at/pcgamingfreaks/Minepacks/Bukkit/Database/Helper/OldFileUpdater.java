@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017, 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,8 +18,6 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper;
 
 import at.pcgamingfreaks.yaml.YAML;
-
-import org.bukkit.ChatColor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -87,19 +85,19 @@ public class OldFileUpdater
 						case "Console":
 							switch(keys[2])
 							{
-								case "NotFromConsole": advancedConverter.put("Language.NotFromConsole", ChatColor.RED + oldYAML.getString(key)); break;
+								case "NotFromConsole": advancedConverter.put("Language.NotFromConsole", "&c" + oldYAML.getString(key)); break;
 							}
 							break;
 						case "Ingame":
 							helper = keys[0] + "." + keys[1] + ".";
 							switch(keys[2])
 							{
-								case "NoPermission": advancedConverter.put(key, ChatColor.RED + oldYAML.getString(key)); break;
+								case "NoPermission": advancedConverter.put(key, "&c" + oldYAML.getString(key)); break;
 								case "OwnBackPackClose": simpleConverter.put(helper + "OwnBackpackClose", key); break;
 								case "PlayerBackPackClose": advancedConverter.put(helper + "PlayerBackpackClose", oldYAML.getString(key).replace("%s", "{OwnerName}")); break;
 								case "InvalidBackpack": simpleConverter.put(key, key); break;
 								case "BackpackCleaned": simpleConverter.put("Language.Ingame.Clean.BackpackCleaned", key); break;
-								case "Cooldown": advancedConverter.put("Language.Ingame.Open.Cooldown", ChatColor.DARK_GREEN + oldYAML.getString(key)); break;
+								case "Cooldown": advancedConverter.put("Language.Ingame.Open.Cooldown", "&2" + oldYAML.getString(key)); break;
 								case "WrongGameMode": simpleConverter.put("Language.Ingame.Open.WrongGameMode", key); break;
 							}
 							break;
