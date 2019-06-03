@@ -1,47 +1,52 @@
 # Minepacks Config File
 
-# Language settings
-# Language to use, will load the file: /plugins/Minepacks/lang/<your language setting>.yml
-Language: en
-# How outdated language files should be treated. Overwrite/Update
-# Overwrite = old language file will be replaced with new, use this only if you use the language files supplied from the plugin
-# Update = the old language file will be updated with the new english messages, all your changes to the file will survive the update
-LanguageUpdateMode: Overwrite
+# Language Settings
+Language:
+  # Defines the used language and the corresponding file used. The corresponding language file will be placed in the lang folder next to the config.yml named: <Language>.yml
+  Language: en
+  # Options:
+  #     Overwrite (deletes all changes from the file and extracts a new language file)
+  #     Upgrade (extracts a new language file and copy's all settings from the old language file)
+  #     Update (adds the default (english) text values for all missing values, just some basic formatting)
+  UpdateMode: Upgrade
 
 # Title to be shown for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
-# Defines how long a player have to wait till he can reopen his backpack.
-# Time is in seconds. Values < 1 disable the cooldown.
-command_cooldown: -1
-# The cooldown will be applied to every player joining the server. Values < 1 disable the join cooldown.
-command_cooldown_after_join: -1
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
-drop_on_death: true
-# Defines if the message that the backpack has been closed should be shown
-show_close_message: false
+DropOnDeath: true
 # Defines the max amount of columns for a backpack.
 # The size of the user's backpack will be defined by the permission, permissions for bigger backpacks than this value will be ignored.
 # Can be set to anything > 0. Backpacks with more than 6 columns will have a broken UI! Sizes bigger than 9 may not work with all permission plugins.
-max_size: 6
-# Defines in which game-modes a player can access his backpack
+MaxSize: 6
+# Defines in which game-modes a player can access his backpack (name or id)
 # Options: ADVENTURE, CREATIVE, SPECTATOR, SURVIVAL
-# allowed_game_modes: [ "SURVIVAL", "ADVENTURE" ]
-allowed_game_modes: [ "SURVIVAL" ]
+# AllowedGameModes: [ "SURVIVAL", "ADVENTURE" ]
+AllowedGameModes: [ "SURVIVAL" ]
+
+Cooldown:
+  # Defines how long a player have to wait till he can reopen his backpack.
+  # Time is in seconds. Values < 1 disable the cooldown.
+  Command: -1
+  # If enabled, cooldowns will be synced between servers (BungeeCord network). It will also allow to keep cooldown through server restarts.
+  # You should only use it with long cooldown times.
+  Sync: false
+  AddOnJoin: true
+  # You can turn this on when using sync to reduce the memory consumption a little bit
+  ClearOnLeave: false
+  # Removes old cooldowns from the cache to free memory. Time in seconds.
+  CleanupInterval: 600
 
 # Controls for the auto pickup on full inventory function
-full_inventory:
+FullInventory:
   # If items should be collected to the backpack if the players inventory is full
-  collect_items: false
+  CollectItems: false
   # Interval in seconds how often items around the player should be collected, increase it if it lags the server
-  check_interval: 1
+  CheckInterval: 1
   # Radius in which items get collected, in meter/blocks, allow decimals
-  collect_radius: 1.5
-
-# Enable this option if you are running a bungeecord setup!
-BungeeCordMode: false
+  CollectRadius: 1.5
 
 
 # Database settings
@@ -57,7 +62,6 @@ Database:
   # If you would like to use UUIDs, it is recommended not to change this setting unless you know what you are doing!
   # true: Only to use if your server is running in online mode and your minecraft version is 1.7.5 or newer
   # false: In offline mode or for minecraft version below 1.7.5
-  # Should be configured automatically based on your minecraft version and online mode settings
   # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
   UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
@@ -65,14 +69,14 @@ Database:
   # false: format: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   UseUUIDSeparators: false
   # Settings only for MySQL
-  MySQL:
+  SQL:
     Host: localhost:3306
     Database: minecraft
     User: minecraft
     Password: minecraft
     # The max amount of connections to the database the connection pool will open
     MaxConnections: 2
-    # List of properties for your MySQL connection. Can be used to disable SSL
+    # List of properties for your SQL connection. Can be used to disable SSL.
     # Properties: ["useSSL=false"]
     Properties: []
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
@@ -84,6 +88,7 @@ Database:
     # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsistency.
     User: backpack_players
     Backpack: backpacks
+    Cooldown: backpack_cooldowns
     # Field settings for the tables
     # Do not change them after the tables have been generated!
     # If you like to change them after the tables have been generated alter the tables manually or delete them (the system then will regenerate them).
@@ -97,12 +102,57 @@ Database:
         ItemStacks: itemstacks
         Version: version
         LastUpdate: lastupdate
+      Cooldown:
+        Player_ID: id
+        Time: time
+  # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottlenecks.
+  Cache:
+    UnCache:
+      # The strategie used to uncache offline players. Options
+      #     interval (offline players get uncached every x seconds)
+      #     intervalChecked (like interval, but also ensures that the player is already offline for at least the interval time, add's a cpu overhead)
+      #     ondisconnect (player instantly gets uncached as soon as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstable connections)
+      #     ondisconnectdelayed (player gets uncached x seconds after he went offline, adds overhead on disconnect, you shouldn't use this with a lot of players joining and leaving.)
+      Strategie: interval
+      # Used for the interval based uncaching algorithms. Also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
+      Interval: 600
+      Delay: 600
 
-# Enables/Disables the auto-update function of the plugin.
-auto-update: true
+Shulkerboxes:
+  # This setting controls whether players can put shulkerboxes into their backpacks.
+  PreventInBackpack: true
+  # This setting allows to disable shulkerboxes all together. Players won't be able to craft or use them.
+  DisableShulkerboxes: false
+  # This settings controls how existing shulkerboxes are handled if they are disabled.
+  # Options: Ignore, Remove = shulker-box will be removed including it's content, Destroy = shulker-box will be destroyed and it's content will be dropped
+  Existing: "Ignore"
 
-# Disables the info that V2 has been released and should be downloaded. You should only use this option if your MC version is not compatible with V2.
-DisableV2Info: false
+ItemFilter:
+  # Enables the item filter. Make sure to define items to be filtered.
+  Enable: false
+  # List off items not allowed in the backpack. Can be name or id (id only for MC versions older than 1.13!).
+  Blacklist: []
+
+# This settings allow control over how the plugin behave in different worlds
+WorldSettings:
+  # All worlds listed here will not have the plugin usable
+  # Blacklist: ["creative_world"]
+  # Blacklist: ["creative_world1", "creative_world2"]
+  Blacklist: []
+  # Defines how the Blacklist will be enforced
+  # Options:
+  #   Message           = The player will see an message that the usage of the backpack is denied in this world.
+  #   MissingPermission = The player will receive the plugins no permission message.
+  #   NoPlugin          = The plugin will not be available at all and act as if it was not installed.
+  #                       This also exclude players with permission to bypass the world restriction from using it!
+  #                       It will not disable the Shulkerboxes filter!
+  BlacklistMode: "Message"
+
+Misc:
+  # Enables/Disables the auto-update function of the plugin.
+  AutoUpdate: true
+  # Enable this option if you are using a BungeeCord setup!
+  UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 16
+Version: 21

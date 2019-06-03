@@ -1,42 +1,56 @@
-name: ${project.name}
-author: ${author}
-website: ${website}
-main: ${project.groupId}.${project.artifactId}.${project.artifactId}
-description: ${project.description}
-version: ${project.version}
-commands:
-  backpack:
-    description: Main command
-    aliases: bp
-    usage: /backpack
+name: "${project.name}"
+author: "${author}"
+website: "${website}"
+main: "${mainClass}"
+description: "${project.description}"
+version: "${version}"
+api-version: "1.13"
+${dependencies}
+
 permissions:
   backpack.*:
-    description: Gives access to the full MinePacks functionality.
+    description: Gives access to the full Minepacks functionality.
     children:
-      backpack: true
+      backpack.use: true
       backpack.size.6: true
-      backpack.others: true
-      backpack.others.edit: true
-      backpack.KeepOnDeath: true
+      backpack.keepOnDeath: true
       backpack.clean: true
-      backpack.clean.other: true
-      backpack.noCooldown: true
       backpack.fullpickup: true
+      backpack.bypass: true
+      backpack.admin: true
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     default: false
     children:
-      backpack: false
       backpack.use: false
       backpack.others: false
-      backpack.KeepOnDeath: true
+      backpack.keepOnDeath: true
       backpack.clean: false
-      backpack.fullpickup: false
-  backpack.use:
-    description: Allows a player to open the backpack.
+  backpack.user:
+    description: This permission can be used to give a user the basic backpack size and allow him to use the backpack.
     children:
-      backpack: true
-  backpack:
+      backpack.use: true
+      backpack.size.1: true
+      backpack.clean: true
+  backpack.userBig:
+    description: This permission can be used to give a user the biggest backpack size and allow him to use the backpack.
+    children:
+      backpack.use: true
+      backpack.size.6: true
+      backpack.clean: true
+  backpack.bypass:
+    children:
+      backpack.ignoreGameMode: true
+      backpack.ignoreWorldBlacklist: true
+      backpack.noCooldown: true
+  backpack.admin:
+    children:
+      backpack.others: true
+      backpack.others.edit: true
+      backpack.clean.others: true
+      backpack.update: true
+      backpack.reload: true
+  backpack.use:
     description: Allows a player to open the backpack.
     default: false
   backpack.size.1:
@@ -85,7 +99,7 @@ permissions:
     default: op
     children:
       backpack.others: true
-  backpack.KeepOnDeath:
+  backpack.keepOnDeath:
     description: Allows the player to keep their items in their backpack on death.
     default: op
   backpack.noCooldown:
@@ -93,4 +107,16 @@ permissions:
     default: op
   backpack.ignoreGameMode:
     description: Allows to bypass the game-mode restriction.
+    default: op
+  backpack.ignoreWorldBlacklist:
+    description: Allows to bypass the world blacklist.
+    default: op
+  backpack.update:
+    description: Allows to update the plugin.
+    default: op
+  backpack.reload:
+    description: Allows to reload the config.
+    default: op
+  backpack.migrate:
+    description: Allows to migrate data from one format to another.
     default: op

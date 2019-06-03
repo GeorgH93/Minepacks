@@ -1,24 +1,102 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: MinePacks wurde aktiviert.
-    Disabled: MinePacks wurde deaktiviert.
-    NotFromConsole: Dieser Befehl kann nicht in der Console ausgeführt werden.
-    LangUpdated: Die Sprachdatei wurde aktualisiert.
-    UpdateUUIDs: Beginne die Spielernamen in UUIDs umzuwandeln...
-    UpdatedUUIDs: 'Es wurden %d Spielernamen in UUIDs umgewandelt.'
+  NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
   Ingame:
-    NoPermission: 'Dir fehlen die Rechte dafür.'
-    OwnBackPackClose: 'Rucksack geschlossen.'
-    PlayerBackPackClose: "%s's Rucksack geschlossen."
-    InvalidBackpack: Rucksack fehlerhaft.
-    BackpackCleaned: Rucksack gelehrt.
-    Cooldown: 'Bitte warte kurz bis du deinen Rucksack wieder öffnest.'
-    WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
-  Description:
-    Backpack: Öffent deinen Rucksack.
-    Clean: Leert deinen Rucksack.
-    CleanOther: Leert den Rucksack eines anderen Spielers.
-    View:     Öffnet den Rucksack eines anderen Spielers.
+    NoPermission: "&cDir fehlen die Rechte dafür."
+    NaN: "[\"\",{\"text\":\"Die Eingabe ist keine gültige Zahl!\",\"color\":\"red\"}]"
+    WorldDisabled: "&cDie Verwendung des Rucksacks ist in dieser Welt deaktiviert!"
+    OwnBackpackClose: "Rucksack geschlossen."
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName}'s Rucksack geschlossen."
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Rucksack fehlerhaft."
+    NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
+    Clean:
+      BackpackCleaned: "Rucksack gelehrt."
+    Open:
+      #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
+      Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
+    Help:
+      Header: "&6### Minepacks Commands ###"
+      Footer: "&6#############################"
+    Admin:
+      Reloading: "&1Reloading ..."
+      Reloaded: "&1Reloaded!"
+      CheckingForUpdates: "&1Suche nach updates ..."
+      Updated: "[\"\",{\"text\":\"Update wurde heruntergeladen. Es wird beim nächsten neustart aktiviert.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Kein update verfügbar.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Es ist ein fehler aufgetreten!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Es ist ein update verfügbar! Bitte downloade es von: \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\"\"}]"
+    Backup:
+      Created: "Rucksack wurder gesichert."
+      NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Seite {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Vorherige <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Seite {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Nächste >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nErstellt: {BackupDate}\"}}]"
+      NoValidBackup: "{BackupIdentifier} ist kein gültiges Backup"
+      NoUserToRestoreToFound: "Kein gültiger Nutzer zum Wiederherstellen gefunden"
+      # NoJSON
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "dd.MM.yyyy HH:mm:ss"
+      Restored: "Backup wurde erfolgreich wiederhergestellt."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Öffent deinen Rucksack."
+      Clean: "Leert deinen Rucksack."
+      CleanOthers: "Leert den Rucksack eines anderen Spielers."
+      OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
+      Reload: "Lädt die konfigurations Datei neu."
+      Update: "Prüft auf neue plugin updates."
+      Backup: "Erstellt eine Sicherungskopie eines Rucksackes."
+      Restore: "Stellt eine Sicherungskopie eines Rucksackes wieder her."
+      RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
+      Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
+      Help: "Zeigt die verfügbaren Befehle an."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+    - rucksack
+  Open:
+    - open
+    - öffnen
+  Clean:
+    - clean
+    - clear
+    - empty
+    - leeren
+    - löschen
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+    - hilfe
+
+# Will be shown in the console during startup
+LanguageName: "german"
+Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 5
+Version: 15

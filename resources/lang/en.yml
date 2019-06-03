@@ -1,24 +1,98 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: MinePacks has been enabled!
-    Disabled: MinePacks has been disabled.
-    NotFromConsole: Command not useable from console.
-    LangUpdated: Language File has been updated.
-    UpdateUUIDs: Start updating database to UUIDs ...
-    UpdatedUUIDs: 'Updated %s accounts to UUIDs.'
+  NotFromConsole: "&cCommand not usable from console."
   Ingame:
-    NoPermission: "You don't have the permission to do that."
-    OwnBackPackClose: 'Backpack closed!'
-    PlayerBackPackClose: "%s's backpack closed!"
-    InvalidBackpack: Invalid backpack.
-    BackpackCleaned: Backpack cleaned.
-    Cooldown: "Please wait till you reopen your backpack."
-    WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
-  Description:
-    Backpack: Opens your backpack.
-    Clean: Cleans your backpack.
-    CleanOther: Cleans the backpack of other players.
-    View: Shows the backpack of other player.
+    NoPermission: "&cYou don't have the permission to do that."
+    WorldDisabled: "&cThe use of the backpack is not allowed in this world."
+    NaN: "[\"\",{\"text\":\"The entered value is not a number!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Backpack closed!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName}'s backpack closed!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Invalid backpack."
+    NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
+    Open:
+      #Parameter: {TimeLeft} time in seconds till he can reopen his backpack, {TimeSpanLeft}
+      Cooldown: "&2Please wait {TimeSpanLeft} seconds till you reopen your backpack."
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
+    Clean:
+      BackpackCleaned: "Backpack cleaned."
+    Help:
+      Header: "&6### Minepacks Commands ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Reloading ..."
+      Reloaded: "&1Reloaded!"
+    Update:
+      CheckingForUpdates: "&1Checking for updates ..."
+      Updated: "[\"\",{\"text\":\"Plugin updated, will be loaded on next restart/reload.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"No plugin update available.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"There was a problem looking for updates! Please check the console!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"There is an update available! Please go to \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" to download it!\"}]"
+    Backup:
+      Created: "The backpack has been backed up successful."
+      NoBackpack: "The player doesn't have a backpack or his backpack is empty."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Previous <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Showing page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "No backup matching {BackupIdentifier} found"
+      NoUserToRestoreToFound: "No valid user to restore backup to found"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Backup has been successful restored."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Opens your backpack."
+      Clean: "Cleans your backpack."
+      CleanOthers: "Cleans the backpack of another players."
+      OpenOthers: "Shows the backpack of another player."
+      Reload: "Reloads the config of the plugin."
+      Update: "Checks for new plugin updates."
+      Version: "Prints the version details about the plugin and it's dependencies."
+      Backup: "Creates a backup of a players backpack."
+      Restore: "Restores a backup."
+      RestoreList: "Lists all available backups."
+      Help: "Shows all available commands and their description."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+
+# Will be shown in the console during startup
+LanguageName: "english"
+Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 5
+Version: 15
