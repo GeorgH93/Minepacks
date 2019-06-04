@@ -50,6 +50,7 @@ permissions:
       backpack.clean.others: true
       backpack.update: true
       backpack.reload: true
+      backpack.migrate: true
   backpack.use:
     description: Allows a player to open the backpack.
     default: false
