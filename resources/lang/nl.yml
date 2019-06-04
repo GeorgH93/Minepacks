@@ -20,5 +20,9 @@ Language:
     CleanOther: Maakt de rugzak van andere spelers schoon.
     View: Laat de rugzak van andere spelers zien.
 
+# Will be shown in the console during startup
+LanguageName: "dutch"
+Author: "bramvkempen"
+
 # Taal Bestand versie. Niet aan komen!
 Version: 5

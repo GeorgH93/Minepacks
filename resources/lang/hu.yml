@@ -20,5 +20,9 @@ Language:
     CleanOther: Kitisztítja a többi játékos hátizsákját.
     View: Megmutatja a másik játékos hátizsákját.
 
+# Will be shown in the console during startup
+LanguageName: "hungarian"
+Author: "montlikadani"
+
 # Language file version. Don't touch it!
 Version: 5

@@ -22,5 +22,9 @@ Language:
     CleanOther: 清理其他玩家的背包.
     View: 查看其他玩家的背包.
 
+# Will be shown in the console during startup
+LanguageName: "simple-chinese"
+Author: "ragnaroks"
+
 # Language file version. Don't touch it!
 Version: 5

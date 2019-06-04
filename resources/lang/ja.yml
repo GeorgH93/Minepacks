@@ -20,5 +20,9 @@ Language:
     CleanOther: 他のプレイヤーのバックパックをクリーンする。
     View: 他のプレイヤーのバックパックを開く。
 
+# Will be shown in the console during startup
+LanguageName: "japanese"
+Author: "snake0053"
+
 # Language file version. Don't touch it!
 Version: 5

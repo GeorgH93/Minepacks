@@ -20,5 +20,9 @@ Language:
     CleanOther: Nétoyer le sac à dos d'autres joueurs.
     View: Voir le contenu du sac à dos des autres joueurs.
 
+# Will be shown in the console during startup
+LanguageName: "french"
+Author: "Nogapra"
+
 # Version de fichierde langage. A ne pas modifié !
 Version: 5

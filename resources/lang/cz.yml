@@ -20,5 +20,9 @@ Language:
     CleanOther: Vymaze batoh jineho hrace.
     View: Otevre batoh jineho hrace.
 
+# Will be shown in the console during startup
+LanguageName: "czech"
+Author: "ProPl4yerCz"
+
 # Language file version. Don't touch it!
 Version: 5

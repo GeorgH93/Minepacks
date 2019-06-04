@@ -20,5 +20,9 @@ Language:
     CleanOther: Limpia la mochila de otros jugadores.
     View: Muestra la mochila de otros jugadores.
 
+# Will be shown in the console during startup
+LanguageName: "spanish"
+Author: "mijiko200"
+
 # Language file version. Don't touch it!
 Version: 5
