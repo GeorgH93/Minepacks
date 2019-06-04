@@ -1,6 +1,6 @@
 <!-- Variables (this block will not be visible in the readme -->
 [banner]: https://pcgamingfreaks.at/images/minepacks.png
-[spigot]: https://www.spigotmc.org/resources/minepacks.19286/
+[spigot]: https://www.spigotmc.org/resources/19286/
 <!--[spigotRatingImg]: https://img.shields.io/spiget/stars/19286.svg
 [spigotDownloadsImg]: https://img.shields.io/spiget/downloads/19286.svg?label=downloads%20%28spigotmc.org%29-->
 [spigotRatingImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
@@ -8,14 +8,16 @@
 [bukkit]: http://dev.bukkit.org/bukkit-plugins/minepacks/
 [issues]: https://github.com/GeorgH93/Minepacks/issues
 [wiki]: https://github.com/GeorgH93/Minepacks/wiki
-[wikiFAQ]: https://github.com/GeorgH93/Minepacks/wiki/faq
-[wikiPermissions]: https://github.com/GeorgH93/Minepacks/wiki/permissions
+[wikiFAQ]: https://github.com/GeorgH93/Minepacks/wiki/FAQ
+[wikiPermissions]: https://github.com/GeorgH93/Minepacks/wiki/Permissions
 [release]: https://github.com/GeorgH93/Minepacks/releases/latest
 [releaseImg]: https://img.shields.io/github/release/GeorgH93/Minepacks.svg?label=github%20release
 [license]: https://github.com/GeorgH93/Minepacks/blob/master/LICENSE
 [licenseImg]: https://img.shields.io/github/license/GeorgH93/Minepacks.svg
-[ci]: https://ci.pcgamingfreaks.at/job/Minepacks%20V2/
-[ciImg]: https://ci.pcgamingfreaks.at/job/Minepacks%20V2/badge/icon
+[ci]: https://ci.pcgamingfreaks.at/job/Minepacks/
+[ciImg]: https://ci.pcgamingfreaks.at/job/Minepacks/badge/icon
+[ciDev]: https://ci.pcgamingfreaks.at/job/Minepacks%20V2/
+[ciDevImg]: https://ci.pcgamingfreaks.at/job/Minepacks%20V2/badge/icon
 [apiVersionImg]: https://img.shields.io/badge/dynamic/xml.svg?label=api-version&query=%2F%2Frelease[1]&url=https%3A%2F%2Frepo.pcgamingfreaks.at%2Frepository%2Fmaven-releases%2Fat%2Fpcgamingfreaks%2FMinepacks-API%2Fmaven-metadata.xml
 [api]: https://github.com/GeorgH93/Minepacks/tree/API
 [apiJavaDoc]: https://ci.pcgamingfreaks.at/job/Minepacks%20API/javadoc/
@@ -27,6 +29,9 @@
 [featureRequestsImg]: https://img.shields.io/github/issues/GeorgH93/Minepacks/enhancement.svg?label=feature%20requests&color=informational
 [requestFeature]: https://github.com/GeorgH93/Minepacks/issues/new?labels=enhancement&template=feature.md
 [config]: https://github.com/GeorgH93/Minepacks/blob/master/resources/config.yml
+[pcgfPluginLib]: https://github.com/GeorgH93/PCGF_PluginLib
+[pcgfPluginLibAdvantages]: https://github.com/GeorgH93/Minepacks/wiki/Build-and-Mode-comparison#Advantages-of-using-the-PCGF-PluginLib
+[languages]: https://github.com/GeorgH93/Minepacks/tree/master/resources/lang
 <!-- End of variables block -->
 
 [![Logo][banner]][spigot]
@@ -43,15 +48,29 @@ Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
 * [Configuration][config]
 * Backpack size controlled by [permissions][wikiPermissions]
 * Auto item-collect on full inventory (can be enabled in the config)
-* SQLite/MySQL database
-* Multi language support (english and german language file included)
+* Multiple storage back-ends (Files, SQLite, MySQL)
+* Multi language support ([multiple language file included][languages])
+* Item filter (block items from being stored in the backpack)
 * Preserves the NBT data of items (everything that can be stored in a chest can be stored in the backpack)
 * Support for name changing / UUIDs
 * Auto-updater
 * [API][api] for developers
 
+## Requirements
+
+* Java 8
+* Bukkit, Spigot or Paper for Minecraft 1.7 or newer
+* (Optional) [PCGF PluginLib][pcgfPluginLib] ([Advantages of using the PCGF PluginLib][pcgfPluginLibAdvantages])
+
 ## Build from source:
 The plugin can be build in 3 different configurations.
+
+### Build requirements
+
+* JDK for Java 8
+* Maven 3
+* git
+
 ### Normal version:
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
@@ -97,4 +116,5 @@ For more details about the API please check the following links:
 ## Links
 * [Spigot][spigot]
 * [Dev Bukkit][bukkit]
-* [Build Server][ci]
+* [Build Server - Release Builds ![ciImg]][ci]
+* [Build Server - Dev Builds ![ciDevImg]][ciDev]
