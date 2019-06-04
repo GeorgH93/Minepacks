@@ -17,8 +17,6 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
 
-import at.pcgamingfreaks.Version;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -39,22 +37,6 @@ public interface MinepacksPlugin
 	{
 		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Minepacks");
 		return (plugin instanceof MinepacksPlugin && plugin.isEnabled()) ? (MinepacksPlugin) plugin : null;
-	}
-
-	/**
-	 * Gets the currently running {@link Version} of the plugin.
-	 * Version 0.0 if plugin is not loaded or enabled.
-	 *
-	 * @return The currently running version of the plugin.
-	 */
-	static @NotNull Version getVersion()
-	{
-		Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("Minepacks");
-		if(plugin instanceof MinepacksPlugin && plugin.isEnabled())
-		{
-			return new Version(plugin.getDescription().getVersion());
-		}
-		return new Version("0.0");
 	}
 
 	/**
@@ -134,9 +116,9 @@ public interface MinepacksPlugin
 	/**
 	 * Gets the command manager of the Minepacks plugin.
 	 *
-	 * @return The command manager instance.
+	 * @return The command manager instance. null if the plugin is running in standalone mode
 	 */
-	MinepacksCommandManager getCommandManager();
+	@Nullable MinepacksCommandManager getCommandManager();
 
 	/**
 	 * Checks if the player is allowed to open a backpack based on is permissions and current game-mode.
