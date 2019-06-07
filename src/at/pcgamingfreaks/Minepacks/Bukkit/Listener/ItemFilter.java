@@ -94,6 +94,8 @@ public class ItemFilter extends MinepacksListener
 	{
 		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
 		{
+			if(event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof Backpack) return; // Allow user to move blacklisted items out of the backpack
+
 			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCurrentItem()));
 			event.setCancelled(true);
 		}

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
 	<artifactId>Minepacks</artifactId>
-	<version>2.0</version>
+	<version>2.0.1</version>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
@@ -84,7 +84,8 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit</artifactId>
-			<version>1.1.1</version>
+			<version>1.2.1</version>
+			<classifier>Bukkit</classifier>
 		</dependency>
 	</dependencies>
 

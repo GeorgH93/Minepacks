@@ -32,9 +32,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
@@ -45,7 +46,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private static String titleOtherFormat, titleOther;
 	private final OfflinePlayer owner;
 	private final Object titleOtherOBC;
-	private final HashMap<Player, Boolean> opened = new HashMap<>();
+	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
 	private Inventory bp;
 	private int size, ownerID;
 	private boolean hasChanged;

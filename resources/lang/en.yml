@@ -63,6 +63,7 @@ Language:
       Restore: "Restores a backup."
       RestoreList: "Lists all available backups."
       Help: "Shows all available commands and their description."
+      Migrate: "Migrates the used database from one type to another."
 
 Command:
   Backpack:
@@ -95,4 +96,4 @@ LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 15
+Version: 16

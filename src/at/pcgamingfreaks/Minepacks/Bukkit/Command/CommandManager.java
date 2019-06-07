@@ -31,6 +31,7 @@ import at.pcgamingfreaks.Reflection;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +42,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	private final RegisterablePluginCommand backpackCommand;
 	private final Message helpFormat;
 
-	public CommandManager(Minepacks plugin)
+	public CommandManager(@NotNull Minepacks plugin)
 	{
 		this.plugin = plugin;
 		// Registering the backpack command with the translated aliases
@@ -88,7 +89,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args)
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
 	{
 		if(sender instanceof Player)
 		{
@@ -108,7 +109,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
 	{
 		if(sender instanceof Player)
 		{

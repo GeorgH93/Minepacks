@@ -23,6 +23,16 @@ Language:
     Help:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Plugin wird neu geladen ..."
+      Reloaded: "&1Plugin neu geladen!"
+    Update:
+      CheckingForUpdates: "&1Suche nach Aktualisierungen ..."
+      Updated: "[\"\",{\"text\":\"Plugin wurde aktualisiert, Änderungen werden mit dem nächsten neustart übernommen.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Plugin Aktualisierung verfügbar.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Es gab ein Problem bei der Suche nach Updates! Bitte prüfe das log für mehr details.\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Es ist eine Aktualisierung verfügbar! Bitte gehe auf \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" um es herunter zu laden!\"}]"
     Admin:
       Reloading: "&1Reloading ..."
       Reloaded: "&1Reloaded!"
@@ -62,6 +72,7 @@ Language:
       RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
       Help: "Zeigt die verfügbaren Befehle an."
+      Migrate: "Erlaubt das konvertieren der Datenbank in ein anderes Format."
 
 Command:
   Backpack:
@@ -99,4 +110,4 @@ LanguageName: "german"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 15
+Version: 16
