@@ -11,7 +11,7 @@ Language:
     InvalidBackpack: "バックパックが無効です。"
     NotAllowedInBackpack: "&c{ItemName}はバックパックに入れることができません。"
     Open:
-      Cooldown: "&2バックパックを開くまで{TimeSpanLeft}秒待ってください。"
+      Cooldown: "&2バックパックを開くまで{TimeLeft}秒待ってください。"
       WrongGameMode: "現在のゲームモードでバックパックを開くことは許可されていません。"
     Clean:
       BackpackCleaned: "バックパックを削除しました。"

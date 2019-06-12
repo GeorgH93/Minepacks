@@ -74,7 +74,7 @@ public class OpenCommand extends MinepacksCommand
 					long cd = plugin.getCooldownManager().getRemainingCooldown(player);
 					if(cd > 0)
 					{
-						TimeSpan ts = new TimeSpan(cd, true);
+						TimeSpan ts = TimeSpan.fromMilliseconds(cd);
 						messageCooldown.send(sender, cd / 1000f, ts.toString());
 						return;
 					}

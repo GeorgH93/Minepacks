@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class CooldownManager extends BukkitRunnable implements Listener
 		HandlerList.unregisterAll(this);
 	}
 
-	public void setCooldown(Player player)
+	public void setCooldown(@NotNull Player player)
 	{
 		final long cooldownTime = System.currentTimeMillis() + cooldown;
 		if(syncCooldown)
@@ -69,12 +70,12 @@ public class CooldownManager extends BukkitRunnable implements Listener
 	}
 
 	@SuppressWarnings("unused")
-	public boolean isInCooldown(Player player)
+	public boolean isInCooldown(@NotNull Player player)
 	{
 		return cooldowns.getOrDefault(player.getUniqueId(), 0L) > System.currentTimeMillis();
 	}
 
-	public long getRemainingCooldown(Player player)
+	public long getRemainingCooldown(@NotNull Player player)
 	{
 		long cd = cooldowns.getOrDefault(player.getUniqueId(), 0L);
 		if(cd > System.currentTimeMillis())
