@@ -1,28 +1,89 @@
 Language:
-  Console:
-    Enabled: MinePacksが有効になりました！
-    Disabled: MinePacksが無効になりました。
-    NotFromConsole: コマンドはコンソールから使用できません。
-    LangUpdated: 言語ファイルが更新されました。
-    UpdateUUIDs: データベースのUUIDへの更新を開始しています...
-    UpdatedUUIDs: '%s アカウントをUUIDに更新しました。'
+  NotFromConsole: "&cコマンドはコンソールから使用できません。"
   Ingame:
-    NoPermission: "あなたはパーミッションを持っていません。"
-    OwnBackPackClose: バックパックを閉じました！
-    PlayerBackPackClose: "%sのバックパックを閉じました！"
-    InvalidBackpack: 無効なバックパック
-    BackpackCleaned: バックパックをクリーンしました。
-    Cooldown: "バックパックを再び開くまでお待ち下さい。"
-    WrongGameMode: "現在のゲームモードでバックパックを開くことは許可されていません。"
-  Description:
-    Backpack: バックパックを開く。
-    Clean: バックパックをクリーンする。
-    CleanOther: 他のプレイヤーのバックパックをクリーンする。
-    View: 他のプレイヤーのバックパックを開く。
+    NoPermission: "&cそれを実行する権限がありません。"
+    WorldDisabled: "&cこのワールドでバックパックの使用は許可されていません。"
+    NaN: "[\"\",{\"text\":\"入力された値は数値ではありません。\",\"color\":\"red\"}]"
+    OwnBackpackClose: "バックパックを閉じました！"
+    OwnBackpackClose_SendMethod: "action_bar"
+    PlayerBackpackClose: "{OwnerName}のバックパックを閉じました！"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "バックパックが無効です。"
+    NotAllowedInBackpack: "&c{ItemName}はバックパックに入れることができません。"
+    Open:
+      Cooldown: "&2バックパックを開くまで{TimeSpanLeft}秒待ってください。"
+      WrongGameMode: "現在のゲームモードでバックパックを開くことは許可されていません。"
+    Clean:
+      BackpackCleaned: "バックパックを削除しました。"
+    Help:
+      Header: "&6##### Minepacks コマンド #####"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1リロード中..."
+      Reloaded: "&1リロード！"
+    Update:
+      CheckingForUpdates: "&1アップデートの確認中..."
+      Updated: "[\"\",{\"text\":\"更新されたプラグインは、次回の再起動/リロード時にロードされます。\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"利用可能なプラグインの更新はありません。\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"アップデートの確認に問題がありました！コンソールを確認してください。\",\"color\":\"red\"}]"
+      UpdateAvailable: "[{\"text\":\"利用可能なアップデートがあります！\\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" からダウンロードして下さい。\"}]"
+    Backup:
+      Created: "バックパックは正常にバックアップされました。"
+      NoBackpack: "プレイヤーはバックパックを持っていないか、バックパックが空です。"
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"表示ページ {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< 前 <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" 表示ページ {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> 次 >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"ユーザー：{BackupPlayerName} ({BackupPlayerUUID})\\n作成日：{BackupDate}\"}}]"
+      NoValidBackup: "No backup matching {BackupIdentifier} found"
+      NoUserToRestoreToFound: "バックアップを復元するための有効なユーザーが見つかりません"
+      ParameterBackupName: "backup_name"
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "バックアップは正常に復元されました。"
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "バックパックを開く。"
+      Clean: "バックパックを削除する。"
+      CleanOthers: "他のプレイヤーのバックパックを削除する。"
+      OpenOthers: "他のプレイヤーのバックパックを開く。"
+      Reload: "プラグインのコンフィグをリロードしました。"
+      Update: "新しいアップデートを確認します。"
+      Version: "プラグインと依存関係に関するバージョンの詳細を表示します。"
+      Backup: "プレイヤーのバックパックのバックアップを作成します。"
+      Restore: "バックアップから復元します。"
+      RestoreList: "利用可能なすべてのバックアップを一覧表示します。"
+      Help: "利用可能なすべてのコマンドとその説明を表示します。"
+      Migrate: "使用中のデータベースのタイプから別のタイプに移行します。"
 
-# Will be shown in the console during startup
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+
 LanguageName: "japanese"
 Author: "snake0053"
 
-# Language file version. Don't touch it!
-Version: 5
+Version: 16
