@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@ public class MySQL extends SQL
 			else
 			{
 				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} CHAR(16) NOT NULL,\n" +
-						                                                 "\nPRIMARY KEY ({FieldPlayerID}),\nUNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
+						                                                 "\nPRIMARY KEY ({FieldPlayerID})\n);"));
 			}
 			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
 					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +

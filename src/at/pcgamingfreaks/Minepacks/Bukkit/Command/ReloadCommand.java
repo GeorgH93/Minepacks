@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,12 +24,11 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 
 public class ReloadCommand extends MinepacksCommand
 {
-	private Message messageReloading, messageReloaded;
+	private final Message messageReloading, messageReloaded;
 
 	public ReloadCommand(Minepacks plugin)
 	{
