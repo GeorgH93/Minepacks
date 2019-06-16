@@ -23,7 +23,7 @@ The API is available through maven.
 ```
 <repository>
 	<id>pcgf-repo</id>
-	<url>https://repo.pcgamingfreaks.at/repository/everything</url>
+	<url>https://repo.pcgamingfreaks.at/repository/maven-everything</url>
 </repository>
 ```
 #### Dependency:
