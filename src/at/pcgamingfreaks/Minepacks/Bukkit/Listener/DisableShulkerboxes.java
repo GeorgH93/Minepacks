@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -102,20 +102,17 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
-		if(event.getInventory() != null && event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
+		if(event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
 		{
 			if(removeExisting)
 			{
 				Block shulkerBlock = ((ShulkerBox) event.getInventory().getHolder()).getBlock();
-				if(shulkerBlock != null)
+				if(dropExistingContent)
 				{
-					if(dropExistingContent)
-					{
-						Utils.dropInventory(event.getInventory(), shulkerBlock.getLocation());
-					}
-					event.getInventory().clear();
-					shulkerBlock.setType(Material.AIR);
+					Utils.dropInventory(event.getInventory(), shulkerBlock.getLocation());
 				}
+				event.getInventory().clear();
+				shulkerBlock.setType(Material.AIR);
 			}
 			event.setCancelled(true);
 		}
@@ -200,12 +197,9 @@ public class DisableShulkerboxes extends MinepacksListener
 			if(removeExisting)
 			{
 				ShulkerBox shulkerBox = (ShulkerBox) block.getState();
-				if(shulkerBox != null)
-				{
-					if(dropExistingContent) Utils.dropInventory(shulkerBox.getInventory(), shulkerBox.getLocation());
-					shulkerBox.getInventory().clear();
-					block.setType(Material.AIR);
-				}
+				if(dropExistingContent) Utils.dropInventory(shulkerBox.getInventory(), shulkerBox.getLocation());
+				shulkerBox.getInventory().clear();
+				block.setType(Material.AIR);
 			}
 			return true;
 		}
@@ -242,6 +236,7 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(ignoreCancelled = true)
 	public void onPrepareItemCraftEvent(PrepareItemCraftEvent event)
 	{
+		if(event.getRecipe() == null) return;
 		Material itemType = event.getRecipe().getResult().getType();
 		if(itemType == Material.SHULKER_SHELL || SHULKER_BOX_MATERIALS.contains(itemType))
 		{
@@ -253,7 +248,6 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(ignoreCancelled = true)
 	public void onDrop(PlayerDropItemEvent event)
 	{
-		//TODO null checks
 		Material itemType = event.getItemDrop().getItemStack().getType();
 		if(itemType == Material.SHULKER_SHELL || SHULKER_BOX_MATERIALS.contains(itemType))
 		{

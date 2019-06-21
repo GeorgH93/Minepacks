@@ -1,6 +1,6 @@
 name: "${project.name}"
 author: "${author}"
-website: "${website}"
+website: "${project.url}"
 main: "${mainClass}"
 description: "${project.description}"
 version: "${version}"
