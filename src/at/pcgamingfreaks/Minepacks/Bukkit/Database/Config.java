@@ -211,12 +211,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfig().getBoolean("Misc.AutoUpdate", true);
 	}
 
-	public boolean useUpdaterDevBuilds()
-	{
-		//TODO add config value for final version
-		return true;
-	}
-
 	public boolean isBungeeCordModeEnabled()
 	{
 		return getConfig().getBoolean("Misc.UseBungeeCord", false);

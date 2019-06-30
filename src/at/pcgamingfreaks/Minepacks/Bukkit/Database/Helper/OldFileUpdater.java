@@ -82,9 +82,9 @@ public class OldFileUpdater
 					switch(keys[1])
 					{
 						case "Console":
-							switch(keys[2])
+							if("NotFromConsole".equals(keys[2]))
 							{
-								case "NotFromConsole": advancedConverter.put("Language.NotFromConsole", "&c" + oldYAML.getString(key)); break;
+								advancedConverter.put("Language.NotFromConsole", "&c" + oldYAML.getString(key));
 							}
 							break;
 						case "Ingame":
