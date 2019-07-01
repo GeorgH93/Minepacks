@@ -57,7 +57,7 @@ import java.util.Collection;
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.11-SNAPSHOT";
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.14-SNAPSHOT";
 	private static Minepacks instance = null;
 
 	@SuppressWarnings("FieldCanBeLocal") // Field is set per reflection from the BadRabbit loader
@@ -174,7 +174,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private void load()
 	{
-		lang.load(config.getLanguage(), config.getLanguageUpdateMode());
+		lang.load(config);
 		database = Database.getDatabase(this);
 		maxSize = config.getBackpackMaxSize();
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.getBPTitle(), config.getBPTitleOther());
