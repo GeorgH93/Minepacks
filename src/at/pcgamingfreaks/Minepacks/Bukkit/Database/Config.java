@@ -155,11 +155,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfig().getString("Database.Tables.Fields." + sub, def);
 	}
 
-	public boolean getUpdatePlayer()
-	{
-		return getConfig().getBoolean("Database.UpdatePlayer", true);
-	}
-
 	public boolean getUseUUIDs()
 	{
 		return getConfig().getBoolean("Database.UseUUIDs", true);

@@ -53,8 +53,6 @@ FullInventory:
 Database:
   # Database type. MySQL, SQLite or Files
   Type: SQLite
-  # Turn off if you want to use player ids created from an other plugin. When using shared tables please check the tables selection
-  UpdatePlayer: true
   # Auto database cleanup settings
   AutoCleanup:
     # Defines the max amount of days backpacks will be stored. -1 to disable auto cleanup
@@ -141,7 +139,7 @@ WorldSettings:
   Blacklist: []
   # Defines how the Blacklist will be enforced
   # Options:
-  #   Message           = The player will see an message that the usage of the backpack is denied in this world.
+  #   Message           = The player will see a message that the usage of the backpack is denied in this world.
   #   MissingPermission = The player will receive the plugins no permission message.
   #   NoPlugin          = The plugin will not be available at all and act as if it was not installed.
   #                       This also exclude players with permission to bypass the world restriction from using it!

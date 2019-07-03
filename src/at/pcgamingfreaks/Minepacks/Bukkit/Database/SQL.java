@@ -46,7 +46,7 @@ public abstract class SQL extends Database
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
 	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
-	protected boolean updatePlayer, syncCooldown;
+	protected boolean syncCooldown;
 
 	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider)
 	{
@@ -57,7 +57,7 @@ public abstract class SQL extends Database
 		loadSettings();
 		buildQuerys();
 		checkDB();
-		if(useUUIDs && updatePlayer)
+		if(useUUIDs)
 		{
 			checkUUIDs(); // Check if there are user accounts without UUID
 		}
@@ -103,7 +103,6 @@ public abstract class SQL extends Database
 		fieldBpLastUpdate = plugin.getConfiguration().getDBFields("Backpack.LastUpdate", "lastUpdate");
 		fieldCdPlayer     = plugin.getConfiguration().getDBFields("Cooldown.Player_ID", "id");
 		fieldCdTime       = plugin.getConfiguration().getDBFields("Cooldown.Time", "time");
-		updatePlayer      = plugin.getConfiguration().getUpdatePlayer();
 		syncCooldown      = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 	}
 
@@ -194,12 +193,13 @@ public abstract class SQL extends Database
 	{
 		// Build the SQL querys with placeholders for the table and field names
 		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE ";
+		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE ";
 		if(useUUIDs)
 		{
 			queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
 			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
 			queryGetBP += "{FieldUUID}=?;";
-			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=?;";
+			querySyncCooldown += "{FieldUUID}";
 			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
 		}
 		else
@@ -207,9 +207,10 @@ public abstract class SQL extends Database
 			queryUpdatePlayerAdd = "INSERT IGNORE INTO {TablePlayers} ({FieldName}) VALUES (?);";
 			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?;";
 			queryGetBP += "{FieldName}=?;";
-			querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldName}=?;";
+			querySyncCooldown = "{FieldName}";
 			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?);";
 		}
+		querySyncCooldown += "=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
@@ -273,7 +274,7 @@ public abstract class SQL extends Database
 		}
 		catch(SQLException e)
 		{
-			System.out.print("Query: " + query);
+			plugin.getLogger().severe("Query: " + query);
 			e.printStackTrace();
 		}
 	}
@@ -386,7 +387,8 @@ public abstract class SQL extends Database
 	@Override
 	public void syncCooldown(Player player, long cooldownTime)
 	{
-		runStatementAsync(querySyncCooldown, new Timestamp(cooldownTime), getPlayerNameOrUUID(player));
+		Timestamp ts = new Timestamp(cooldownTime);
+		runStatementAsync(querySyncCooldown, ts, getPlayerNameOrUUID(player), ts);
 	}
 
 	@Override
