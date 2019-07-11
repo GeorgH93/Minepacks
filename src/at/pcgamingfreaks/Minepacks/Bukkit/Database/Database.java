@@ -66,7 +66,7 @@ public abstract class Database implements Listener
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
-		if(!backupFolder.exists() && backupFolder.mkdirs()) mp.getLogger().info("Failed to create backups folder.");
+		if(!backupFolder.exists() && !backupFolder.mkdirs()) mp.getLogger().info("Failed to create backups folder.");
 	}
 
 	public void init()
