@@ -93,48 +93,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 	}
 
-	@Override
-	public @NotNull String getSQLHost()
-	{
-		return getConfig().getString("Database.SQL.Host", "localhost");
-	}
-
-	@Override
-	public @NotNull String getSQLDatabase()
-	{
-		return getConfig().getString("Database.SQL.Database", "minecraft");
-	}
-
-	@Override
-	public @NotNull String getSQLUser()
-	{
-		return getConfig().getString("Database.SQL.User", "minecraft");
-	}
-
-	@Override
-	public @NotNull String getSQLPassword()
-	{
-		return getConfig().getString("Database.SQL.Password", "");
-	}
-
-	@Override
-	public int getSQLMaxConnections()
-	{
-		return getConfig().getInt("Database.SQL.MaxConnections", 2);
-	}
-
-	@Override
-	public @NotNull String getSQLConnectionProperties()
-	{
-		List<String> list = getConfig().getStringList("Database.SQL.Properties", new LinkedList<>());
-		StringBuilder str = new StringBuilder("?allowMultiQueries=true&autoReconnect=true");
-		for(String s : list)
-		{
-			str.append("&").append(s);
-		}
-		return str.toString();
-	}
-
 	public String getUserTable()
 	{
 		return getConfig().getString("Database.Tables.User", "backpack_players");
