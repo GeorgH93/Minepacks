@@ -57,11 +57,9 @@ import java.util.Collection;
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB = "Minepacks V2", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.14-SNAPSHOT";
+	@SuppressWarnings("unused")
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks V2", JENKINS_JOB_MASTER = "Minepacks", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.14-SNAPSHOT";
 	private static Minepacks instance = null;
-
-	@SuppressWarnings("FieldCanBeLocal") // Field is set per reflection from the BadRabbit loader
-	private boolean useBukkitUpdater = false;
 
 	private Config config;
 	private Language lang;
@@ -157,14 +155,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public @Nullable Updater update(@Nullable at.pcgamingfreaks.Updater.Updater.UpdaterResponse output)
 	{
 		UpdateProvider updateProvider;
-		if(useBukkitUpdater) updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
+		if(getDescription().getVersion().contains("Release")) updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
 		else
 		{
 			/*if[STANDALONE]
-			getLogger().warning("Auto-updates not available for your build config!");
-			return null;
+			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB_MASTER, getLogger(), ".*-Standalone.*");
 			else[STANDALONE]*/
-			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB, getLogger());
+			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB_DEV, getLogger());
 			/*end[STANDALONE]*/
 		}
 		Updater updater = new Updater(this, this.getFile(), true, updateProvider);

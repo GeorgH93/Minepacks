@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Uses BadRabbit to initiate the plugin in normal or standalone mode depending on the users environment.
  */
+@SuppressWarnings("unused")
 public class MinepacksBadRabbit extends BadRabbit
 {
 	@Override
@@ -37,13 +38,11 @@ public class MinepacksBadRabbit extends BadRabbit
 			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
 			Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
 			newPluginInstance = (JavaPlugin) standaloneClass.newInstance();
-			getField(standaloneClass, "useBukkitUpdater").set(newPluginInstance, true);
 		}
 		else
 		{
 			getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
 			newPluginInstance = new Minepacks();
-			getField(Minepacks.class, "useBukkitUpdater").set(newPluginInstance, true);
 		}
 		return newPluginInstance;
 	}
