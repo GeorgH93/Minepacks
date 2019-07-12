@@ -300,7 +300,7 @@ public abstract class SQL extends Database
 		final int id = backpack.getOwnerID(), usedSerializer = itsSerializer.getUsedSerializer();
 		final String nameOrUUID = getPlayerNameOrUUID(backpack.getOwner()), name = backpack.getOwner().getName();
 
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+		Runnable runnable = () -> {
 			try(Connection connection = getConnection())
 			{
 				if(id <= 0)
@@ -335,7 +335,8 @@ public abstract class SQL extends Database
 				e.printStackTrace();
 				writeBackup(name, nameOrUUID, usedSerializer, data);
 			}
-		});
+		};
+		if(asyncSave) Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable); else runnable.run();
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public abstract class Database implements Listener
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer;
 	protected final boolean useUUIDs, bungeeCordMode;
-	protected boolean useUUIDSeparators;
+	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
 	private final UnCacheStrategie unCacheStrategie;
@@ -77,6 +77,7 @@ public abstract class Database implements Listener
 	public void close()
 	{
 		HandlerList.unregisterAll(this);
+		asyncSave = false;
 		backpacks.forEach((key, value) -> value.closeAll());
 		backpacks.clear();
 		unCacheStrategie.close();
