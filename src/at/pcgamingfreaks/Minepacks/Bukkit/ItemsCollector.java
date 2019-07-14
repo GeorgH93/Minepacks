@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,12 +34,13 @@ public class ItemsCollector extends BukkitRunnable
 {
 	private final Minepacks plugin;
 	private final double radius;
+	private final BukkitTask task;
 
 	public ItemsCollector(Minepacks plugin)
 	{
 		this.plugin = plugin;
 		this.radius = plugin.getConfiguration().getFullInvRadius();
-		runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
 	}
 
 	@Override
@@ -78,5 +80,10 @@ public class ItemsCollector extends BukkitRunnable
 				}
 			}
 		}
+	}
+
+	public void close()
+	{
+		task.cancel();
 	}
 }
