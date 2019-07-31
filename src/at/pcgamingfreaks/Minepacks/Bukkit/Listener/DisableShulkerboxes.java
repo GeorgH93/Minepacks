@@ -68,6 +68,7 @@ public class DisableShulkerboxes extends MinepacksListener
 			else
 			{
 				SHULKER_BOX_MATERIALS.add(Material.LIGHT_GRAY_SHULKER_BOX);
+				SHULKER_BOX_MATERIALS.add(Material.SHULKER_BOX);
 			}
 		}
 	}
