@@ -77,7 +77,7 @@ public class OldFileUpdater
 			try
 			{
 				keys = key.split("\\.");
-				if(keys.length == 3)
+				if(keys.length == 3 && keys[0].equals("Language"))
 				{
 					switch(keys[1])
 					{
@@ -104,6 +104,15 @@ public class OldFileUpdater
 							helper = "Language.Commands.Description.";
 							simpleConverter.put(helper + keys[2], key);
 							break;
+					}
+				}
+				if(keys.length == 1)
+				{
+					switch(keys[0])
+					{
+						case "LanguageName":
+						case "Author":
+							simpleConverter.put(key, key);
 					}
 				}
 			}
