@@ -1,0 +1,97 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+Language:
+  NotFromConsole: "&cKomut konsoldan kullanılabilir değil."
+  Ingame:
+    NoPermission: "&cBunu yapmak için iznin yok."
+    WorldDisabled: "&cÇantaların kullanımı bu dünyada devredışı."
+    NaN: "[\"\",{\"text\":\"Girilen değer sayı değil!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Çanta kapandı!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} adlı kişinin çantası kapandı!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Geçersiz çanta."
+    NotAllowedInBackpack: "&c{ItemName} çanta içinde bulundurulamaz."
+    Open:
+      # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Çantanızı geri açana kadar lütfen \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" bekleyin.\"}]"
+      # Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Şu anki oyun modunda çantanızı açamazsınız."
+    Clean:
+      BackpackCleaned: "Çanta temizlendi."
+    Help:
+      Header: "&6### Minepacks Komutları ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Tekrar Yükleniyor ..."
+      Reloaded: "&1Tekrar Yüklendi!"
+    Update:
+      CheckingForUpdates: "&1Güncellemeler denetleniyor ..."
+      Updated: "[\"\",{\"text\":\"Eklenti güncellendi, diğer restart/reload işleminde yüklenecek.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Eklenti güncellemesi bulunmuyor.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Güncelleme denetlenirken bir hata oluştu! Lütfen konsolu kontrol edin!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Güncelleme mevcut! Yüklemek için \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" adresini kullanın!\"}]"
+    Backup:
+      Created: "Çanta yedeklendi."
+      NoBackpack: "Oyuncunun bir çantası yok ya da çantası boş."
+    Restore:
+      BackupsPerPage: "10"
+      Headline: "[\"\",{\"text\":\"Yedeklemeler\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Gösterilen sayfa {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Önceki <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Gösterilen Sayfa {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Sonraki >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "Yedekleme eşleşmesi {BackupIdentifier} bulunamadı"
+      NoUserToRestoreToFound: "Yedekleme için geçerli oyuncu bulunamadı"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Yedek başarıyla geri getirildi."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Çantanı açar."
+      Clean: "Çantanı temizler."
+      CleanOthers: "Başka bir oyuncunun çantasını temizler."
+      OpenOthers: "Başkasının çantasını görüntüler."
+      Reload: "Eklentinin config dosyasını tekrar yükler."
+      Update: "Eklenti için yeni güncellemeleri denetler."
+      Version: "Eklenti detaylarını ve gerekliliklerinin çıktısını verir."
+      Backup: "Oyuncunun çantasını yedekler."
+      Restore: "Yedeği yükler."
+      RestoreList: "Mevcut tüm yedekleri listeler."
+      Help: "Mevcut tüm komutları ve tanımlarını gösterir."
+      Migrate: "Kullanılan veritabanını bir türden diğerine geçirir."
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+
+# Will be shown in the console during startup
+LanguageName: "turkish"
+Author: "imZesha"
+
+# Language file version. Don't touch it!
+Version: 16
