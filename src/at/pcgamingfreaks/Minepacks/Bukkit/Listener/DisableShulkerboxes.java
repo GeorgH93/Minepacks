@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 
 public class DisableShulkerboxes extends MinepacksListener
 { //TODO handle existing shulkerboxes in inventory
@@ -103,7 +104,7 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryOpen(InventoryOpenEvent event)
 	{
-		if(event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase().contains("shulker"))
+		if(event.getInventory().getHolder() != null && event.getInventory().getHolder().getClass().getName().toLowerCase(Locale.ROOT).contains("shulker"))
 		{
 			if(removeExisting)
 			{

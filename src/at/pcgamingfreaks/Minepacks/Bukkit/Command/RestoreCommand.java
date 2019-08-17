@@ -173,7 +173,7 @@ public class RestoreCommand extends MinepacksCommand
 	@Override
 	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
-		final String arg = args[args.length - 1].toLowerCase();
+		final String arg = args[args.length - 1].toLowerCase(Locale.ROOT);
 		List<String> autoComplete = null;
 		if(args.length == 1)
 		{
@@ -181,7 +181,7 @@ public class RestoreCommand extends MinepacksCommand
 			autoComplete = new LinkedList<>();
 			for(String backupId : backups)
 			{
-				if(backupId.toLowerCase().startsWith(arg)) autoComplete.add(backupId);
+				if(backupId.toLowerCase(Locale.ROOT).startsWith(arg)) autoComplete.add(backupId);
 			}
 			for(String listCommand : listCommands)
 			{
@@ -193,7 +193,7 @@ public class RestoreCommand extends MinepacksCommand
 			autoComplete = new LinkedList<>();
 			for(Player player : Bukkit.getOnlinePlayers())
 			{
-				if(player.getName().toLowerCase().startsWith(arg)) autoComplete.add(player.getName());
+				if(player.getName().toLowerCase(Locale.ROOT).startsWith(arg)) autoComplete.add(player.getName());
 			}
 		}
 		return autoComplete;

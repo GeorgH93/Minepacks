@@ -24,6 +24,8 @@ import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.event.HandlerList;
 
+import java.util.Locale;
+
 public class MigrationManager
 {
 	private final Minepacks plugin;
@@ -106,7 +108,7 @@ public class MigrationManager
 		try
 		{
 			boolean global = false;
-			if(targetDatabaseType.toLowerCase().equals("external") ||targetDatabaseType.toLowerCase().equals("global") || targetDatabaseType.toLowerCase().equals("shared"))
+			if(targetDatabaseType.toLowerCase(Locale.ROOT).equals("external") || targetDatabaseType.toLowerCase(Locale.ROOT).equals("global") || targetDatabaseType.toLowerCase(Locale.ROOT).equals("shared"))
 			{
 				/*if[STANDALONE]
 				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
@@ -118,11 +120,11 @@ public class MigrationManager
 					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
 					return null;
 				}
-				targetDatabaseType = pool.getDatabaseType().toLowerCase();
+				targetDatabaseType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
 				global = true;
 				/*end[STANDALONE]*/
 			}
-			switch(targetDatabaseType.toLowerCase())
+			switch(targetDatabaseType.toLowerCase(Locale.ROOT))
 			{
 				case "flat":
 				case "file":

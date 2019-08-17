@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class OpenCommand extends MinepacksCommand
 {
@@ -56,7 +57,7 @@ public class OpenCommand extends MinepacksCommand
 			{
 				allowedGameModesBuilder.append(", ");
 			}
-			allowedGameModesBuilder.append(gameMode.name().toLowerCase());
+			allowedGameModesBuilder.append(gameMode.name().toLowerCase(Locale.ROOT));
 		}
 		allowedGameModes = allowedGameModesBuilder.toString(); //TODO translate
 	}
@@ -84,6 +85,7 @@ public class OpenCommand extends MinepacksCommand
 			}
 			else
 			{
+				//noinspection StringToUpperCaseOrToLowerCaseWithoutLocale
 				messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(), allowedGameModes);
 			}
 		}
@@ -106,11 +108,11 @@ public class OpenCommand extends MinepacksCommand
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission("backpack.open.other")))
 		{
-			String name, arg = args[args.length - 1].toLowerCase();
+			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
 			List<String> names = new LinkedList<>();
 			for(Player player : Bukkit.getOnlinePlayers())
 			{
-				name = player.getName().toLowerCase();
+				name = player.getName().toLowerCase(Locale.ROOT);
 				if(!name.equalsIgnoreCase(commandSender.getName()) && name.startsWith(arg)) names.add(name);
 			}
 			return names;
@@ -125,7 +127,6 @@ public class OpenCommand extends MinepacksCommand
 		help.add(new HelpData(getTranslatedName(), null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
 		if(requester.hasPermission("backpack.open.other"))
 		{
-			//noinspection ConstantConditions
 			help.add(new HelpData(getTranslatedName(), helpParam, descriptionOpenOthers));
 		}
 		return help;

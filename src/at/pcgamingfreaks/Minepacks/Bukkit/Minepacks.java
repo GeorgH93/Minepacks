@@ -53,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Locale;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
@@ -332,7 +333,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public WorldBlacklistMode isDisabled(Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission("backpack.ignoreWorldBlacklist"))) return WorldBlacklistMode.None;
-		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase())) return worldBlacklistMode;
+		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase(Locale.ROOT))) return worldBlacklistMode;
 		return WorldBlacklistMode.None;
 	}
 

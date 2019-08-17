@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 
 public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> /*if_not[STANDALONE]*/ implements MinepacksCommandManager /*end[STANDALONE]*/
 {
@@ -132,7 +133,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	{
 		for(HelpData d : data)
 		{
-			helpFormat.send(target, mainCommandAlias, d.getTranslatedSubCommand(), d.getParameter(), d.getDescription(), d.getClickAction().name().toLowerCase());
+			helpFormat.send(target, mainCommandAlias, d.getTranslatedSubCommand(), d.getParameter(), d.getDescription(), d.getClickAction().name().toLowerCase(Locale.ROOT));
 		}
 	}
 }

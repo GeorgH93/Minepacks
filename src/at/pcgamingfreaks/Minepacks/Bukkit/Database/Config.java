@@ -32,10 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("ConstantConditions")
 public class Config extends Configuration implements DatabaseConnectionConfiguration
@@ -125,7 +122,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getUnCacheStrategie()
 	{
-		return getConfig().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase();
+		return getConfig().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ROOT);
 	}
 
 	public long getUnCacheInterval()
@@ -210,7 +207,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			{
 				try
 				{
-					gm = GameMode.valueOf(string.toUpperCase());
+					gm = GameMode.valueOf(string.toUpperCase(Locale.ROOT));
 				}
 				catch(IllegalArgumentException ignored)
 				{
@@ -294,7 +291,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		HashSet<String> blacklist = new HashSet<>();
 		for(String world : getConfig().getStringList("WorldSettings.Blacklist", new LinkedList<>()))
 		{
-			blacklist.add(world.toLowerCase());
+			blacklist.add(world.toLowerCase(Locale.ROOT));
 		}
 		return blacklist;
 	}

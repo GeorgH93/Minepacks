@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MigrateCommand extends MinepacksCommand
 {
@@ -39,7 +40,7 @@ public class MigrateCommand extends MinepacksCommand
 	{
 		if(args.length >= 1)
 		{
-			switch(args[0].toLowerCase())
+			switch(args[0].toLowerCase(Locale.ROOT))
 			{
 				case "db": case "database": case "storage": migrateDb(sender, args); break;
 			}

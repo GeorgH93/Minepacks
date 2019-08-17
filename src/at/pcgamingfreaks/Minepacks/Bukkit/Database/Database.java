@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -85,7 +86,7 @@ public abstract class Database implements Listener
 
 	public static Database getDatabase(Minepacks plugin)
 	{
-		String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase();
+		String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase(Locale.ROOT);
 		ConnectionProvider connectionProvider = null;
 		if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 		{
@@ -99,7 +100,7 @@ public abstract class Database implements Listener
 				plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
 				return null;
 			}
-			dbType = pool.getDatabaseType().toLowerCase();
+			dbType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
 			connectionProvider = pool.getConnectionProvider();
 			/*end[STANDALONE]*/
 		}

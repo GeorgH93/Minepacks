@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2019 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class ClearCommand extends MinepacksCommand
 {
@@ -92,11 +93,11 @@ public class ClearCommand extends MinepacksCommand
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission("backpack.clean.other")))
 		{
-			String name, arg = args[args.length - 1].toLowerCase();
+			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
 			List<String> names = new LinkedList<>();
 			for(Player player : Bukkit.getOnlinePlayers())
 			{
-				name = player.getName().toLowerCase();
+				name = player.getName().toLowerCase(Locale.ROOT);
 				if(!name.equalsIgnoreCase(commandSender.getName()) && name.startsWith(arg)) names.add(name);
 			}
 			return names;

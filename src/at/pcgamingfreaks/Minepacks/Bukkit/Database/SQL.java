@@ -33,10 +33,7 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class SQL extends Database
 {
@@ -142,7 +139,7 @@ public abstract class SQL extends Database
 					String uuid = res.getString(fieldPlayerUUID);
 					if(uuid == null)
 					{
-						toConvert.put(res.getString(fieldPlayerName).toLowerCase(), new UpdateData(null, res.getInt(fieldPlayerID)));
+						toConvert.put(res.getString(fieldPlayerName).toLowerCase(Locale.ROOT), new UpdateData(null, res.getInt(fieldPlayerID)));
 					}
 					else
 					{
@@ -158,7 +155,7 @@ public abstract class SQL extends Database
 					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), true, useUUIDSeparators);
 					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
 					{
-						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase());
+						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase(Locale.ROOT));
 						updateData.uuid = entry.getValue();
 						toUpdate.add(updateData);
 					}
