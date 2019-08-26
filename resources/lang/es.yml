@@ -1,28 +1,93 @@
+Version: 16
+# Para simplificar la personalización y traducción del plugin, por favor, échale un vistazo al editor: http://ptp.pcgamingfreaks.at
 Language:
-  Console:
-    Enabled: ¡MinePacks ha sido actualizado!
-    Disabled: MinePacks ha sido desactivado.
-    NotFromConsole: No puedes usar este comando desde la consola.
-    LangUpdated: Se ha actualizado el archivo de idioma.
-    UpdateUUIDs: Empieza la actualizacion de la base de datos a UUIDs ...
-    UpdatedUUIDs: 'Se han actualizado %s cuentas a UUIDs.'
+  NotFromConsole: "&cEl comando no puede ser usado desde la consola."
   Ingame:
-    NoPermission: "No tienes permiso para hacer eso."
-    OwnBackPackClose: '¡Mochila cerrada!'
-    PlayerBackPackClose: "¡Se ha cerrado la mochila de %s!"
-    InvalidBackpack: Mochila invalida.
-    BackpackCleaned: Se ha limpiado la mochila.
-    Cooldown: "Espera para abrir tu mochila de nuevo."
-    WrongGameMode: "No puedes abrir tu mochila en el modo de juego actual."
-  Description:
-    Backpack: Abre tu mochila.
-    Clean: Limpia tu mochila.
-    CleanOther: Limpia la mochila de otros jugadores.
-    View: Muestra la mochila de otros jugadores.
-
-# Will be shown in the console during startup
-LanguageName: "spanish"
-Author: "mijiko200"
-
-# Language file version. Don't touch it!
-Version: 5
+    NoPermission: "&cNo tienes permiso para hacer esto."
+    WorldDisabled: "&cEl uso de las mochilas no está permitido en este mundo."
+    NaN: "[\"\",{\"text\":\"¡El valor introducido no es un número!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "¡Mochila cerrada!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parametros: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "¡La mochila de {OwnerName} fue cerrada!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Mochila no validad"
+    NotAllowedInBackpack: "&cNo está permitido almacenar el item {ItemName} en la mochila."
+    Open:
+      # Parametro: {TimeLeft} tiempo en segundos hasta que la mochila se pueda volver a abrir, {TimeSpanLeft} lapso de tiempo desde que la mochila es formateada y pueda volver a abrise.
+      Cooldown: "[{\"text\":\"Please wait \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" till you reopen your backpack.\"}]"
+      # Parametros: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "No está permitido acceder a las mochilas en tu modo de juego actual."
+    Clean:
+      BackpackCleaned: "Mochila vaciada"
+    Help:
+      Header: "&6### Comandos de Minepacks ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Actualizando..."
+      Reloaded: "&1¡Actualizado!"
+    Update:
+      CheckingForUpdates: "&cComprobando actualizaciones..."
+      Updated: "[\"\",{\"text\":\"Plugin actualizado, será cargado en el siguiente reinicio/parada.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"No plugin update available.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"¡Hubo un error comprando actualizaciones! ¡Por favor, revisa la consola!\",\"color\":\"red\"}]"
+      # Puedes cambiar este mensaje si lo deseas, ¡pero no llores si el enlace ya no está vinculado al plugin!
+      UpdateAvailable: "[{\"text\":\"¡Hay una actualización disponible! ¡Por favor, ve a \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" para descargarla!\"}]"
+    Backup:
+      Created: "La mochila fue respaldada con excito."
+      NoBackpack: "El jugador no tiene mochila o bien está vacia."
+    Restore:
+      BackupsPerPage: "10"
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"mostrando pág. {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Anterior <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Mostrando pág. {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Siguiente >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "No se encontraron coincidencias con el el backup {BackupIdentifier}."
+      NoUserToRestoreToFound: "Usuario no valido para restaurar la copia de seguridad."
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "La mochila fue restaurada correctamente."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Abre tu mochila."
+      Clean: "Vacia tu mochila."
+      CleanOthers: "Vacia la mochila de otro jugador."
+      OpenOthers: "Observa la mochila de otro jugador."
+      Reload: "Actualiza la configuración del plugin."
+      Update: "Comprueba las nuevas actualizaciones del plugin."
+      Version: "Prints the version details about the plugin and it's dependencies."
+      Backup: "Crea un backup de la mochila de un jugador."
+      Restore: "Restaura una mochila."
+      RestoreList: "Lista de todas las mochilas disponibles."
+      Help: "Muestra todos los comandos disponibles y sus descripciones."
+      Migrate: " Migra la base de datos utilizada de un tipo a otro."
+LanguageName: "es_es"
+Author: "ThatOverPowered"
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
