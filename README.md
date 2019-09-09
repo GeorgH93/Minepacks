@@ -1,8 +1,6 @@
 <!-- Variables (this block will not be visible in the readme -->
 [banner]: https://pcgamingfreaks.at/images/minepacks.png
 [spigot]: https://www.spigotmc.org/resources/19286/
-<!--[spigotRatingImg]: https://img.shields.io/spiget/stars/19286.svg
-[spigotDownloadsImg]: https://img.shields.io/spiget/downloads/19286.svg?label=downloads%20%28spigotmc.org%29-->
 [spigotRatingImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
 [spigotDownloadsImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=downloads%20%28spigotmc.org%29&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
 [bukkit]: http://dev.bukkit.org/bukkit-plugins/minepacks/
@@ -56,20 +54,21 @@ Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
 * Auto-updater
 * [API][api] for developers
 
-## Requirements
-
+## Requirements:
+### Runtime requirements:
 * Java 8
 * Bukkit, Spigot or Paper for Minecraft 1.7 or newer
 * (Optional) [PCGF PluginLib][pcgfPluginLib] ([Advantages of using the PCGF PluginLib][pcgfPluginLibAdvantages])
 
-## Build from source:
-The plugin can be build in 3 different configurations.
-
-### Build requirements
+### Build requirements:
 
 * JDK for Java 8
 * Maven 3
 * git
+
+## Build from source:
+The plugin can be build in 3 different configurations.  
+All the details about the different build configs and runtime modes can be found [here](https://github.com/GeorgH93/Minepacks/wiki/Build-and-Mode-comparison).
 
 ### Normal version:
 ```
