@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-@SuppressWarnings("ConstantConditions")
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
 	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
@@ -57,7 +56,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
 		{
-			OldFileUpdater.updateConfig(oldConfig.getYaml(), getConfig());
+			OldFileUpdater.updateConfig(oldConfig.getYamlE(), getConfigE());
 		}
 		else
 		{
@@ -69,17 +68,17 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//region Database getter
 	public int getAutoCleanupMaxInactiveDays()
 	{
-		return getConfig().getInt("Database.AutoCleanup.MaxInactiveDays", -1);
+		return getConfigE().getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
 
 	public String getDatabaseType()
 	{
-		return getConfig().getString("Database.Type", "sqlite");
+		return getConfigE().getString("Database.Type", "sqlite");
 	}
 
 	public void setDatabaseType(String type)
 	{
-		getConfig().set("Database.Type", type);
+		getConfigE().set("Database.Type", type);
 		try
 		{
 			save();
@@ -92,109 +91,111 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getUserTable()
 	{
-		return getConfig().getString("Database.Tables.User", "backpack_players");
+		return getConfigE().getString("Database.Tables.User", "backpack_players");
 	}
 
 	public String getBackpackTable()
 	{
-		return getConfig().getString("Database.Tables.Backpack", "backpacks");
+		return getConfigE().getString("Database.Tables.Backpack", "backpacks");
 	}
 
 	public String getCooldownTable()
 	{
-		return getConfig().getString("Database.Tables.Cooldown", "backpack_cooldowns");
+		return getConfigE().getString("Database.Tables.Cooldown", "backpack_cooldowns");
 	}
 
 	public String getDBFields(String sub, String def)
 	{
-		return getConfig().getString("Database.Tables.Fields." + sub, def);
+		return getConfigE().getString("Database.Tables.Fields." + sub, def);
 	}
 
 	public boolean getUseUUIDs()
 	{
-		return getConfig().getBoolean("Database.UseUUIDs", true);
+		boolean uuid = getConfigE().getBoolean("Database.UseUUIDs", true);
+		if(!uuid) logger.warning(ConsoleColor.RED + "Disabling UUIDs is not recommended and can lead to unexpected behaviour. Please consider enabling UUIDs. The option will be removed with v2.1." + ConsoleColor.RESET);
+		return uuid;
 	}
 
 	public boolean getUseUUIDSeparators()
 	{
-		return getConfig().getBoolean("Database.UseUUIDSeparators", false);
+		return getConfigE().getBoolean("Database.UseUUIDSeparators", false);
 	}
 
 	public String getUnCacheStrategie()
 	{
-		return getConfig().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ROOT);
+		return getConfigE().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ROOT);
 	}
 
 	public long getUnCacheInterval()
 	{
-		return getConfig().getLong("Database.Cache.UnCache.Interval", 600) * 20L;
+		return getConfigE().getLong("Database.Cache.UnCache.Interval", 600) * 20L;
 	}
 
 	public long getUnCacheDelay()
 	{
-		return getConfig().getLong("Database.Cache.UnCache.Delay", 600) * 20L;
+		return getConfigE().getLong("Database.Cache.UnCache.Delay", 600) * 20L;
 	}
 	//endregion
 
 	public String getBPTitleOther()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName}", "%s"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName}", "%s"));
 	}
 
 	public String getBPTitle()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfig().getString("BackpackTitle", "Backpack"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack"));
 	}
 
 	public boolean getDropOnDeath()
 	{
-		return getConfig().getBoolean("DropOnDeath", true);
+		return getConfigE().getBoolean("DropOnDeath", true);
 	}
 
 	public int getBackpackMaxSize()
 	{
-		return getConfig().getInt("MaxSize", 6);
+		return getConfigE().getInt("MaxSize", 6);
 	}
 
 	public boolean getAutoUpdate()
 	{
-		return getConfig().getBoolean("Misc.AutoUpdate", true);
+		return getConfigE().getBoolean("Misc.AutoUpdate", true);
 	}
 
 	public boolean isBungeeCordModeEnabled()
 	{
-		return getConfig().getBoolean("Misc.UseBungeeCord", false);
+		return getConfigE().getBoolean("Misc.UseBungeeCord", false);
 	}
 
 	public long getCommandCooldown()
 	{
-		return getConfig().getInt("Cooldown.Command", -1) * 1000L;
+		return getConfigE().getInt("Cooldown.Command", -1) * 1000L;
 	}
 
 	public boolean isCommandCooldownSyncEnabled()
 	{
-		return getConfig().getBoolean("Cooldown.Sync", false);
+		return getConfigE().getBoolean("Cooldown.Sync", false);
 	}
 
 	public boolean isCommandCooldownClearOnLeaveEnabled()
 	{
-		return getConfig().getBoolean("Cooldown.ClearOnLeave", false);
+		return getConfigE().getBoolean("Cooldown.ClearOnLeave", false);
 	}
 
 	public boolean isCommandCooldownAddOnJoinEnabled()
 	{
-		return getConfig().getBoolean("Cooldown.AddOnJoin", true);
+		return getConfigE().getBoolean("Cooldown.AddOnJoin", true);
 	}
 
 	public long getCommandCooldownCleanupInterval()
 	{
-		return getConfig().getInt("Cooldown.CleanupInterval", 600) * 20L;
+		return getConfigE().getInt("Cooldown.CleanupInterval", 600) * 20L;
 	}
 
 	public Collection<GameMode> getAllowedGameModes()
 	{
 		Collection<GameMode> gameModes = new HashSet<>();
-		for(String string : getConfig().getStringList("AllowedGameModes", new LinkedList<>()))
+		for(String string : getConfigE().getStringList("AllowedGameModes", new LinkedList<>()))
 		{
 			GameMode gm = null;
 			try
@@ -230,51 +231,51 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//region Full inventory handling
 	public boolean getFullInvCollect()
 	{
-		return getConfig().getBoolean("FullInventory.CollectItems", false);
+		return getConfigE().getBoolean("FullInventory.CollectItems", false);
 	}
 
 	public long getFullInvCheckInterval()
 	{
-		return getConfig().getInt("FullInventory.CheckInterval", 1) * 20L; // in seconds
+		return getConfigE().getInt("FullInventory.CheckInterval", 1) * 20L; // in seconds
 	}
 
 	public double getFullInvRadius()
 	{
-		return getConfig().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
+		return getConfigE().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
 	}
 	//endregion
 
 	//region Shulkerboxes
 	public boolean isShulkerboxesPreventInBackpackEnabled()
 	{ // Shulkerboxes are only available in MC 1.11 and newer
-		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfig().getBoolean("Shulkerboxes.PreventInBackpack", true);
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfigE().getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
 	public boolean isShulkerboxesDisable()
 	{ // Shulkerboxes are only available in MC 1.11 and newer
-		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfig().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfigE().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
 	}
 
 	public boolean isShulkerboxesExistingDropEnabled()
 	{
-		return getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy");
+		return getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy");
 	}
 
 	public boolean isShulkerboxesExistingDestroyEnabled()
 	{
-		return getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy") || getConfig().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Remove");
+		return getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy") || getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Remove");
 	}
 	//endregion
 
 	//region Item filter
 	public boolean isItemFilterEnabled()
 	{
-		return getConfig().getBoolean("ItemFilter.Enable", false) || getConfig().getBoolean("Shulkerboxes.PreventInBackpack", true);
+		return getConfigE().getBoolean("ItemFilter.Enable", false) || getConfigE().getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
 	public Collection<MinecraftMaterial> getItemFilterBlacklist()
 	{
-		List<String> stringBlacklist = getConfig().getStringList("ItemFilter.Blacklist", new LinkedList<>());
+		List<String> stringBlacklist = getConfigE().getStringList("ItemFilter.Blacklist", new LinkedList<>());
 		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
 		for(String item : stringBlacklist)
 		{
@@ -289,7 +290,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public Collection<String> getWorldBlacklist()
 	{
 		HashSet<String> blacklist = new HashSet<>();
-		for(String world : getConfig().getStringList("WorldSettings.Blacklist", new LinkedList<>()))
+		for(String world : getConfigE().getStringList("WorldSettings.Blacklist", new LinkedList<>()))
 		{
 			blacklist.add(world.toLowerCase(Locale.ROOT));
 		}
@@ -298,7 +299,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public WorldBlacklistMode getWorldBlacklistMode()
 	{
-		String mode = getConfig().getString("WorldSettings.BlacklistMode", "Message");
+		String mode = getConfigE().getString("WorldSettings.BlacklistMode", "Message");
 		WorldBlacklistMode blacklistMode = WorldBlacklistMode.Message;
 		try
 		{

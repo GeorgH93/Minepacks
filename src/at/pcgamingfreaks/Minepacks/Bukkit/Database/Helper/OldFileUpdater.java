@@ -50,7 +50,9 @@ public class OldFileUpdater
 				case "Misc.AutoUpdate": oldKey = "auto-update"; break;
 				case "Misc.UseBungeeCord": oldKey = "BungeeCordMode"; break;
 				case "Language.Language": oldKey = "Language"; break;
-				case "Database.UseUUIDs": if(!oldYAML.isSet("Database.UseUUIDs") && oldYAML.isSet("UseUUIDs")) oldKey = "UseUUIDs"; break;
+				case "Database.UseUUIDs":
+				case "UseUUIDs":
+					continue;
 			}
 			try
 			{
