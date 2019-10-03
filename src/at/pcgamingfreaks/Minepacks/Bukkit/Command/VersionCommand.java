@@ -27,16 +27,19 @@ import java.util.List;
 
 public class VersionCommand extends MinepacksCommand
 {
+	private final String minepacksVersion;
+
 	public VersionCommand(Minepacks plugin)
 	{
 		super(plugin, "version", plugin.getLanguage().getTranslated("Commands.Description.Version"), "backpack.version", plugin.getLanguage().getCommandAliases("Version"));
+		minepacksVersion = plugin.getDescription().getName() + ": " + plugin.getDescription().getVersion();
 	}
 
 	@Override
 	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
 		sender.sendMessage("##### Start Minepacks version info #####");
-		sender.sendMessage("Marriage Master: " +  plugin.getDescription().getVersion());
+		sender.sendMessage(minepacksVersion);
 		/*if_not[STANDALONE]*/
 		sender.sendMessage("PCGF PluginLib: " + at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion());
 		/*end[STANDALONE]*/
