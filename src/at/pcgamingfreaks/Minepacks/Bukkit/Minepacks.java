@@ -75,6 +75,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private CommandManager commandManager;
 	private Collection<GameMode> gameModes;
 	private CooldownManager cooldownManager = null;
+	private ItemFilter itemFilter = null;
 
 	public static Minepacks getInstance()
 	{
@@ -188,7 +189,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new BackpackEventListener(this), this);
 		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
-		if(config.isItemFilterEnabled()) pluginManager.registerEvents(new ItemFilter(this), this);
+		if(config.isItemFilterEnabled())
+		{
+			itemFilter = new ItemFilter(this);
+			pluginManager.registerEvents(itemFilter, this);
+		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
@@ -209,6 +214,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(cooldownManager != null) cooldownManager.close();
 		cooldownManager = null;
 		getServer().getScheduler().cancelTasks(this); // Kill all running task
+		itemFilter = null;
 	}
 
 	public void reload()
@@ -346,5 +352,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public @Nullable CooldownManager getCooldownManager()
 	{
 		return cooldownManager;
+	}
+
+	@Override
+	public @Nullable ItemFilter getItemFilter()
+	{
+		return itemFilter;
 	}
 }

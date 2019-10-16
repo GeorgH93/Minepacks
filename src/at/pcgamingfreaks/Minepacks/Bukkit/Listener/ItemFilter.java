@@ -36,7 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class ItemFilter extends MinepacksListener
+public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter
 {
 	private final Message messageNotAllowedInBackpack;
 	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
@@ -81,7 +81,7 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(event.getDestination().getHolder() instanceof Backpack && blockedMaterials.contains(new MinecraftMaterial(event.getItem())))
+		if(event.getDestination().getHolder() instanceof Backpack && isItemBlocked(event.getItem()))
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
@@ -99,9 +99,9 @@ public class ItemFilter extends MinepacksListener
 			if(event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD && event.getHotbarButton() != -1)
 			{
 				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-				if(item != null && blockedMaterials.contains(new MinecraftMaterial(item))) event.setCancelled(true);
+				if(item != null && isItemBlocked(item)) event.setCancelled(true);
 			}
-			else if(event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
+			else if(event.getCurrentItem() != null && isItemBlocked(event.getCurrentItem()))
 			{
 				if(event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof Backpack) return; // Allow user to move blacklisted items out of the backpack
 
@@ -114,10 +114,16 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && blockedMaterials.contains(new MinecraftMaterial(event.getOldCursor())))
+		if(event.getInventory().getHolder() instanceof Backpack && event.getOldCursor() != null && isItemBlocked(event.getOldCursor()))
 		{
 			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getOldCursor()));
 			event.setCancelled(true);
 		}
+	}
+
+	@Override
+	public boolean isItemBlocked(ItemStack item)
+	{
+		return blockedMaterials.contains(new MinecraftMaterial(item));
 	}
 }

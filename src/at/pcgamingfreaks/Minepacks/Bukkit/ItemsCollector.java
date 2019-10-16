@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -35,12 +36,14 @@ public class ItemsCollector extends BukkitRunnable
 	private final Minepacks plugin;
 	private final double radius;
 	private final BukkitTask task;
+	private final ItemFilter itemFilter;
 
 	public ItemsCollector(Minepacks plugin)
 	{
 		this.plugin = plugin;
 		this.radius = plugin.getConfiguration().getFullInvRadius();
 		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+		itemFilter = plugin.getItemFilter();
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class ItemsCollector extends BukkitRunnable
 						Item item = (Item) entity;
 						if(!item.isDead() && item.getPickupDelay() <= 0)
 						{
+							if(itemFilter != null && itemFilter.isItemBlocked(item.getItemStack())) continue;
 							HashMap<Integer, ItemStack> full = backpack.getInventory().addItem(item.getItemStack());
 							backpack.setChanged();
 							if(!full.isEmpty())
