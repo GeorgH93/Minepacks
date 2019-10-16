@@ -27,9 +27,11 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -92,12 +94,20 @@ public class ItemFilter extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryClickEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
+		if(event.getInventory().getHolder() instanceof Backpack)
 		{
-			if(event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof Backpack) return; // Allow user to move blacklisted items out of the backpack
+			if(event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD && event.getHotbarButton() != -1)
+			{
+				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+				if(item != null && blockedMaterials.contains(new MinecraftMaterial(item))) event.setCancelled(true);
+			}
+			else if(event.getCurrentItem() != null && blockedMaterials.contains(new MinecraftMaterial(event.getCurrentItem())))
+			{
+				if(event.getClickedInventory() != null && event.getClickedInventory().getHolder() instanceof Backpack) return; // Allow user to move blacklisted items out of the backpack
 
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCurrentItem()));
-			event.setCancelled(true);
+				messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCurrentItem()));
+				event.setCancelled(true);
+			}
 		}
 	}
 
