@@ -21,9 +21,13 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
+@SuppressWarnings("unused")
 public interface Backpack extends InventoryHolder
 {
 	/**
@@ -101,4 +105,24 @@ public interface Backpack extends InventoryHolder
 	 * @param location The location the content of the backpack should be dropped to.
 	 */
 	void drop(Location location);
+
+	/**
+	 * @param stack The item stack that should be added to the backpack.
+	 * @return null if the entire item stack has been added. An item stack containing the items that did not fit into the backpack.
+	 */
+	default @Nullable ItemStack addItem(ItemStack stack)
+	{
+		Map<Integer, ItemStack> left = addItems(stack);
+		if(left.isEmpty()) return null;
+		return left.get(0);
+	}
+
+	/**
+	 * @param itemStacks The item that should be added to the backpack.
+	 * @return A HashMap containing items that didn't fit. The key is the number of the added item
+	 */
+	default @NotNull Map<Integer, ItemStack> addItems(ItemStack... itemStacks)
+	{
+		return getInventory().addItem(itemStacks);
+	}
 }
