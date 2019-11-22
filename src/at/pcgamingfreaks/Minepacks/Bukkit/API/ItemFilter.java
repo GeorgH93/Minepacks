@@ -17,9 +17,36 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public interface ItemFilter
 {
-	boolean isItemBlocked(ItemStack item);
+	/**
+	 * @param item The item that should be checked.
+	 * @return True if the item is not allowed. False if the item is allowed.
+	 */
+	boolean isItemBlocked(@NotNull ItemStack item);
+
+	/**
+	 * @param player The player that should receive the message that the item is not allowed.
+	 * @param itemStack The item that is not allowed. Will be used for the name.
+	 */
+	void sendNotAllowedMessage(@NotNull Player player, @NotNull ItemStack itemStack);
+
+	/**
+	 * @param player The player that should receive the message if the item is not allowed.
+	 * @param itemStack The item that should be checked.
+	 * @return True if the item is not allowed. False if the item is allowed.
+	 */
+	default boolean checkIsBlockedAndShowMessage(@NotNull Player player, @NotNull ItemStack itemStack)
+	{
+		if(isItemBlocked(itemStack))
+		{
+			sendNotAllowedMessage(player, itemStack);
+			return true;
+		}
+		return false;
+	}
 }
