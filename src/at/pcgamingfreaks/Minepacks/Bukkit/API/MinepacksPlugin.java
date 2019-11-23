@@ -126,7 +126,12 @@ public interface MinepacksPlugin
 	 * @param player The player to be checked.
 	 * @return True if the player can use a backpack. False if not.
 	 */
-	boolean isPlayerGameModeAllowed(Player player);
+	boolean isPlayerGameModeAllowed(final @NotNull Player player);
 
+	/**
+	 * Gets the item filter.
+	 *
+	 * @return The item filter. Null if item filter is disabled
+	 */
 	@Nullable ItemFilter getItemFilter();
 }
