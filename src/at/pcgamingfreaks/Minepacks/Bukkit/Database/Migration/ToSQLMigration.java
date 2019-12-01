@@ -47,7 +47,6 @@ public abstract class ToSQLMigration extends Migration
 	protected static final DateFormat SQLITE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	protected final SQL newDb;
-	protected final boolean uuid;
 
 	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull Database oldDb, @NotNull String dbType, boolean global)
 	{
@@ -63,7 +62,6 @@ public abstract class ToSQLMigration extends Migration
 			case "sqlite": newDb = new SQLite(plugin, connectionProvider); break;
 			default: newDb = null;
 		}
-		uuid = plugin.getConfiguration().getUseUUIDs();
 	}
 
 	protected  @Language("SQL") String replacePlaceholders(SQL database, @Language("SQL") String query) throws Exception

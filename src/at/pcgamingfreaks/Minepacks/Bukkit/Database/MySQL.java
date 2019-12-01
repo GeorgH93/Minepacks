@@ -30,7 +30,6 @@ import java.sql.SQLException;
 
 public class MySQL extends SQL
 {
-	//TODO add cooldown sync table
 	public MySQL(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider)
 	{
 		super(plugin, (connectionProvider == null) ? new MySQLConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), plugin.getConfiguration()) : connectionProvider);
@@ -48,17 +47,9 @@ public class MySQL extends SQL
 	{
 		try(Connection connection = getConnection())
 		{
-			if(useUUIDs)
-			{
-				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} VARCHAR(16) NOT NULL,\n" +
-						                                                 "{FieldUUID} CHAR(" +  ((useUUIDSeparators) ? "36" : "32") + ") DEFAULT NULL," + "\nPRIMARY KEY ({FieldPlayerID}),\n" +
-						                                                 "UNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
-			}
-			else
-			{
-				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} CHAR(16) NOT NULL,\n" +
-						                                                 "\nPRIMARY KEY ({FieldPlayerID})\n);"));
-			}
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} VARCHAR(16) NOT NULL,\n" +
+					                                                 "{FieldUUID} CHAR(" +  ((useUUIDSeparators) ? "36" : "32") + ") DEFAULT NULL," + "\nPRIMARY KEY ({FieldPlayerID}),\n" +
+					                                                 "UNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
 			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
 					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
 					                                                 "PRIMARY KEY ({FieldBPOwner}),\nCONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) " +

@@ -41,7 +41,7 @@ public class SQLtoFilesMigration extends Migration
 	protected SQLtoFilesMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb) throws InvocationTargetException, IllegalAccessException
 	{
 		super(plugin, oldDb);
-		@Language("SQL") String query = "SELECT " + (plugin.getConfiguration().getUseUUIDs() ? "{FieldUUID}" : "{FieldName}") + ",{FieldBPITS},{FieldBPVersion} FROM {TablePlayers} INNER JOIN {TableBackpacks} ON {FieldPlayerID}={FieldBPOwner};";
+		@Language("SQL") String query = "SELECT {FieldUUID},{FieldBPITS},{FieldBPVersion} FROM {TablePlayers} INNER JOIN {TableBackpacks} ON {FieldPlayerID}={FieldBPOwner};";
 		//noinspection ConstantConditions
 		sqlQuery = (String) Reflection.getMethod(SQL.class, "replacePlaceholders", String.class).invoke(oldDb, query);
 		saveFolder = new File(this.plugin.getDataFolder(), Files.FOLDER_NAME);

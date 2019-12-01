@@ -69,14 +69,7 @@ public class SQLite extends SQL
 		queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", ",{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
-		if(useUUIDs)
-		{
-			queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
-		}
-		else
-		{
-			queryUpdatePlayerAdd = queryUpdatePlayerAdd.replaceAll("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
-		}
+		queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
 	}
 
 	@SuppressWarnings("SqlResolve")
@@ -85,15 +78,12 @@ public class SQLite extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL" + ((useUUIDs) ? " , `uuid` CHAR(32)" : "") + " UNIQUE);");
-			if(useUUIDs)
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
+			try
 			{
-				try
-				{
-					stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
-				}
-				catch(SQLException ignored) {}
+				stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 			}
+			catch(SQLException ignored) {}
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
 			try
 			{
@@ -116,16 +106,9 @@ public class SQLite extends SQL
 	@Override
 	public void updatePlayer(final Player player)
 	{
-		if(useUUIDs)
-		{
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-				runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
-				runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
-			});
-		}
-		else
-		{
-			runStatementAsync(queryUpdatePlayerAdd, player.getName());
-		}
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
+			runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
+		});
 	}
 }

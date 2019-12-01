@@ -40,14 +40,7 @@ public class FilesToSQLMigration extends ToSQLMigration
 		super(plugin, oldDb, dbType, global);
 		saveFolder = new File(this.plugin.getDataFolder(), Files.FOLDER_NAME);
 
-		if(uuid)
-		{
-			queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldUUID},{FieldName}) VALUES (?,?);");
-		}
-		else
-		{
-			queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldName}) VALUES (?);");
-		}
+		queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldUUID},{FieldName}) VALUES (?,?);");
 		queryInsertBackpacks = replacePlaceholders(newDb, "INSERT INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);");
 	}
 
@@ -64,7 +57,7 @@ public class FilesToSQLMigration extends ToSQLMigration
 			{
 				String name = file.getName().substring(0, file.getName().length() - Files.EXT.length());
 				statementInsertUser.setString(1, name);
-				if(uuid) statementInsertUser.setString(2, "UNKNOWN");
+				statementInsertUser.setString(2, "UNKNOWN");
 				statementInsertUser.executeUpdate();
 				try(ResultSet rs = statementInsertUser.getGeneratedKeys())
 				{

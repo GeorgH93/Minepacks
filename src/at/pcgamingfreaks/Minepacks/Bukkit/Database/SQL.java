@@ -54,10 +54,7 @@ public abstract class SQL extends Database
 		loadSettings();
 		buildQuerys();
 		checkDB();
-		if(useUUIDs)
-		{
-			checkUUIDs(); // Check if there are user accounts without UUID
-		}
+		checkUUIDs(); // Check if there are user accounts without UUID
 
 		// Delete old backpacks
 		if(maxAge > 0)
@@ -189,25 +186,11 @@ public abstract class SQL extends Database
 	protected final void buildQuerys()
 	{
 		// Build the SQL querys with placeholders for the table and field names
-		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE ";
-		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE ";
-		if(useUUIDs)
-		{
-			queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
-			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
-			queryGetBP += "{FieldUUID}=?;";
-			querySyncCooldown += "{FieldUUID}";
-			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
-		}
-		else
-		{
-			queryUpdatePlayerAdd = "INSERT IGNORE INTO {TablePlayers} ({FieldName}) VALUES (?);";
-			queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?;";
-			queryGetBP += "{FieldName}=?;";
-			querySyncCooldown = "{FieldName}";
-			queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldName}=?);";
-		}
-		querySyncCooldown += "=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
+		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE {FieldUUID}=?;";
+		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
+		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
+		queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
+		queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
@@ -280,14 +263,7 @@ public abstract class SQL extends Database
 	@Override
 	public void updatePlayer(final Player player)
 	{
-		if(useUUIDs)
-		{
-			runStatementAsync(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player), player.getName());
-		}
-		else
-		{
-			runStatementAsync(queryUpdatePlayerAdd, player.getName());
-		}
+		runStatementAsync(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player), player.getName());
 	}
 
 	@Override
@@ -295,7 +271,7 @@ public abstract class SQL extends Database
 	{
 		final byte[] data = itsSerializer.serialize(backpack.getInventory());
 		final int id = backpack.getOwnerID(), usedSerializer = itsSerializer.getUsedSerializer();
-		final String nameOrUUID = getPlayerNameOrUUID(backpack.getOwner()), name = backpack.getOwner().getName();
+		final String nameOrUUID = getPlayerFormattedUUID(backpack.getOwner()), name = backpack.getOwner().getName();
 
 		Runnable runnable = () -> {
 			try(Connection connection = getConnection())
@@ -342,7 +318,7 @@ public abstract class SQL extends Database
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
 			{
-				ps.setString(1, getPlayerNameOrUUID(player));
+				ps.setString(1, getPlayerFormattedUUID(player));
 				final int bpID, version;
 				final byte[] data;
 				try(ResultSet rs = ps.executeQuery())
@@ -386,7 +362,7 @@ public abstract class SQL extends Database
 	public void syncCooldown(Player player, long cooldownTime)
 	{
 		Timestamp ts = new Timestamp(cooldownTime);
-		runStatementAsync(querySyncCooldown, ts, getPlayerNameOrUUID(player), ts);
+		runStatementAsync(querySyncCooldown, ts, getPlayerFormattedUUID(player), ts);
 	}
 
 	@Override
@@ -395,7 +371,7 @@ public abstract class SQL extends Database
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetCooldown))
 			{
-				ps.setString(1, getPlayerNameOrUUID(player));
+				ps.setString(1, getPlayerFormattedUUID(player));
 				try(ResultSet rs = ps.executeQuery())
 				{
 					final long time = (rs.next()) ? rs.getLong(fieldCdTime) : 0;

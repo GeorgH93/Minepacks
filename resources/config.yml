@@ -57,11 +57,6 @@ Database:
   AutoCleanup:
     # Defines the max amount of days backpacks will be stored. -1 to disable auto cleanup
     MaxInactiveDays: -1
-  # If you would like to use UUIDs, it is recommended not to change this setting unless you know what you are doing!
-  # true: Should be used if your server is running Minecraft 1.7.5 or newer
-  # false: In offline mode or for minecraft version below 1.7.5
-  # If you are using BungeeCord please set this setting based on your BungeeCord's online mode!!!
-  UseUUIDs: true
   # Defines the storage format for UUIDs for compatibility with other plugins (shared tables)
   # true: format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   # false: format: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

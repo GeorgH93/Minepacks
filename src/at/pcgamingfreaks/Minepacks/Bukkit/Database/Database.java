@@ -50,7 +50,7 @@ public abstract class Database implements Listener
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer;
-	protected final boolean useUUIDs, bungeeCordMode;
+	protected final boolean bungeeCordMode;
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
@@ -62,7 +62,6 @@ public abstract class Database implements Listener
 		plugin = mp;
 		itsSerializer = new InventorySerializer(plugin.getLogger());
 		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
-		useUUIDs = plugin.getConfiguration().getUseUUIDs();
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
@@ -121,7 +120,7 @@ public abstract class Database implements Listener
 
 	public void backup(@NotNull Backpack backpack)
 	{
-		writeBackup(backpack.getOwner().getName(), getPlayerNameOrUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
+		writeBackup(backpack.getOwner().getName(), getPlayerFormattedUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
 	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
@@ -163,25 +162,9 @@ public abstract class Database implements Listener
 		return new ArrayList<>();
 	}
 
-	protected String getPlayerNameOrUUID(OfflinePlayer player)
-	{
-		if(useUUIDs)
-		{
-			return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
-		}
-		else
-		{
-			return player.getName();
-		}
-	}
-
 	protected String getPlayerFormattedUUID(OfflinePlayer player)
 	{
-		if(useUUIDs)
-		{
-			return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
-		}
-		return null;
+		return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
 	}
 
 	public @NotNull Collection<Backpack> getLoadedBackpacks()

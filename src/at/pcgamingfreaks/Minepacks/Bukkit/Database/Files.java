@@ -63,7 +63,6 @@ public class Files extends Database
 		// Files are stored with the users name or the uuid, there is no reason to update anything
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private void checkFiles()
 	{
 		File[] allFiles = saveFolder.listFiles((dir, name) -> name.endsWith(EXT));
@@ -79,49 +78,42 @@ public class Files extends Database
 				continue; // We don't have to check if the file name is correct cause we have the deleted the file
 			}
 			int len = file.getName().length() - EXT.length();
-			if(useUUIDs) // Use UUID-based saving
+			if(len <= 16) // It's a player name
 			{
-				if(len <= 16) // It's a player name
+				if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT)))
 				{
-					if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT)))
-					{
-						plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-					}
-				}
-				else // It's an UUID
-				{
-					if(file.getName().contains("-"))
-					{
-						if(!useUUIDSeparators)
-						{
-							if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("-", ""))))
-							{
-								plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-							}
-						}
-					}
-					else
-					{
-						if(useUUIDSeparators)
-						{
-							if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT))))
-							{
-								plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-							}
-						}
-					}
+					plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
 				}
 			}
-			else  if(len > 16) // Use name-based saving, we only have to rename it if it's name is more than 16 chars (minecraft max player name length)
+			else // It's an UUID
 			{
-				file.renameTo(new File(saveFolder, UUIDConverter.getNameFromUUID(file.getName().substring(0, len)) + EXT));
+				if(file.getName().contains("-"))
+				{
+					if(!useUUIDSeparators)
+					{
+						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("-", ""))))
+						{
+							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+						}
+					}
+				}
+				else
+				{
+					if(useUUIDSeparators)
+					{
+						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT))))
+						{
+							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+						}
+					}
+				}
 			}
 		}
 	}
 	
 	private String getFileName(OfflinePlayer player)
 	{
-		return getPlayerNameOrUUID(player) + EXT;
+		return getPlayerFormattedUUID(player) + EXT;
 	}
 	
 	// DB Functions

@@ -37,14 +37,7 @@ public class SQLtoSQLMigration extends ToSQLMigration
 	{
 		super(plugin, oldDb, dbType, global);
 
-		if(uuid)
-		{
-			queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldPlayerID},{FieldName},{FieldUUID}) VALUES (?,?,?);");
-		}
-		else
-		{
-			queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldPlayerID},{FieldName}) VALUES (?,?);");
-		}
+		queryInsertUsers = replacePlaceholders(newDb, "INSERT INTO {TablePlayers} ({FieldPlayerID},{FieldName},{FieldUUID}) VALUES (?,?,?);");
 		queryInsertBackpacks = replacePlaceholders(newDb, "INSERT INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion},{FieldBPLastUpdate}) VALUES (?,?,?,?);");
 	}
 
@@ -92,7 +85,7 @@ public class SQLtoSQLMigration extends ToSQLMigration
 		int userId = usersResultSet.getInt((String) FIELD_PLAYER_ID.get(oldDb));
 		preparedStatement.setInt(1, userId);
 		preparedStatement.setString(2, usersResultSet.getString((String) FIELD_PLAYER_NAME.get(oldDb)));
-		if(uuid) preparedStatement.setString(3, usersResultSet.getString((String) FIELD_PLAYER_UUID.get(oldDb)));
+		preparedStatement.setString(3, usersResultSet.getString((String) FIELD_PLAYER_UUID.get(oldDb)));
 	}
 
 	private void migrateBackpack(@NotNull ResultSet backpacksResultSet, @NotNull PreparedStatement preparedStatement) throws Exception
