@@ -1,28 +1,99 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: MinePacks a été activé !
-    Disabled: MinePacks a été désactivé.
-    NotFromConsole: Commande non utilisable depuis la console.
-    LangUpdated: Le fichier de langage a été mis à jour.
-    UpdateUUIDs: Commence la mise à jour de la base de données UUIDs ...
-    UpdatedUUIDs: 'Mise à jour de %s compte vers UUIDs.'
+  NotFromConsole: "&cCommande inutilisable depuis la console."
   Ingame:
-    NoPermission: "Vous n'avez pas la permissions de faire cela."
-    OwnBackPackClose: 'Votre sac à dos a été fermé !'
-    PlayerBackPackClose: "%s's sac à dos ont été fermés !"
-    InvalidBackpack: Sac à dos invalide.
-    BackpackCleaned: Sac à dos nétoyé.
-    Cooldown: "S'il vous plaît veuillez patienter avant de réouvrir votre sac à dos."
-    WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sacà dos dans votre gamemode actuel."
-  Description:
-    Backpack: Ouverture de votre sac à dos.
-    Clean: Nétoyer votre sac à dos.
-    CleanOther: Nétoyer le sac à dos d'autres joueurs.
-    View: Voir le contenu du sac à dos des autres joueurs.
+    NoPermission: "&cVous n'avez pas la permission !"
+    WorldDisabled: "&cL'utilisation du sac à dos n'est pas autorisée dans ce monde."
+    NaN: "[\"\",{\"text\":\"La valeur saisie n'est pas un nombre !\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Sac à dos fermé !"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} sac à dos fermé !"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Sac à dos non valide."
+    NotAllowedInBackpack: "&c{ItemName} n'est pas autorisé dans le sac à dos."
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Veuillez patienter \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondes\"}},{\"text\":\" till you reopen your backpack.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sac à dos dans votre mode de jeu actuel."
+    Clean:
+      BackpackCleaned: "Sac à dos nettoyé."
+    Help:
+      Header: "&6### Minepacks Commandes ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Le plugin est en Rechargement ..."
+      Reloaded: "&1Le plugin a été Recharger !"
+    Update:
+      CheckingForUpdates: "&1Vérification des mises à jour ..."
+      Updated: "[\"\",{\"text\":\"Plugin mis à jour, sera chargé au prochain redémarrage/rechargement.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Aucune mise à jour du plugin disponible.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Il y a eu un problème de recherche de mises à jour ! Vérifiez la console s'il vous plaît !\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Il y a une mise à jour disponible ! Veuillez vous rendre à l'adresse suivante \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" pour la télécharger !\"}]"
+    Backup:
+      Created: "Le sac à dos a été sauvegardé avec succès."
+      NoBackpack: "Le joueur n'a pas de sac à dos ou son sac à dos est vide."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Previous <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Utilisateur: {BackupPlayerName} ({BackupPlayerUUID})\\nCréé: {BackupDate}\"}}]"
+      NoValidBackup: "Aucune correspondance des sauvegardes {BackupIdentifier} trouvé."
+      NoUserToRestoreToFound: "Aucun utilisateur valide pour restaurer la sauvegarde sur trouvée"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "dd.MM.yyyy HH:mm:ss"
+      Restored: "La sauvegarde a été restaurée avec succès."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Ouvre votre sac à dos."
+      Clean: "Nettoie votre sac à dos."
+      CleanOthers: "Nettoie le sac à dos d'un autre joueur."
+      OpenOthers: "Montre le sac à dos d'un autre joueur."
+      Reload: "Recharge la configuration du plugin."
+      Update: "Vérifie les nouvelles mises à jour des plugins."
+      Version: "Imprime les détails de la version du plugin et de ses dépendances."
+      Backup: "Crée une sauvegarde d'un sac à dos de joueur."
+      Restore: "Restaure une sauvegarde."
+      RestoreList: "Liste toutes les sauvegardes disponibles."
+      Help: "Affiche toutes les commandes disponibles et leur description."
+      Migrate: "Migre la base de données utilisée d'un type à un autre."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
 
 # Will be shown in the console during startup
-LanguageName: "french"
-Author: "Nogapra"
+LanguageName: "Français"
+Author: "HiiRaZ"
 
-# Version de fichierde langage. A ne pas modifié !
-Version: 5
+# Language file version. Don't touch it!
+Version: 16
