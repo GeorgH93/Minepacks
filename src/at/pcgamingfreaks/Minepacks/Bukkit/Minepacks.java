@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ import at.pcgamingfreaks.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
@@ -73,6 +74,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private Collection<GameMode> gameModes;
 	private CooldownManager cooldownManager = null;
 	private ItemFilter itemFilter = null;
+	private Sound openSound = null;
 
 	public static Minepacks getInstance()
 	{
@@ -200,6 +202,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 		gameModes = config.getAllowedGameModes();
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
+
+		openSound = config.getOpenSound();
 	}
 
 	private void unload()
@@ -293,6 +297,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			messageInvalidBackpack.send(opener);
 			return;
+		}
+		if(openSound != null)
+		{
+			opener.getWorld().playSound(opener.getLocation(), openSound, 1, 0);
 		}
 		backpack.open(opener, editable);
 	}

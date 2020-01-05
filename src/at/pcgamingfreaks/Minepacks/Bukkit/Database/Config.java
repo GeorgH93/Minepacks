@@ -28,6 +28,7 @@ import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -327,6 +328,35 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public String getItemShortcutHeadValue()
 	{
 		return getConfigE().getString("ItemShortcut.HeadTextureValue", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0=");
+	}
+	//endregion
+
+	//region Sound settings
+	private Sound getSound(String option, Sound autoValue)
+	{
+		if(!getConfigE().getBoolean("Sound.Enabled", true)) return null;
+		String soundName = getConfigE().getString("Sound." + option, "auto").toUpperCase(Locale.ENGLISH);
+		if(soundName.equals("AUTO")) return autoValue;
+		if(soundName.equals("DISABLED") || soundName.equals("FALSE")) return null;
+		try
+		{
+			return Sound.valueOf(soundName);
+		}
+		catch(Exception ignored)
+		{
+			logger.warning("Unknown sound: " + soundName);
+		}
+		return null;
+	}
+
+	public Sound getOpenSound()
+	{
+		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? Sound.valueOf("BLOCK_SHULKER_BOX_OPEN") : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? Sound.BLOCK_CHEST_OPEN : Sound.valueOf("CHEST_OPEN")));
+	}
+
+	public Sound getCloseSound()
+	{
+		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? Sound.valueOf("BLOCK_SHULKER_BOX_CLOSE") : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? Sound.BLOCK_CHEST_CLOSE : Sound.valueOf("CHEST_CLOSE")));
 	}
 	//endregion
 	//endregion
