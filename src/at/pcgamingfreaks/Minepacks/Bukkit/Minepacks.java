@@ -31,10 +31,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.BackpackEventListener;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
@@ -195,6 +192,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			pluginManager.registerEvents(itemFilter, this);
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();

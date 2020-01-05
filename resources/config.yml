@@ -146,6 +146,18 @@ WorldSettings:
   #                       It will not disable the Shulkerboxes filter!
   BlacklistMode: "Message"
 
+# Gives the players an item that they can interact with to open their backpack. Only works on MC 1.8 or newer
+ItemShortcut:
+  # If enabled the players will be given an item they can interact with to open the backpack.
+  # The item may not be removed from their inventory as long as this option is enabled.
+  Enabled: true
+  # The name of the item in the inventory
+  ItemName: "&eBackpack"
+  # The texture value for the head.
+  # Heads can be found here: https://minecraft-heads.com/custom-heads/
+  # The correct value is the one listed on the head page under Other/Value
+  HeadTextureValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
+
 Misc:
   # Enables/Disables the auto-update function of the plugin.
   AutoUpdate: true
@@ -153,4 +165,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 21
+Version: 22

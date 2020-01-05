@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
+	private static final int CONFIG_VERSION = 22, UPGRADE_THRESHOLD = 22, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -54,7 +54,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
-		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
+		if(oldConfig.getVersion() < PRE_V2_VERSION) // Pre V2.0 config file
 		{
 			OldFileUpdater.updateConfig(oldConfig.getYamlE(), getConfigE());
 		}
@@ -310,6 +310,23 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			logger.warning(ConsoleColor.YELLOW + "Unsupported mode \"" + mode + "\" for option \"WorldSettings.BlacklistMode\"" + ConsoleColor.RESET);
 		}
 		return blacklistMode;
+	}
+	//endregion
+
+	//region ItemShortcut settings
+	public boolean isItemShortcutEnabled()
+	{
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
+	}
+
+	public String getItemShortcutItemName()
+	{
+		return getConfigE().getString("ItemShortcut.ItemName", "&eBackpack");
+	}
+
+	public String getItemShortcutHeadValue()
+	{
+		return getConfigE().getString("ItemShortcut.HeadTextureValue", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0=");
 	}
 	//endregion
 	//endregion
