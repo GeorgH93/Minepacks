@@ -17,10 +17,9 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
-import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -45,39 +44,37 @@ import java.util.UUID;
 
 public class ItemShortcut implements Listener
 {
-	private static final Material HEAD_MATERIAL = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13) ? Material.PLAYER_HEAD : Material.valueOf("SKULL");
-	private final String itemName;
-	private final ItemStack item;
+	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
+	private final String itemName, value;
 
 	public ItemShortcut(Minepacks plugin)
 	{
-		item =  (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) ? new ItemStack(HEAD_MATERIAL) : new ItemStack(HEAD_MATERIAL, 1, (byte) 3);
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
-		String name = (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) ? "{\\\"text\\\":\\\"" + itemName + "\\\"}" : itemName;
-		String str = "{display:{Name:\\\"\" + name + \"\\\"},SkullOwner:{Id:\"" + UUID.nameUUIDFromBytes("Minepacks".getBytes()) + "\",Properties:{textures:[{Value:\"" + plugin.getConfiguration().getItemShortcutHeadValue() + "\"}]}}}";
-		plugin.getLogger().info(str);
-		Bukkit.getUnsafe().modifyItemStack(item, str);
+		value = plugin.getConfiguration().getItemShortcutHeadValue();
 	}
 
 	private boolean isItemShortcut(@Nullable ItemStack stack)
 	{
 		//noinspection ConstantConditions
-		return stack != null && stack.getType() == HEAD_MATERIAL && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(itemName);
+		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(itemName);
 	}
 
 	private void addItem(Player player)
 	{
-		boolean empty = false, item = false;
-		for(ItemStack itemStack : player.getInventory())
+		if(player.hasPermission("backpack.use"))
 		{
-			if(itemStack == null || itemStack.getType() == Material.AIR) empty = true;
-			else if(isItemShortcut(itemStack))
+			boolean empty = false, item = false;
+			for(ItemStack itemStack : player.getInventory())
 			{
-				item = true;
-				break;
+				if(itemStack == null || itemStack.getType() == Material.AIR) empty = true;
+				else if(isItemShortcut(itemStack))
+				{
+					item = true;
+					break;
+				}
 			}
+			if(!item && empty) player.getInventory().addItem(HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
 		}
-		if(!item && empty) player.getInventory().addItem(this.item);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
