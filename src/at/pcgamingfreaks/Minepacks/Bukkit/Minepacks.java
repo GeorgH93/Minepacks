@@ -298,6 +298,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			messageInvalidBackpack.send(opener);
 			return;
 		}
+		//noinspection ObjectEquality
+		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
 			opener.getWorld().playSound(opener.getLocation(), openSound, 1, 0);
