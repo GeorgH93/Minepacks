@@ -38,7 +38,7 @@ Language:
       UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
     Backup:
       Created: "Рюкзак был успешно скопирован."
-      NoBackpack: "У игрока нет рюкзака или он пустой."
+      NoBackpack: "У игрока нет рюкзака, либо он пустой."
     Restore:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Резервные копии\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"страница {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
