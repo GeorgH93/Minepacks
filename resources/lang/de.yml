@@ -13,6 +13,8 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Rucksack fehlerhaft."
     NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
+    DontRemoveShortcut: "&cDu darfst den Rucksack nicht aus deinem Inventar entfernen!"
+    DontRemoveShortcut_SendMethod: "action_bar"
     Clean:
       BackpackCleaned: "Rucksack gelehrt."
     Open:
@@ -110,4 +112,4 @@ LanguageName: "german"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 16
+Version: 17

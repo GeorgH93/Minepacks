@@ -13,6 +13,9 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Invalid backpack."
     NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cYou must not remove the backpack shortcut from your inventory!"
+    DontRemoveShortcut_SendMethod: "action_bar"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Please wait \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" till you reopen your backpack.\"}]"
@@ -96,4 +99,4 @@ LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 16
+Version: 17

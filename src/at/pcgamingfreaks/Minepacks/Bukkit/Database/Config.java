@@ -317,7 +317,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//region ItemShortcut settings
 	public boolean isItemShortcutEnabled()
 	{
-		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
 	}
 
 	public String getItemShortcutItemName()
@@ -332,11 +332,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//endregion
 
 	//region Sound settings
-	private Sound getSound(String option, Sound autoValue)
+	private Sound getSound(String option, String autoValue)
 	{
 		if(!getConfigE().getBoolean("Sound.Enabled", true)) return null;
 		String soundName = getConfigE().getString("Sound." + option, "auto").toUpperCase(Locale.ENGLISH);
-		if(soundName.equals("AUTO")) return autoValue;
+		if(soundName.equals("AUTO")) soundName = autoValue;
 		if(soundName.equals("DISABLED") || soundName.equals("FALSE")) return null;
 		try
 		{
@@ -351,12 +351,12 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public Sound getOpenSound()
 	{
-		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? Sound.valueOf("BLOCK_SHULKER_BOX_OPEN") : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? Sound.BLOCK_CHEST_OPEN : Sound.valueOf("CHEST_OPEN")));
+		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN"));
 	}
 
 	public Sound getCloseSound()
 	{
-		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? Sound.valueOf("BLOCK_SHULKER_BOX_CLOSE") : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? Sound.BLOCK_CHEST_CLOSE : Sound.valueOf("CHEST_CLOSE")));
+		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
 	}
 	//endregion
 	//endregion

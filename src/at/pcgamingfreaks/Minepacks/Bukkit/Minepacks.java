@@ -57,7 +57,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
 	@SuppressWarnings("unused")
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks V2", JENKINS_JOB_MASTER = "Minepacks", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.15-SNAPSHOT";
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks Dev", JENKINS_JOB_MASTER = "Minepacks", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.19-SNAPSHOT";
 	private static Minepacks instance = null;
 
 	private Config config;

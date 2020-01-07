@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.HeadUtils;
+import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.ChatColor;
@@ -46,11 +47,13 @@ public class ItemShortcut implements Listener
 {
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
 	private final String itemName, value;
+	private final Message messageDoNotRemoveItem;
 
 	public ItemShortcut(Minepacks plugin)
 	{
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
+		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 	}
 
 	private boolean isItemShortcut(@Nullable ItemStack stack)
@@ -109,11 +112,13 @@ public class ItemShortcut implements Listener
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
 				{
 					event.setCancelled(true);
+					messageDoNotRemoveItem.send(event.getWhoClicked());
 				}
 			}
 			else if(isItemShortcut(event.getCursor()) && !event.getWhoClicked().getInventory().equals(event.getClickedInventory()))
 			{
 				event.setCancelled(true);
+				messageDoNotRemoveItem.send(event.getWhoClicked());
 			}
 		}
 	}
@@ -126,10 +131,12 @@ public class ItemShortcut implements Listener
 			if(isItemShortcut(event.getCursor()))
 			{
 				event.setCancelled(true);
+				messageDoNotRemoveItem.send(event.getWhoClicked());
 			}
 			else if(isItemShortcut(event.getOldCursor()))
 			{
 				event.setCancelled(true);
+				messageDoNotRemoveItem.send(event.getWhoClicked());
 			}
 		}
 	}
@@ -154,6 +161,7 @@ public class ItemShortcut implements Listener
 		if(isItemShortcut(event.getItemDrop().getItemStack()))
 		{
 			event.setCancelled(true);
+			messageDoNotRemoveItem.send(event.getPlayer());
 		}
 	}
 
