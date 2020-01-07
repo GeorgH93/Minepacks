@@ -66,6 +66,9 @@ Database:
   # true: format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   # false: format: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   UseUUIDSeparators: false
+  # Options: auto, online, offline | auto will decide based on the server online mode option.
+  # If you are using BungeeCord, set it to whatever you use on your BungeeCord server!!!
+  UUID_Type: auto
   # Settings only for MySQL
   SQL:
     Host: localhost:3306

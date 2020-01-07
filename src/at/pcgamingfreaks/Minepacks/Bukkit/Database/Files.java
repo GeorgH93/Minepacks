@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ public class Files extends Database
 			{
 				if(len <= 16) // It's a player name
 				{
-					if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), true, useUUIDSeparators) + EXT)))
+					if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), onlineUUIDs, useUUIDSeparators) + EXT)))
 					{
 						plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
 					}

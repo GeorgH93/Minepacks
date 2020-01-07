@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ public abstract class SQL extends Database
 			{
 				if(toConvert.size() > 0)
 				{
-					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), true, useUUIDSeparators);
+					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), onlineUUIDs, useUUIDSeparators);
 					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
 					{
 						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase(Locale.ROOT));

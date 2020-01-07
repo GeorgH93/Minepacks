@@ -117,6 +117,16 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return uuid;
 	}
 
+	public boolean useOnlineUUIDs()
+	{
+		String type = getConfigE().getString("Database.UUID_Type", "auto").toLowerCase(Locale.ENGLISH);
+		if(type.equals("auto"))
+		{
+			return plugin.getServer().getOnlineMode();
+		}
+		return type.equals("online");
+	}
+
 	public boolean getUseUUIDSeparators()
 	{
 		return getConfigE().getBoolean("Database.UseUUIDSeparators", false);
