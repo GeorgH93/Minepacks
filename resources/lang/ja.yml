@@ -10,6 +10,9 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "バックパックが無効です。"
     NotAllowedInBackpack: "&c{ItemName}はバックパックに入れることができません。"
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cバックパックショートカットをインベントリから削除しないでください！"
+    DontRemoveShortcut_SendMethod: "action_bar"
     Open:
       Cooldown: "&2バックパックを開くまで{TimeLeft}秒待ってください。"
       WrongGameMode: "現在のゲームモードでバックパックを開くことは許可されていません。"
@@ -84,6 +87,6 @@ Command:
     - help
 
 LanguageName: "japanese"
-Author: "snake0053"
+Author: "ethernetcat"
 
-Version: 16
+Version: 17
