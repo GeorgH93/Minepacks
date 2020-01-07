@@ -1,0 +1,102 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
+Language:
+  NotFromConsole: "&cЭту команду нельзя использовать в консоле."
+  Ingame:
+    NoPermission: "&cУ вас недостаточно прав для этого."
+    WorldDisabled: "&cИспользовать рюкзак не разрешено в этом мире."
+    NaN: "[\"\",{\"text\":\"Введенное значение не является числом!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Рюкзак закрыт!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "Рюкзак {OwnerName} закрыь!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Недействительный рюкзак."
+    NotAllowedInBackpack: "&c{ItemName} нельзя положить в рюкзак."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cВы не можете удалить иконку рюкзака из своего инвентаря!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Пожалуйста подождите \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} секунд\"}},{\"text\":\", перед тем как снова открыть свой рюкзак.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Вам не разрешено открывать рюкзак в текущем режиме игры."
+    Clean:
+      BackpackCleaned: "Рюкзак очищен."
+    Help:
+      Header: "&6### Команды Minepacks ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Перезагрузка ..."
+      Reloaded: "&1Плагин успешно перезагружен!"
+    Update:
+      CheckingForUpdates: "&1Проверка обновлений..."
+      Updated: "[\"\",{\"text\":\"Плагин обновлён и будет загружен после следующей перезагрузки.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Нет доступных обновлений.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"При проверке обновлений произошла ошибка! Пожалуйста проверьте консоль!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
+    Backup:
+      Created: "Рюкзак был успешно скопирован."
+      NoBackpack: "У игрока нет рюкзака, либо он пустой."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Резервные копии\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"страница {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Предыдущая <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Страница {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Следующая >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Пользователь: {BackupPlayerName} ({BackupPlayerUUID})\\nСоздана: {BackupDate}\"}}]"
+      NoValidBackup: "Резервная копия {BackupIdentifier} не найдена"
+      NoUserToRestoreToFound: "Не найдено действительного пользователя или копии для восстановления"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "dd.MM.yy HH:mm:ss"
+      Restored: "Резервная копия успешно восстановлена."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Открыть ваш рюкзак."
+      Clean: "Очистить ваш рюкзак."
+      CleanOthers: "Очистить рюкзак другого игрока."
+      OpenOthers: "Открыть рюкзак другого игрока."
+      Reload: "Перезагрузить конфигурацию плагина."
+      Update: "Проверить плагин на наличие новых версий."
+      Version: "Посмотреть информацию о плагине и о его зависимостях."
+      Backup: "Создать резервную копию рюкзака игрока."
+      Restore: "Восстановить резервную копию."
+      RestoreList: "Посмотреть список всех доступных резервных копий."
+      Help: "Посмотреть все команды и их описание."
+      Migrate: "Изменить тип используемой базы данных."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+
+# Will be shown in the console during startup
+LanguageName: "russian"
+Author: "MrZillaGold"
+
+# Language file version. Don't touch it!
+Version: 17
