@@ -1,7 +1,7 @@
 # To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
 
 Language:
-  NotFromConsole: "&cЭту команду нельзя использовать в консоле."
+  NotFromConsole: "&cЭту команду нельзя использовать в консоли."
   Ingame:
     NoPermission: "&cУ вас недостаточно прав для этого."
     WorldDisabled: "&cИспользовать рюкзак не разрешено в этом мире."
