@@ -27,7 +27,7 @@ Language:
       Header: "&6### Команды Minepacks ###"
       Footer: "&6#############################"
     Reload:
-      Reloading: "&1Перезагрузка ..."
+      Reloading: "&1Перезагрузка..."
       Reloaded: "&1Плагин успешно перезагружен!"
     Update:
       CheckingForUpdates: "&1Проверка обновлений..."
