@@ -9,7 +9,7 @@ Language:
     OwnBackpackClose: "Рюкзак закрыт!"
     OwnBackpackClose_SendMethod: "action_bar"
     #Parameter: {OwnerName}, {OwnerDisplayName}
-    PlayerBackpackClose: "Рюкзак {OwnerName} закрыь!"
+    PlayerBackpackClose: "Рюкзак {OwnerName} закрыт!"
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Недействительный рюкзак."
     NotAllowedInBackpack: "&c{ItemName} нельзя положить в рюкзак."
