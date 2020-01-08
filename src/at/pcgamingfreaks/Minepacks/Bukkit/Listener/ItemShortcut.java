@@ -141,7 +141,7 @@ public class ItemShortcut implements Listener
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
 		Iterator<ItemStack> itemStackIterator = event.getDrops().iterator();
