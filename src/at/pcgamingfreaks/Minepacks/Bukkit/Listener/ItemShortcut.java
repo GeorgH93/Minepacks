@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.HeadUtils;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -33,10 +34,8 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,6 +90,38 @@ public class ItemShortcut implements Listener
 	{
 		if ((event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) return;
 		if(isItemShortcut(event.getItem()))
+		{
+			event.getPlayer().performCommand("backpack open");
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onArmorStandManipulation(PlayerArmorStandManipulateEvent event)
+	{
+		if(isItemShortcut(event.getPlayerItem()))
+		{
+			event.getPlayer().performCommand("backpack open");
+			event.setCancelled(true);
+		}
+	}
+
+	private static final boolean DUAL_WIELDING_MC = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9);
+
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onItemFrameInteract(PlayerInteractEntityEvent event)
+	{
+		Player player = event.getPlayer();
+		ItemStack item;
+		if(DUAL_WIELDING_MC)
+		{
+			item = (event.getHand() == EquipmentSlot.HAND) ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
+		}
+		else
+		{
+			item = player.getItemInHand();
+		}
+		if(isItemShortcut(item))
 		{
 			event.getPlayer().performCommand("backpack open");
 			event.setCancelled(true);

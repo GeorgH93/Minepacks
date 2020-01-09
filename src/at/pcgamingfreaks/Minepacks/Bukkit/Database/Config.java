@@ -113,7 +113,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public boolean getUseUUIDs()
 	{
 		boolean uuid = getConfigE().getBoolean("Database.UseUUIDs", true);
-		if(!uuid) logger.warning(ConsoleColor.RED + "Disabling UUIDs is not recommended and can lead to unexpected behaviour. Please consider enabling UUIDs. The option will be removed with v2.1." + ConsoleColor.RESET);
+		if(!uuid) logger.warning(ConsoleColor.RED + "Disabling UUIDs is not recommended and can lead to unexpected behaviour. Please consider enabling UUIDs. The option will be removed at some point." + ConsoleColor.RESET);
 		return uuid;
 	}
 
