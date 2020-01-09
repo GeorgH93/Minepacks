@@ -1,7 +1,7 @@
 # To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
 
 Language:
-  NotFromConsole: "&cЭту команду нельзя использовать в консоле."
+  NotFromConsole: "&cЭту команду нельзя использовать в консоли."
   Ingame:
     NoPermission: "&cУ вас недостаточно прав для этого."
     WorldDisabled: "&cИспользовать рюкзак не разрешено в этом мире."
@@ -9,7 +9,7 @@ Language:
     OwnBackpackClose: "Рюкзак закрыт!"
     OwnBackpackClose_SendMethod: "action_bar"
     #Parameter: {OwnerName}, {OwnerDisplayName}
-    PlayerBackpackClose: "Рюкзак {OwnerName} закрыь!"
+    PlayerBackpackClose: "Рюкзак {OwnerName} закрыт!"
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Недействительный рюкзак."
     NotAllowedInBackpack: "&c{ItemName} нельзя положить в рюкзак."
@@ -27,7 +27,7 @@ Language:
       Header: "&6### Команды Minepacks ###"
       Footer: "&6#############################"
     Reload:
-      Reloading: "&1Перезагрузка ..."
+      Reloading: "&1Перезагрузка..."
       Reloaded: "&1Плагин успешно перезагружен!"
     Update:
       CheckingForUpdates: "&1Проверка обновлений..."
