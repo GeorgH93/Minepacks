@@ -26,8 +26,8 @@ Language:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
     Reload:
-      Reloading: "&1Plugin wird neu geladen ..."
-      Reloaded: "&1Plugin neu geladen!"
+      Reloading: "&Minepacks wird neu geladen ..."
+      Reloaded: "&1Minepacks neu geladen!"
     Update:
       CheckingForUpdates: "&1Suche nach Aktualisierungen ..."
       Updated: "[\"\",{\"text\":\"Plugin wurde aktualisiert, Änderungen werden mit dem nächsten neustart übernommen.\",\"color\":\"yellow\"}]"
