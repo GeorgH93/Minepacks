@@ -35,7 +35,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Nincs plugin frissítés elérhető.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Probléma volt a frissítések keresésekor! Kérlek, ellenőrizd a konzolt!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Van egy frissítés elérhető! Menj a(z) \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\", hogy letöltsd!\"}]"
+      UpdateAvailable: "[{\"text\":\"Van egy frissítés elérhető! Menj a(z) \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\", hogy letöltsd!\"}]"
     Backup:
       Created: "A hátizsák sikeresen mentésre került."
       NoBackpack: "A játékosnak nincs egy hátizsákja vagy a hátizsákja üres."

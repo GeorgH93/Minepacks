@@ -32,7 +32,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Aucune mise à jour du plugin disponible.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Il y a eu un problème de recherche de mises à jour ! Vérifiez la console s'il vous plaît !\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Il y a une mise à jour disponible ! Veuillez vous rendre à l'adresse suivante \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" pour la télécharger !\"}]"
+      UpdateAvailable: "[{\"text\":\"Il y a une mise à jour disponible ! Veuillez vous rendre à l'adresse suivante \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" pour la télécharger !\"}]"
     Backup:
       Created: "Le sac à dos a été sauvegardé avec succès."
       NoBackpack: "Le joueur n'a pas de sac à dos ou son sac à dos est vide."

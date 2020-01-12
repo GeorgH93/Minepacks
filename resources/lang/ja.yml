@@ -29,7 +29,7 @@ Language:
       Updated: "[\"\",{\"text\":\"更新されたプラグインは、次回の再起動/リロード時にロードされます。\",\"color\":\"yellow\"}]"
       NoUpdate: "[\"\",{\"text\":\"利用可能なプラグインの更新はありません。\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"アップデートの確認に問題がありました！コンソールを確認してください。\",\"color\":\"red\"}]"
-      UpdateAvailable: "[{\"text\":\"利用可能なアップデートがあります！\\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" からダウンロードして下さい。\"}]"
+      UpdateAvailable: "[{\"text\":\"利用可能なアップデートがあります！\\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" からダウンロードして下さい。\"}]"
     Backup:
       Created: "バックパックは正常にバックアップされました。"
       NoBackpack: "プレイヤーはバックパックを持っていないか、バックパックが空です。"

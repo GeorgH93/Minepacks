@@ -34,7 +34,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Plugin Aktualisierung verfügbar.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Es gab ein Problem bei der Suche nach Updates! Bitte prüfe das log für mehr details.\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Es ist eine Aktualisierung verfügbar! Bitte gehe auf \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" um es herunter zu laden!\"}]"
+      UpdateAvailable: "[{\"text\":\"Es ist eine Aktualisierung verfügbar! Bitte gehe auf \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" um es herunter zu laden!\"}]"
     Admin:
       Reloading: "&1Reloading ..."
       Reloaded: "&1Reloaded!"
@@ -43,7 +43,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Kein update verfügbar.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Es ist ein fehler aufgetreten!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Es ist ein update verfügbar! Bitte downloade es von: \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\"\"}]"
+      UpdateAvailable: "[{\"text\":\"Es ist ein update verfügbar! Bitte downloade es von: \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\"\"}]"
     Backup:
       Created: "Rucksack wurder gesichert."
       NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."

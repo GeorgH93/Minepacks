@@ -35,7 +35,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Нет доступных обновлений.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"При проверке обновлений произошла ошибка! Пожалуйста проверьте консоль!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
+      UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
     Backup:
       Created: "Рюкзак был успешно скопирован."
       NoBackpack: "У игрока нет рюкзака, либо он пустой."

@@ -32,7 +32,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Plugin atualizado!\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Houve um problema ao procucurar atualizações, olhe o console!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Atualização disponível, vá até \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" para baixa-la!\"}]"
+      UpdateAvailable: "[{\"text\":\"Atualização disponível, vá até \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" para baixa-la!\"}]"
     Backup:
       Created: "Backup criado com sucesso."
       NoBackpack: "O jogador não tem um backup ou a mochila está vazia."

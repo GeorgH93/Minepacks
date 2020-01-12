@@ -31,7 +31,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Eklenti güncellemesi bulunmuyor.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"Güncelleme denetlenirken bir hata oluştu! Lütfen konsolu kontrol edin!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Güncelleme mevcut! Yüklemek için \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" adresini kullanın!\"}]"
+      UpdateAvailable: "[{\"text\":\"Güncelleme mevcut! Yüklemek için \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" adresini kullanın!\"}]"
     Backup:
       Created: "Çanta yedeklendi."
       NoBackpack: "Oyuncunun bir çantası yok ya da çantası boş."
