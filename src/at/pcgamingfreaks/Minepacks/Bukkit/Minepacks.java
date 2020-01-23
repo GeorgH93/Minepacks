@@ -57,7 +57,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
 	@SuppressWarnings("unused")
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks Dev", JENKINS_JOB_MASTER = "Minepacks", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.19-SNAPSHOT";
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks Dev", JENKINS_JOB_MASTER = "Minepacks";
 	private static Minepacks instance = null;
 
 	private Config config;
@@ -103,7 +103,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		else[STANDALONE]*/
 		// Not standalone so we should check the version of the PluginLib
-		if(at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion().olderThan(new Version(MIN_PCGF_PLUGIN_LIB_VERSION)))
+		if(at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion().olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
 		{
 			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
 			setEnabled(false);

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,8 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.BadRabbit.Bukkit.BadRabbit;
+import at.pcgamingfreaks.Version;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,17 +34,28 @@ public class MinepacksBadRabbit extends BadRabbit
 	@Override
 	protected @NotNull JavaPlugin createInstance() throws Exception
 	{
-		JavaPlugin newPluginInstance;
-		if(Bukkit.getPluginManager().getPlugin("PCGF_PluginLib") == null)
+		JavaPlugin newPluginInstance = null;
+		Plugin pcgfPluginLib = Bukkit.getPluginManager().getPlugin("PCGF_PluginLib");
+		if(pcgfPluginLib != null)
 		{
-			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
-			Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
-			newPluginInstance = (JavaPlugin) standaloneClass.newInstance();
+			if(new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
+			{
+				getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
+			}
+			else
+			{
+				getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
+				newPluginInstance = new Minepacks();
+			}
 		}
 		else
 		{
-			getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
-			newPluginInstance = new Minepacks();
+			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
+		}
+		if(newPluginInstance == null)
+		{
+			Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
+			newPluginInstance = (JavaPlugin) standaloneClass.newInstance();
 		}
 		return newPluginInstance;
 	}
