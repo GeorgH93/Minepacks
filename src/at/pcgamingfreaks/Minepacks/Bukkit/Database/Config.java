@@ -165,7 +165,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public int getBackpackMaxSize()
 	{
-		return getConfigE().getInt("MaxSize", 6);
+		int size = getConfigE().getInt("MaxSize", 6);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14)) size = Math.min(6, size);
+		return Math.max(1, size);
 	}
 
 	public boolean getAutoUpdate()

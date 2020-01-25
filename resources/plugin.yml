@@ -72,15 +72,6 @@ permissions:
   backpack.size.6:
     description: 6*9 backpack
     default: false
-  backpack.size.7:
-    description: 7*9 backpack (broken gui)
-    default: false
-  backpack.size.8:
-    description: 8*9 backpack (broken gui)
-    default: false
-  backpack.size.9:
-    description: 9*9 backpack (broken gui)
-    default: false
   backpack.clean:
     description: Allows the player to clean their own backpack.
     default: false
