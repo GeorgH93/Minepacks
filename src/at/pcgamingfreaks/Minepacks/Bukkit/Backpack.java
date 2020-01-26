@@ -129,8 +129,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 					Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
 					if(owner.isOnline())
 					{
-						owner.getPlayer().getWorld().dropItemNaturally(owner.getPlayer().getLocation(), stack);
-						//Owner is online!
+						Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> owner.getPlayer().getWorld().dropItemNaturally(owner.getPlayer().getLocation(), stack));
 					}
 					else throw new RuntimeException("Backpack to big for MC 1.14 and up!");
 				}
