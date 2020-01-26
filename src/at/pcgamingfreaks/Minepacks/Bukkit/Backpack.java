@@ -113,7 +113,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		ownerID = ID;
 	}
 	
-	public Backpack(OfflinePlayer owner, ItemStack[] backpack, int ID)
+	public Backpack(final OfflinePlayer owner, ItemStack[] backpack, final int ID)
 	{
 		this(owner, backpack.length, ID);
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && backpack.length > 54)
@@ -126,7 +126,16 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
 				if(owner.isOnline())
 				{
-					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> toMuch.forEach(stack -> owner.getPlayer().getWorld().dropItemNaturally(owner.getPlayer().getLocation(), stack)));
+					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> {
+						if(owner.isOnline())
+						{
+							Player player = owner.getPlayer();
+							assert player != null;
+							Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
+							left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+							this.setChanged();
+						}
+					});
 				}
 				else throw new RuntimeException("Backpack to big for MC 1.14 and up!");
 			}
