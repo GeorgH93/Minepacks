@@ -19,11 +19,11 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -118,25 +118,17 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		this(owner, backpack.length, ID);
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && backpack.length > 54)
 		{ // Try to optimize space usage to compress items into only 6 rows
-			ItemStack[] dbStack = backpack;
-			backpack = new ItemStack[54];
-			int filled = 0;
-			for(ItemStack stack : dbStack)
+			InventoryCompressor compressor = new InventoryCompressor(backpack, 54);
+			final List<ItemStack> toMuch = compressor.compress();
+			backpack = compressor.getTargetStack();
+			if(!toMuch.isEmpty())
 			{
-				if(stack == null || stack.getType() == Material.AIR) continue;
-				if(filled == 54)
+				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
+				if(owner.isOnline())
 				{
-					Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
-					if(owner.isOnline())
-					{
-						Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> owner.getPlayer().getWorld().dropItemNaturally(owner.getPlayer().getLocation(), stack));
-					}
-					else throw new RuntimeException("Backpack to big for MC 1.14 and up!");
+					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> toMuch.forEach(stack -> owner.getPlayer().getWorld().dropItemNaturally(owner.getPlayer().getLocation(), stack)));
 				}
-				else
-				{
-					backpack[filled++] = stack;
-				}
+				else throw new RuntimeException("Backpack to big for MC 1.14 and up!");
 			}
 		}
 		bp.setContents(backpack);
