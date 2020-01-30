@@ -91,9 +91,9 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 	public Backpack(OfflinePlayer owner, int size, int ID)
 	{
-		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14))
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && size > 54)
 		{
-			size = Math.min(size, 54);
+			size = 54;
 			Minepacks.getInstance().getLogger().warning("Backpacks with more than 6 rows are no longer supported on Minecraft 1.14 and up!");
 		}
 		this.owner = owner;
