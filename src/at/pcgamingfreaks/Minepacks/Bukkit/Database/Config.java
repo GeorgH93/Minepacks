@@ -167,7 +167,10 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		int size = getConfigE().getInt("MaxSize", 6);
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14)) size = Math.min(6, size);
-		if(size > 6) logger.warning("Backpacks with more than 6 rows will not work on MC 1.14");
+		if(size > 6)
+		{
+			logger.info("Starting with MC 1.14 backpacks with more than 6 rows will no longer be possible. A feature to allow bigger backpacks through multiple pages is currently in development.");
+		}
 		return Math.max(1, size);
 	}
 
