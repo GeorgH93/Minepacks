@@ -146,6 +146,15 @@ public class ItemShortcut implements Listener
 					messageDoNotRemoveItem.send(event.getWhoClicked());
 				}
 			}
+			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
+			{
+				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+				if(isItemShortcut(item))
+				{
+					event.setCancelled(true);
+					messageDoNotRemoveItem.send(event.getWhoClicked());
+				}
+			}
 			else if(isItemShortcut(event.getCursor()) && !event.getWhoClicked().getInventory().equals(event.getClickedInventory()))
 			{
 				event.setCancelled(true);
