@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -64,7 +63,7 @@ public class DisableShulkerboxes extends MinepacksListener
 			SHULKER_BOX_MATERIALS.add(Material.YELLOW_SHULKER_BOX);
 			if(MCVersion.isOlderThan(MCVersion.MC_1_13))
 			{
-				SHULKER_BOX_MATERIALS.add((Material) Reflection.getEnum(Material.class, "SILVER_SHULKER_BOX"));
+				SHULKER_BOX_MATERIALS.add(Material.valueOf("SILVER_SHULKER_BOX"));
 			}
 			else
 			{

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
@@ -90,6 +91,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 	public Backpack(OfflinePlayer owner, int size, int ID)
 	{
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && size > 54)
+		{
+			size = 54;
+			Minepacks.getInstance().getLogger().warning("Backpacks with more than 6 rows are no longer supported on Minecraft 1.14 and up!");
+		}
 		this.owner = owner;
 		titleOther = StringUtils.limitLength(String.format(titleOtherFormat, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, size, titleOther);
@@ -107,9 +113,33 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		ownerID = ID;
 	}
 	
-	public Backpack(OfflinePlayer owner, ItemStack[] backpack, int ID)
+	public Backpack(final OfflinePlayer owner, ItemStack[] backpack, final int ID)
 	{
 		this(owner, backpack.length, ID);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && backpack.length > 54)
+		{ // Try to optimize space usage to compress items into only 6 rows
+			InventoryCompressor compressor = new InventoryCompressor(backpack, 54);
+			final List<ItemStack> toMuch = compressor.compress();
+			backpack = compressor.getTargetStack();
+			if(!toMuch.isEmpty())
+			{
+				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
+				if(owner.isOnline())
+				{
+					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> {
+						if(owner.isOnline())
+						{
+							Player player = owner.getPlayer();
+							assert player != null;
+							Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
+							left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+							this.setChanged();
+						}
+					});
+				}
+				else throw new RuntimeException("Backpack to big for MC 1.14 and up!");
+			}
+		}
 		bp.setContents(backpack);
 	}
 	

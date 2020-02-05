@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -96,10 +96,14 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	{
 		if(event.getInventory().getHolder() instanceof Backpack)
 		{
-			if(event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD && event.getHotbarButton() != -1)
+			if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
 			{
 				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-				if(item != null && isItemBlocked(item)) event.setCancelled(true);
+				if(item != null && isItemBlocked(item))
+				{
+					event.setCancelled(true);
+					messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(item));
+				}
 			}
 			else if(event.getCurrentItem() != null && isItemBlocked(event.getCurrentItem()))
 			{

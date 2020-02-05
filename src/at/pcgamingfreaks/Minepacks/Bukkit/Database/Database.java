@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public abstract class Database implements Listener
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer;
-	protected final boolean bungeeCordMode;
+	protected final boolean onlineUUIDs, bungeeCordMode;
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
@@ -62,6 +62,7 @@ public abstract class Database implements Listener
 		plugin = mp;
 		itsSerializer = new InventorySerializer(plugin.getLogger());
 		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
+		onlineUUIDs = plugin.getConfiguration().useOnlineUUIDs();
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);

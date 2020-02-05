@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -31,10 +31,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.BackpackEventListener;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DisableShulkerboxes;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.DropOnDeath;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
@@ -44,6 +41,7 @@ import at.pcgamingfreaks.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
@@ -59,7 +57,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	private static final int BUKKIT_PROJECT_ID = 83445;
 	@SuppressWarnings("unused")
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks V2", JENKINS_JOB_MASTER = "Minepacks", MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.15-SNAPSHOT";
+	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks Dev", JENKINS_JOB_MASTER = "Minepacks";
 	private static Minepacks instance = null;
 
 	private Config config;
@@ -76,6 +74,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private Collection<GameMode> gameModes;
 	private CooldownManager cooldownManager = null;
 	private ItemFilter itemFilter = null;
+	private Sound openSound = null;
 
 	public static Minepacks getInstance()
 	{
@@ -104,7 +103,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		else[STANDALONE]*/
 		// Not standalone so we should check the version of the PluginLib
-		if(at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion().olderThan(new Version(MIN_PCGF_PLUGIN_LIB_VERSION)))
+		if(at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getVersion().olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
 		{
 			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
 			setEnabled(false);
@@ -114,7 +113,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 
 		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_14_R1))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_15_R1))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
@@ -195,6 +194,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			pluginManager.registerEvents(itemFilter, this);
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
@@ -202,6 +202,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 		gameModes = config.getAllowedGameModes();
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
+
+		openSound = config.getOpenSound();
 	}
 
 	private void unload()
@@ -295,6 +297,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			messageInvalidBackpack.send(opener);
 			return;
+		}
+		//noinspection ObjectEquality
+		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
+		if(openSound != null)
+		{
+			opener.getWorld().playSound(opener.getLocation(), openSound, 1, 0);
 		}
 		backpack.open(opener, editable);
 	}

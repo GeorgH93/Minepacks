@@ -1,28 +1,102 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: A MinePacks engedélyezve!
-    Disabled: A MinePacks letiltva.
-    NotFromConsole: A konzolon nem használható parancs.
-    LangUpdated: A nyelvi fájl frissítve lett.
-    UpdateUUIDs: Indítsd el az adatbázis frissítését az UUID-okhoz ...
-    UpdatedUUIDs: 'Frissítve %s fiókok UUID-okhoz.'
+  NotFromConsole: "&cA parancs nem használható konzolból."
   Ingame:
-    NoPermission: Nincs jogod ehhez.
-    OwnBackPackClose: 'A hátizsák bezárva!'
-    PlayerBackPackClose: "%s hátizsákja bezárva!"
-    InvalidBackpack: Érvénytelen hátizsák.
-    BackpackCleaned: A hátizsák kitisztítva.
-    Cooldown: "Várjon, amíg újra nem nyitja ki a hátizsákot."
-    WrongGameMode: "A hátizsákot nem lehet megnyitni az aktuális játékmódban."
-  Description:
-    Backpack: Megnyitja a hátizsákod.
-    Clean: Kitisztítja a hátizsákod.
-    CleanOther: Kitisztítja a többi játékos hátizsákját.
-    View: Megmutatja a másik játékos hátizsákját.
+    NoPermission: "&cNincs jogod ezt megtenni."
+    WorldDisabled: "&cA hátizsák használata nem engedélyezett ebben a világban."
+    NaN: "[\"\",{\"text\":\"A beírt érték nem egy szám!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Hátizsák bezárva!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} hátizsákja bezárva!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Érvénytelen hátizsák."
+    NotAllowedInBackpack: "&c{ItemName} nem engedélyezett a hátizsákban."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cNem szabad eltávolítani a hátizsák ikonját az eszköztárból!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Várj \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} másodperc\"}},{\"text\":\", amíg újra nem nyitja a hátizsákot.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "A jelenlegi játékmódban nem engedélyezett kinyitni a hátizsákot."
+    Clean:
+      BackpackCleaned: "Hátizsák kitisztítva."
+    Help:
+      Header: "&6### Minepacks parancsok ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Minepacks újratöltése ..."
+      Reloaded: "&1Minepacks újratöltve!"
+    Update:
+      CheckingForUpdates: "&1Frissítések ellenőrzése ..."
+      Updated: "[\"\",{\"text\":\"Plugin frissítve, be lesz töltve a következő újraindítás/újratöltésnél.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Nincs plugin frissítés elérhető.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Probléma volt a frissítések keresésekor! Kérlek, ellenőrizd a konzolt!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Van egy frissítés elérhető! Menj a(z) \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\", hogy letöltsd!\"}]"
+    Backup:
+      Created: "A hátizsák sikeresen mentésre került."
+      NoBackpack: "A játékosnak nincs egy hátizsákja vagy a hátizsákja üres."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Mentések\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"oldal {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Előző <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Oldal {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Következő >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Felhasználó: {BackupPlayerName} ({BackupPlayerUUID})\\nLétrehozva: {BackupDate}\"}}]"
+      NoValidBackup: "Nincs mentés találva {BackupIdentifier}"
+      NoUserToRestoreToFound: "Nincs érvényes felhasználó, aki visszaállíthatja a biztonsági másolatot"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Biztonsági mentés sikeresen visszaállítva."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Megnyitja a hátizsákod."
+      Clean: "Törli a hátizsákod."
+      CleanOthers: "Törli más játékosok hátizsákját."
+      OpenOthers: "Megmutatja más játékosok hátizsákját."
+      Reload: "Újratölti a konfigot és a plugint."
+      Update: "Ellenőrzi a plugin új frissítéseit."
+      Version: "Kiírja a plugin verziójának részleteit és annak függőségeit."
+      Backup: "Létrehoz egy mentést a játékosok hátizsákjáról."
+      Restore: "Visszaállít egy mentést."
+      RestoreList: "Listázza az összes elérhető mentéseket."
+      Help: "Megmutatja az összes elérhető parancsokat és azok leírását."
+      Migrate: "A használt adatbázist áttelepíti egyik típusról a másikra."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
 
 # Will be shown in the console during startup
 LanguageName: "hungarian"
 Author: "montlikadani"
 
 # Language file version. Don't touch it!
-Version: 5
+Version: 17

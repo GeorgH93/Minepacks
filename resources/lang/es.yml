@@ -1,5 +1,5 @@
-Version: 16
-# Para simplificar la personalización y traducción del plugin, por favor, échale un vistazo al editor: http://ptp.pcgamingfreaks.at
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
   NotFromConsole: "&cEl comando no puede ser usado desde la consola."
   Ingame:
@@ -8,20 +8,23 @@ Language:
     NaN: "[\"\",{\"text\":\"¡El valor introducido no es un número!\",\"color\":\"red\"}]"
     OwnBackpackClose: "¡Mochila cerrada!"
     OwnBackpackClose_SendMethod: "action_bar"
-    # Parametros: {OwnerName}, {OwnerDisplayName}
+    #Parameter: {OwnerName}, {OwnerDisplayName}
     PlayerBackpackClose: "¡La mochila de {OwnerName} fue cerrada!"
     PlayerBackpackClose_SendMethod: "action_bar"
-    InvalidBackpack: "Mochila no validad"
+    InvalidBackpack: "Mochila no válida"
     NotAllowedInBackpack: "&cNo está permitido almacenar el item {ItemName} en la mochila."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cNo puedes remover la mochila de tu hotbar o inventario!"
+    DontRemoveShortcut_SendMethod: "action_bar"
     Open:
-      # Parametro: {TimeLeft} tiempo en segundos hasta que la mochila se pueda volver a abrir, {TimeSpanLeft} lapso de tiempo desde que la mochila es formateada y pueda volver a abrise.
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Please wait \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" till you reopen your backpack.\"}]"
-      # Parametros: {CurrentGameMode}, {AllowedGameModes}
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "No está permitido acceder a las mochilas en tu modo de juego actual."
     Clean:
       BackpackCleaned: "Mochila vaciada"
     Help:
-      Header: "&6### Comandos de Minepacks ###"
+      Header: "&6### Comandos Minepacks ###"
       Footer: "&6#############################"
     Reload:
       Reloading: "&1Actualizando..."
@@ -31,13 +34,13 @@ Language:
       Updated: "[\"\",{\"text\":\"Plugin actualizado, será cargado en el siguiente reinicio/parada.\",\"color\":\"yellow\"}]"
       NoUpdate: "[\"\",{\"text\":\"No plugin update available.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"¡Hubo un error comprando actualizaciones! ¡Por favor, revisa la consola!\",\"color\":\"red\"}]"
-      # Puedes cambiar este mensaje si lo deseas, ¡pero no llores si el enlace ya no está vinculado al plugin!
-      UpdateAvailable: "[{\"text\":\"¡Hay una actualización disponible! ¡Por favor, ve a \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" para descargarla!\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"¡Hay una actualización disponible! ¡Por favor, ve a \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" para descargarla!\"}]"
     Backup:
       Created: "La mochila fue respaldada con excito."
       NoBackpack: "El jugador no tiene mochila o bien está vacia."
     Restore:
-      BackupsPerPage: "10"
+      BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"mostrando pág. {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
       Footer: "[{\"text\":\"<<< Anterior <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Mostrando pág. {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Siguiente >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
       BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
@@ -64,8 +67,7 @@ Language:
       RestoreList: "Lista de todas las mochilas disponibles."
       Help: "Muestra todos los comandos disponibles y sus descripciones."
       Migrate: " Migra la base de datos utilizada de un tipo a otro."
-LanguageName: "es_es"
-Author: "ThatOverPowered"
+
 Command:
   Backpack:
     - backpack
@@ -91,3 +93,10 @@ Command:
     - version
   Help:
     - help
+
+# Will be shown in the console during startup
+LanguageName: "es_es"
+Author: "ThatOverPowered"
+
+# Language file version. Don't touch it!
+Version: 17

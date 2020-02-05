@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016-2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,12 +34,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class BackpackEventListener extends MinepacksListener
 {
 	private final Message messageOwnBackpackClose, messageOtherBackpackClose;
+	private final Sound closeSound;
 	
 	public BackpackEventListener(Minepacks plugin)
 	{
 		super(plugin);
 		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
 		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
+		closeSound = plugin.getConfiguration().getCloseSound();
 	}
 	
 	@EventHandler
@@ -61,6 +64,10 @@ public class BackpackEventListener extends MinepacksListener
 			{
 				OfflinePlayer owner = backpack.getOwner();
 				messageOtherBackpackClose.send(closer, owner.getName(), owner.isOnline() ? owner.getPlayer().getDisplayName() : ChatColor.GRAY + owner.getName());
+			}
+			if(closeSound != null)
+			{
+				closer.getWorld().playSound(closer.getLocation(), closeSound, 1, 0);
 			}
 	    }
 	}

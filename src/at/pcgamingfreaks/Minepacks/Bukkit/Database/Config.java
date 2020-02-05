@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 21, UPGRADE_THRESHOLD = 21;
+	private static final int CONFIG_VERSION = 22, UPGRADE_THRESHOLD = 22, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -54,7 +55,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
-		if(oldConfig.getVersion() < 20) // Pre V2.0 config file
+		if(oldConfig.getVersion() < PRE_V2_VERSION) // Pre V2.0 config file
 		{
 			OldFileUpdater.updateConfig(oldConfig.getYamlE(), getConfigE());
 		}
@@ -109,6 +110,16 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getString("Database.Tables.Fields." + sub, def);
 	}
 
+	public boolean useOnlineUUIDs()
+	{
+		String type = getConfigE().getString("Database.UUID_Type", "auto").toLowerCase(Locale.ENGLISH);
+		if(type.equals("auto"))
+		{
+			return plugin.getServer().getOnlineMode();
+		}
+		return type.equals("online");
+	}
+
 	public boolean getUseUUIDSeparators()
 	{
 		return getConfigE().getBoolean("Database.UseUUIDSeparators", false);
@@ -147,7 +158,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public int getBackpackMaxSize()
 	{
-		return getConfigE().getInt("MaxSize", 6);
+		int size = getConfigE().getInt("MaxSize", 6);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14)) size = Math.min(6, size);
+		if(size > 6)
+		{
+			logger.info("Starting with MC 1.14 backpacks with more than 6 rows will no longer be possible. A feature to allow bigger backpacks through multiple pages is currently in development.");
+		}
+		return Math.max(1, size);
 	}
 
 	public boolean getAutoUpdate()
@@ -303,6 +320,52 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			logger.warning(ConsoleColor.YELLOW + "Unsupported mode \"" + mode + "\" for option \"WorldSettings.BlacklistMode\"" + ConsoleColor.RESET);
 		}
 		return blacklistMode;
+	}
+	//endregion
+
+	//region ItemShortcut settings
+	public boolean isItemShortcutEnabled()
+	{
+		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
+	}
+
+	public String getItemShortcutItemName()
+	{
+		return getConfigE().getString("ItemShortcut.ItemName", "&eBackpack");
+	}
+
+	public String getItemShortcutHeadValue()
+	{
+		return getConfigE().getString("ItemShortcut.HeadTextureValue", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0=");
+	}
+	//endregion
+
+	//region Sound settings
+	private Sound getSound(String option, String autoValue)
+	{
+		if(!getConfigE().getBoolean("Sound.Enabled", true)) return null;
+		String soundName = getConfigE().getString("Sound." + option, "auto").toUpperCase(Locale.ENGLISH);
+		if(soundName.equals("AUTO")) soundName = autoValue;
+		if(soundName.equals("DISABLED") || soundName.equals("FALSE")) return null;
+		try
+		{
+			return Sound.valueOf(soundName);
+		}
+		catch(Exception ignored)
+		{
+			logger.warning("Unknown sound: " + soundName);
+		}
+		return null;
+	}
+
+	public Sound getOpenSound()
+	{
+		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN"));
+	}
+
+	public Sound getCloseSound()
+	{
+		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
 	}
 	//endregion
 	//endregion

@@ -1,0 +1,102 @@
+Version: 16
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+Language:
+  NotFromConsole: "&cO comando não pode ser usado no console."
+  Ingame:
+    NoPermission: "&cVocê não tem permissão para isso."
+    WorldDisabled: "&cVocê não pode usar a mochila nesse mundo."
+    NaN: "[\"\",{\"text\":\"Isso não é um número!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Mochila fechada!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "Mochila de {OwnerName} fechada!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Mochila inválida."
+    NotAllowedInBackpack: "&c{ItemName} não pode ficar na mochila."
+    Open:
+      # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Por favor, espere \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" para abrir a mochila novamente.\"}]"
+      # Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Você não pode abrir a mochila nesse modo de jogo."
+    Clean:
+      BackpackCleaned: "Mochila limpa."
+    Help:
+      Header: "&6### Comandos Minepacks ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Recarregando ..."
+      Reloaded: "&1Recarregado!"
+    Update:
+      CheckingForUpdates: "&1Procurando atualizações ..."
+      Updated: "[\"\",{\"text\":\"Plugin atualizado, será carregado no próximo restart/reload.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Plugin atualizado!\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Houve um problema ao procucurar atualizações, olhe o console!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Atualização disponível, vá até \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" para baixa-la!\"}]"
+    Backup:
+      Created: "Backup criado com sucesso."
+      NoBackpack: "O jogador não tem um backup ou a mochila está vazia."
+    Restore:
+      BackupsPerPage: "10"
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"página {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Anterior <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Página {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Próximo >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "Nenhuma correspondência de backup {BackupIdentifier} encontrada"
+      NoUserToRestoreToFound: "Nenhum usuário válido para restaurar o backup encontrado"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Backup carregado com sucesso."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Abre sua mochila."
+      Clean: "Limpa sua mochila."
+      CleanOthers: "Limpa a mochila de outros jogadores."
+      OpenOthers: "Abre a mochila de outro jogador."
+      Reload: "Recarrega a configuração do plugin."
+      Update: "Procura por novas atualizações."
+      Version: "Mostra detalhes da versão do plugin e suas dependências."
+      Backup: "Cria um backup da mochila dos jogadores."
+      Restore: "Restaura um backup."
+      RestoreList: "Mostra todos os backups disponíveis."
+      Help: "Mostra todos os comandos disponíveis e suas descrições."
+      Migrate: "Migra o banco de dados usado de um tipo para outro."
+LanguageName: "Português"
+Author: "dotJunyo"
+Command:
+  Backpack:
+    - backpack
+    - bp
+    - mochila
+  Open:
+    - open
+    - abrir
+  Clean:
+    - clean
+    - clear
+    - empty
+    - limpar
+  Reload:
+    - reload
+    - restart
+    - recarregar
+  Update:
+    - update
+    - atualizar
+  Backup:
+    - backup
+  Restore:
+    - restore
+    - restaurar
+  ListBackups:
+    - listbackups
+    - listarbackups
+  Version:
+    - version
+    - versao
+  Help:
+    - help
+    - ajuda
