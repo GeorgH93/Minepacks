@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.ChatColor;
@@ -45,11 +46,13 @@ import java.util.UUID;
 public class ItemShortcut implements Listener
 {
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
+	private final Minepacks plugin;
 	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
 
 	public ItemShortcut(Minepacks plugin)
 	{
+		this.plugin = plugin;
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
@@ -79,12 +82,30 @@ public class ItemShortcut implements Listener
 		}
 	}
 
+	//region Add backpack item
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent event)
 	{
+		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());
 	}
 
+	@EventHandler
+	public void onSpawn(PlayerRespawnEvent event)
+	{
+		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
+		addItem(event.getPlayer());
+	}
+
+	@EventHandler
+	public void onWorldChange(PlayerChangedWorldEvent event)
+	{
+		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
+		addItem(event.getPlayer());
+	}
+	//endregion
+
+	//region Prevent placing of backpack item
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemInteract(PlayerInteractEvent event)
 	{
@@ -127,7 +148,9 @@ public class ItemShortcut implements Listener
 			event.setCancelled(true);
 		}
 	}
+	//endregion
 
+	//region Handle inventory acctions
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemClick(InventoryClickEvent event)
 	{
@@ -182,6 +205,20 @@ public class ItemShortcut implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onDropItem(PlayerDropItemEvent event)
+	{
+		if(isItemShortcut(event.getItemDrop().getItemStack()))
+		{
+			event.setCancelled(true);
+			messageDoNotRemoveItem.send(event.getPlayer());
+		}
+	}
+	//endregion
+
+	/**
+	 * Removes the backpack item form the drops on death
+	 */
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
 		Iterator<ItemStack> itemStackIterator = event.getDrops().iterator();
@@ -193,21 +230,5 @@ public class ItemShortcut implements Listener
 				break;
 			}
 		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void onSpawn(PlayerDropItemEvent event)
-	{
-		if(isItemShortcut(event.getItemDrop().getItemStack()))
-		{
-			event.setCancelled(true);
-			messageDoNotRemoveItem.send(event.getPlayer());
-		}
-	}
-
-	@EventHandler
-	public void onSpawn(PlayerRespawnEvent event)
-	{
-		addItem(event.getPlayer());
 	}
 }
