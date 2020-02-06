@@ -163,7 +163,7 @@ public class ItemShortcut implements Listener
 			{
 				if(event.getAction() == InventoryAction.SWAP_WITH_CURSOR)
 				{
-					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission("backpack.use")) return;
+					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission("backpack.use") || !plugin.isPlayerGameModeAllowed(player)) return;
 					Backpack backpack = plugin.getBackpackCachedOnly(player);
 					if(backpack != null)
 					{
