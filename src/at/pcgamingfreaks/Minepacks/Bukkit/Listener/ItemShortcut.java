@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -41,6 +42,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 public class ItemShortcut implements Listener
@@ -150,38 +152,59 @@ public class ItemShortcut implements Listener
 	}
 	//endregion
 
-	//region Handle inventory acctions
+	//region Handle inventory actions
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemClick(InventoryClickEvent event)
 	{
 		if(event.getWhoClicked() instanceof Player)
 		{
+			final Player player = (Player) event.getWhoClicked();
 			if(isItemShortcut(event.getCurrentItem()))
 			{
-				if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
+				if(event.getAction() == InventoryAction.SWAP_WITH_CURSOR)
 				{
-					((Player) event.getWhoClicked()).performCommand("backpack open");
+					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission("backpack.use")) return;
+					Backpack backpack = plugin.getBackpackCachedOnly(player);
+					if(backpack != null)
+					{
+						//TODO right click should place only one
+						final ItemStack stack = event.getCursor();
+						if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
+						{
+							Map<Integer, ItemStack> full = backpack.getInventory().addItem(stack);
+							stack.setAmount((full.isEmpty()) ? 0 : full.get(0).getAmount());
+							event.setCancelled(true);
+						}
+						else
+						{
+							plugin.getItemFilter().messageNotAllowedInBackpack.send(player, plugin.getItemFilter().itemNameResolver.getName(stack));
+						}
+					}
+				}
+				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
+				{
+					player.performCommand("backpack open");
 					event.setCancelled(true);
 				}
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
 				{
 					event.setCancelled(true);
-					messageDoNotRemoveItem.send(event.getWhoClicked());
+					messageDoNotRemoveItem.send(player);
 				}
 			}
 			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
 			{
-				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+				ItemStack item = player.getInventory().getItem(event.getHotbarButton());
 				if(isItemShortcut(item))
 				{
 					event.setCancelled(true);
-					messageDoNotRemoveItem.send(event.getWhoClicked());
+					messageDoNotRemoveItem.send(player);
 				}
 			}
-			else if(isItemShortcut(event.getCursor()) && !event.getWhoClicked().getInventory().equals(event.getClickedInventory()))
+			else if(isItemShortcut(event.getCursor()) && !player.getInventory().equals(event.getClickedInventory()))
 			{
 				event.setCancelled(true);
-				messageDoNotRemoveItem.send(event.getWhoClicked());
+				messageDoNotRemoveItem.send(player);
 			}
 		}
 	}

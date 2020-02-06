@@ -38,9 +38,9 @@ import java.util.HashSet;
 
 public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter
 {
-	private final Message messageNotAllowedInBackpack;
+	public final Message messageNotAllowedInBackpack;
+	public final ItemNameResolver itemNameResolver;
 	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
-	private final ItemNameResolver itemNameResolver;
 
 	public ItemFilter(final Minepacks plugin)
 	{
