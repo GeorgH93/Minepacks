@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class ReloadCommand extends MinepacksCommand
 
 	public ReloadCommand(Minepacks plugin)
 	{
-		super(plugin, "reload", plugin.getLanguage().getTranslated("Commands.Description.Reload"), "backpack.reload", plugin.getLanguage().getCommandAliases("Reload"));
+		super(plugin, "reload", plugin.getLanguage().getTranslated("Commands.Description.Reload"), Permissions.RELOAD, plugin.getLanguage().getCommandAliases("Reload"));
 
 		// Load messages
 		messageReloading = plugin.getLanguage().getMessage("Ingame.Reload.Reloading");

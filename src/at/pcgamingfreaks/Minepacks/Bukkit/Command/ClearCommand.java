@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -41,7 +42,7 @@ public class ClearCommand extends MinepacksCommand
 
 	public ClearCommand(Minepacks plugin)
 	{
-		super(plugin, "clear", plugin.getLanguage().getTranslated("Commands.Description.Clean"), "backpack.clean", plugin.getLanguage().getCommandAliases("Clean"));
+		super(plugin, "clear", plugin.getLanguage().getTranslated("Commands.Description.Clean"), Permissions.CLEAN, plugin.getLanguage().getCommandAliases("Clean"));
 		messageBackpackCleaned = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleaned");
 		descriptionCleanOthers = plugin.getLanguage().getTranslated("Commands.Description.CleanOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
@@ -54,7 +55,7 @@ public class ClearCommand extends MinepacksCommand
 		if(commandSender instanceof Player && args.length < 2)
 		{
 			Player player = (Player) commandSender;
-			target = (args.length == 1 && player.hasPermission("backpack.clean.others")) ? Bukkit.getOfflinePlayer(args[0]) : player;
+			target = (args.length == 1 && player.hasPermission(Permissions.CLEAN_OTHER)) ? Bukkit.getOfflinePlayer(args[0]) : player;
 		}
 		else if(args.length == 1) target = Bukkit.getOfflinePlayer(args[0]);
 		if(target != null)
@@ -91,7 +92,7 @@ public class ClearCommand extends MinepacksCommand
 	@Override
 	public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
-		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission("backpack.clean.other")))
+		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.CLEAN_OTHER)))
 		{
 			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
 			List<String> names = new LinkedList<>();
@@ -109,7 +110,7 @@ public class ClearCommand extends MinepacksCommand
 	public List<HelpData> getHelp(@NotNull CommandSender requester)
 	{
 		List<HelpData> help = super.getHelp(requester);
-		if(!(requester instanceof Player) || requester.hasPermission("backpack.clean.other"))
+		if(!(requester instanceof Player) || requester.hasPermission(Permissions.CLEAN_OTHER))
 		{
 			//noinspection ConstantConditions
 			help.add(new HelpData(getTranslatedName(), helpParam, descriptionCleanOthers));

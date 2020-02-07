@@ -15,7 +15,7 @@ BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
 # Defines if the content of the backpack get dropped on the death of a player.
-# If enabled, it can be disabled for individual players with the "backpack.KeepOnDeath" permission.
+# If enabled, it can be disabled for individual players with the "backpack.keepOnDeath" permission.
 DropOnDeath: true
 # Defines the max amount of columns for a backpack.
 # The size of the user's backpack will be defined by the permission, permissions for bigger backpacks than this value will be ignored.

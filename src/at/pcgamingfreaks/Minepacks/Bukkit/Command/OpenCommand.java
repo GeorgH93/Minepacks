@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -42,7 +43,7 @@ public class OpenCommand extends MinepacksCommand
 
 	public OpenCommand(Minepacks plugin)
 	{
-		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), "backpack.use", true, plugin.getLanguage().getCommandAliases("Open"));
+		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
 		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f").replaceAll("\\{TimeSpanLeft}", "%2\\$s");
@@ -70,7 +71,7 @@ public class OpenCommand extends MinepacksCommand
 		{
 			if(getMinepacksPlugin().isPlayerGameModeAllowed(player))
 			{
-				if(plugin.getCooldownManager() != null && !player.hasPermission("backpack.noCooldown"))
+				if(plugin.getCooldownManager() != null && !player.hasPermission(Permissions.NO_COOLDOWN))
 				{
 					long cd = plugin.getCooldownManager().getRemainingCooldown(player);
 					if(cd > 0)
@@ -91,10 +92,10 @@ public class OpenCommand extends MinepacksCommand
 		}
 		else
 		{
-			if(player.hasPermission("backpack.others"))
+			if(player.hasPermission(Permissions.OTHERS))
 			{
 				//noinspection deprecation
-				plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission("backpack.others.edit"));
+				plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission(Permissions.OTHERS_EDIT));
 			}
 			else
 			{
@@ -106,7 +107,7 @@ public class OpenCommand extends MinepacksCommand
 	@Override
 	public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
-		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission("backpack.open.other")))
+		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.OTHERS)))
 		{
 			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
 			List<String> names = new LinkedList<>();
@@ -125,7 +126,7 @@ public class OpenCommand extends MinepacksCommand
 	{
 		List<HelpData> help = new LinkedList<>();
 		help.add(new HelpData(getTranslatedName(), null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
-		if(requester.hasPermission("backpack.open.other"))
+		if(requester.hasPermission(Permissions.OTHERS))
 		{
 			help.add(new HelpData(getTranslatedName(), helpParam, descriptionOpenOthers));
 		}

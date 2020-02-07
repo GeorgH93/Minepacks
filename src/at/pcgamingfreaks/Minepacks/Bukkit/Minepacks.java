@@ -36,6 +36,7 @@ import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateProviders.UpdateProvider;
+import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
 
 import org.bukkit.Bukkit;
@@ -153,7 +154,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		instance = null;
 	}
 
-	public @Nullable Updater update(@Nullable at.pcgamingfreaks.Updater.Updater.UpdaterResponse output)
+	public @Nullable Updater update(@Nullable UpdateResponseCallback updateResponseCallback)
 	{
 		UpdateProvider updateProvider;
 		if(getDescription().getVersion().contains("Release")) updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
@@ -165,8 +166,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB_DEV, getLogger());
 			/*end[STANDALONE]*/
 		}
-		Updater updater = new Updater(this, this.getFile(), true, updateProvider);
-		updater.update(output);
+		Updater updater = new Updater(this, true, updateProvider);
+		updater.update(updateResponseCallback);
 		return updater;
 	}
 
@@ -346,7 +347,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	public WorldBlacklistMode isDisabled(Player player)
 	{
-		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission("backpack.ignoreWorldBlacklist"))) return WorldBlacklistMode.None;
+		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission(Permissions.IGNORE_WORLD_BLACKLIST))) return WorldBlacklistMode.None;
 		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase(Locale.ROOT))) return worldBlacklistMode;
 		return WorldBlacklistMode.None;
 	}
@@ -354,7 +355,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public boolean isPlayerGameModeAllowed(Player player)
 	{
-		return gameModes.contains(player.getGameMode()) || player.hasPermission("backpack.ignoreGameMode");
+		return gameModes.contains(player.getGameMode()) || player.hasPermission(Permissions.IGNORE_GAME_MODE);
 	}
 
 	public @Nullable CooldownManager getCooldownManager()

@@ -112,3 +112,12 @@ permissions:
   backpack.migrate:
     description: Allows to migrate data from one format to another.
     default: op
+  backpack.backup:
+    description: Allows to create a backup of a backpack.
+    default: op
+  backpack.restore:
+    description: Allows to restore a backup of a backpack.
+    default: op
+  backpack.version:
+    description: Allows to print the version details of the plugin and it's dependencies.
+    default: op

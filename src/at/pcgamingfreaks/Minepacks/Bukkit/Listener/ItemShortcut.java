@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -68,7 +69,7 @@ public class ItemShortcut implements Listener
 
 	private void addItem(Player player)
 	{
-		if(player.hasPermission("backpack.use"))
+		if(player.hasPermission(Permissions.USE))
 		{
 			boolean empty = false, item = false;
 			for(ItemStack itemStack : player.getInventory())
@@ -163,7 +164,7 @@ public class ItemShortcut implements Listener
 			{
 				if(event.getAction() == InventoryAction.SWAP_WITH_CURSOR)
 				{
-					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission("backpack.use") || !plugin.isPlayerGameModeAllowed(player)) return;
+					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission(Permissions.USE) || !plugin.isPlayerGameModeAllowed(player)) return;
 					Backpack backpack = plugin.getBackpackCachedOnly(player);
 					if(backpack != null)
 					{

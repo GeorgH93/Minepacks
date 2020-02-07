@@ -171,7 +171,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		if(owner.isOnline())
 		{
 			Player owner = this.owner.getPlayer();
-			if(owner != null && owner.hasPermission("backpack.use"))
+			if(owner != null && owner.hasPermission(Permissions.USE))
 			{
 				int size = Minepacks.getInstance().getBackpackPermSize(owner);
 				if(size != bp.getSize())

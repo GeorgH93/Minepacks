@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +38,7 @@ public class BackupCommand extends MinepacksCommand
 
 	public BackupCommand(Minepacks plugin)
 	{
-		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), "backpack.backup", plugin.getLanguage().getCommandAliases("Backup"));
+		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), Permissions.BACKUP, plugin.getLanguage().getCommandAliases("Backup"));
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 		messageCreated = plugin.getLanguage().getMessage("Ingame.Backup.Created");
 		messageNoBackpack = plugin.getLanguage().getMessage("Ingame.Backup.NoBackpack");
