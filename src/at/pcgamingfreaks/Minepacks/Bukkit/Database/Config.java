@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 22, UPGRADE_THRESHOLD = 22, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 23, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -278,14 +278,21 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//endregion
 
 	//region Item filter
+	public boolean isItemFilterEnabledNoShulker()
+	{
+		return getConfigE().getBoolean("ItemFilter.Enabled", false);
+	}
+
 	public boolean isItemFilterEnabled()
 	{
-		return getConfigE().getBoolean("ItemFilter.Enable", false) || getConfigE().getBoolean("Shulkerboxes.PreventInBackpack", true);
+		return isItemFilterEnabledNoShulker() || getConfigE().getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
 	public Collection<MinecraftMaterial> getItemFilterBlacklist()
 	{
+		if(!isItemFilterEnabledNoShulker()) return new LinkedList<>();
 		List<String> stringBlacklist = getConfigE().getStringList("ItemFilter.Blacklist", new LinkedList<>());
+		if(isItemFilterModeWhitelist()) stringBlacklist.add("air");
 		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
 		for(String item : stringBlacklist)
 		{
@@ -293,6 +300,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			if(mat != null) blacklist.add(mat);
 		}
 		return blacklist;
+	}
+
+	public boolean isItemFilterModeWhitelist()
+	{
+		return getConfigE().getString("ItemFilter.Mode", "blacklist").toLowerCase(Locale.ENGLISH).equals("whitelist") && isItemFilterEnabledNoShulker();
 	}
 	//endregion
 

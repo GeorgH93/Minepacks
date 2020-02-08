@@ -40,13 +40,15 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 {
 	public final Message messageNotAllowedInBackpack;
 	public final ItemNameResolver itemNameResolver;
+	private final boolean whitelistMode;
 	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
 
 	public ItemFilter(final Minepacks plugin)
 	{
 		super(plugin);
 
-		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled())
+		whitelistMode = plugin.getConfiguration().isItemFilterModeWhitelist();
+		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled() && !whitelistMode)
 		{
 			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
 			{
@@ -78,6 +80,12 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		/*end[STANDALONE]*/
 	}
 
+	@Override
+	public boolean isItemBlocked(ItemStack item)
+	{
+		return whitelistMode ^ blockedMaterials.contains(new MinecraftMaterial(item));
+	}
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
@@ -92,7 +100,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onItemMove(InventoryClickEvent event)
+	public void onItemClick(InventoryClickEvent event)
 	{
 		if(event.getInventory().getHolder() instanceof Backpack)
 		{
@@ -123,11 +131,5 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getOldCursor()));
 			event.setCancelled(true);
 		}
-	}
-
-	@Override
-	public boolean isItemBlocked(ItemStack item)
-	{
-		return blockedMaterials.contains(new MinecraftMaterial(item));
 	}
 }
