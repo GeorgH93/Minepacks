@@ -195,6 +195,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
+		if(!config.getUseUUIDs() && config.getString("Database.UUID_Type", "auto").equalsIgnoreCase("auto") && MCVersion.isUUIDsSupportAvailable()) pluginManager.registerEvents(new NoUUIDWarning(), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
