@@ -72,6 +72,10 @@ Database:
     Password: minecraft
     # The max amount of connections to the database the connection pool will open
     MaxConnections: 2
+    # Sets the max lifetime of the connection in seconds. -1 = Default (30min)
+    MaxLifetime: -1
+    # Sets the idle timeout of the connection in seconds. -1 = Default (15min)
+    IdleTimeout:
     # List of properties for your SQL connection. Can be used to disable SSL.
     # Properties: ["useSSL=false"]
     Properties: []
