@@ -32,9 +32,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter
 {
@@ -42,6 +44,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	public final ItemNameResolver itemNameResolver;
 	private final boolean whitelistMode;
 	private final Collection<MinecraftMaterial> filteredMaterials = new HashSet<>();
+	private final Set<String> filteredNames;
 
 	public ItemFilter(final Minepacks plugin)
 	{
@@ -56,6 +59,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 			}
 		}
 		filteredMaterials.addAll(plugin.getConfiguration().getItemFilterMaterials());
+		filteredNames = plugin.getConfiguration().getItemFilterNames();
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 
@@ -83,7 +87,14 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	@Override
 	public boolean isItemBlocked(ItemStack item)
 	{
-		return whitelistMode ^ filteredMaterials.contains(new MinecraftMaterial(item));
+		if(filteredMaterials.contains(new MinecraftMaterial(item))) return !whitelistMode;
+		if(item.hasItemMeta())
+		{
+			ItemMeta meta = item.getItemMeta();
+			assert meta != null; //TODO remove after testing
+			if(meta.hasDisplayName() && filteredNames.contains(meta.getDisplayName())) return !whitelistMode;
+		}
+		return whitelistMode;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

@@ -304,6 +304,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return blacklist;
 	}
 
+	public Set<String> getItemFilterNames()
+	{
+		Set<String> names = new HashSet<>();
+		getConfigE().getStringList("ItemFilter.Names", new LinkedList<>()).forEach(name -> names.add(ChatColor.translateAlternateColorCodes('&', name)));
+		return names;
+	}
+
 	public boolean isItemFilterModeWhitelist()
 	{
 		return getConfigE().getString("ItemFilter.Mode", "blacklist").toLowerCase(Locale.ENGLISH).equals("whitelist") && isItemFilterEnabledNoShulker();

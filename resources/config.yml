@@ -129,11 +129,14 @@ Shulkerboxes:
 
 ItemFilter:
   # Enables the item filter. Make sure to define items to be filtered.
-  Enable: false
+  Enabled: false
   # Changes the filter mode, either blacklist (only not listed materials are allowed) or whitelist (only listed materials are allowed)
   Mode: blacklist
-  # List off materials that should be filtered. Can be name or id (id only for MC versions older than 1.13!).
+  # Filter lists bellow. An item will be blocked (in blacklist mode) or allowed (in whitelist mode) if it matches on of the given filters.
+  # List of materials that should be filtered. Can be name or id (id only for MC versions older than 1.13!).
   Materials: []
+  # List of names that should be filtered. Must match the display name of the item exactly. & color codes will be converted automatically.
+  Names: []
 
 # This settings allow control over how the plugin behave in different worlds
 WorldSettings:
