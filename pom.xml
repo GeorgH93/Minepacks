@@ -71,21 +71,27 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.13.2-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- PCGF Plugin Lib -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.20-SNAPSHOT</version>
+			<version>1.0.21-SNAPSHOT</version>
 		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>BadRabbit</artifactId>
-			<version>1.2.1</version>
-			<classifier>Bukkit</classifier>
+			<artifactId>BadRabbit-Bukkit</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.10</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -116,6 +122,20 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<!-- Resolve lombok -->
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<version>1.18.10.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<!-- Bundle the API into the JAR -->
 			<plugin>

@@ -41,7 +41,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	public final Message messageNotAllowedInBackpack;
 	public final ItemNameResolver itemNameResolver;
 	private final boolean whitelistMode;
-	private final Collection<MinecraftMaterial> blockedMaterials = new HashSet<>();
+	private final Collection<MinecraftMaterial> filteredMaterials = new HashSet<>();
 
 	public ItemFilter(final Minepacks plugin)
 	{
@@ -52,10 +52,10 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		{
 			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
 			{
-				blockedMaterials.add(new MinecraftMaterial(mat, (short) -1));
+				filteredMaterials.add(new MinecraftMaterial(mat, (short) -1));
 			}
 		}
-		blockedMaterials.addAll(plugin.getConfiguration().getItemFilterBlacklist());
+		filteredMaterials.addAll(plugin.getConfiguration().getItemFilterMaterials());
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 
@@ -83,7 +83,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	@Override
 	public boolean isItemBlocked(ItemStack item)
 	{
-		return whitelistMode ^ blockedMaterials.contains(new MinecraftMaterial(item));
+		return whitelistMode ^ filteredMaterials.contains(new MinecraftMaterial(item));
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

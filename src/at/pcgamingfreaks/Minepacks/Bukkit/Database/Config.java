@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 23, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 24, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -61,7 +61,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 		else
 		{
-			super.doUpgrade(oldConfig);
+			Map<String, String> remappedKeys = new HashMap<>();
+			if(oldConfig.getVersion() <= 23) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
+			doUpgrade(oldConfig, remappedKeys);
 		}
 	}
 
@@ -127,7 +129,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getUnCacheStrategie()
 	{
-		return getConfigE().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ROOT);
+		return getConfigE().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ENGLISH);
 	}
 
 	public long getUnCacheInterval()
@@ -288,13 +290,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return isItemFilterEnabledNoShulker() || getConfigE().getBoolean("Shulkerboxes.PreventInBackpack", true);
 	}
 
-	public Collection<MinecraftMaterial> getItemFilterBlacklist()
+	public Collection<MinecraftMaterial> getItemFilterMaterials()
 	{
 		if(!isItemFilterEnabledNoShulker()) return new LinkedList<>();
-		List<String> stringBlacklist = getConfigE().getStringList("ItemFilter.Blacklist", new LinkedList<>());
-		if(isItemFilterModeWhitelist()) stringBlacklist.add("air");
+		List<String> stringMaterialList = getConfigE().getStringList("ItemFilter.Materials", new LinkedList<>());
+		if(isItemFilterModeWhitelist()) stringMaterialList.add("air");
 		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
-		for(String item : stringBlacklist)
+		for(String item : stringMaterialList)
 		{
 			MinecraftMaterial mat = MinecraftMaterial.fromInput(item);
 			if(mat != null) blacklist.add(mat);
