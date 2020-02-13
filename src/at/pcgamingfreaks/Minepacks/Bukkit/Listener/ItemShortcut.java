@@ -212,15 +212,10 @@ public class ItemShortcut implements Listener
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemDrag(InventoryDragEvent event)
-	{ //TODO improve
-		if(!event.getInventory().equals(event.getWhoClicked().getInventory()))
+	{
+		if(!event.getInventory().equals(event.getWhoClicked().getInventory()) && event.getRawSlots().containsAll(event.getInventorySlots()))
 		{
-			if(isItemShortcut(event.getCursor()))
-			{
-				event.setCancelled(true);
-				messageDoNotRemoveItem.send(event.getWhoClicked());
-			}
-			else if(isItemShortcut(event.getOldCursor()))
+			if(isItemShortcut(event.getCursor()) || isItemShortcut(event.getOldCursor()))
 			{
 				event.setCancelled(true);
 				messageDoNotRemoveItem.send(event.getWhoClicked());
