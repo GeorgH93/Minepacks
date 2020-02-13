@@ -306,6 +306,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public Set<String> getItemFilterNames()
 	{
+		if(!isItemFilterEnabledNoShulker()) return new HashSet<>();
 		Set<String> names = new HashSet<>();
 		getConfigE().getStringList("ItemFilter.Names", new LinkedList<>()).forEach(name -> names.add(ChatColor.translateAlternateColorCodes('&', name)));
 		return names;
