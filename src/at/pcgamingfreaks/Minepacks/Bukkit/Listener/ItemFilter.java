@@ -45,7 +45,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	public final ItemNameResolver itemNameResolver;
 	private final boolean whitelistMode;
 	private final Collection<MinecraftMaterial> filteredMaterials = new HashSet<>();
-	private final Set<String> filteredNames;
+	private final Set<String> filteredNames, filteredLore;
 
 	public ItemFilter(final Minepacks plugin)
 	{
@@ -61,6 +61,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		}
 		filteredMaterials.addAll(plugin.getConfiguration().getItemFilterMaterials());
 		filteredNames = plugin.getConfiguration().getItemFilterNames();
+		filteredLore = plugin.getConfiguration().getItemFilterLore();
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 
@@ -95,6 +96,18 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 			ItemMeta meta = item.getItemMeta();
 			assert meta != null; //TODO remove after testing
 			if(meta.hasDisplayName() && filteredNames.contains(meta.getDisplayName())) return !whitelistMode;
+			if(meta.hasLore() && !filteredLore.isEmpty())
+			{
+				StringBuilder loreBuilder = new StringBuilder();
+				//noinspection ConstantConditions
+				for(String loreLine : meta.getLore())
+				{
+					if(filteredLore.contains(loreLine)) return !whitelistMode;
+					if(loreBuilder.length() > 0) loreBuilder.append("\n");
+					loreBuilder.append(loreLine);
+				}
+				if(filteredLore.contains(loreBuilder.toString())) return !whitelistMode;
+			}
 		}
 		return whitelistMode;
 	}

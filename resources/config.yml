@@ -137,6 +137,8 @@ ItemFilter:
   Materials: []
   # List of names that should be filtered. Must match the display name of the item exactly. & color codes will be converted automatically.
   Names: []
+  # List of lore that should be filtered. Can be a single line or all lines of the lore.
+  Lore: []
 
 # This settings allow control over how the plugin behave in different worlds
 WorldSettings:

@@ -312,6 +312,14 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return names;
 	}
 
+	public Set<String> getItemFilterLore()
+	{
+		if(!isItemFilterEnabledNoShulker()) return new HashSet<>();
+		Set<String> loreSet = new HashSet<>();
+		getConfigE().getStringList("ItemFilter.Lore", new LinkedList<>()).forEach(lore -> loreSet.add(ChatColor.translateAlternateColorCodes('&', lore)));
+		return loreSet;
+	}
+
 	public boolean isItemFilterModeWhitelist()
 	{
 		return getConfigE().getString("ItemFilter.Mode", "blacklist").toLowerCase(Locale.ENGLISH).equals("whitelist") && isItemFilterEnabledNoShulker();
