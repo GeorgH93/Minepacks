@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -105,6 +105,10 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 				}
 				return true;
 			}
+		}
+		else if(args.length == 0) // If the command was executed in the console without parameters
+		{
+			args = new String[]{"help"}; // Show help
 		}
 		return super.onCommand(sender, command, alias, args);
 	}
