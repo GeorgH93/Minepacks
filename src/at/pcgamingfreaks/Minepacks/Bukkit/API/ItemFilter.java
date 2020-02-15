@@ -19,15 +19,19 @@ package at.pcgamingfreaks.Minepacks.Bukkit.API;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public interface ItemFilter
 {
 	/**
 	 * @param item The item that should be checked.
 	 * @return True if the item is not allowed. False if the item is allowed.
 	 */
-	boolean isItemBlocked(@NotNull ItemStack item);
+	@Contract("null->false")
+	boolean isItemBlocked(@Nullable ItemStack item);
 
 	/**
 	 * @param player The player that should receive the message that the item is not allowed.
@@ -40,7 +44,7 @@ public interface ItemFilter
 	 * @param itemStack The item that should be checked.
 	 * @return True if the item is not allowed. False if the item is allowed.
 	 */
-	default boolean checkIsBlockedAndShowMessage(@NotNull Player player, @NotNull ItemStack itemStack)
+	default boolean checkIsBlockedAndShowMessage(@NotNull Player player, @Nullable ItemStack itemStack)
 	{
 		if(isItemBlocked(itemStack))
 		{
