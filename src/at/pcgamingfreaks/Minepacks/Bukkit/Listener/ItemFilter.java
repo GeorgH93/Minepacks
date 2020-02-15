@@ -33,6 +33,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -112,6 +113,12 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		return whitelistMode;
 	}
 
+	@Override
+	public void sendNotAllowedMessage(@NotNull Player player, @NotNull ItemStack itemStack)
+	{
+		messageNotAllowedInBackpack.send(player, itemNameResolver.getName(itemStack));
+	}
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
@@ -119,7 +126,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
-				messageNotAllowedInBackpack.send((Player) event.getSource().getHolder(), itemNameResolver.getName(event.getItem()));
+				sendNotAllowedMessage((Player) event.getSource().getHolder(), event.getItem());
 			}
 			event.setCancelled(true);
 		}
@@ -132,23 +139,20 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		if(event.getInventory().getHolder() instanceof Backpack)
 		{
 			Player player = (Player) event.getWhoClicked();
-			if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY && isItemBlocked(event.getCurrentItem()))
+			if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY && checkIsBlockedAndShowMessage(player, event.getCurrentItem()))
 			{
 				event.setCancelled(true);
-				messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCurrentItem()));
 			}
 			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
 			{
 				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
-				if(item != null && isItemBlocked(item))
+				if(checkIsBlockedAndShowMessage(player, item))
 				{
 					event.setCancelled(true);
-					messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(item));
 				}
 			}
-			else if(!player.getInventory().equals(event.getClickedInventory()) && isItemBlocked(event.getCursor()))
+			else if(!player.getInventory().equals(event.getClickedInventory()) && checkIsBlockedAndShowMessage(player, event.getCursor()))
 			{
-				messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getCursor()));
 				event.setCancelled(true);
 			}
 		}
