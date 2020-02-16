@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 23, UPGRADE_THRESHOLD = 23, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 22, UPGRADE_THRESHOLD = 22, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -112,8 +112,8 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public boolean getUseUUIDs()
 	{
-		boolean uuid = getConfigE().getBoolean("Database.UseUUIDs", true) && MCVersion.isUUIDsSupportAvailable();
-		if(!uuid) logger.severe(ConsoleColor.RED + "Disabling UUIDs is not recommended and can lead to unexpected behaviour. Please consider enabling UUIDs. The option will be removed with the v2.2 update." + ConsoleColor.RESET);
+		boolean uuid = getConfigE().getBoolean("Database.UseUUIDs", true);
+		if(!uuid) logger.warning(ConsoleColor.RED + "Disabling UUIDs is not recommended and can lead to unexpected behaviour. Please consider enabling UUIDs. The option will be removed at some point." + ConsoleColor.RESET);
 		return uuid;
 	}
 
@@ -176,7 +176,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public boolean getAutoUpdate()
 	{
-		return getConfigE().getBoolean("Misc.AutoUpdate", true) && MCVersion.isUUIDsSupportAvailable();
+		return getConfigE().getBoolean("Misc.AutoUpdate", true);
 	}
 
 	public boolean isBungeeCordModeEnabled()
