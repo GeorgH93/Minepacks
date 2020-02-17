@@ -269,7 +269,7 @@
 									<artifactSet>
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
-											<include>at.pcgamingfreaks:BadRabbit</include>
+											<include>at.pcgamingfreaks:BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks</include>
 										</includes>
 									</artifactSet>
