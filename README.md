@@ -26,7 +26,7 @@
 [featureRequests]: https://github.com/GeorgH93/Minepacks/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
 [featureRequestsImg]: https://img.shields.io/github/issues/GeorgH93/Minepacks/enhancement.svg?label=feature%20requests&color=informational
 [requestFeature]: https://github.com/GeorgH93/Minepacks/issues/new?labels=enhancement&template=feature.md
-[config]: https://github.com/GeorgH93/Minepacks/blob/master/resources/config.yml
+[config]: https://github.com/GeorgH93/Minepacks/blob/master/Minepacks/resources/config.yml
 [pcgfPluginLib]: https://github.com/GeorgH93/PCGF_PluginLib
 [pcgfPluginLibAdvantages]: https://github.com/GeorgH93/Minepacks/wiki/Build-and-Mode-comparison#Advantages-of-using-the-PCGF-PluginLib
 [languages]: https://github.com/GeorgH93/Minepacks/tree/master/Minepacks/resources/lang
@@ -34,7 +34,7 @@
 
 [![Logo][banner]][spigot]
 
-Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
+Minepacks is a free and reliable backpack plugin for minecraft server running bukkit or spigot.
 
 [![ciImg]][ci] [![releaseImg]][release]
 [![apiVersionImg]][api] [![licenseImg]][license]

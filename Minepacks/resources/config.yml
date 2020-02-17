@@ -75,7 +75,7 @@ Database:
     # Sets the max lifetime of the connection in seconds. -1 = Default (30min)
     MaxLifetime: -1
     # Sets the idle timeout of the connection in seconds. -1 = Default (15min)
-    IdleTimeout:
+    IdleTimeout: -1
     # List of properties for your SQL connection. Can be used to disable SSL.
     # Properties: ["useSSL=false"]
     Properties: []
