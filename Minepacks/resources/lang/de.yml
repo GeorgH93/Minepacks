@@ -1,7 +1,7 @@
 # To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
 
 Language:
-  NotFromConsole: "&cDieser Befehl kann nicht in der Console ausgeführt werden."
+  NotFromConsole: "&cDieser Befehl kann nicht in der Konsole ausgeführt werden."
   Ingame:
     NoPermission: "&cDir fehlen die Rechte dafür."
     NaN: "[\"\",{\"text\":\"Die Eingabe ist keine gültige Zahl!\",\"color\":\"red\"}]"
@@ -16,12 +16,12 @@ Language:
     DontRemoveShortcut: "&cDu darfst den Rucksack nicht aus deinem Inventar entfernen!"
     DontRemoveShortcut_SendMethod: "action_bar"
     Clean:
-      BackpackCleaned: "Rucksack gelehrt."
+      BackpackCleaned: "Rucksack geleert."
     Open:
       #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
       Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
-      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Game-Mode nicht öffnen."
+      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Gamemode nicht öffnen."
     Help:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
@@ -30,13 +30,13 @@ Language:
       Reloaded: "&1Minepacks neu geladen!"
     Update:
       CheckingForUpdates: "&1Suche nach Aktualisierungen ..."
-      Updated: "[\"\",{\"text\":\"Plugin wurde aktualisiert, Änderungen werden mit dem nächsten neustart übernommen.\",\"color\":\"yellow\"}]"
-      NoUpdate: "[\"\",{\"text\":\"Plugin Aktualisierung verfügbar.\",\"color\":\"gold\"}]"
-      UpdateFail: "[\"\",{\"text\":\"Es gab ein Problem bei der Suche nach Updates! Bitte prüfe das log für mehr details.\",\"color\":\"red\"}]"
+      Updated: "[\"\",{\"text\":\"Plugin wurde aktualisiert, Änderungen werden mit dem nächsten Neustart übernommen.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Plugin-Aktualisierung verfügbar.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Es gab ein Problem bei der Suche nach Updates! Bitte prüfe den Log für mehr Details.\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
       UpdateAvailable: "[{\"text\":\"Es ist eine Aktualisierung verfügbar! Bitte gehe auf \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" um es herunter zu laden!\"}]"
     Backup:
-      Created: "Rucksack wurder gesichert."
+      Created: "Rucksack wurde gesichert."
       NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."
     Restore:
       BackupsPerPage: 10
@@ -54,18 +54,18 @@ Language:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
     Description:
-      Backpack: "Öffent deinen Rucksack."
+      Backpack: "Öffnet deinen Rucksack."
       Clean: "Leert deinen Rucksack."
       CleanOthers: "Leert den Rucksack eines anderen Spielers."
       OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
-      Reload: "Lädt die konfigurations Datei neu."
-      Update: "Prüft auf neue plugin updates."
+      Reload: "Lädt die Konfigurations-Datei neu."
+      Update: "Prüft auf neue Plugin-Updates."
       Backup: "Erstellt eine Sicherungskopie eines Rucksackes."
-      Restore: "Stellt eine Sicherungskopie eines Rucksackes wieder her."
+      Restore: "Stellt eine Sicherungskopie eines Rucksacks wieder her."
       RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
       Help: "Zeigt die verfügbaren Befehle an."
-      Migrate: "Erlaubt das konvertieren der Datenbank in ein anderes Format."
+      Migrate: "Erlaubt das Konvertieren der Datenbank in ein anderes Format."
 
 Command:
   Backpack:
