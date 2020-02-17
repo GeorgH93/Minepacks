@@ -55,7 +55,9 @@ Temporary Items
 *.classpath
 *.project
 *.prefs
-/target/
+target/
 /bin/
 *.iml
 /.idea/
+
+.flattened-pom.xml

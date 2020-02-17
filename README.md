@@ -17,7 +17,7 @@
 [ciDev]: https://ci.pcgamingfreaks.at/job/Minepacks%20Dev/
 [ciDevImg]: https://ci.pcgamingfreaks.at/job/Minepacks%20Dev/badge/icon
 [apiVersionImg]: https://img.shields.io/badge/dynamic/xml.svg?label=api-version&query=%2F%2Frelease[1]&url=https%3A%2F%2Frepo.pcgamingfreaks.at%2Frepository%2Fmaven-releases%2Fat%2Fpcgamingfreaks%2FMinepacks-API%2Fmaven-metadata.xml
-[api]: https://github.com/GeorgH93/Minepacks/tree/API
+[api]: https://github.com/GeorgH93/Minepacks/tree/master/Minepacks-API
 [apiJavaDoc]: https://ci.pcgamingfreaks.at/job/Minepacks%20API/javadoc/
 [apiBuilds]: https://ci.pcgamingfreaks.at/job/Minepacks%20API/
 [bugReports]: https://github.com/GeorgH93/Minepacks/issues?q=is%3Aissue+is%3Aopen+label%3Abug
@@ -29,7 +29,7 @@
 [config]: https://github.com/GeorgH93/Minepacks/blob/master/resources/config.yml
 [pcgfPluginLib]: https://github.com/GeorgH93/PCGF_PluginLib
 [pcgfPluginLibAdvantages]: https://github.com/GeorgH93/Minepacks/wiki/Build-and-Mode-comparison#Advantages-of-using-the-PCGF-PluginLib
-[languages]: https://github.com/GeorgH93/Minepacks/tree/master/resources/lang
+[languages]: https://github.com/GeorgH93/Minepacks/tree/master/Minepacks/resources/lang
 <!-- End of variables block -->
 
 [![Logo][banner]][spigot]
@@ -57,7 +57,7 @@ Minepacks is a backpack plugin for minecraft server running bukkit or spigot.
 ## Requirements:
 ### Runtime requirements:
 * Java 8
-* Bukkit, Spigot or Paper for Minecraft 1.7 or newer
+* Bukkit, Spigot or Paper for Minecraft 1.7.5 or newer
 * (Optional) [PCGF PluginLib][pcgfPluginLib] ([Advantages of using the PCGF PluginLib][pcgfPluginLibAdvantages])
 
 ### Build requirements:
@@ -76,7 +76,7 @@ git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
 mvn package
 ```
-The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>.jar`.
+The final file will be in the `Minepacks/target` folder, named `Minepacks-<CurrentVersion>.jar`.
 
 ### Standalone version:
 This version works without the PCGF-PluginLib, however some API features are not available.
@@ -85,7 +85,7 @@ git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
 mvn package -P Standalone,ExcludeBadRabbit
 ```
-The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>-Standalone.jar`.
+The final file will be in the `Minepacks/target` folder, named `Minepacks-<CurrentVersion>-Standalone.jar`.
 
 ### Release version:
 This is the version of the plugin published on dev.bukkit.org and spigotmc.org.
@@ -95,7 +95,7 @@ cd Minepacks
 mvn clean install -P Standalone,ExcludeBadRabbit
 mvn clean package -P Release
 ```
-The final file will be in the `target` folder, named `Minepacks-<CurrentVersion>-Release.jar`.
+The final file will be in the `Minepacks/target` folder, named `Minepacks-<CurrentVersion>-Release.jar`.
 
 ## API:
 Minepacks V2 comes with an API that allows you to interact with this plugin.

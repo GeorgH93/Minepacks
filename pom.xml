@@ -2,8 +2,9 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.pcgamingfreaks</groupId>
-	<artifactId>Minepacks</artifactId>
-	<version>2.1.7</version>
+	<artifactId>Minepacks-Parent</artifactId>
+	<version>${revision}</version>
+	<packaging>pom</packaging>
 
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
@@ -19,7 +20,7 @@
 		<url>https://ci.pcgamingfreaks.at/job/Minepacks/</url>
 	</ciManagement>
 
-	<name>Minepacks</name>
+	<name>Minepacks-Parent</name>
 	<description>Minepacks is a backpack plugin with different backpack sizes, multi language support and SQLite and MySQL storage support.</description>
 	<url>https://www.spigotmc.org/resources/19286/</url>
 	<inceptionYear>2014</inceptionYear>
@@ -31,10 +32,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<author>GeorgH93</author>
-		<version>${project.version}</version>
-		<dependencies>depend: [ PCGF_PluginLib ]</dependencies>
-		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
+		<revision>2.2-BETA</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -51,63 +49,17 @@
 	</repositories>
 
 	<dependencies>
-		<!-- Minepacks API -->
-		<dependency>
-			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>Minepacks-API</artifactId>
-			<version>2.0.11</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.bukkit</groupId>
-					<artifactId>bukkit</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>at.pcgamingfreaks</groupId>
-					<artifactId>PluginLib</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<!-- Bukkit -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.13.2-R0.1-SNAPSHOT</version>
+			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
-		</dependency>
-		<!-- PCGF Plugin Lib -->
-		<dependency>
-			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>PluginLib</artifactId>
-			<version>1.0.19-SNAPSHOT</version>
-		</dependency>
-		<!-- BadRabbit -->
-		<dependency>
-			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>BadRabbit</artifactId>
-			<version>1.2.1</version>
-			<classifier>Bukkit</classifier>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<defaultGoal>clean package</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test/src</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>resources</directory>
-				<filtering>true</filtering>
-			</resource>
-			<resource>
-				<directory>./</directory>
-				<includes>
-					<include>LICENSE</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>${project.build.directory}/generated-resources</directory>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -117,228 +69,50 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<!-- Bundle the API into the JAR -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<pomElements>
+						<description/>
+						<inceptionYear/>
+						<organization/>
+						<scm/>
+						<developers/>
+						<contributors/>
+						<mailingLists/>
+						<issueManagement/>
+						<repositories/>
+						<ciManagement/>
+						<!--<url/><pluginRepositories/><distributionManagement/>-->
+					</pomElements>
+				</configuration>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>flatten</id>
+						<phase>process-resources</phase>
 						<goals>
-							<goal>shade</goal>
+							<goal>flatten</goal>
 						</goals>
-						<configuration>
-							<createDependencyReducedPom>false</createDependencyReducedPom>
-							<minimizeJar>false</minimizeJar>
-							<artifactSet>
-								<includes>
-									<include>at.pcgamingfreaks:Minepacks-API</include>
-								</includes>
-							</artifactSet>
-						</configuration>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>ExcludeBadRabbit</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>3.1.2</version>
-						<executions>
-							<execution>
-								<id>default-jar</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<excludes>
-										<exclude>at/pcgamingfreaks/Minepacks/Bukkit/MinepacksBadRabbit.class</exclude>
-									</excludes>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>Standalone</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<version>${project.version}-Standalone</version>
-				<dependencies/>
-				<mainClass>${project.groupId}.${project.artifactId}Standalone.Bukkit.${project.artifactId}</mainClass>
-			</properties>
-			<build>
-				<plugins>
-					<!-- Shades some required libs into the final jar -->
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.2.1</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-								<configuration>
-									<shadedArtifactAttached>true</shadedArtifactAttached>
-									<shadedClassifierName>Standalone</shadedClassifierName>
-									<createDependencyReducedPom>false</createDependencyReducedPom>
-									<minimizeJar>true</minimizeJar>
-									<outputDirectory>${project.build.directory}</outputDirectory>
-									<artifactSet>
-										<includes>
-											<include>at.pcgamingfreaks:Minepacks-API</include>
-											<include>at.pcgamingfreaks:PluginLib</include>
-										</includes>
-									</artifactSet>
-									<relocations>
-										<relocation>
-											<pattern>at.pcgf.libs</pattern>
-											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs</shadedPattern>
-										</relocation>
-										<relocation>
-											<pattern>at.pcgamingfreaks.Minepacks</pattern>
-											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone</shadedPattern>
-											<excludes>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.*</exclude>
-											</excludes>
-										</relocation>
-										<relocation>
-											<pattern>at.pcgamingfreaks</pattern>
-											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.at.pcgamingfreaks</shadedPattern>
-											<excludes>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Callback</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager</exclude>
-											</excludes>
-										</relocation>
-									</relocations>
-									<filters>
-										<filter>
-											<artifact>at.pcgamingfreaks:PluginLib</artifact>
-											<excludes>
-												<exclude>*.yml</exclude>
-											</excludes>
-										</filter>
-									</filters>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<!-- Replace all the PCGF-PluginLib code with alternatives -->
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>munge-maven-plugin</artifactId>
-						<version>1.0</version>
-						<executions>
-							<execution>
-								<id>munge</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>munge</goal>
-								</goals>
-								<configuration>
-									<symbols>STANDALONE</symbols>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>Release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<version>${project.version}-Release</version>
-				<dependencies>softdepend: [ PCGF_PluginLib ]</dependencies>
-				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
-			</properties>
-			<dependencies>
-				<dependency>
-					<groupId>at.pcgamingfreaks</groupId>
-					<artifactId>Minepacks</artifactId>
-					<version>${project.version}</version>
-					<classifier>Standalone</classifier>
-				</dependency>
-			</dependencies>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.2.1</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-								<configuration>
-									<shadedArtifactAttached>true</shadedArtifactAttached>
-									<shadedClassifierName>Release</shadedClassifierName>
-									<createDependencyReducedPom>false</createDependencyReducedPom>
-									<minimizeJar>false</minimizeJar>
-									<artifactSet>
-										<includes>
-											<include>at.pcgamingfreaks:Minepacks-API</include>
-											<include>at.pcgamingfreaks:BadRabbit</include>
-											<include>at.pcgamingfreaks:Minepacks</include>
-										</includes>
-									</artifactSet>
-									<relocations>
-										<relocation>
-											<pattern>at.pcgamingfreaks.BadRabbit</pattern>
-											<shadedPattern>at.pcgamingfreaks.Minepacks</shadedPattern>
-										</relocation>
-									</relocations>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>license-maven-plugin</artifactId>
-						<version>1.20</version>
-						<configuration>
-							<excludedScopes>test,provided,system</excludedScopes>
-							<generateBundle>true</generateBundle>
-							<licensesOutputFile>${project.build.directory}/generated-resources/licenses-THIRD-PARTY.xml</licensesOutputFile>
-						</configuration>
-						<executions>
-							<execution>
-								<id>add-third-party</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>add-third-party</goal>
-									<goal>download-licenses</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+	<modules>
+		<module>Minepacks-API</module>
+		<module>Minepacks</module>
+	</modules>
 
 	<distributionManagement>
 		<repository>
