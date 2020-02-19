@@ -130,14 +130,12 @@ public class ItemShortcut implements Listener
 		}
 	}
 
-	private static final boolean DUAL_WIELDING_MC = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9);
-
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onItemFrameInteract(PlayerInteractEntityEvent event)
 	{
 		Player player = event.getPlayer();
 		ItemStack item;
-		if(DUAL_WIELDING_MC)
+		if(MCVersion.isDualWieldingMC())
 		{
 			item = (event.getHand() == EquipmentSlot.HAND) ? player.getInventory().getItemInMainHand() : player.getInventory().getItemInOffHand();
 		}
