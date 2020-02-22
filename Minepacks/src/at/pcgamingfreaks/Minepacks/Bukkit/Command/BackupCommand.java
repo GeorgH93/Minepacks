@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
@@ -74,7 +75,7 @@ public class BackupCommand extends MinepacksCommand
 	@Override
 	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
-		return null;
+		return Utils.getPlayerNamesStartingWith(args[args.length - 1], sender);
 	}
 
 	@Override

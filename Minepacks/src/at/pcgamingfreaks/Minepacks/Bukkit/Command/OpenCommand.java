@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
@@ -109,14 +110,7 @@ public class OpenCommand extends MinepacksCommand
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.OTHERS)))
 		{
-			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
-			List<String> names = new LinkedList<>();
-			for(Player player : Bukkit.getOnlinePlayers())
-			{
-				name = player.getName().toLowerCase(Locale.ROOT);
-				if(!name.equalsIgnoreCase(commandSender.getName()) && name.startsWith(arg)) names.add(name);
-			}
-			return names;
+			return Utils.getPlayerNamesStartingWith(args[args.length - 1], commandSender);
 		}
 		return null;
 	}

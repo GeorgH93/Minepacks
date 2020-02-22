@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
@@ -31,9 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 public class ClearCommand extends MinepacksCommand
 {
@@ -94,14 +93,7 @@ public class ClearCommand extends MinepacksCommand
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.CLEAN_OTHER)))
 		{
-			String name, arg = args[args.length - 1].toLowerCase(Locale.ROOT);
-			List<String> names = new LinkedList<>();
-			for(Player player : Bukkit.getOnlinePlayers())
-			{
-				name = player.getName().toLowerCase(Locale.ROOT);
-				if(!name.equalsIgnoreCase(commandSender.getName()) && name.startsWith(arg)) names.add(name);
-			}
-			return names;
+			return Utils.getPlayerNamesStartingWith(args[args.length - 1], commandSender);
 		}
 		return null;
 	}
