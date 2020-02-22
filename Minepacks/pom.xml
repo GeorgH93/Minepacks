@@ -18,7 +18,8 @@
 
 	<properties>
 		<author>GeorgH93</author>
-		<version>${project.version}</version>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<version>${project.version}-T${timestamp}</version>
 		<dependencies>depend: [ PCGF_PluginLib ]</dependencies>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 	</properties>
