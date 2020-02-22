@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -244,7 +244,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	public @NotNull List<ItemStack> setSize(int newSize)
 	{
 		opened.forEach((key, value) -> key.closeInventory()); // Close all open views of the inventory
-		List<ItemStack> removedItems = new LinkedList<>();
+		List<ItemStack> removedItems = new ArrayList<>();
 		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{

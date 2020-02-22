@@ -124,7 +124,7 @@ public abstract class SQL extends Database
 		try(Connection connection = getConnection())
 		{
 			Map<String, UpdateData> toConvert = new HashMap<>();
-			List<UpdateData> toUpdate = new LinkedList<>();
+			List<UpdateData> toUpdate = new ArrayList<>();
 			try(Statement stmt = connection.createStatement(); ResultSet res = stmt.executeQuery(queryGetUnsetOrInvalidUUIDs))
 			{
 				while(res.next())

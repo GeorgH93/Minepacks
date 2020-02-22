@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 public class HelpCommand extends MinepacksCommand
@@ -49,7 +49,7 @@ public class HelpCommand extends MinepacksCommand
 	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
 		messageHeader.send(sender);
-		Collection<HelpData> help = new LinkedList<>(), temp;
+		Collection<HelpData> help = new ArrayList<>(), temp;
 		for(MinepacksCommand cmd : commands)
 		{
 			temp = cmd.doGetHelp(sender);

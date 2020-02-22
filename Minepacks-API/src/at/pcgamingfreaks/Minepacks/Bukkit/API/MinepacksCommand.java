@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -162,7 +162,7 @@ public abstract class MinepacksCommand extends SubCommand
 	@Override
 	public @Nullable List<HelpData> getHelp(@NotNull CommandSender requester)
 	{
-		List<HelpData> help = new LinkedList<>();
+		List<HelpData> help = new ArrayList<>(1);
 		help.add(new HelpData(getTranslatedName(), null, getDescription()));
 		return help;
 	}

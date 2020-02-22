@@ -29,7 +29,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BackupCommand extends MinepacksCommand
@@ -81,7 +81,7 @@ public class BackupCommand extends MinepacksCommand
 	@Override
 	public List<HelpData> getHelp(final @NotNull CommandSender requester)
 	{
-		List<HelpData> help = new LinkedList<>();
+		List<HelpData> help = new ArrayList<>(1);
 		help.add(new HelpData(getTranslatedName(), helpParam, getDescription()));
 		return help;
 	}

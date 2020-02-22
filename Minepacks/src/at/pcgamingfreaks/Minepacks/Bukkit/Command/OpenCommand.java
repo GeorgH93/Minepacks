@@ -32,7 +32,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -118,7 +118,7 @@ public class OpenCommand extends MinepacksCommand
 	@Override
 	public List<HelpData> getHelp(@NotNull CommandSender requester)
 	{
-		List<HelpData> help = new LinkedList<>();
+		List<HelpData> help = new ArrayList<>(2);
 		help.add(new HelpData(getTranslatedName(), null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));
 		if(requester.hasPermission(Permissions.OTHERS))
 		{

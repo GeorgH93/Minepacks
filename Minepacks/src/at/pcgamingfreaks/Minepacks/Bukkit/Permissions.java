@@ -36,4 +36,7 @@ public class Permissions
 	public static final String BACKUP = BASE + "backup";
 	public static final String RESTORE = BASE + "restore";
 	public static final String VERSION = BASE + "version";
+
+	public static final String INVENTORY_CLEAR = "clearInventory";
+	public static final String INVENTORY_CLEAR_OTHER = "clearInventory.other";
 }

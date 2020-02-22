@@ -179,7 +179,7 @@ public class RestoreCommand extends MinepacksCommand
 		if(args.length == 1)
 		{
 			List<String> backups = ((Minepacks) getMinepacksPlugin()).getDatabase().getBackups();
-			autoComplete = new LinkedList<>();
+			autoComplete = new ArrayList<>();
 			for(String backupId : backups)
 			{
 				if(backupId.toLowerCase(Locale.ROOT).startsWith(arg)) autoComplete.add(backupId);
@@ -191,7 +191,7 @@ public class RestoreCommand extends MinepacksCommand
 		}
 		else if(args.length == 2)
 		{
-			autoComplete = new LinkedList<>();
+			autoComplete = new ArrayList<>();
 			for(Player player : Bukkit.getOnlinePlayers())
 			{
 				if(player.getName().toLowerCase(Locale.ROOT).startsWith(arg)) autoComplete.add(player.getName());
@@ -203,7 +203,7 @@ public class RestoreCommand extends MinepacksCommand
 	@Override
 	public List<HelpData> getHelp(final @NotNull CommandSender requester)
 	{
-		List<HelpData> help = new LinkedList<>();
+		List<HelpData> help = new ArrayList<>();
 		help.add(new HelpData(getTranslatedName() + " " + listCommands[0], null, ((Minepacks) getMinepacksPlugin()).getLanguage().getTranslated("Commands.Description.RestoreList"), MessageClickEvent.ClickEventAction.RUN_COMMAND));
 		help.add(new HelpData(getTranslatedName(), helpParam, getDescription(), MessageClickEvent.ClickEventAction.SUGGEST_COMMAND));
 		return help;
