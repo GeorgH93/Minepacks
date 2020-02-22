@@ -179,6 +179,12 @@ Sound:
   # auto will play the chest sound for minecraft versions older than 1.11 and the shulker-box sound for newer MC versions
   CloseSound: auto
 
+# Settings for the inventory management
+InventoryManagement:
+  ClearCommand:
+    # If enabled the plugin provides an inventory clear command that keeps the backpack item.
+    Enabled: true
+
 Misc:
   # Enables/Disables the auto-update function of the plugin.
   AutoUpdate: true
@@ -186,4 +192,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 24
+Version: 25

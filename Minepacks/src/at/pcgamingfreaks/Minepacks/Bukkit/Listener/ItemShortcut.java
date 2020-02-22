@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -102,6 +103,13 @@ public class ItemShortcut implements Listener
 
 	@EventHandler
 	public void onWorldChange(PlayerChangedWorldEvent event)
+	{
+		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
+		addItem(event.getPlayer());
+	}
+
+	@EventHandler
+	public void onInventoryClear(InventoryClearedEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());

@@ -27,6 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
+import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -72,6 +73,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private WorldBlacklistMode worldBlacklistMode;
 	private ItemsCollector collector;
 	private CommandManager commandManager;
+	private InventoryClearCommand inventoryClearCommand;
 	private Collection<GameMode> gameModes;
 	private CooldownManager cooldownManager = null;
 	private ItemFilter itemFilter = null;
@@ -184,6 +186,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		messageNotANumber      = lang.getMessage("Ingame.NaN");
 
 		commandManager = new CommandManager(this);
+		if(config.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
 
 		//region register events
 		PluginManager pluginManager = getServer().getPluginManager();
@@ -209,6 +212,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private void unload()
 	{
+		if(inventoryClearCommand != null)
+		{
+			inventoryClearCommand.close();
+			inventoryClearCommand = null;
+		}
 		if(collector != null) collector.close();
 		commandManager.close();
 		if(collector != null) collector.cancel();

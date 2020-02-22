@@ -51,6 +51,11 @@ Language:
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Backup has been successful restored."
+    InventoryClear:
+      UnknownPlayer: "&cCould not find player {Name}!"
+      Cleared: "Inventory cleared."
+      ClearedOther: "{DisplayName}'s&r inventory has been cleared."
+      ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -93,10 +98,14 @@ Command:
     - version
   Help:
     - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
 
 # Will be shown in the console during startup
 LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 17
+Version: 18

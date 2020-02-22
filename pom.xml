@@ -6,6 +6,12 @@
 	<version>${revision}</version>
 	<packaging>pom</packaging>
 
+	<properties>
+		<revision>2.3-ALPHA-SNAPSHOT</revision>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
 	<scm>
 		<connection>scm:git:git@github.com:GeorgH93/Minepacks.git</connection>
 		<developerConnection>scm:git:git@github.com:GeorgH93/Minepacks.git</developerConnection>
@@ -31,11 +37,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<properties>
-		<revision>2.2</revision>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
 
 	<repositories>
 		<repository>
@@ -56,6 +57,13 @@
 			<version>1.15.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.10</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -69,6 +77,21 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+			<!-- Resolve lombok -->
+			<plugin>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok-maven-plugin</artifactId>
+				<version>1.18.10.0</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>delombok</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Flatten pom for deployment -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>flatten-maven-plugin</artifactId>

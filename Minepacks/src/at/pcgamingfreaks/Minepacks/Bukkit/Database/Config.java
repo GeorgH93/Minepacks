@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 24, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 25, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -396,6 +396,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public Sound getCloseSound()
 	{
 		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
+	}
+	//endregion
+
+	//region InventoryManagement settings
+	public boolean isInventoryManagementClearCommandEnabled()
+	{
+		return getConfigE().getBoolean("InventoryManagement.ClearCommand.Enabled", true);
 	}
 	//endregion
 	//endregion
