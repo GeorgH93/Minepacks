@@ -14,10 +14,10 @@
 	<name>Minepacks</name>
 	<description>Minepacks is a backpack plugin with different backpack sizes, multi language support and SQLite and MySQL storage support.</description>
 	<url>https://www.spigotmc.org/resources/19286/</url>
-	<inceptionYear>2014</inceptionYear>
 
 	<properties>
 		<author>GeorgH93</author>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<version>${project.version}-T${timestamp}</version>
 		<dependencies>depend: [ PCGF_PluginLib ]</dependencies>
