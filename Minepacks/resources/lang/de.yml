@@ -17,6 +17,8 @@ Language:
     DontRemoveShortcut_SendMethod: "action_bar"
     Clean:
       BackpackCleaned: "Rucksack geleert."
+      BackpackCleanedBy: "Dein Rucksack wurde von {DisplayName}&r geleert"
+      BackpackCleanedOther: "Der Rucksack von {DisplayName}&r wurde geleert."
     Open:
       #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
       Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."

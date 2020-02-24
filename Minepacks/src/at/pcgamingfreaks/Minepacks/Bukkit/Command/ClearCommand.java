@@ -27,6 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,15 +37,17 @@ import java.util.List;
 
 public class ClearCommand extends MinepacksCommand
 {
-	private final Message messageBackpackCleaned;
+	private final Message messageCleared, messageClearedOther, messageClearedBy;
 	private final String helpParam, descriptionCleanOthers;
 
 	public ClearCommand(Minepacks plugin)
 	{
 		super(plugin, "clear", plugin.getLanguage().getTranslated("Commands.Description.Clean"), Permissions.CLEAN, plugin.getLanguage().getCommandAliases("Clean"));
-		messageBackpackCleaned = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleaned");
 		descriptionCleanOthers = plugin.getLanguage().getTranslated("Commands.Description.CleanOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
+		messageCleared = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleaned");
+		messageClearedBy = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedBy").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
+		messageClearedOther = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedOther").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
 	}
 
 	@Override
@@ -67,7 +70,23 @@ public class ClearCommand extends MinepacksCommand
 					if(backpack != null)
 					{
 						backpack.clear();
-						messageBackpackCleaned.send(commandSender);
+						if(commandSender.equals(backpack.getOwner()))
+						{
+							messageCleared.send(commandSender);
+						}
+						else
+						{
+							if(backpack.getOwner().isOnline())
+							{
+								Player owner = backpack.getOwner().getPlayer();
+								messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
+								messageClearedBy.send(owner, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
+							}
+							else
+							{
+								messageClearedOther.send(commandSender, backpack.getOwner().getName(), ChatColor.GRAY + backpack.getOwner().getName());
+							}
+						}
 					}
 					else
 					{

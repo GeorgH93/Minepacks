@@ -22,7 +22,9 @@ Language:
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "You are not allowed to open your backpack in your current game-mode."
     Clean:
-      BackpackCleaned: "Backpack cleaned."
+      BackpackCleaned: "Backpack cleared."
+      BackpackCleanedBy: "Your backpack has been cleared by {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName}'s&r backpack has been cleared."
     Help:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
