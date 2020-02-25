@@ -172,6 +172,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public ShrinkApproach getShrinkApproach()
 	{
+		if(MCVersion.isOlderThan(MCVersion.MC_1_8)) return ShrinkApproach.FAST;
 		String approach = getConfigE().getString("ShrinkApproach", "SORT");
 		try
 		{
