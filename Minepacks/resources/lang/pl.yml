@@ -1,0 +1,95 @@
+Language:
+  NotFromConsole: "&cPolecenia nie można używać z konsoli."
+  Ingame:
+    NoPermission: "&cNie masz na to pozwolenia."
+    WorldDisabled: "&cKorzystanie z plecaka jest zabronione na tym świecie."
+    NaN: "[\"\",{\"text\":\"Podana wartość nie jest liczbą\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Plecak zamknięty!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} plecak zamknięty!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Nieprawidłowy plecak."
+    NotAllowedInBackpack: "&c{ItemName}nie jest dozwolone w plecaku."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cYou must not remove the backpack shortcut from your inventory!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\"Proszę czekać\",\"color\":\"dark_green\"},{\"text\":\" aż do ponownego otwarcia plecaka.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "W bieżącym trybie gry nie wolno otwierać plecaka."
+    Clean:
+      BackpackCleaned: "Plecak wyczyszczony."
+    Help:
+      Header: "&6### Paczka poleceń ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Ponowne ładowanie..."
+      Reloaded: "&1Załadowano ponownie!"
+    Update:
+      CheckingForUpdates: "&1Checking for updates ..."
+      Updated: "[\"\",{\"text\":\"Wtyczka zaktualizowana, zostanie załadowana przy następnym restarcie / przeładowaniu\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Brak aktualizacji wtyczki.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Podczas wyszukiwania aktualizacji wystąpił problem! Sprawdź konsolę!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Dostępna jest aktualizacja! Proszę wejść na \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" aby go pobrać!\"}]"
+    Backup:
+      Created: "Utworzono kopię zapasową plecaka."
+      NoBackpack: "Gracz nie ma plecaka lub jego plecak jest pusty."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Kopie zapasowe\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"wyświetlana strona {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Poprzednia <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Wyświetlana strona {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Następna >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "Nie znaleziono kopii zapasowej pasującej{BackupIdentifier} "
+      NoUserToRestoreToFound: "Brak prawidłowego użytkownika do przywrócenia kopii zapasowej do znalezionej."
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Kopia zapasowa została pomyślnie przywrócona."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Otwiera plecak."
+      Clean: "Czyści plecak."
+      CleanOthers: "Czyści plecak innych graczy."
+      OpenOthers: "Otwiera plecak innych graczy."
+      Reload: "Ponownie ładuje konfigurację wtyczki."
+      Update: "Sprawdza dostępność nowych aktualizacji wtyczek."
+      Version: "Wyświetla szczegóły wersji wtyczki i jej zależności."
+      Backup: "Tworzy kopię zapasową plecaka gracza."
+      Restore: "Przywraca kopię zapasową."
+      RestoreList: "Wyświetla wszystkie dostępne kopie zapasowe."
+      Help: "Pokazuje wszystkie dostępne polecenia i ich opis."
+      Migrate: "Migruje używaną bazę danych z jednego typu na inny."
+
+Command:
+  Backpack:
+    - plecak
+    - pk
+  Open:
+    - "otwórz"
+  Clean:
+    - "wyczyść"
+  Reload:
+    - reload
+    - restart
+  Update:
+    - aktualizacja
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - wersja
+  Help:
+    - pomoc
+
+# Will be shown in the console during startup
+LanguageName: "Polish"
+Author: "Lisheya"
