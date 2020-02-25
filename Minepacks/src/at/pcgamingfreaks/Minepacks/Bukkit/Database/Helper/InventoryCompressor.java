@@ -30,7 +30,7 @@ public class InventoryCompressor
 	@Getter private ItemStack[] targetStacks, inputStacks;
 	private int filled = 0;
 	private ItemStack lastStack = null;
-	private List<ItemStack> toMuch;
+	@Getter private List<ItemStack> toMuch;
 
 	public InventoryCompressor(ItemStack[] stacks)
 	{
@@ -137,5 +137,22 @@ public class InventoryCompressor
 				stack.setAmount(stack.getAmount() - move);
 			}
 		}
+	}
+
+	public List<ItemStack> fast()
+	{
+		for(ItemStack stack : inputStacks)
+		{
+			if(stack == null || stack.getType() == Material.AIR || stack.getAmount() < 1) continue;
+			if(filled == targetStacks.length)
+			{
+				toMuch.add(stack);
+			}
+			else
+			{
+				targetStacks[filled++] = stack;
+			}
+		}
+		return toMuch;
 	}
 }

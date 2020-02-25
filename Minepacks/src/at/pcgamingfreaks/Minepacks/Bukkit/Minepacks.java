@@ -178,6 +178,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		lang.load(config);
 		database = Database.getDatabase(this);
 		maxSize = config.getBackpackMaxSize();
+		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(config.getShrinkApproach());
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.getBPTitle(), config.getBPTitleOther());
 		messageNotFromConsole  = lang.getMessage("NotFromConsole");
 		messageNoPermission    = lang.getMessage("Ingame.NoPermission");

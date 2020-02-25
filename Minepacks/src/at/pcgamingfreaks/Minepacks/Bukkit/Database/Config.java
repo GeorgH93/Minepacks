@@ -24,6 +24,7 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
@@ -167,6 +168,20 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			logger.info("Starting with MC 1.14 backpacks with more than 6 rows will no longer be possible. A feature to allow bigger backpacks through multiple pages is currently in development.");
 		}
 		return Math.max(1, size);
+	}
+
+	public ShrinkApproach getShrinkApproach()
+	{
+		String approach = getConfigE().getString("ShrinkApproach", "SORT");
+		try
+		{
+			return ShrinkApproach.valueOf(approach.toUpperCase(Locale.ENGLISH));
+		}
+		catch(IllegalArgumentException ignored)
+		{
+			logger.warning("Unknown ShrinkApproach \"" + approach + "\"!");
+			return ShrinkApproach.SORT;
+		}
 	}
 
 	public boolean getAutoUpdate()

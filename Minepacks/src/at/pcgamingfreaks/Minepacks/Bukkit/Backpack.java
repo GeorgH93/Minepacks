@@ -31,6 +31,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import lombok.AccessLevel;
+import lombok.Setter;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private final static Method METHOD_GET_INVENTORY = NMSReflection.getOBCMethod("inventory.CraftInventory", "getInventory");
 	private final static Method METHOD_CRAFT_CHAT_MESSAGE_FROM_STRING = MCVersion.isAny(MCVersion.MC_1_13) ? NMSReflection.getOBCMethod("util.CraftChatMessage", "wrapOrNull", String.class) : null;
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
+	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;
 	private static String titleOtherFormat, titleOther;
 	private final OfflinePlayer owner;
@@ -244,24 +248,24 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	public @NotNull List<ItemStack> setSize(int newSize)
 	{
 		opened.forEach((key, value) -> key.closeInventory()); // Close all open views of the inventory
-		List<ItemStack> removedItems = new ArrayList<>();
+		List<ItemStack> removedItems;
 		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{
-			int count = 0;
-			itemStackArray = new ItemStack[newSize];
-			for(ItemStack i : bp.getContents())
+			InventoryCompressor compressor = new InventoryCompressor(bp.getContents());
+			switch(shrinkApproach)
 			{
-				if(i != null)
-				{
-					if(count < newSize) itemStackArray[count++] = i;
-					else removedItems.add(i);
-				}
+				case FAST: compressor.fast(); break;
+				case COMPRESS: compressor.compress(); break;
+				case SORT: compressor.sort(); break;
 			}
+			itemStackArray = compressor.getTargetStacks();
+			removedItems = compressor.getToMuch();
 		}
 		else
 		{
 			itemStackArray = bp.getContents();
+			removedItems = new ArrayList<>(0);
 		}
 		bp = Bukkit.createInventory(bp.getHolder(), newSize, titleOther);
 		for(int i = 0; i < itemStackArray.length; i++)
