@@ -44,7 +44,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 
 public class ItemShortcut implements Listener
@@ -178,8 +177,8 @@ public class ItemShortcut implements Listener
 						final ItemStack stack = event.getCursor();
 						if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
 						{
-							Map<Integer, ItemStack> full = backpack.getInventory().addItem(stack);
-							stack.setAmount((full.isEmpty()) ? 0 : full.get(0).getAmount());
+							ItemStack full = backpack.addItem(stack);
+							stack.setAmount((full == null) ? 0 : full.getAmount());
 							event.setCancelled(true);
 						}
 						else

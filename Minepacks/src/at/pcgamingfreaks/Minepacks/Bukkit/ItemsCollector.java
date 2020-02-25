@@ -28,8 +28,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemsCollector extends BukkitRunnable
 {
@@ -69,7 +69,7 @@ public class ItemsCollector extends BukkitRunnable
 						if(!item.isDead() && item.getPickupDelay() <= 0)
 						{
 							if(itemFilter != null && itemFilter.isItemBlocked(item.getItemStack())) continue;
-							HashMap<Integer, ItemStack> full = backpack.getInventory().addItem(item.getItemStack());
+							Map<Integer, ItemStack> full = backpack.addItems(item.getItemStack());
 							backpack.setChanged();
 							if(!full.isEmpty())
 							{
