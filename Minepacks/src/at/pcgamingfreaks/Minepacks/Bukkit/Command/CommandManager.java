@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Command.CommandExecutorWithSubCommandsGeneric;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.RegisterablePluginCommand;
 import at.pcgamingfreaks.Command.HelpData;
@@ -72,6 +73,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		// Init backpack commands
 		defaultSubCommand = new OpenCommand(plugin);
 		registerSubCommand(defaultSubCommand);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8)) registerSubCommand(new SortCommand(plugin));
 		registerSubCommand(new ClearCommand(plugin));
 		registerSubCommand(new ReloadCommand(plugin));
 		registerSubCommand(new UpdateCommand(plugin));

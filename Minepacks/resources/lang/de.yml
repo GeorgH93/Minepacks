@@ -24,6 +24,8 @@ Language:
       Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Gamemode nicht öffnen."
+    Sort:
+      Sorted: "Dein Rucksack wurde sortiert."
     Help:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
@@ -62,6 +64,7 @@ Language:
     PlayerNameVariable: "player_name"
     Description:
       Backpack: "Öffnet deinen Rucksack."
+      Sort: "Sortiert deinen Rucksack"
       Clean: "Leert deinen Rucksack."
       CleanOthers: "Leert den Rucksack eines anderen Spielers."
       OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
@@ -82,6 +85,9 @@ Command:
   Open:
     - open
     - öffnen
+  Sort:
+    - sort
+    - sortieren
   Clean:
     - clean
     - clear

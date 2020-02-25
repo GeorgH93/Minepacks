@@ -21,6 +21,7 @@ public class Permissions
 {
 	public static final String BASE = "backpack.";
 	public static final String USE = BASE + "use";
+	public static final String SORT = BASE + "sort";
 	public static final String CLEAN = BASE + "clean";
 	public static final String CLEAN_OTHER = BASE + "clean.other";
 	public static final String FULL_PICKUP = BASE + "fullpickup";

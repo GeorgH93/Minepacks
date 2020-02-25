@@ -120,7 +120,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		{ // Try to optimize space usage to compress items into only 6 rows
 			InventoryCompressor compressor = new InventoryCompressor(backpack, 54);
 			final List<ItemStack> toMuch = compressor.compress();
-			backpack = compressor.getTargetStack();
+			backpack = compressor.getTargetStacks();
 			if(!toMuch.isEmpty())
 			{
 				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");

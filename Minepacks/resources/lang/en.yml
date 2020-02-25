@@ -25,6 +25,8 @@ Language:
       BackpackCleaned: "Backpack cleared."
       BackpackCleanedBy: "Your backpack has been cleared by {DisplayName}&r."
       BackpackCleanedOther: "{DisplayName}'s&r backpack has been cleared."
+    Sort:
+      Sorted: "Backpack sorted."
     Help:
       Header: "&6### Minepacks Commands ###"
       Footer: "&6#############################"
@@ -63,6 +65,7 @@ Language:
     PlayerNameVariable: "player_name"
     Description:
       Backpack: "Opens your backpack."
+      Sort: "Sorts your backpack."
       Clean: "Cleans your backpack."
       CleanOthers: "Cleans the backpack of another players."
       OpenOthers: "Shows the backpack of another player."
@@ -81,6 +84,8 @@ Command:
     - bp
   Open:
     - open
+  Sort:
+    - sort
   Clean:
     - clean
     - clear
