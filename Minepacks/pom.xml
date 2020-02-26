@@ -20,7 +20,8 @@
 		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<version>${project.version}-T${timestamp}</version>
-		<dependencies>depend: [ PCGF_PluginLib ]</dependencies>
+		<dependencies>PCGF_PluginLib</dependencies>
+		<soft-dependencies/>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 	</properties>
 
@@ -43,10 +44,17 @@
 			<artifactId>BadRabbit-Bukkit</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<!-- Tests -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.6.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
-		<defaultGoal>clean package</defaultGoal>
+		<defaultGoal>clean package test</defaultGoal>
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test/src</testSourceDirectory>
 		<resources>
@@ -65,6 +73,10 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M4</version>
+			</plugin>
 			<!-- Bundle the API into the JAR -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -218,7 +230,8 @@
 			</activation>
 			<properties>
 				<version>${project.version}-Release</version>
-				<dependencies>softdepend: [ PCGF_PluginLib ]</dependencies>
+				<dependencies/>
+				<soft-dependencies>PCGF_PluginLib</soft-dependencies>
 				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
 			</properties>
 			<dependencies>

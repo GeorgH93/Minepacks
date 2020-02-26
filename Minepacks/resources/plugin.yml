@@ -5,7 +5,8 @@ main: "${mainClass}"
 description: "${project.description}"
 version: "${version}"
 api-version: "1.13"
-${dependencies}
+depend: [${dependencies}]
+softdepend: [${soft-dependencies}]
 
 permissions:
   backpack.*:
@@ -32,12 +33,14 @@ permissions:
       backpack.use: true
       backpack.size.1: true
       backpack.clean: true
+      backpack.sort: true
   backpack.userBig:
     description: This permission can be used to give a user the biggest backpack size and allow him to use the backpack.
     children:
       backpack.use: true
       backpack.size.6: true
       backpack.clean: true
+      backpack.sort: true
   backpack.bypass:
     children:
       backpack.ignoreGameMode: true
@@ -72,11 +75,14 @@ permissions:
   backpack.size.6:
     description: 6*9 backpack
     default: false
+  backpack.sort:
+    description: Allows the player to sort their own backpack.
+    default: false
   backpack.clean:
     description: Allows the player to clean their own backpack.
     default: false
   backpack.fullpickup:
-    desctiption: Allows the player to automatically pick up items when their inventory is full (function needs to be enabled in the config)
+    description: Allows the player to automatically pick up items when their inventory is full (function needs to be enabled in the config)
     defaut: true
   backpack.clean.other:
     description: Allows the player to clean other players backpacks.
@@ -121,3 +127,11 @@ permissions:
   backpack.version:
     description: Allows to print the version details of the plugin and it's dependencies.
     default: op
+  clearInventory:
+    description: Allows the player to clear their own inventory.
+    default: op
+  clearInventory.other:
+    description: Allows the player to clear the inventory of other players.
+    default: op
+    children:
+      clearInventory: true
