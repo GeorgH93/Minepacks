@@ -172,6 +172,8 @@ ItemShortcut:
   # Heads can be found here: https://minecraft-heads.com/custom-heads/
   # The correct value is the one listed on the head page under Other/Value
   HeadTextureValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
+  # Increases compatibility with some death chest plugins. Enable this if the backpack item is added to your death chest!
+  ImproveDeathChestCompatibility: false
 
 Sound:
   # Enables all sound effects
@@ -198,4 +200,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 25
+Version: 26

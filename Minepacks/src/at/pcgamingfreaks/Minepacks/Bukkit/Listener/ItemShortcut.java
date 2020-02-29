@@ -52,12 +52,14 @@ public class ItemShortcut implements Listener
 	private final Minepacks plugin;
 	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
+	private boolean improveDeathChestCompatibility;
 
 	public ItemShortcut(Minepacks plugin)
 	{
 		this.plugin = plugin;
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
+		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 	}
 
@@ -245,6 +247,7 @@ public class ItemShortcut implements Listener
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
+		//region prevent drop
 		Iterator<ItemStack> itemStackIterator = event.getDrops().iterator();
 		while(itemStackIterator.hasNext())
 		{
@@ -252,6 +255,18 @@ public class ItemShortcut implements Listener
 			{
 				itemStackIterator.remove();
 				break;
+			}
+		}
+		//endregion
+		if(improveDeathChestCompatibility)
+		{ // improveDeathChestCompatibility
+			for(ItemStack itemStack : event.getEntity().getInventory())
+			{
+				if(isItemShortcut(itemStack))
+				{
+					itemStack.setAmount(0);
+					itemStack.setType(Material.AIR);
+				}
 			}
 		}
 	}

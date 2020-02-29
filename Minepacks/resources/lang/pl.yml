@@ -1,3 +1,5 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
   NotFromConsole: "&cPolecenia nie można używać z konsoli."
   Ingame:
@@ -93,3 +95,6 @@ Command:
 # Will be shown in the console during startup
 LanguageName: "Polish"
 Author: "Lisheya"
+
+# Language file version. Don't touch it!
+Version: 17
