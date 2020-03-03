@@ -181,6 +181,7 @@ public class ItemShortcut implements Listener
 						{
 							ItemStack full = backpack.addItem(stack);
 							stack.setAmount((full == null) ? 0 : full.getAmount());
+							event.setCursor(full);
 							event.setCancelled(true);
 						}
 						else
