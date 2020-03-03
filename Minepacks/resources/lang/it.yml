@@ -1,0 +1,118 @@
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
+Language:
+  NotFromConsole: "&cComando non utilizzabile dalla console."
+  Ingame:
+    NoPermission: "&cPermesso negato."
+    WorldDisabled: "&cL'uso dei backpack non è autorizzato in questo mondo."
+    NaN: "[\"\",{\"text\":\"Il valore inserito non è un numero!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Backpack chiuso!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "Backpack di {OwnerName} chiuso!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Backpack invalido."
+    NotAllowedInBackpack: "&c{ItemName} non può essere inserito nel backpack."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cNon puoi rimuovere il backpack dalla hotbar o inventario!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} secondi per riaprire il backpack, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Perfavore aspettaret \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondi\"}},{\"text\":\" per riaprire il backpack.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Non puoi aprire il backpack in questa game-mode."
+    Clean:
+      BackpackCleaned: "Backpack svuotato."
+      BackpackCleanedBy: "Il tuo backpack è stato svuotato da {DisplayName}&r."
+      BackpackCleanedOther: "Il backpack di {DisplayName}&r è stato svuotato."
+    Sort:
+      Sorted: "Backpack organizzato."
+    Help:
+      Header: "&6###  Comandi Minepacks  ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Ricaricando Minepacks ..."
+      Reloaded: "&1Minepacks ricaricati!"
+    Update:
+      CheckingForUpdates: "&1Cercando aggiornamenti ..."
+      Updated: "[\"\",{\"text\":\"Plugin aggiornato, sarà caricato al prossimo riavvio/reload.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Nessun aggiornamento disponibile.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"C'è stato un problema per trovare gli aggiornamenti! Perfavore controllare la console!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"C'è un aggiornamento disponibile! Perfavore usa \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" per scaricarlo!\"}]"
+    Backup:
+      Created: "Backup del backpack eseguito con successo."
+      NoBackpack: "Il giocatore non ha un backpack o è vuoto."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backup\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"pagina {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Precedente <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Pagina {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Prossimo >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Utente: {BackupPlayerName} ({BackupPlayerUUID})\\nData di creazione: {BackupDate}\"}}]"
+      NoValidBackup: "Nessun backup per {BackupIdentifier} trovato"
+      NoUserToRestoreToFound: "Nessun utente valido per il backup trovato"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Il backup è stato ripristinato con successo."
+    InventoryClear:
+      UnknownPlayer: "&cImpossibile trovare l'utente {Name}!"
+      Cleared: "Inventario ripulito."
+      ClearedOther: "L'inventario di {DisplayName}&r è stato ripulito."
+      ClearedOtherTarget: "Il tuo inventario è stato ripulito da {DisplayName}&r."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Apre il tuo backpack."
+      Sort: "Organizza il tuo backpack."
+      Clean: "Ripulisce il tuo backpack."
+      CleanOthers: "Ripulisce il backpack di un altro utente."
+      OpenOthers: "Mostra il backpack di un altro utente."
+      Reload: "Reicarica il plugin."
+      Update: "Controlla per nuovi aggiornamenti."
+      Version: "Mostra la versione del plugin e le sue relative dipendenze."
+      Backup: "Crea un backup del backpack dell'utente."
+      Restore: "Ripristina un backup."
+      RestoreList: "Mostra tutti i backup disponibili."
+      Help: "Mostra tutti i comandi disponibili e le loro descrizioni."
+      Migrate: "Migra il database da un utente all'altro."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+
+# Will be shown in the console during startup
+LanguageName: "italiano"
+Author: "Mastory_Md5"
+
+# Language file version. Don't touch it!
+Version: 18
