@@ -174,6 +174,8 @@ ItemShortcut:
   HeadTextureValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
   # Increases compatibility with some death chest plugins. Enable this if the backpack item is added to your death chest!
   ImproveDeathChestCompatibility: false
+  # Prevents the backpack from being used as a hat
+  BlockAsHat: false
 
 Sound:
   # Enables all sound effects
@@ -200,4 +202,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 26
+Version: 27

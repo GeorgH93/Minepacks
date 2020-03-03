@@ -34,10 +34,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +49,7 @@ public class ItemShortcut implements Listener
 	private final Minepacks plugin;
 	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
-	private boolean improveDeathChestCompatibility;
+	private final boolean improveDeathChestCompatibility, blockAsHat;
 
 	public ItemShortcut(Minepacks plugin)
 	{
@@ -60,6 +57,7 @@ public class ItemShortcut implements Listener
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
+		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 	}
 
@@ -210,10 +208,17 @@ public class ItemShortcut implements Listener
 					messageDoNotRemoveItem.send(player);
 				}
 			}
-			else if(isItemShortcut(event.getCursor()) && !player.getInventory().equals(event.getClickedInventory()))
+			else if(isItemShortcut(event.getCursor()))
 			{
-				event.setCancelled(true);
-				messageDoNotRemoveItem.send(player);
+				if(!player.getInventory().equals(event.getClickedInventory()))
+				{
+					event.setCancelled(true);
+					messageDoNotRemoveItem.send(player);
+				}
+				else if(event.getSlotType() == InventoryType.SlotType.ARMOR && blockAsHat)
+				{
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

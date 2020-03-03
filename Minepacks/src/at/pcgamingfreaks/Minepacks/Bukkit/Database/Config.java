@@ -38,7 +38,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 26, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 27, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -388,6 +388,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public boolean isItemShortcutImproveDeathChestCompatibilityEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.ImproveDeathChestCompatibility", false);
+	}
+
+	public boolean isItemShortcutBlockAsHatEnabled()
+	{
+		return getConfigE().getBoolean("ItemShortcut.BlockAsHat", false);
 	}
 	//endregion
 
