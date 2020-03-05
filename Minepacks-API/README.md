@@ -16,8 +16,8 @@ This branch holds the API for the Minepacks plugin.
 
 [![ciImg]][ci] [![apiVersionImg]][apiJavaDoc] [![licenseImg]][license]
 
-## Adding it to your plugin
-### Maven
+## Adding it to your plugin:
+### Maven:
 The API is available through maven.
 #### Repository:
 ```
@@ -56,6 +56,6 @@ public MinepacksPlugin getMinepacks() {
 ```
 You can now use the returned `MinepacksPlugin` object to interact with the Minepacks plugin.
 
-## Links
+## Links:
 * [JavaDoc][apiJavaDoc]
 * [API Build Server][apiBuilds]

@@ -105,14 +105,14 @@ For more details about the API please check the following links:
 
 [Source Code & Details][api] ⚫ [JavaDoc][apiJavaDoc] ⚫ [Build Server][apiBuilds]
 
-## Support
+## Support:
 * [Wiki][wiki]
 * [Issue tracker][issues]
   * [new feature request][requestFeature]
   * [new bug report][reportBug]
 * [Faq][wikiFAQ]
 
-## Links
+## Links:
 * [Spigot][spigot]
 * [Dev Bukkit][bukkit]
 * [Build Server - Release Builds ![ciImg]][ci]
