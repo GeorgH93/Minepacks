@@ -38,7 +38,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 27, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 28, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -393,6 +393,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public boolean isItemShortcutBlockAsHatEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.BlockAsHat", false);
+	}
+
+	public boolean isRightClickOnContainerAllowed()
+	{
+		return getConfigE().getBoolean("ItemShortcut.OpenContainerOnRightClick", false) && MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13);
 	}
 	//endregion
 

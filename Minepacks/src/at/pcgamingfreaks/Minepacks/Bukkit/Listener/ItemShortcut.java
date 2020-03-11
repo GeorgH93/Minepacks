@@ -40,7 +40,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.UUID;
 
 public class ItemShortcut implements Listener
@@ -49,7 +51,8 @@ public class ItemShortcut implements Listener
 	private final Minepacks plugin;
 	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
-	private final boolean improveDeathChestCompatibility, blockAsHat;
+	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
+	private final Set<Material> containerMaterials = new HashSet<>();
 
 	public ItemShortcut(Minepacks plugin)
 	{
@@ -58,7 +61,21 @@ public class ItemShortcut implements Listener
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
+		allowRightClickOnContainers = plugin.getConfiguration().isRightClickOnContainerAllowed();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
+		if(allowRightClickOnContainers)
+		{
+			containerMaterials.add(Material.CHEST);
+			containerMaterials.add(Material.TRAPPED_CHEST);
+			containerMaterials.add(Material.ENDER_CHEST);
+			containerMaterials.add(Material.CRAFTING_TABLE);
+			containerMaterials.add(Material.FURNACE);
+			containerMaterials.add(Material.BLAST_FURNACE);
+			containerMaterials.add(Material.DISPENSER);
+			containerMaterials.add(Material.DROPPER);
+			containerMaterials.add(Material.HOPPER);
+			if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11)) containerMaterials.addAll(DisableShulkerboxes.SHULKER_BOX_MATERIALS);
+		}
 	}
 
 	private boolean isItemShortcut(@Nullable ItemStack stack)
@@ -122,6 +139,11 @@ public class ItemShortcut implements Listener
 		if ((event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) return;
 		if(isItemShortcut(event.getItem()))
 		{
+			if(allowRightClickOnContainers && event.getAction() == Action.RIGHT_CLICK_BLOCK)
+			{
+				//noinspection ConstantConditions
+				if(containerMaterials.contains(event.getClickedBlock().getType())) return;
+			}
 			event.getPlayer().performCommand("backpack open");
 			event.setCancelled(true);
 		}

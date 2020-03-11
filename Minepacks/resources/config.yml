@@ -176,6 +176,8 @@ ItemShortcut:
   ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat
   BlockAsHat: false
+  # Opens a container if right clicked while holding the backpack shortcut in the hand. This option will only work on MC 1.13 or newer.
+  OpenContainerOnRightClick: false
 
 Sound:
   # Enables all sound effects
@@ -202,4 +204,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 27
+Version: 28
