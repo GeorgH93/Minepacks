@@ -395,9 +395,14 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getBoolean("ItemShortcut.BlockAsHat", false);
 	}
 
-	public boolean isRightClickOnContainerAllowed()
+	public boolean isItemShortcutRightClickOnContainerAllowed()
 	{
 		return getConfigE().getBoolean("ItemShortcut.OpenContainerOnRightClick", false) && MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13);
+	}
+
+	public int getItemShortcutPreferredSlotId()
+	{
+		return getConfigE().getInt("ItemShortcut.PreferredSlotId", -1);
 	}
 	//endregion
 

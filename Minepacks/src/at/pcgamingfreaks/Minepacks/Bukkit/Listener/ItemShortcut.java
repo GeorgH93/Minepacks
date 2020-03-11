@@ -52,6 +52,7 @@ public class ItemShortcut implements Listener
 	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
+	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
 
 	public ItemShortcut(Minepacks plugin)
@@ -61,8 +62,10 @@ public class ItemShortcut implements Listener
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
-		allowRightClickOnContainers = plugin.getConfiguration().isRightClickOnContainerAllowed();
+		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
+		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
+
 		if(allowRightClickOnContainers)
 		{
 			containerMaterials.add(Material.CHEST);
@@ -98,7 +101,19 @@ public class ItemShortcut implements Listener
 					break;
 				}
 			}
-			if(!item && empty) player.getInventory().addItem(HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
+			if(!item && empty)
+			{
+				if(preferredSlotId >= 0 && preferredSlotId < 36)
+				{
+					ItemStack stack = player.getInventory().getItem(preferredSlotId);
+					if(stack == null || stack.getType() == Material.AIR)
+					{
+						player.getInventory().setItem(preferredSlotId, HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
+						return;
+					}
+				}
+				player.getInventory().addItem(HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
+			}
 		}
 	}
 

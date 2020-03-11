@@ -178,6 +178,8 @@ ItemShortcut:
   BlockAsHat: false
   # Opens a container if right clicked while holding the backpack shortcut in the hand. This option will only work on MC 1.13 or newer.
   OpenContainerOnRightClick: false
+  # The id of the slot that should be preferred when giving a player the shortcut item
+  PreferredSlotId: -1
 
 Sound:
   # Enables all sound effects
