@@ -252,7 +252,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		ItemStack[] itemStackArray;
 		if(bp.getSize() > newSize)
 		{
-			InventoryCompressor compressor = new InventoryCompressor(bp.getContents());
+			InventoryCompressor compressor = new InventoryCompressor(bp.getContents(), newSize);
 			switch(shrinkApproach)
 			{
 				case FAST: compressor.fast(); break;
