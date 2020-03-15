@@ -33,6 +33,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
@@ -188,6 +189,16 @@ public class ItemShortcut implements Listener
 			item = player.getItemInHand();
 		}
 		if(isItemShortcut(item))
+		{
+			event.getPlayer().performCommand("backpack open");
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event)
+	{
+		if(isItemShortcut(event.getItemInHand()))
 		{
 			event.getPlayer().performCommand("backpack open");
 			event.setCancelled(true);
