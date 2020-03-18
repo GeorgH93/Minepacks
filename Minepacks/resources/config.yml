@@ -57,7 +57,7 @@ FullInventory:
 
 # Database settings
 Database:
-  # Database type. MySQL, SQLite or Files
+  # Database type. MySQL, SQLite, Files (data is stored in files, one file per user) or Shared (use shared connection pool from PCGF PluginLib)
   Type: SQLite
   # Auto database cleanup settings
   AutoCleanup:
