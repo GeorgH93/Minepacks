@@ -85,7 +85,7 @@ public class ItemShortcut implements Listener
 	private boolean isItemShortcut(@Nullable ItemStack stack)
 	{
 		//noinspection ConstantConditions
-		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && stack.getItemMeta().getDisplayName().equals(itemName);
+		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && itemName.equals(stack.getItemMeta().getDisplayName());
 	}
 
 	private void addItem(Player player)
