@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -35,13 +34,11 @@ public class ItemConfigItem extends ItemConfig
 {
 	private static final Producer PRODUCER = MCVersion.isOlderThan(MCVersion.MC_1_14) ? new ProducerLegacy() : new ProducerModelId();
 	protected final @NotNull Material material;
-	protected final int value;
 
 	public ItemConfigItem(final @NotNull Material material, final @NotNull String displayName, final int value, final @Nullable List<String> lore)
 	{
-		super(displayName, lore);
+		super(displayName, lore, value);
 		this.material = material;
-		this.value = value;
 	}
 
 	@Override
@@ -61,7 +58,7 @@ public class ItemConfigItem extends ItemConfig
 		@Override
 		public ItemStack make(final @NotNull ItemConfigItem itemConfig, final int amount)
 		{
-			ItemStack stack = new ItemStack(itemConfig.material, amount, (short) itemConfig.value);
+			ItemStack stack = new ItemStack(itemConfig.material, amount, (short) itemConfig.model);
 			ItemMeta meta = stack.getItemMeta();
 			assert meta != null;
 			meta.setDisplayName(itemConfig.displayName);
@@ -81,7 +78,7 @@ public class ItemConfigItem extends ItemConfig
 			ItemMeta meta = stack.getItemMeta();
 			assert meta != null;
 			meta.setDisplayName(itemConfig.displayName);
-			meta.setCustomModelData(itemConfig.value);
+			meta.setCustomModelData(itemConfig.model);
 			if(itemConfig.lore != null) meta.setLore(itemConfig.lore);
 			stack.setItemMeta(meta);
 			return stack;

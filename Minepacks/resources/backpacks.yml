@@ -7,15 +7,16 @@ Items:
     # The texture value for the head.
     # Heads can be found here: https://minecraft-heads.com/custom-heads/
     # The correct value is the one listed on the head page under Other/Value
-    Model: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
+    # Only relevant for MC 1.14 and newer. Will set the custom_model_data so that you can overwrite the head with your own model if your players are using your texture pack
+    Model: 57045
     DisplayName: "&eBackpack"
     Lore:
       - "Right click to open your backpack."
       - "Drag items on it to place them in your backpack."
   Minepacks:
     Material: shulker_shell
-    # Will set the damage value and unbreakable
-      on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
+    # Will set the damage value and unbreakable on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
     Model: 10
     DisplayName: "&eBackpack"
     Lore:

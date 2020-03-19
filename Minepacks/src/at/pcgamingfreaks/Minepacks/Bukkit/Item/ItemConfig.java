@@ -33,6 +33,7 @@ public abstract class ItemConfig
 {
 	protected final @NotNull String displayName;
 	protected final @Nullable List<String> lore;
+	protected final int model;
 
 	public abstract ItemStack make(final int amount);
 

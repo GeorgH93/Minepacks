@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 
 import at.pcgamingfreaks.Bukkit.HeadUtils;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -35,9 +36,9 @@ public class ItemConfigHead extends ItemConfig
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
 	@Getter protected final String value;
 
-	public ItemConfigHead(final @NotNull String displayName, final @NotNull String value, final @Nullable List<String> lore)
+	public ItemConfigHead(final @NotNull String displayName, final @NotNull String value, final int model, final @Nullable List<String> lore)
 	{
-		super(displayName, lore);
+		super(displayName, lore, MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) ? model : -1);
 		this.value = value;
 	}
 
@@ -49,6 +50,7 @@ public class ItemConfigHead extends ItemConfig
 		{
 			ItemMeta meta = stack.getItemMeta();
 			meta.setLore(lore);
+			if(model >= 0) meta.setCustomModelData(model);
 			stack.setItemMeta(meta);
 		}
 		return stack;

@@ -60,13 +60,14 @@ public class BackpacksConfig extends Configuration
 			}
 			final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
 			final String material = getYamlE().getString(key + ".Material", "player_head");
+			final int model = getYamlE().getInt(key + ".Model", 1);
 			if(material.equalsIgnoreCase("player_head"))
 			{
-				itemConfigs.put(key, new ItemConfigHead(displayName, getConfigE().getString(key + ".Model", ""), loreFinal));
+				itemConfigs.put(key, new ItemConfigHead(displayName, getConfigE().getString(key + ".HeadValue", ""), model, loreFinal));
 			}
 			else
 			{
-				itemConfigs.put(key, new ItemConfigItem(getMaterialFromString(material), displayName, getYamlE().getInt(key + ".Model", 1), loreFinal));
+				itemConfigs.put(key, new ItemConfigItem(getMaterialFromString(material), displayName, model, loreFinal));
 			}
 		});
 	}
