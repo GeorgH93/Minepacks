@@ -199,7 +199,18 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			pluginManager.registerEvents(itemFilter, this);
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
-		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
+		if(config.isItemShortcutEnabled())
+		{
+			try
+			{
+				pluginManager.registerEvents(new ItemShortcut(this), this);
+			}
+			catch(IllegalArgumentException ignored) {}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();

@@ -17,16 +17,16 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
-import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.Item.BackpacksConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,22 +50,27 @@ public class ItemShortcut implements Listener
 {
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
 	private final Minepacks plugin;
-	private final String itemName, value;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
+	private final ItemConfig itemConfig;
 
 	public ItemShortcut(Minepacks plugin)
 	{
 		this.plugin = plugin;
-		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
-		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
 		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
+
+		itemConfig = new BackpacksConfig(plugin).getItemConfig("Items." + plugin.getConfiguration().getItemShortcutItemName());
+		if(itemConfig == null)
+		{
+			plugin.getLogger().severe("Item '" + plugin.getConfiguration().getItemShortcutItemName() + "' is not defined in the backpacks.yml file! Item shortcut will be disabled!");
+			throw new IllegalArgumentException("The item is not defined.");
+		}
 
 		if(allowRightClickOnContainers)
 		{
@@ -85,7 +90,7 @@ public class ItemShortcut implements Listener
 	private boolean isItemShortcut(@Nullable ItemStack stack)
 	{
 		//noinspection ConstantConditions
-		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && itemName.equals(stack.getItemMeta().getDisplayName());
+		return stack != null && stack.getType() == itemConfig.getMaterial() && stack.hasItemMeta() && itemConfig.getDisplayName().equals(stack.getItemMeta().getDisplayName());
 	}
 
 	private void addItem(Player player)
@@ -109,11 +114,11 @@ public class ItemShortcut implements Listener
 					ItemStack stack = player.getInventory().getItem(preferredSlotId);
 					if(stack == null || stack.getType() == Material.AIR)
 					{
-						player.getInventory().setItem(preferredSlotId, HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
+						player.getInventory().setItem(preferredSlotId, itemConfig.make(1));
 						return;
 					}
 				}
-				player.getInventory().addItem(HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
+				player.getInventory().addItem(itemConfig.make(1));
 			}
 		}
 	}
