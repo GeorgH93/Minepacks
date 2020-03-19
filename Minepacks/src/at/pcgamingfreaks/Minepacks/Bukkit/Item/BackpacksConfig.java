@@ -50,24 +50,30 @@ public class BackpacksConfig extends Configuration
 	{
 		getYamlE().getKeysFiltered("Items\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
-			final List<String> lore = getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
-			final List<String> loreFinal;
-			if(lore.size() == 0) loreFinal = null;
-			else
-			{
-				loreFinal = new ArrayList<>(lore.size());
-				lore.forEach(loreEntry -> loreFinal.add(ChatColor.translateAlternateColorCodes('&', loreEntry)));
+			try{
+				final List<String> lore = getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
+				final List<String> loreFinal;
+				if(lore.size() == 0) loreFinal = null;
+				else
+				{
+					loreFinal = new ArrayList<>(lore.size());
+					lore.forEach(loreEntry -> loreFinal.add(ChatColor.translateAlternateColorCodes('&', loreEntry)));
+				}
+				final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
+				final String material = getYamlE().getString(key + ".Material", "player_head");
+				final int model = getYamlE().getInt(key + ".Model", 1);
+				if(material.equalsIgnoreCase("player_head"))
+				{
+					itemConfigs.put(key, new ItemConfigHead(displayName, getConfigE().getString(key + ".HeadValue", ""), model, loreFinal));
+				}
+				else
+				{
+					itemConfigs.put(key, new ItemConfigItem(getMaterialFromString(material), displayName, model, loreFinal));
+				}
 			}
-			final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
-			final String material = getYamlE().getString(key + ".Material", "player_head");
-			final int model = getYamlE().getInt(key + ".Model", 1);
-			if(material.equalsIgnoreCase("player_head"))
+			catch(Exception e)
 			{
-				itemConfigs.put(key, new ItemConfigHead(displayName, getConfigE().getString(key + ".HeadValue", ""), model, loreFinal));
-			}
-			else
-			{
-				itemConfigs.put(key, new ItemConfigItem(getMaterialFromString(material), displayName, model, loreFinal));
+				plugin.getLogger().warning("Failed to load item definition for '" + key + "'! Error: " + e.getMessage());
 			}
 		});
 	}
@@ -78,6 +84,7 @@ public class BackpacksConfig extends Configuration
 		Material mat = Material.getMaterial(name);
 		if(mat == null && MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) mat = Material.getMaterial(name, true);
 		//TODO from id
+		if(mat == null) throw new IllegalArgumentException("Unable to find material: " + name);
 		return mat;
 	}
 

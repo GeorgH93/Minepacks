@@ -14,16 +14,9 @@ Items:
     Lore:
       - "Right click to open your backpack."
       - "Drag items on it to place them in your backpack."
-  Minepacks:
-    Material: shulker_shell
-    # Will set the damage value and unbreakable on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
-    Model: 10
-    DisplayName: "&eBackpack"
-    Lore:
-      - "Right click to open your backpack."
-      - "Drag items on it to place them in your backpack."
   MinepacksLegacy:
     Material: CARROT_STICK
+    # Will set the damage value and unbreakable on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
     Model: 1
     DisplayName: "&eBackpack"
     Lore:
