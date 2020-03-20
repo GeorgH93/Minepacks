@@ -59,6 +59,8 @@ Language:
       Cleared: "Inventar gelöscht."
       ClearedOther: "Das Inventar von {DisplayName}&r wurde gelöscht."
       ClearedOtherTarget: "Dein Inventar wurde von {DisplayName}&r gelöscht."
+    Shortcut:
+      Given: "Du hast das Rucksack Item erhalten."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -76,6 +78,7 @@ Language:
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
       Help: "Zeigt die verfügbaren Befehle an."
       Migrate: "Erlaubt das Konvertieren der Datenbank in ein anderes Format."
+      Shortcut: "Fügt den Rucksack in dein Inventar hinzu."
 
 Command:
   Backpack:
@@ -110,6 +113,8 @@ Command:
   Help:
     - help
     - hilfe
+  Shortcut:
+    - shortcut
   InventoryClear:
     - clear
     - inventoryclear

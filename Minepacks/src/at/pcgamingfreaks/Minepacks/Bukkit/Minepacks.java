@@ -28,6 +28,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -203,7 +204,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			try
 			{
-				pluginManager.registerEvents(new ItemShortcut(this), this);
+				ItemShortcut itemShortcut = new ItemShortcut(this);
+				pluginManager.registerEvents(itemShortcut, this);
+				commandManager.registerSubCommand(new ShortcutCommand(this, itemShortcut));
 			}
 			catch(IllegalArgumentException ignored) {}
 			catch(Exception e)

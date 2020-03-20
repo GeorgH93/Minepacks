@@ -39,6 +39,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -93,7 +94,7 @@ public class ItemShortcut implements Listener
 		return stack != null && stack.getType() == itemConfig.getMaterial() && stack.hasItemMeta() && itemConfig.getDisplayName().equals(stack.getItemMeta().getDisplayName());
 	}
 
-	private void addItem(Player player)
+	public void addItem(final @NotNull Player player)
 	{
 		if(player.hasPermission(Permissions.USE))
 		{
