@@ -39,17 +39,16 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.UUID;
 
 public class ItemShortcut implements Listener
 {
-	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
 	private final Minepacks plugin;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
@@ -90,25 +89,27 @@ public class ItemShortcut implements Listener
 
 	private boolean isItemShortcut(@Nullable ItemStack stack)
 	{
-		//noinspection ConstantConditions
-		return stack != null && stack.getType() == itemConfig.getMaterial() && stack.hasItemMeta() && itemConfig.getDisplayName().equals(stack.getItemMeta().getDisplayName());
+		if(stack == null || !stack.hasItemMeta()) return false;
+		ItemMeta meta = stack.getItemMeta();
+		if(meta == null) return false;
+		//TODO check item metadata
+		return stack.getType() == itemConfig.getMaterial() && itemConfig.getDisplayName().equals(meta.getDisplayName());
 	}
 
 	public void addItem(final @NotNull Player player)
 	{
 		if(player.hasPermission(Permissions.USE))
 		{
-			boolean empty = false, item = false;
+			boolean empty = false; // Stores if there is an empty inventory slot available
 			for(ItemStack itemStack : player.getInventory())
 			{
-				if(itemStack == null || itemStack.getType() == Material.AIR) empty = true;
+				if(itemStack == null || itemStack.getType() == Material.AIR) empty = true; // Empty inventory slot found
 				else if(isItemShortcut(itemStack))
-				{
-					item = true;
-					break;
+				{ //TODO update item
+					return;
 				}
 			}
-			if(!item && empty)
+			if(empty) // There is an empty inventory slot available that the item can be added to
 			{
 				if(preferredSlotId >= 0 && preferredSlotId < 36)
 				{
@@ -227,18 +228,34 @@ public class ItemShortcut implements Listener
 					Backpack backpack = plugin.getBackpackCachedOnly(player);
 					if(backpack != null)
 					{
-						//TODO right click should place only one
 						final ItemStack stack = event.getCursor();
-						if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
+						if(stack != null && stack.getAmount() > 0)
 						{
-							ItemStack full = backpack.addItem(stack);
-							stack.setAmount((full == null) ? 0 : full.getAmount());
-							event.setCursor(full);
-							event.setCancelled(true);
-						}
-						else
-						{
-							plugin.getItemFilter().messageNotAllowedInBackpack.send(player, plugin.getItemFilter().itemNameResolver.getName(stack));
+							if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
+							{
+								if(event.getClick() == ClickType.RIGHT)
+								{ // right click should place only one
+									ItemStack place = stack.clone();
+									place.setAmount(1);
+									ItemStack full = backpack.addItem(stack);
+									if(full == null)
+									{
+										stack.setAmount(stack.getAmount() - 1);
+										event.setCursor(stack);
+									}
+								}
+								else
+								{
+									ItemStack full = backpack.addItem(stack);
+									stack.setAmount((full == null) ? 0 : full.getAmount());
+									event.setCursor(stack);
+								}
+								event.setCancelled(true);
+							}
+							else
+							{
+								plugin.getItemFilter().messageNotAllowedInBackpack.send(player, plugin.getItemFilter().itemNameResolver.getName(stack));
+							}
 						}
 					}
 				}

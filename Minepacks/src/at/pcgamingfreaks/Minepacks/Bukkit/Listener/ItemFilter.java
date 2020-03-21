@@ -33,6 +33,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,6 +89,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	}
 
 	@Override
+	@Contract("null->false")
 	public boolean isItemBlocked(final @Nullable ItemStack item)
 	{
 		if(item == null) return false;
