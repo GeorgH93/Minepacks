@@ -50,6 +50,7 @@ import java.util.Set;
 public class ItemShortcut implements Listener
 {
 	private final Minepacks plugin;
+	private final String openCommand;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
 	private final int preferredSlotId;
@@ -63,6 +64,7 @@ public class ItemShortcut implements Listener
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
 		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
+		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
 		itemConfig = new BackpacksConfig(plugin).getItemConfig("Items." + plugin.getConfiguration().getItemShortcutItemName());
@@ -167,7 +169,7 @@ public class ItemShortcut implements Listener
 				//noinspection ConstantConditions
 				if(containerMaterials.contains(event.getClickedBlock().getType())) return;
 			}
-			event.getPlayer().performCommand("backpack open");
+			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
 		}
 	}
@@ -177,7 +179,7 @@ public class ItemShortcut implements Listener
 	{
 		if(isItemShortcut(event.getPlayerItem()))
 		{
-			event.getPlayer().performCommand("backpack open");
+			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
 		}
 	}
@@ -197,7 +199,7 @@ public class ItemShortcut implements Listener
 		}
 		if(isItemShortcut(item))
 		{
-			event.getPlayer().performCommand("backpack open");
+			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
 		}
 	}
@@ -207,7 +209,7 @@ public class ItemShortcut implements Listener
 	{
 		if(isItemShortcut(event.getItemInHand()))
 		{
-			event.getPlayer().performCommand("backpack open");
+			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
 		}
 	}
@@ -261,7 +263,7 @@ public class ItemShortcut implements Listener
 				}
 				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
 				{
-					player.performCommand("backpack open");
+					player.performCommand(openCommand);
 					event.setCancelled(true);
 				}
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)

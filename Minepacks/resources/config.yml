@@ -72,10 +72,10 @@ Database:
   UUID_Type: auto
   # Settings only for MySQL
   SQL:
-    Host: localhost:3306
-    Database: minecraft
-    User: minecraft
-    Password: minecraft
+    Host: "localhost:3306"
+    Database: "minecraft"
+    User: "minecraft"
+    Password: "minecraft"
     # The max amount of connections to the database the connection pool will open
     MaxConnections: 2
     # Sets the max lifetime of the connection in seconds. -1 = Default (30min)

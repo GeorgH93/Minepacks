@@ -23,7 +23,7 @@ import at.pcgamingfreaks.YamlFileManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
@@ -43,7 +43,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	{
 		if(oldLang.getVersion() < 10) // Pre v2.0 versions
 		{
-			OldFileUpdater.updateLanguage(oldLang.getYaml(), getYaml(), plugin.getLogger());
+			OldFileUpdater.updateLanguage(oldLang.getYamlE(), getYaml(), plugin.getLogger());
 		}
 		else
 		{
@@ -58,7 +58,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 
 	public String[] getCommandAliases(final String command, final @NotNull String... defaults)
 	{
-		List<String> aliases = getLang().getStringList("Command." + command, new LinkedList<>());
+		List<String> aliases = getLangE().getStringList("Command." + command, new ArrayList<>(0));
 		return (aliases.size() > 0) ? aliases.toArray(new String[0]) : defaults;
 	}
 }
