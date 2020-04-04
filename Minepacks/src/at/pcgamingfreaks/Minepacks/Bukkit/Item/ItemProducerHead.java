@@ -18,47 +18,41 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 
 import at.pcgamingfreaks.Bukkit.HeadUtils;
-import at.pcgamingfreaks.Bukkit.MCVersion;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import lombok.Getter;
-
-import java.util.List;
 import java.util.UUID;
 
-public class ItemConfigHead extends ItemConfig
+public class ItemProducerHead implements IItemProducer
 {
+	public static final ItemProducerHead INSTANCE = new ItemProducerHead();
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
-	@Getter protected final String value;
 
-	public ItemConfigHead(final @NotNull String displayName, final @NotNull String value, final int model, final @Nullable List<String> lore)
-	{
-		super(displayName, lore, MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) ? model : -1);
-		this.value = value;
-	}
+	private ItemProducerHead()
+	{}
 
 	@Override
-	public ItemStack make(final int amount)
-	{
-		ItemStack stack = HeadUtils.fromBase64(value, displayName, MINEPACKS_UUID);
-		if(lore != null)
+	public @NotNull ItemStack make(@NotNull ItemConfig config, int amount)
+	{ //TODO add size parameter
+		ItemStack stack = HeadUtils.fromBase64(config.getValue(), config.getDisplayName(), MINEPACKS_UUID);
+		ItemMeta meta = stack.getItemMeta();
+		if(meta != null)
 		{
-			ItemMeta meta = stack.getItemMeta();
-			meta.setLore(lore);
-			if(model >= 0) meta.setCustomModelData(model);
-			stack.setItemMeta(meta);
+			boolean metaSet = false;
+			if(config.getLore() != null && !config.getLore().isEmpty())
+			{
+				meta.setLore(config.getLore());
+				metaSet = true;
+			}
+			if(config.getModel() >= 0)
+			{
+				meta.setCustomModelData(config.getModel());
+				metaSet = true;
+			}
+			if(metaSet) stack.setItemMeta(meta);
 		}
 		return stack;
-	}
-
-	@Override
-	public Material getMaterial()
-	{
-		return HeadUtils.HEAD_MATERIAL;
 	}
 }

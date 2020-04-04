@@ -15,14 +15,13 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.Item;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
-import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,30 +61,13 @@ public class BackpacksConfig extends Configuration
 				final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
 				final String material = getYamlE().getString(key + ".Material");
 				final int model = getYamlE().getInt(key + ".Model");
-				if(material.equalsIgnoreCase("player_head"))
-				{
-					itemConfigs.put(key, new ItemConfigHead(displayName, getConfigE().getString(key + ".HeadValue"), model, loreFinal));
-				}
-				else
-				{
-					itemConfigs.put(key, new ItemConfigItem(getMaterialFromString(material), displayName, model, loreFinal));
-				}
+				itemConfigs.put(key, new ItemConfig(material, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
 			}
 			catch(Exception e)
 			{
 				plugin.getLogger().warning("Failed to load item definition for '" + key + "'! Error: " + e.getMessage());
 			}
 		});
-	}
-
-	private Material getMaterialFromString(String name)
-	{
-		name = name.toUpperCase(Locale.ENGLISH);
-		Material mat = Material.getMaterial(name);
-		if(mat == null && MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) mat = Material.getMaterial(name, true);
-		//TODO from id
-		if(mat == null) throw new IllegalArgumentException("Unable to find material: " + name);
-		return mat;
 	}
 
 	public @Nullable ItemConfig getItemConfig(final @NotNull String name)
