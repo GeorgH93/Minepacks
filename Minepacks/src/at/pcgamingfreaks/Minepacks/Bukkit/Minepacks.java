@@ -123,6 +123,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			this.setEnabled(false);
 			return;
 		}
+		if(MCVersion.isAny(MCVersion.MC_1_7))
+		{
+			getLogger().warning(ConsoleColor.RED + "Some features of the plugin might not be available or work correct on Minecraft 1.7!" + ConsoleColor.RESET);
+		}
 		//endregion
 
 		//region check if a plugin folder exists (was renamed from MinePacks to Minepacks with the V2.0 update)
