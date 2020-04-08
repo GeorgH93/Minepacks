@@ -46,7 +46,7 @@ public final class ItemConfig
 		{
 			this.material = HeadUtils.HEAD_MATERIAL;
 			model = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) ? model : -1;
-			producer = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) ?  ItemProducerHead.INSTANCE : ItemProducerLegacy.INSTANCE;
+			producer = (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && value != null) ?  ItemProducerHead.INSTANCE : ItemProducerLegacy.INSTANCE;
 		}
 		else
 		{

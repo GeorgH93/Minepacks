@@ -35,8 +35,9 @@ public class ItemProducerHead implements IItemProducer
 
 	@Override
 	public @NotNull ItemStack make(@NotNull ItemConfig config, int amount)
-	{ //TODO add size parameter
-		ItemStack stack = HeadUtils.fromBase64(config.getValue(), config.getDisplayName(), MINEPACKS_UUID);
+	{
+		//noinspection ConstantConditions
+		ItemStack stack = HeadUtils.fromBase64(config.getValue(), config.getDisplayName(), MINEPACKS_UUID, amount);
 		ItemMeta meta = stack.getItemMeta();
 		if(meta != null)
 		{
