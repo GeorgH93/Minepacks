@@ -2,6 +2,7 @@
 Items:
   # Example item that uses a player head
   BackpackHeadBlue:
+    Enabled: true
     # Use player_head if it should be a head with a custom texture. Do not use the id or the head item name of your minecraft version!
     Material: player_head
     # The texture value for the head.
@@ -15,6 +16,7 @@ Items:
       - "Right click to open your backpack."
       - "Drag items on it to place them in your backpack."
   MinepacksLegacy:
+    Enabled: true
     Material: CARROT_STICK
     # Will set the damage value and unbreakable on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
     Model: 1

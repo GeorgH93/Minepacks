@@ -33,11 +33,13 @@ public final class ItemProducerLegacy implements IItemProducer
 	{
 		ItemStack stack = new ItemStack(config.getMaterial(), amount, (short) config.getModel());
 		ItemMeta meta = stack.getItemMeta();
-		assert meta != null;
-		meta.setDisplayName(config.getDisplayName());
-		meta.setUnbreakable(true);
-		if(config.getLore() != null) meta.setLore(config.getLore());
-		stack.setItemMeta(meta);
+		if(meta != null)
+		{
+			meta.setDisplayName(config.getDisplayName());
+			meta.setUnbreakable(true);
+			if(config.getLore() != null) meta.setLore(config.getLore());
+			stack.setItemMeta(meta);
+		}
 		return stack;
 	}
 }

@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.YamlFileManager;
 
@@ -26,7 +27,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BackpacksConfig extends Configuration
 {
@@ -40,6 +44,17 @@ public class BackpacksConfig extends Configuration
 	}
 
 	@Override
+	protected boolean newConfigCreated()
+	{
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14))
+		{
+			getConfigE().set("Items.MinepacksLegacy.Enabled", false);
+			return true;
+		}
+		return super.newConfigCreated();
+	}
+
+	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
 		doUpgrade(oldConfig, new HashMap<>(), getYamlE().getKeysFiltered("Items\\..*"));
@@ -49,7 +64,9 @@ public class BackpacksConfig extends Configuration
 	{
 		getYamlE().getKeysFiltered("Items\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
-			try{
+			try
+			{
+				if(!getConfigE().getBoolean(key + "Enabled", true)) return;
 				final List<String> lore = getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
 				final List<String> loreFinal;
 				if(lore.size() == 0) loreFinal = null;
