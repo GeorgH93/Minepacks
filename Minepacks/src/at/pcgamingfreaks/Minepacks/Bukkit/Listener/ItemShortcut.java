@@ -22,7 +22,6 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -67,7 +66,7 @@ public class ItemShortcut implements Listener
 		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
-		itemConfig = new BackpacksConfig(plugin).getItemConfig("Items." + plugin.getConfiguration().getItemShortcutItemName());
+		itemConfig = plugin.getBackpacksConfig().getItemConfig("Items." + plugin.getConfiguration().getItemShortcutItemName());
 		if(itemConfig == null)
 		{
 			plugin.getLogger().severe("Item '" + plugin.getConfiguration().getItemShortcutItemName() + "' is not defined in the backpacks.yml file! Item shortcut will be disabled!");

@@ -29,6 +29,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -52,6 +53,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import lombok.Getter;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Locale;
@@ -64,6 +67,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private static Minepacks instance = null;
 
 	private Config config;
+	@Getter private BackpacksConfig backpacksConfig;
 	private Language lang;
 	private Database database;
 
@@ -142,6 +146,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		//endregion
 		instance = this;
 		config = new Config(this);
+		backpacksConfig = new BackpacksConfig(this);
 		lang = new Language(this);
 		load();
 
@@ -251,6 +256,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		unload();
 		config.reload();
+		backpacksConfig.reload();
 		load();
 	}
 
