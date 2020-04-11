@@ -127,21 +127,21 @@ public class ItemShortcut implements Listener
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(PlayerChangedWorldEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClear(InventoryClearedEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
