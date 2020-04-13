@@ -22,5 +22,23 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IItemProducer
 {
+	/**
+	 * Produces the item according to the item config. But with a different amount.
+	 *
+	 * @param config The config that defines the item.
+	 * @return The produced item stack.
+	 */
+	default @NotNull ItemStack make(final @NotNull ItemConfig config)
+	{
+		return make(config, config.getAmount());
+	}
+
+	/**
+	 * Produces the item according to the item config. But with a different amount.
+	 *
+	 * @param config The config that defines the item.
+	 * @param amount How many items should be produced.
+	 * @return The produced item stack.
+	 */
 	@NotNull ItemStack make(final @NotNull ItemConfig config, final int amount);
 }

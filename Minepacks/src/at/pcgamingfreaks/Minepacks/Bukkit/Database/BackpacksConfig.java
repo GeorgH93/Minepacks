@@ -78,7 +78,8 @@ public class BackpacksConfig extends Configuration
 				final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
 				final String material = getYamlE().getString(key + ".Material");
 				final int model = getYamlE().getInt(key + ".Model");
-				itemConfigs.put(key, new ItemConfig(material, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
+				final int amount = getYamlE().getInt(key + ".Amount", 1);
+				itemConfigs.put(key, new ItemConfig(key.substring("Items.".length()), material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
 			}
 			catch(Exception e)
 			{

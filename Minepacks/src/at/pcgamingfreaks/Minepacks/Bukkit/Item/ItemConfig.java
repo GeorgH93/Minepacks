@@ -33,15 +33,19 @@ import java.util.Locale;
 @Getter
 public final class ItemConfig
 {
+	private final @Nullable String name;
 	private final @NotNull Material material;
 	private final @NotNull String displayName;
 	private final @Nullable List<String> lore;
-	private final int model;
+	private final int amount, model;
 	private final @Nullable String value;
 	private final @NotNull IItemProducer producer;
 
-	public ItemConfig(final @NotNull String material, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
+	public ItemConfig(final @Nullable String name, final @NotNull String material, final int amount, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
 	{
+		assert model < 0;
+		this.name = name;
+		this.amount = amount;
 		if(material.equalsIgnoreCase("player_head"))
 		{
 			this.material = HeadUtils.HEAD_MATERIAL;
@@ -58,6 +62,8 @@ public final class ItemConfig
 		this.model = model;
 		this.value = value;
 	}
+
+	public @NotNull ItemStack make() { return producer.make(this); }
 
 	public @NotNull ItemStack make(final int amount)
 	{
