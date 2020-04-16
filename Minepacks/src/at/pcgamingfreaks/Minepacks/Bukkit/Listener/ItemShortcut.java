@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -282,7 +283,7 @@ public class ItemShortcut implements Listener
 			}
 			else if(isItemShortcut(event.getCursor()))
 			{
-				if(!player.getInventory().equals(event.getClickedInventory()))
+				if(!player.getInventory().equals(Utils.getClickedInventory(event)))
 				{
 					event.setCancelled(true);
 					messageDoNotRemoveItem.send(player);
