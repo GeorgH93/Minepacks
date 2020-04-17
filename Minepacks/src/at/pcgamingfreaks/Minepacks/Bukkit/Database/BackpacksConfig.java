@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BackpacksConfig extends Configuration
 {
@@ -40,7 +41,7 @@ public class BackpacksConfig extends Configuration
 	public BackpacksConfig(final @NotNull JavaPlugin plugin)
 	{
 		super(plugin, CONFIG_VERSION, CONFIG_VERSION, "backpacks.yml");
-		loadItemConfigs();
+		loadItemConfigs("Items");
 	}
 
 	@Override
@@ -60,9 +61,9 @@ public class BackpacksConfig extends Configuration
 		doUpgrade(oldConfig, new HashMap<>(), getYamlE().getKeysFiltered("Items\\..*"));
 	}
 
-	private void loadItemConfigs()
+	private void loadItemConfigs(final @NotNull String parentKey)
 	{
-		getYamlE().getKeysFiltered("Items\\.[^.]*\\.Material").forEach(materialKey -> {
+		getYamlE().getKeysFiltered(parentKey + "\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
 			try
 			{
@@ -79,7 +80,7 @@ public class BackpacksConfig extends Configuration
 				final String material = getYamlE().getString(key + ".Material");
 				final int model = getYamlE().getInt(key + ".Model");
 				final int amount = getYamlE().getInt(key + ".Amount", 1);
-				itemConfigs.put(key, new ItemConfig(key.substring("Items.".length()), material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
+				itemConfigs.put(key, new ItemConfig(key.substring(parentKey.length() + 1), material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
 			}
 			catch(Exception e)
 			{
@@ -91,5 +92,10 @@ public class BackpacksConfig extends Configuration
 	public @Nullable ItemConfig getItemConfig(final @NotNull String name)
 	{
 		return itemConfigs.get(name);
+	}
+
+	public @NotNull List<ItemConfig> getBackpackItems()
+	{
+		return itemConfigs.entrySet().stream().filter(entry -> entry.getKey().startsWith("Items.")).map(Map.Entry::getValue).collect(Collectors.toList());
 	}
 }

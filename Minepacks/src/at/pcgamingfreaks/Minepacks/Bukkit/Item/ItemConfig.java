@@ -33,7 +33,7 @@ import java.util.Locale;
 @Getter
 public final class ItemConfig
 {
-	private final @Nullable String name;
+	private final @NotNull String name;
 	private final @NotNull Material material;
 	private final @NotNull String displayName;
 	private final @Nullable List<String> lore;
@@ -41,7 +41,7 @@ public final class ItemConfig
 	private final @Nullable String value;
 	private final @NotNull IItemProducer producer;
 
-	public ItemConfig(final @Nullable String name, final @NotNull String material, final int amount, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
+	public ItemConfig(final @NotNull String name, final @NotNull String material, final int amount, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
 	{
 		assert model < 0;
 		this.name = name;
