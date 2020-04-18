@@ -20,10 +20,10 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,17 +31,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class BackpacksConfig extends Configuration
 {
 	private static final int CONFIG_VERSION = 1;
-	private Map<String, ItemConfig> itemConfigs = new HashMap<>();
+	private static final Pattern ITEM_TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{(?<placeholder>[\\w-.]+)}");
 
-	public BackpacksConfig(final @NotNull JavaPlugin plugin)
+	private final @NotNull Minepacks plugin;
+	private final Map<String, ItemConfig> itemConfigs = new HashMap<>();
+
+	public BackpacksConfig(final @NotNull Minepacks plugin)
 	{
 		super(plugin, CONFIG_VERSION, CONFIG_VERSION, "backpacks.yml");
-		loadItemConfigs("Items");
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -61,6 +66,12 @@ public class BackpacksConfig extends Configuration
 		doUpgrade(oldConfig, new HashMap<>(), getYamlE().getKeysFiltered("Items\\..*"));
 	}
 
+	public void loadData()
+	{
+		itemConfigs.clear();
+		loadItemConfigs("Items");
+	}
+
 	private void loadItemConfigs(final @NotNull String parentKey)
 	{
 		getYamlE().getKeysFiltered(parentKey + "\\.[^.]*\\.Material").forEach(materialKey -> {
@@ -74,11 +85,11 @@ public class BackpacksConfig extends Configuration
 				else
 				{
 					loreFinal = new ArrayList<>(lore.size());
-					lore.forEach(loreEntry -> loreFinal.add(ChatColor.translateAlternateColorCodes('&', loreEntry)));
+					lore.forEach(loreEntry -> loreFinal.add(translateItemData(loreEntry)));
 				}
-				final String displayName = ChatColor.translateAlternateColorCodes('&', getConfigE().getString(key + ".DisplayName", "&eBackpack"));
+				final String displayName = translateItemData(getConfigE().getString(key + ".DisplayName", "&kBackpack"));
 				final String material = getYamlE().getString(key + ".Material");
-				final int model = getYamlE().getInt(key + ".Model");
+				final int model = getYamlE().getInt(key + ".Model", 0);
 				final int amount = getYamlE().getInt(key + ".Amount", 1);
 				itemConfigs.put(key, new ItemConfig(key.substring(parentKey.length() + 1), material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
 			}
@@ -87,6 +98,25 @@ public class BackpacksConfig extends Configuration
 				plugin.getLogger().warning("Failed to load item definition for '" + key + "'! Error: " + e.getMessage());
 			}
 		});
+	}
+
+	private @NotNull String translateItemData(@NotNull String text)
+	{
+		text = ChatColor.translateAlternateColorCodes('&', text);
+		Matcher matcher = ITEM_TEXT_PLACEHOLDER_PATTERN.matcher(text);
+		StringBuffer buffer = new StringBuffer();
+		while(matcher.find())
+		{
+			String replaced = matcher.group(0);
+			final String key = "Items." + matcher.group("placeholder");
+			if(plugin.getLanguage().getLangE().isSet("Language." + key))
+			{
+				replaced = plugin.getLanguage().getTranslated(key);
+			}
+			matcher.appendReplacement(buffer, replaced);
+		}
+		matcher.appendTail(buffer);
+		return buffer.toString();
 	}
 
 	public @Nullable ItemConfig getItemConfig(final @NotNull String name)

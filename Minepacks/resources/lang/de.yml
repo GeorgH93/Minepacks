@@ -61,6 +61,18 @@ Language:
       ClearedOtherTarget: "Dein Inventar wurde von {DisplayName}&r gelöscht."
     Shortcut:
       Given: "Du hast das Rucksack Item erhalten."
+      Set: "Shortcut style set."
+      UnknownShortcutStyle: "[\"\",{\"text\":\"Unknown shortcut style: {ShortcutStyle}\",\"color\":\"red\"}]"
+      GUI:
+        # No Json!!!
+        Title: "&bSelect your backpack design"
+
+  # No Json!!!
+  Items:
+    NameBackpack: "Rucksack"
+    DescriptionOpen: "Rechtsklick zum öffnen."
+    DescriptionDragAndDrop: "Ziehe Items auf den Rucksack um sie hinein zu legen."
+
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"

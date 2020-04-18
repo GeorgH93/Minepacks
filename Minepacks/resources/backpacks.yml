@@ -11,19 +11,19 @@ Items:
     HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
     # Only relevant for MC 1.14 and newer. Will set the custom_model_data so that you can overwrite the head with your own model if your players are using your texture pack
     Model: 57045
-    DisplayName: "&eBackpack"
+    DisplayName: "&e{NameBackpack}"
     Lore:
-      - "Right click to open your backpack."
-      - "Drag items on it to place them in your backpack."
+      - "{DescriptionOpen}"
+      - "{DescriptionDragAndDrop}"
   MinepacksLegacy:
     Enabled: true
     Material: CARROT_STICK
     # Will set the damage value and unbreakable on MC versions older than 1.14 or the custom_model_data for MC 1.14 and newer
     Model: 1
-    DisplayName: "&eBackpack"
+    DisplayName: "&e{NameBackpack}"
     Lore:
-      - "Right click to open your backpack."
-      - "Drag items on it to place them in your backpack."
+      - "{DescriptionOpen}"
+      - "{DescriptionDragAndDrop}"
 
 
 # Config file version. Don't touch it!

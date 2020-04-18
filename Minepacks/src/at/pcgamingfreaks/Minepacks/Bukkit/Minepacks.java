@@ -186,6 +186,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private void load()
 	{
 		lang.load(config);
+		backpacksConfig.loadData();
 		database = Database.getDatabase(this);
 		maxSize = config.getBackpackMaxSize();
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(config.getShrinkApproach());

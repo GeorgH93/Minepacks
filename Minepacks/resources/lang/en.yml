@@ -62,6 +62,18 @@ Language:
       ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
     Shortcut:
       Given: "The backpack shortcut item has been added to your inventory."
+      Set: "Shortcut style set."
+      UnknownShortcutStyle: "[\"\",{\"text\":\"Unknown shortcut style: {ShortcutStyle}\",\"color\":\"red\"}]"
+      GUI:
+        # No Json!!!
+        Title: "&bSelect your backpack design"
+
+  # No Json!!!
+  Items:
+    NameBackpack: "Backpack"
+    DescriptionOpen: "Right click to open your backpack."
+    DescriptionDragAndDrop: "Drag items on it to place them in your backpack."
+
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
