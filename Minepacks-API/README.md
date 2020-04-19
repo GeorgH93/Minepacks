@@ -43,9 +43,10 @@ cd Minepacks
 mvn -pl Minepacks-API
 ```
 
+## Usage:
 ### Get access to the API:
 ```java
-public MinepacksPlugin getMinepacks() {
+public static MinepacksPlugin getMinepacks() {
     Plugin bukkitPlugin = Bukkit.getPluginManager().getPlugin("Minepacks");
     if(!(bukkitPlugin instanceof MinepacksPlugin)) {
     	// Do something if Minepacks is not available
@@ -55,6 +56,16 @@ public MinepacksPlugin getMinepacks() {
 }
 ```
 You can now use the returned `MinepacksPlugin` object to interact with the Minepacks plugin.
+
+### Access a players backpack inventory:
+```java
+public static Inventory getPlayerBackpackInventory(Player player) {
+    Backpack bp = getMinepacks().getBackpackCachedOnly(player);
+    if(bp == null) return null; //Backpack not loaded (retry later)
+    return bp.getInventory();
+}
+```
+This will return null if the backpack is not loaded or the inventory of the backpack if the backpack is already loaded.
 
 ## Links:
 * [JavaDoc][apiJavaDoc]
