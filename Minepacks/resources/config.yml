@@ -2,7 +2,7 @@
 
 # Language Settings
 Language:
-  # Defines the used language and the corresponding file used. The corresponding language file will be placed in the lang folder next to the config.yml named: <Language>.yml
+  # Defines the used language, and the corresponding file used. The corresponding language file will be placed in the lang folder next to the config.yml named: <Language>.yml
   Language: en
   # Options:
   #     Overwrite (deletes all changes from the file and extracts a new language file)
@@ -36,11 +36,11 @@ Cooldown:
   # Defines how long a player have to wait till he can reopen his backpack.
   # Time is in seconds. Values < 1 disable the cooldown.
   Command: -1
-  # If enabled, cooldowns will be synced between servers (BungeeCord network). It will also allow to keep cooldown through server restarts.
+  # If enabled, cooldowns will be synced between servers (BungeeCord network). It will also allow keeping the cooldown through server restarts.
   # You should only use it with long cooldown times.
   Sync: false
   AddOnJoin: true
-  # You can turn this on when using sync to reduce the memory consumption a little bit
+  # You can turn this on when using sync to reduce the memory consumption a little
   ClearOnLeave: false
   # Removes old cooldowns from the cache to free memory. Time in seconds.
   CleanupInterval: 600
@@ -87,11 +87,11 @@ Database:
     Properties: []
   # Tables settings for shared tables when using MySQL - Advanced MySQL Settings
   # Use these settings only if you know what you are doing!!!!
-  # Do only change this settings if you know what you are doing and have some basic MySQL knowledge!!!
+  # Do only change these settings if you know what you are doing and have some basic MySQL knowledge!!!
   # Changing settings down here after you have used this plugin may result in data inconsistency!!!
   Tables:
     # Table names
-    # Don't change the players table if you have backpacks stored in your database already! Player id's might wont match anymore resulting data inconsistency.
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might won't match anymore resulting data inconsistency.
     User: backpack_players
     Backpack: backpacks
     Cooldown: backpack_cooldowns
@@ -111,32 +111,32 @@ Database:
       Cooldown:
         Player_ID: id
         Time: time
-  # Settings controlling the cache behavior of the plugin. You may can optimize it a little bit depending on your player count, ram or cpu bottlenecks.
+  # Settings controlling the cache behavior of the plugin. You may optimize it a little depending on your player count, ram or cpu bottlenecks.
   Cache:
     UnCache:
       # The strategie used to uncache offline players. Options
       #     interval (offline players get uncached every x seconds)
-      #     intervalChecked (like interval, but also ensures that the player is already offline for at least the interval time, add's a cpu overhead)
+      #     intervalChecked (like interval, but also ensures that the player is already offline for at least the interval time, adds a cpu overhead)
       #     ondisconnect (player instantly gets uncached as soon as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstable connections)
       #     ondisconnectdelayed (player gets uncached x seconds after he went offline, adds overhead on disconnect, you shouldn't use this with a lot of players joining and leaving.)
       Strategie: interval
-      # Used for the interval based uncaching algorithms. Also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
+      # Used for the interval based uncaching algorithms, and is also used as delay for ondisconnectdelayed. Value in seconds. Default: 600 = 10 minutes
       Interval: 600
       Delay: 600
 
 Shulkerboxes:
   # This setting controls whether players can put shulkerboxes into their backpacks.
   PreventInBackpack: true
-  # This setting allows to disable shulkerboxes all together. Players won't be able to craft or use them.
+  # This setting allows disabling shulkerboxes all together. Players won't be able to craft or use them.
   DisableShulkerboxes: false
-  # This settings controls how existing shulkerboxes are handled if they are disabled.
-  # Options: Ignore, Remove = shulker-box will be removed including it's content, Destroy = shulker-box will be destroyed and it's content will be dropped
+  # This setting controls how existing shulkerboxes are handled if they are disabled.
+  # Options: Ignore, Remove = shulker-box will be removed including its content, Destroy = shulker-box will be destroyed, and it's content will be dropped
   Existing: "Ignore"
 
 ItemFilter:
   # Enables the item filter. Make sure to define items to be filtered.
   Enabled: false
-  # Changes the filter mode, either blacklist (only not listed materials are allowed) or whitelist (only listed materials are allowed)
+  # Changes the filter mode, either blacklist (only unlisted materials are allowed) or whitelist (only listed materials are allowed)
   Mode: blacklist
   # Filter lists bellow. An item will be blocked (in blacklist mode) or allowed (in whitelist mode) if it matches on of the given filters.
   # List of materials that should be filtered. Can be name or id (id only for MC versions older than 1.13!).
@@ -146,7 +146,7 @@ ItemFilter:
   # List of lore that should be filtered. Can be a single line or all lines of the lore.
   Lore: []
 
-# This settings allow control over how the plugin behave in different worlds
+# These settings allow control over how the plugin behave in different worlds
 WorldSettings:
   # All worlds listed here will not have the plugin usable
   # Blacklist: ["creative_world"]
@@ -154,14 +154,14 @@ WorldSettings:
   Blacklist: []
   # Defines how the Blacklist will be enforced
   # Options:
-  #   Message           = The player will see a message that the usage of the backpack is denied in this world.
+  #   Message           = The player will see a message that the usage of the backpack is not allowed in this world.
   #   MissingPermission = The player will receive the plugins no permission message.
   #   NoPlugin          = The plugin will not be available at all and act as if it was not installed.
   #                       This also exclude players with permission to bypass the world restriction from using it!
   #                       It will not disable the Shulkerboxes filter!
   BlacklistMode: "Message"
 
-# Gives the players an item that they can interact with to open their backpack. Only works on MC 1.8 or newer
+# Gives the players an item they can interact with to open their backpack. Only works on MC 1.8 or newer.
 ItemShortcut:
   # If enabled the players will be given an item they can interact with to open the backpack.
   # The item may not be removed from their inventory as long as this option is enabled.
@@ -172,7 +172,7 @@ ItemShortcut:
   # Heads can be found here: https://minecraft-heads.com/custom-heads/
   # The correct value is the one listed on the head page under Other/Value
   HeadTextureValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
-  # Increases compatibility with some death chest plugins. Enable this if the backpack item is added to your death chest!
+  # Increases compatibility with some death chest plugins. Enable this if the backpack item gets added to your death chest!
   ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat
   BlockAsHat: false
@@ -184,13 +184,13 @@ ItemShortcut:
 Sound:
   # Enables all sound effects
   Enabled: true
-  # The sound effect that should be played if the backpack is opened
+  # The sound effect that should be played when the backpack is opened
   # disabled or false to disable the sound effect
-  # auto will play the chest sound for minecraft versions older than 1.11 and the shulker-box sound for newer MC versions
+  # auto will play the chest sound for minecraft versions older than 1.11, and the shulker-box sound for newer MC versions
   OpenSound: auto
-  # The sound effect that should be played if the backpack is closed
+  # The sound effect that should be played when the backpack is closed
   # disabled or false to disable the sound effect
-  # auto will play the chest sound for minecraft versions older than 1.11 and the shulker-box sound for newer MC versions
+  # auto will play the chest sound for minecraft versions older than 1.11, and the shulker-box sound for newer MC versions
   CloseSound: auto
 
 # Settings for the inventory management
