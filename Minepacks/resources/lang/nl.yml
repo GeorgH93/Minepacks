@@ -51,7 +51,7 @@ Language:
       NoValidBackup: "Geen back-up gevonden die overeenkomt met {BackupIdentifier}."
       NoUserToRestoreToFound: "Geen geldige speler gevonden waarbij de back-up kan worden hersteld."
       # No Json!!!
-      ParameterBackupName: "back-up_naam"
+      ParameterBackupName: "backup_name"
       # No Json!!!
       DateFormat: "d MMMM yyyy HH:mm[:ss]"
       Restored: "Back-up is succesvol hersteld."
@@ -62,7 +62,7 @@ Language:
       ClearedOtherTarget: "Je inventaris is geleegd door {DisplayName}&r."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
-    PlayerNameVariable: "speler_naam"
+    PlayerNameVariable: "player_name"
     Description:
       Backpack: "Opent je rugzak."
       Sort: "Sorteert je rugzak."
