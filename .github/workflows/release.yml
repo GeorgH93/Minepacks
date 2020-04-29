@@ -28,10 +28,11 @@ jobs:
         mvn -B install package --file pom.xml -P ExcludeBadRabbit
         cp Minepacks/target/M*.jar artifacts/
 
-    - name: Publish to GitHub Packages Apache Maven
-      run: 'mvn deploy -s $GITHUB_WORKSPACE/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+# Does not work reliable
+#    - name: Publish to GitHub Packages Apache Maven
+#      run: 'mvn deploy -s $GITHUB_WORKSPACE/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
+#      env:
+#        GITHUB_TOKEN: ${{ github.token }}
 
     - name: Build with Maven (Standalone)
       run: |
