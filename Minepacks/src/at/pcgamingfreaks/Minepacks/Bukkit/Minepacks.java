@@ -18,8 +18,8 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.Updater;
 import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
@@ -35,9 +35,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.StringUtils;
-import at.pcgamingfreaks.Updater.UpdateProviders.BukkitUpdateProvider;
-import at.pcgamingfreaks.Updater.UpdateProviders.JenkinsUpdateProvider;
-import at.pcgamingfreaks.Updater.UpdateProviders.UpdateProvider;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
 
@@ -58,11 +55,9 @@ import java.util.Locale;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
-	private static final int BUKKIT_PROJECT_ID = 83445;
-	@SuppressWarnings("unused")
-	private static final String JENKINS_URL = "https://ci.pcgamingfreaks.at", JENKINS_JOB_DEV = "Minepacks Dev", JENKINS_JOB_MASTER = "Minepacks";
 	private static Minepacks instance = null;
 
+	private ManagedUpdater updater = null;
 	private Config config;
 	private Language lang;
 	private Database database;
@@ -115,6 +110,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		/*end[STANDALONE]*/
 
+		updater = new ManagedUpdater(this);
 
 		//region Check compatibility with used minecraft version
 		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_15_R1))
@@ -141,7 +137,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		lang = new Language(this);
 		load();
 
-		if(config.getAutoUpdate()) update(null);
+		if(config.getAutoUpdate()) updater.update();
 		getLogger().info(StringUtils.getPluginEnabledMessage(getDescription().getName()));
 	}
 
@@ -149,29 +145,16 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void onDisable()
 	{
 		if(config == null) return;
-		Updater updater = null;
-		if(config.getAutoUpdate()) updater = update(null);
+		if(config.getAutoUpdate()) updater.update();
 		unload();
-		if(updater != null) updater.waitForAsyncOperation(); // Wait for updater to finish
+		updater.waitForAsyncOperation(); // Wait for an update to finish
 		getLogger().info(StringUtils.getPluginDisabledMessage(getDescription().getName()));
 		instance = null;
 	}
 
-	public @Nullable Updater update(@Nullable UpdateResponseCallback updateResponseCallback)
+	public void update(final @Nullable UpdateResponseCallback updateResponseCallback)
 	{
-		UpdateProvider updateProvider;
-		if(getDescription().getVersion().contains("Release")) updateProvider = new BukkitUpdateProvider(BUKKIT_PROJECT_ID, getLogger());
-		else
-		{
-			/*if[STANDALONE]
-			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB_MASTER, getLogger(), ".*-Standalone.*");
-			else[STANDALONE]*/
-			updateProvider = new JenkinsUpdateProvider(JENKINS_URL, JENKINS_JOB_DEV, getLogger());
-			/*end[STANDALONE]*/
-		}
-		Updater updater = new Updater(this, true, updateProvider);
 		updater.update(updateResponseCallback);
-		return updater;
 	}
 
 	private void load()
