@@ -166,8 +166,9 @@ public class ItemShortcut implements Listener
 		{
 			if(allowRightClickOnContainers && event.getAction() == Action.RIGHT_CLICK_BLOCK)
 			{
+				return; //TODO testing
 				//noinspection ConstantConditions
-				if(containerMaterials.contains(event.getClickedBlock().getType())) return;
+				//if(containerMaterials.contains(event.getClickedBlock().getType())) return;
 			}
 			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
@@ -239,7 +240,7 @@ public class ItemShortcut implements Listener
 								{ // right click should place only one
 									ItemStack place = stack.clone();
 									place.setAmount(1);
-									ItemStack full = backpack.addItem(stack);
+									ItemStack full = backpack.addItem(place);
 									if(full == null)
 									{
 										stack.setAmount(stack.getAmount() - 1);
