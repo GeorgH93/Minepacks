@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,10 +34,15 @@ import java.sql.Statement;
 
 public class SQLite extends SQL
 {
-	//TODO add cooldown sync table
-	public SQLite(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider)
+	public static String getDbFile(final @NotNull Minepacks plugin)
 	{
-		super(plugin, (connectionProvider == null) ? new SQLiteConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db") : connectionProvider);
+		return plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db";
+	}
+
+	//TODO add cooldown sync table
+	public SQLite(final @NotNull Minepacks plugin, final @Nullable ConnectionProvider connectionProvider)
+	{
+		super(plugin, (connectionProvider == null) ? new SQLiteConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), getDbFile(plugin)) : connectionProvider);
 	}
 
 	@Override
