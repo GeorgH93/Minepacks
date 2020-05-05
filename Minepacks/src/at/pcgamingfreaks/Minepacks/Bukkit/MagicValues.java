@@ -19,5 +19,5 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.24-SNAPSHOT";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.25-SNAPSHOT";
 }

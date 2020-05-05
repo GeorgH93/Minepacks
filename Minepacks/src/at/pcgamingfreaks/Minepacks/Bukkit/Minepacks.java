@@ -137,7 +137,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		lang = new Language(this);
 		load();
 
-		if(config.getAutoUpdate()) updater.update();
+		if(config.useUpdater()) updater.update();
 		getLogger().info(StringUtils.getPluginEnabledMessage(getDescription().getName()));
 	}
 
@@ -145,7 +145,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public void onDisable()
 	{
 		if(config == null) return;
-		if(config.getAutoUpdate()) updater.update();
+		if(config.useUpdater()) updater.update();
 		unload();
 		updater.waitForAsyncOperation(); // Wait for an update to finish
 		getLogger().info(StringUtils.getPluginDisabledMessage(getDescription().getName()));
@@ -159,6 +159,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private void load()
 	{
+		updater.setChannel(config.getUpdateChannel());
 		lang.load(config);
 		database = Database.getDatabase(this);
 		if(database == null)
