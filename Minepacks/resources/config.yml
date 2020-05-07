@@ -180,6 +180,8 @@ ItemShortcut:
   OpenContainerOnRightClick: false
   # The id of the slot that should be preferred when giving a player the shortcut item
   PreferredSlotId: -1
+  # If this option is enabled the player will not be able to move the backpack item within their inventory
+  BlockItemFromMoving: false
 
 Sound:
   # Enables all sound effects
@@ -208,4 +210,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 29
+Version: 30

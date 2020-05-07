@@ -38,7 +38,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 29, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 30, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -419,6 +419,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public int getItemShortcutPreferredSlotId()
 	{
 		return getConfigE().getInt("ItemShortcut.PreferredSlotId", -1);
+	}
+
+	public boolean getItemShortcutBlockItemFromMoving()
+	{
+		return getConfigE().getBoolean("ItemShortcut.BlockItemFromMoving", false);
 	}
 	//endregion
 
