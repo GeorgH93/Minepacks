@@ -32,6 +32,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -375,7 +376,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
 	}
 
-	public String getItemShortcutItemName()
+	public @NotNull String getItemShortcutItemName()
 	{
 		return getConfigE().getString("ItemShortcut.Item", "BackpackHeadBlue");
 	}
@@ -403,7 +404,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//endregion
 
 	//region Sound settings
-	private Sound getSound(String option, String autoValue)
+	private @Nullable Sound getSound(final @NotNull String option, final @NotNull String autoValue)
 	{
 		if(!getConfigE().getBoolean("Sound.Enabled", true)) return null;
 		String soundName = getConfigE().getString("Sound." + option, "auto").toUpperCase(Locale.ENGLISH);
@@ -420,12 +421,12 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return null;
 	}
 
-	public Sound getOpenSound()
+	public @Nullable Sound getOpenSound()
 	{
 		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN"));
 	}
 
-	public Sound getCloseSound()
+	public @Nullable Sound getCloseSound()
 	{
 		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
 	}
