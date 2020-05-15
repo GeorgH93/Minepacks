@@ -84,39 +84,48 @@ public abstract class Database implements Listener
 		unCacheStrategie.close();
 	}
 
-	public static Database getDatabase(Minepacks plugin)
+	public static @Nullable Database getDatabase(Minepacks plugin)
 	{
-		String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase(Locale.ROOT);
-		ConnectionProvider connectionProvider = null;
-		if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
+		try
 		{
+			String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase(Locale.ROOT);
+			ConnectionProvider connectionProvider = null;
+			if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
+			{
 			/*if[STANDALONE]
 			plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
 			return null;
 			else[STANDALONE]*/
-			at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
-			if(pool == null)
-			{
-				plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-				return null;
+				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
+				if(pool == null)
+				{
+					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+					return null;
+				}
+				dbType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
+				connectionProvider = pool.getConnectionProvider();
+				/*end[STANDALONE]*/
 			}
-			dbType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
-			connectionProvider = pool.getConnectionProvider();
-			/*end[STANDALONE]*/
+			Database database;
+			switch(dbType)
+			{
+				case "mysql": database = new MySQL(plugin, connectionProvider); break;
+				case "sqlite": database = new SQLite(plugin, connectionProvider); break;
+				case "flat":
+				case "file":
+				case "files":
+					database = new Files(plugin); break;
+				default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
+			}
+			database.init();
+			return database;
 		}
-		Database database;
-		switch(dbType)
+		catch(IllegalStateException ignored) {}
+		catch(Exception e)
 		{
-			case "mysql": database = new MySQL(plugin, connectionProvider); break;
-			case "sqlite": database = new SQLite(plugin, connectionProvider); break;
-			case "flat":
-			case "file":
-			case "files":
-				database = new Files(plugin); break;
-			default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
+			e.printStackTrace();
 		}
-		database.init();
-		return database;
+		return null;
 	}
 
 	public void backup(@NotNull Backpack backpack)

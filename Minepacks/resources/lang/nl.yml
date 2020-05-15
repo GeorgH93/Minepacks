@@ -1,28 +1,122 @@
+Version: 18
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
 Language:
-  Console:
-    Enabled: MinePacks is ingeschakeld!
-    Disabled: MinePacks is uitgeschakeld.
-    NotFromConsole: Commando kan niet in de console worden gebruikt.
-    LangUpdated: Taal Bestand is geüpdatet.
-    UpdateUUIDs: Beginnen met updaten van database naar UUIDs ...
-    UpdatedUUIDs: '%s accounts geüpdatet naar UUIDs.'
+  NotFromConsole: "&cDit commando kan je niet vanuit de console gebruiken."
   Ingame:
-    NoPermission: Je bent niet bevoegd om dit te doen.
-    OwnBackPackClose: 'Rugzak gesloten!'
-    PlayerBackPackClose: "%s's rugzak gesloten!"
-    InvalidBackpack: Ongeldige rugzak.
-    BackpackCleaned: Rugzak schoongemaakt.
-    Cooldown: "Wacht alsjeblieft met het heropenen van je rugzak."
-    WrongGameMode: "Je bent niet bevoegd om je rugzak in je huidige spelmodus te openen."
-  Description:
-    Backpack: Opent je rugzak.
-    Clean: Maakt je rugzak schoon.
-    CleanOther: Maakt de rugzak van andere spelers schoon.
-    View: Laat de rugzak van andere spelers zien.
-
-# Will be shown in the console during startup
-LanguageName: "dutch"
-Author: "bramvkempen"
-
-# Taal Bestand versie. Niet aan komen!
-Version: 5
+    NoPermission: "&cJe bent niet gemachtigd om dat te doen."
+    WorldDisabled: "&cHet gebruik van de rugzak is niet toegestaan in deze wereld."
+    NaN: "[\"\",{\"text\":\"De ingevoerde waarde moet een getal zijn!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Rugzak gesloten"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName}'s rugzak gesloten"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Ongeldige rugzak"
+    NotAllowedInBackpack: "&c{ItemName} mag je niet in de rugzak bewaren."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cJe mag de rugzak niet uit je inventaris halen!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Wacht \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" voordat je de rugzak heropent.\"}]"
+      # Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "De rugzak mag in de huidige spelmodus niet worden geopend."
+    Clean:
+      BackpackCleaned: "Rugzak geleegd"
+      BackpackCleanedBy: "Je rugzak is geleegd door {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName}'s&r rugzak is geleegd."
+    Sort:
+      Sorted: "Rugzak gesorteerd."
+    Help:
+      Header: "&6### Minepacks Commando's ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Minepacks opnieuw laden"
+      Reloaded: "&1Minepacks is herladen"
+    Update:
+      CheckingForUpdates: "&1Controleren op updates"
+      Updated: "[\"\",{\"text\":\"Plugin geüpdatet, veranderingen zijn van kracht na de volgende herstart.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Geen plugin update beschikbaar.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Er was een probleem bij het zoeken naar updates. Bekijk  de console!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Er is een update beschikbaar! Ga naar \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" om hem te downloaden!\"}]"
+    Backup:
+      Created: "De rugzak is succesvol opgeslagen."
+      NoBackpack: "De speler heeft geen rugzak of deze is leeg."
+    Restore:
+      BackupsPerPage: "10"
+      Headline: "[\"\",{\"text\":\"Back-ups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Pagina {CurrentPage} van {MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Vorige <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Pagina {CurrentPage} van {MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Volgende >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "Geen back-up gevonden die overeenkomt met {BackupIdentifier}."
+      NoUserToRestoreToFound: "Geen geldige speler gevonden waarbij de back-up kan worden hersteld."
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "d MMMM yyyy HH:mm[:ss]"
+      Restored: "Back-up is succesvol hersteld."
+    InventoryClear:
+      UnknownPlayer: "&cKan speler {Name} niet vinden!"
+      Cleared: "Inventaris geleegd"
+      ClearedOther: "{DisplayName}'s&r inventaris is geleegd."
+      ClearedOtherTarget: "Je inventaris is geleegd door {DisplayName}&r."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Opent je rugzak."
+      Sort: "Sorteert je rugzak."
+      Clean: "Schoont je rugzak op."
+      CleanOthers: "Schoont de rugzak op van andere spelers."
+      OpenOthers: "Laat de rugzak zien van andere spelers."
+      Reload: "Herlaadt de instellingen van de plugin."
+      Update: "Controleert op nieuwe plugin updates."
+      Version: "Geeft details weer over de versie de plugin en diens afhankelijkheden."
+      Backup: "Creëert een back-up van de rugzakken van de spelers."
+      Restore: "Herstelt een back-up."
+      RestoreList: "Laat alle beschikbare back-ups zien."
+      Help: "Laat alle commando's zien met hun beschrijving."
+      Migrate: "Zet de database over naar een ander type."
+LanguageName: "Nederlands"
+Author: "Le0ne_"
+Command:
+  Backpack:
+    - backpack
+    - bp
+    - rugzak
+    - rz
+  Open:
+    - open
+  Sort:
+    - sorteer
+    - sort
+  Clean:
+    - clean
+    - schoon
+  Reload:
+    - herlaad
+    - herstart
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+    - herstel
+  ListBackups:
+    - listbackups
+    - lijst
+    - backuplijst
+  Version:
+    - version
+    - versie
+  Help:
+    - help
+    - hulp
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - wis
+    - verwijder

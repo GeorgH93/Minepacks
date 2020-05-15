@@ -37,7 +37,7 @@ import java.util.*;
 
 public abstract class SQL extends Database
 {
-	private ConnectionProvider dataSource;
+	private final ConnectionProvider dataSource;
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
@@ -50,6 +50,7 @@ public abstract class SQL extends Database
 		super(plugin);
 
 		dataSource = connectionProvider;
+		if(!dataSource.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
 
 		loadSettings();
 		buildQuerys();

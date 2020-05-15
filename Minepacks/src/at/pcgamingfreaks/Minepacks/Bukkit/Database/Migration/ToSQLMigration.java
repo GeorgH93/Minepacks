@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import at.pcgamingfreaks.Reflection;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
@@ -59,7 +60,11 @@ public abstract class ToSQLMigration extends Migration
 		switch(dbType)
 		{
 			case "mysql": newDb = new MySQL(plugin, connectionProvider); break;
-			case "sqlite": newDb = new SQLite(plugin, connectionProvider); break;
+			case "sqlite":
+				final File dbFile = new File(SQLite.getDbFile(plugin));
+				if(dbFile.exists()) dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis()));
+				newDb = new SQLite(plugin, connectionProvider);
+				break;
 			default: newDb = null;
 		}
 	}

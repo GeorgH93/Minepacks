@@ -1,4 +1,4 @@
-# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
 
 Language:
   NotFromConsole: "&cDieser Befehl kann nicht in der Konsole ausgeführt werden."
@@ -21,7 +21,7 @@ Language:
       BackpackCleanedOther: "Der Rucksack von {DisplayName}&r wurde geleert."
     Open:
       #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
-      Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden bis du deinen Rucksack wieder öffnest."
+      Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden, bis du deinen Rucksack wieder öffnest."
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Gamemode nicht öffnen."
     Sort:
@@ -82,9 +82,9 @@ Language:
       Clean: "Leert deinen Rucksack."
       CleanOthers: "Leert den Rucksack eines anderen Spielers."
       OpenOthers: "Öffnet den Rucksack eines anderen Spielers."
-      Reload: "Lädt die Konfigurations-Datei neu."
+      Reload: "Lädt die Konfigurationsdatei neu."
       Update: "Prüft auf neue Plugin-Updates."
-      Backup: "Erstellt eine Sicherungskopie eines Rucksackes."
+      Backup: "Erstellt eine Sicherungskopie eines Rucksacks."
       Restore: "Stellt eine Sicherungskopie eines Rucksacks wieder her."
       RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."

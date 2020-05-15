@@ -52,7 +52,7 @@ public class ItemShortcut implements Listener
 	private final Minepacks plugin;
 	private final String openCommand;
 	private final Message messageDoNotRemoveItem;
-	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers;
+	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
 	private final ItemConfig itemConfig;
@@ -64,6 +64,7 @@ public class ItemShortcut implements Listener
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
 		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
+		blockItemFromMoving = plugin.getConfiguration().getItemShortcutBlockItemFromMoving();
 		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
@@ -135,21 +136,21 @@ public class ItemShortcut implements Listener
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(PlayerChangedWorldEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		addItem(event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onInventoryClear(InventoryClearedEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
@@ -272,6 +273,7 @@ public class ItemShortcut implements Listener
 					event.setCancelled(true);
 					messageDoNotRemoveItem.send(player);
 				}
+				if(blockItemFromMoving) event.setCancelled(true);
 			}
 			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
 			{

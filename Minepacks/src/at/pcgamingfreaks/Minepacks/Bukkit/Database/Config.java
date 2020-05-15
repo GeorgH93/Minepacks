@@ -39,8 +39,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 29, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
-
+	private static final int CONFIG_VERSION = 31, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 	public Config(JavaPlugin plugin)
 	{
 		super(plugin, CONFIG_VERSION, UPGRADE_THRESHOLD);
@@ -65,7 +64,10 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			Map<String, String> remappedKeys = new HashMap<>();
 			if(oldConfig.getVersion() <= 23) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
-			doUpgrade(oldConfig, remappedKeys);
+			if(oldConfig.getVersion() <= 28) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
+			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
+			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
+			doUpgrade(oldConfig, remappedKeys, keysToKeep);
 		}
 	}
 
@@ -186,15 +188,28 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 	}
 
-	public boolean getAutoUpdate()
+	//region Misc getters
+	public boolean useUpdater()
 	{
-		return getConfigE().getBoolean("Misc.AutoUpdate", true);
+		return getConfigE().getBoolean("Misc.AutoUpdate.Enabled", getConfigE().getBoolean("Misc.AutoUpdate", true));
+	}
+
+	public String getUpdateChannel()
+	{
+		String channel = getConfigE().getString("Misc.AutoUpdate.Channel", "Release");
+		if("Release".equals(channel) || "Master".equals(channel) || "Dev".equals(channel))
+		{
+			return channel;
+		}
+		else logger.info("Unknown update Channel: " + channel);
+		return null;
 	}
 
 	public boolean isBungeeCordModeEnabled()
 	{
 		return getConfigE().getBoolean("Misc.UseBungeeCord", false);
 	}
+	//endregion
 
 	public long getCommandCooldown()
 	{
@@ -396,6 +411,10 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getInt("ItemShortcut.PreferredSlotId", -1);
 	}
 
+	public boolean getItemShortcutBlockItemFromMoving()
+	{
+		return getConfigE().getBoolean("ItemShortcut.BlockItemFromMoving", false);
+	}
 	public boolean isItemShortcutPlayerChoiceEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.AllowPlayersToChoseItem", true);

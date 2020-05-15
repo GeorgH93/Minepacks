@@ -23,6 +23,8 @@
 		<dependencies>PCGF_PluginLib</dependencies>
 		<soft-dependencies/>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
+		<releaseType>Normal</releaseType>
+		<updateChannel>Release</updateChannel>
 	</properties>
 
 	<dependencies>
@@ -36,8 +38,7 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.23-SNAPSHOT</version>
-		</dependency>
+			<version>1.0.25-SNAPSHOT</version>		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
@@ -141,6 +142,7 @@
 				<version>${project.version}-Standalone</version>
 				<dependencies/>
 				<mainClass>${project.groupId}.${project.artifactId}Standalone.Bukkit.${project.artifactId}</mainClass>
+				<releaseType>Standalone</releaseType>
 			</properties>
 			<build>
 				<plugins>
@@ -235,6 +237,7 @@
 				<dependencies/>
 				<soft-dependencies>PCGF_PluginLib</soft-dependencies>
 				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
+				<releaseType>Release</releaseType>
 			</properties>
 			<dependencies>
 				<dependency>

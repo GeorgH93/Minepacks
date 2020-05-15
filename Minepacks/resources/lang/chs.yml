@@ -1,30 +1,118 @@
-#simple-Chinese
+# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: MinePacks插件当前已启用!
-    Disabled: MinePacks插件当前未启用.
-    NotFromConsole: 无法在控制台中使用此命令.
-    LangUpdated: 语言配置文件已更新.
-    UpdateUUIDs: 更新UUID数据中...
-    UpdatedUUIDs: "%s个UUID数据已更新完成."
-    MinecraftVersionNotCompatible: "你的Minecraft版本(MC %1$s)当前不兼容本插件的当前版本(%2$s). 请更新!"
+  NotFromConsole: "§f［§b背包§f］ 控制台无法执行这个命令。"
   Ingame:
-    NoPermission: 您没有权限使用.
-    OwnBackPackClose: 您的背包已关闭.
-    PlayerBackPackClose: "%s的背包已关闭."
-    InvalidBackpack: 无效背包.
-    BackpackCleaned: 背包已清理.
-    Cooldown: 请等待冷却时间结束后再开启您的背包.
-    WrongGameMode: 在当前游戏模式下,您不被允许使用背包.
-  Description:
-    Backpack: 打开您自己的背包.
-    Clean: 清理您自己的背包.
-    CleanOther: 清理其他玩家的背包.
-    View: 查看其他玩家的背包.
+    NoPermission: "§f［§b背包§f］ 您没有权限。"
+    WorldDisabled: "§f［§b背包§f］ 这个世界禁用。"
+    NaN: "§f［§b背包§f］ 无效的数值。"
+    OwnBackpackClose: "§f［§b背包§f］ 背包关闭"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "§f［§b背包§f］ 玩家 §a{OwnerName} §f背包关闭。"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "§f［§b背包§f］ 无效的背包。"
+    NotAllowedInBackpack: "§f［§b背包§f］ 物品 {ItemName} §f不能放背包内。"
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "§f［§b背包§f］ 您不能从背包丢弃头颅。"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "§f［§b背包§f］ 请等待 §e{TimeLeft} §f秒。"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "§f［§b背包§f］ 您不能在这种游戏模式下打开背包。"
+    Clean:
+      BackpackCleaned: "§f［§b背包§f］ 背包清空。"
+      BackpackCleanedBy: "§f［§b背包§f］ 玩家 {DisplayName} 清空您的背包。"
+      BackpackCleanedOther: "§f［§b背包§f］ 玩家 {DisplayName} 的背包已清空。"
+    Sort:
+      Sorted: "§f［§b背包§f］ 背包分类"
+    Help:
+      Header: ""
+      Footer: ""
+    Reload:
+      Reloading: "§f［§b背包§f］ 重新加载中"
+      Reloaded: "§f［§b背包§f］ 更新配置与语言文件"
+    Update:
+      CheckingForUpdates: "§f［§b背包§f］ 检查更新"
+      Updated: "§f［§b背包§f］ 插件已更新，将在下次启动加载。"
+      NoUpdate: "§f［§b背包§f］ 没有可用的更新。"
+      UpdateFail: "§f［§b背包§f］ 出现错误！请检查控制台！"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "§f［§b背包§f］ 发现新版本 https://www.spigotmc.org/resources/19286/"
+    Backup:
+      Created: "§f［§b背包§f］ 背包已备份"
+      NoBackpack: "§f［§b背包§f］ 玩家没有背包，或者背包是空的。"
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Previous <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Showing page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "No backup matching {BackupIdentifier} found"
+      NoUserToRestoreToFound: "No valid user to restore backup to found"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Backup has been successful restored."
+    InventoryClear:
+      UnknownPlayer: "&cCould not find player {Name}!"
+      Cleared: "Inventory cleared."
+      ClearedOther: "{DisplayName}'s&r inventory has been cleared."
+      ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
+  Commands:
+    HelpFormat: "§f［§b背包§f］ {Description}命令 “/{MainCommand} {SubCommand} {Parameters}”"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "打开背包"
+      Sort: "整理背包"
+      Clean: "清空背包"
+      CleanOthers: "清空玩家背包"
+      OpenOthers: "显示玩家背包"
+      Reload: "重新加载"
+      Update: "检查更新"
+      Version: "查看版本"
+      Backup: "创建备份"
+      Restore: "打开备份"
+      RestoreList: "列出所有备份"
+      Help: "查看帮助"
+      Migrate: "迁移数据类型"
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
 
 # Will be shown in the console during startup
-LanguageName: "simple-chinese"
-Author: "ragnaroks"
+LanguageName: "中文"
+Author: "尹"
 
 # Language file version. Don't touch it!
-Version: 5
+Version: 18

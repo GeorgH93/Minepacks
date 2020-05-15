@@ -13,13 +13,20 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Sac à dos non valide."
     NotAllowedInBackpack: "&c{ItemName} n'est pas autorisé dans le sac à dos."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cVous ne devez pas supprimer le raccourci de sac à dos de votre inventaire !"
+    DontRemoveShortcut_SendMethod: "action_bar"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Veuillez patienter \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondes\"}},{\"text\":\" till you reopen your backpack.\"}]"
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sac à dos dans votre mode de jeu actuel."
     Clean:
-      BackpackCleaned: "Sac à dos nettoyé."
+      BackpackCleaned: "Sac à dos nettoyé."s
+      BackpackCleanedBy: "Votre sac à dos a été nettoyé par {DisplayName}&r."
+      BackpackCleanedOther: "Sac à dos de {DisplayName} &rnettoyé."
+    Sort:
+      Sorted: "Sac à dos trié."
     Help:
       Header: "&6### Minepacks Commandes ###"
       Footer: "&6#############################"
@@ -48,11 +55,17 @@ Language:
       # No Json!!!
       DateFormat: "dd.MM.yyyy HH:mm:ss"
       Restored: "La sauvegarde a été restaurée avec succès."
+    InventoryClear:
+      UnknownPlayer: "&cImpossible de trouver le joueur {Name}!"
+      Cleared: "Inventaire nettoyé."
+      ClearedOther: "Inventaire de {DisplayName} &rnettoyé."
+      ClearedOtherTarget: "Votre inventaire a été effacé par {DisplayName}&r."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
     Description:
       Backpack: "Ouvre votre sac à dos."
+      Sort: "Trie votre sac à dos."
       Clean: "Nettoie votre sac à dos."
       CleanOthers: "Nettoie le sac à dos d'un autre joueur."
       OpenOthers: "Montre le sac à dos d'un autre joueur."
@@ -71,6 +84,8 @@ Command:
     - bp
   Open:
     - open
+  Sort:
+    - sort
   Clean:
     - clean
     - clear
@@ -90,10 +105,14 @@ Command:
     - version
   Help:
     - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
 
 # Will be shown in the console during startup
 LanguageName: "Français"
-Author: "HiiRaZ"
+Author: "HiiRaZ & Sniper_TVmc"
 
 # Language file version. Don't touch it!
-Version: 16
+Version: 18
