@@ -9,16 +9,6 @@ depend: [${dependencies}]
 softdepend: [${soft-dependencies}]
 
 permissions:
-  backpack.*:
-    description: Gives access to the full Minepacks functionality.
-    children:
-      backpack.use: true
-      backpack.size.6: true
-      backpack.keepOnDeath: true
-      backpack.clean: true
-      backpack.fullpickup: true
-      backpack.bypass: true
-      backpack.admin: true
   backpack.disable:
     description: This permission group can be used to disable the plugin for certian users/groups/worlds.
     default: false
