@@ -1,6 +1,10 @@
 Defaults:
   # The item that should be used as a shortcut by default
   BackpackItem: BackpackHeadBlue
+  BlockedSlotsMaterial: Barrier
+  # Options: top_left, top_right, bottom_left, bottom_right
+  ControlsPosition: bottom_right
+  ControlsLayout: None
 
 # The items define the possible backpack items that can be used as shortcuts
 Items:
@@ -29,6 +33,85 @@ Items:
       - "{DescriptionOpen}"
       - "{DescriptionDragAndDrop}"
 
+Backpacks:
+  1:
+    Pages: 1
+    SlotsPerPage: 9
+    BlockedSlotsMaterial: Barrier
+  2:
+    Slots: 18
+  3:
+    Rows: 3
+  4:
+    Rows: 4
+  5:
+    Rows: 5
+  6:
+    Rows: 6
+  Double:
+    Pages: 2
+    SlotsPerPage: 52
+    ControlsLayout: Minimal
+  Mega:
+    Slots: 213
+    ControlsLayout: FullRow
+
+ControlsLayouts:
+  None: []
+  Minimal: [ Next, Previous ]
+  Extended: [ SortPage, Clear, Next, Previous ]
+  FullRow: [ First, Previous, Nothing, SortPage, SortBackpack, Clear, Nothing, Next, Last ]
+
+Buttons:
+  Next:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEzYjhmNjgxZGFhZDhiZjQzNmNhZThkYTNmZTgxMzFmNjJhMTYyYWI4MWFmNjM5YzNlMDY0NGFhNmFiYWMyZiJ9fX0="
+    DisplayName: "&e{Next}"
+    Lore:
+      - "{DescriptionNext}"
+      - "{DescriptionNextPageNr}: {NextPageNr}"
+    Action: next_page
+  Previous:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY1MmUyYjkzNmNhODAyNmJkMjg2NTFkN2M5ZjI4MTlkMmU5MjM2OTc3MzRkMThkZmRiMTM1NTBmOGZkYWQ1ZiJ9fX0="
+    DisplayName: "&e{Previous}"
+    Action: previous_page
+  First:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOWM5ZWM3MWMxMDY4ZWM2ZTAzZDJjOTI4N2Y5ZGE5MTkzNjM5ZjNhNjM1ZTJmYmQ1ZDg3YzJmYWJlNjQ5OSJ9fX0="
+    DisplayName: "&e{First}"
+    Action: first_page
+  Last:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODE2ZWEzNGE2YTZlYzVjMDUxZTY5MzJmMWM0NzFiNzAxMmIyOThkMzhkMTc5ZjFiNDg3YzQxM2Y1MTk1OWNkNCJ9fX0="
+    DisplayName: "&e{Last}"
+    Action: last_page
+  SortPage:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTg4N2NjMzg4YzhkY2ZjZjFiYThhYTVjM2MxMDJkY2U5Y2Y3YjFiNjNlNzg2YjM0ZDRmMWMzNzk2ZDNlOWQ2MSJ9fX0="
+    DisplayName: "&e{Sort}"
+    Action: sort_page
+  SortBackpack:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTg4N2NjMzg4YzhkY2ZjZjFiYThhYTVjM2MxMDJkY2U5Y2Y3YjFiNjNlNzg2YjM0ZDRmMWMzNzk2ZDNlOWQ2MSJ9fX0="
+    DisplayName: "&e{Sort}"
+    Action: sort_backpack
+  Clear:
+    Material: player_head
+    HeadValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWI5YzYwMzc5NDc5N2U4M2U4NmRkNGFkMzY0NmU3MjEyODY3ZWQ1ZWJmOGQ5MmNmMjBiYzk5OTgzNjUwY2JiZCJ9fX0="
+    DisplayName: "&e{Clear}"
+    Action: clear
+  Nothing:
+    Material: LIGHT_GRAY_STAINED_GLASS_PANE
+    DisplayName: ""
+    Action: nothing
+
+
+
+
+# Allows to put the buttons for backpack actions (sort, clear, previous/next page) into the 7. row (assuming that the other 6 rows are used by the backpack)
+# This option is only supported on MC versions older than 1.14. If you allow newer clients on your old server make sure this option is disabled!
+AllowControlsInRow7: false
 
 # Config file version. Don't touch it!
 Version: 1
