@@ -31,6 +31,7 @@ public class Permissions
 	public static final String NO_COOLDOWN = BASE + "noCooldown";
 	public static final String IGNORE_GAME_MODE = BASE + "ignoreGameMode";
 	public static final String IGNORE_WORLD_BLACKLIST = BASE + "ignoreWorldBlacklist";
+	public static final String CHOSE_DESIGN = BASE + "choseDesign";
 	public static final String UPDATE = BASE + "update";
 	public static final String RELOAD = BASE + "reload";
 	public static final String MIGRATE = BASE + "migrate";

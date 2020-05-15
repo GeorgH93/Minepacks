@@ -376,12 +376,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
 	}
 
-	public @NotNull String getItemShortcutItemName()
-	{
-		return getConfigE().getString("ItemShortcut.Item", "BackpackHeadBlue");
-	}
-
-
 	public boolean isItemShortcutImproveDeathChestCompatibilityEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.ImproveDeathChestCompatibility", false);
@@ -400,6 +394,16 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public int getItemShortcutPreferredSlotId()
 	{
 		return getConfigE().getInt("ItemShortcut.PreferredSlotId", -1);
+	}
+
+	public boolean isItemShortcutPlayerChoiceEnabled()
+	{
+		return getConfigE().getBoolean("ItemShortcut.AllowPlayersToChoseItem", true);
+	}
+
+	public boolean isItemShortcutPlayerDisableItemEnabled()
+	{
+		return getConfigE().getBoolean("ItemShortcut.AllowPlayersToDisableItem", true);
 	}
 	//endregion
 

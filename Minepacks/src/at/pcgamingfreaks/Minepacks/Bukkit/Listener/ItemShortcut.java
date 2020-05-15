@@ -67,10 +67,10 @@ public class ItemShortcut implements Listener
 		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
-		itemConfig = plugin.getBackpacksConfig().getItemConfig("Items." + plugin.getConfiguration().getItemShortcutItemName());
+		itemConfig = plugin.getBackpacksConfig().getItemConfig("Items." + plugin.getBackpacksConfig().getDefaultBackpackItem());
 		if(itemConfig == null)
 		{
-			plugin.getLogger().severe("Item '" + plugin.getConfiguration().getItemShortcutItemName() + "' is not defined in the backpacks.yml file! Item shortcut will be disabled!");
+			plugin.getLogger().severe("Item '" + plugin.getBackpacksConfig().getDefaultBackpackItem() + "' is not defined in the backpacks.yml file! Item shortcut will be disabled!");
 			throw new IllegalArgumentException("The item is not defined.");
 		}
 

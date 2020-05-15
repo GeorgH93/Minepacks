@@ -61,4 +61,11 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 		List<String> aliases = getLangE().getStringList("Command." + command, new ArrayList<>(0));
 		return (aliases.size() > 0) ? aliases.toArray(new String[0]) : defaults;
 	}
+
+	public @NotNull String[] getSwitch(final @NotNull String key, final @NotNull String defaultSwitch)
+	{
+		List<String> switches = getLangE().getStringList("Command.Switches." + key, new ArrayList<>(1));
+		if(!switches.contains(defaultSwitch)) switches.add(defaultSwitch);
+		return switches.toArray(new String[0]);
+	}
 }

@@ -27,10 +27,9 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import lombok.Getter;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -39,14 +38,19 @@ public class BackpacksConfig extends Configuration
 {
 	private static final int CONFIG_VERSION = 1;
 	private static final Pattern ITEM_TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{(?<placeholder>[\\w-.]+)}");
+	@Getter private static BackpacksConfig instance;
 
 	private final @NotNull Minepacks plugin;
 	private final Map<String, ItemConfig> itemConfigs = new HashMap<>();
+	@Getter private final Set<String> validShortcutStyles = new HashSet<>();
+	@Getter private String defaultBackpackItem = "";
+	@Getter private boolean allowItemShortcut = true;
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
 	{
 		super(plugin, CONFIG_VERSION, CONFIG_VERSION, "backpacks.yml");
 		this.plugin = plugin;
+		instance = this;
 	}
 
 	@Override
@@ -61,15 +65,29 @@ public class BackpacksConfig extends Configuration
 	}
 
 	@Override
-	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
+	protected void doUpgrade(final @NotNull YamlFileManager oldConfig)
 	{
 		doUpgrade(oldConfig, new HashMap<>(), getYamlE().getKeysFiltered("Items\\..*"));
 	}
 
 	public void loadData()
 	{
+		allowItemShortcut = true;
 		itemConfigs.clear();
 		loadItemConfigs("Items");
+		if(itemConfigs.isEmpty())
+		{
+			logger.warning("There musst be at least one item defined to use the items feature!");
+			allowItemShortcut = false;
+		}
+		validShortcutStyles.addAll(getBackpackItems().stream().map(ItemConfig::getName).collect(Collectors.toList()));
+		defaultBackpackItem = getString("Defaults.BackpackItem", "unknown");
+		if(!validShortcutStyles.contains(defaultBackpackItem))
+		{
+			String tmp = validShortcutStyles.iterator().next();
+			logger.warning("Unknown default backpack item '" + defaultBackpackItem + "'. Using '" + tmp + "' instead.");
+			defaultBackpackItem = tmp;
+		}
 	}
 
 	private void loadItemConfigs(final @NotNull String parentKey)

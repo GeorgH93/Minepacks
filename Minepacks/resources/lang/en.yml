@@ -92,6 +92,7 @@ Language:
       Help: "Shows all available commands and their description."
       Migrate: "Migrates the used database from one type to another."
       Shortcut: "Adds the backpack shortcut item to your inventory."
+      ShortcutChose: "Opens a dialog to chose how your backpack item should look like."
 
 Command:
   Backpack:
@@ -126,6 +127,9 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Switches:
+    Set:
+      - set
 
 # Will be shown in the console during startup
 LanguageName: "english"

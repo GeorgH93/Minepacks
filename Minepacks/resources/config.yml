@@ -166,8 +166,10 @@ ItemShortcut:
   # If enabled the players will be given an item they can interact with to open the backpack.
   # The item may not be removed from their inventory as long as this option is enabled.
   Enabled: true
-  # The item that should be used as a shortcut, you can create custom ones in the backpacks.yml file
-  Item: BackpackHeadBlue
+  # Allows players to chose how the backpack items should look like. They also need the "backpack.choseDesign" permission.
+  AllowPlayersToChoseItem: true
+  # Allows players to disable the backpack item. Only effective if AllowPlayersToChoseItem is enabled.
+  AllowPlayersToDisableItem: true
   # Increases compatibility with some death chest plugins. Enable this if the backpack item is added to your death chest!
   ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat

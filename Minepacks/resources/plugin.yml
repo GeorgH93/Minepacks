@@ -24,6 +24,7 @@ permissions:
       backpack.size.1: true
       backpack.clean: true
       backpack.sort: true
+      backpack.choseDesign: true
   backpack.userBig:
     description: This permission can be used to give a user the biggest backpack size and allow him to use the backpack.
     children:
@@ -74,6 +75,9 @@ permissions:
   backpack.fullpickup:
     description: Allows the player to automatically pick up items when their inventory is full (function needs to be enabled in the config)
     defaut: true
+  backpack.choseDesign:
+    description: Allows the player to chose the design of the backpack item shortcut.
+    default: true
   backpack.clean.other:
     description: Allows the player to clean other players backpacks.
     default: op

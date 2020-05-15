@@ -210,7 +210,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			pluginManager.registerEvents(itemFilter, this);
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
-		if(config.isItemShortcutEnabled())
+		if(config.isItemShortcutEnabled() && backpacksConfig.isAllowItemShortcut())
 		{
 			try
 			{
@@ -218,7 +218,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 				pluginManager.registerEvents(itemShortcut, this);
 				commandManager.registerSubCommand(new ShortcutCommand(this, itemShortcut));
 			}
-			catch(IllegalArgumentException ignored) {}
 			catch(Exception e)
 			{
 				e.printStackTrace();

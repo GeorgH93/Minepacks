@@ -1,3 +1,7 @@
+Defaults:
+  # The item that should be used as a shortcut by default
+  BackpackItem: BackpackHeadBlue
+
 # The items define the possible backpack items that can be used as shortcuts
 Items:
   # Example item that uses a player head

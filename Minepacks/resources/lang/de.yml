@@ -91,6 +91,7 @@ Language:
       Help: "Zeigt die verfügbaren Befehle an."
       Migrate: "Erlaubt das Konvertieren der Datenbank in ein anderes Format."
       Shortcut: "Fügt den Rucksack in dein Inventar hinzu."
+      ShortcutChose: "Ändert das aussehen deines Rucksacks."
 
 Command:
   Backpack:
@@ -131,6 +132,10 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Switches:
+    Set:
+      - set
+      - setzen
 
 # Will be shown in the console during startup
 LanguageName: "german"
