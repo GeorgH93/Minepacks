@@ -49,9 +49,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import lombok.Getter;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.Set;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
@@ -65,7 +68,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
 	private int maxSize;
-	private Collection<String> worldBlacklist;
+	@Getter private Set<String> worldBlacklist;
 	private WorldBlacklistMode worldBlacklistMode;
 	private ItemsCollector collector;
 	private CommandManager commandManager;
@@ -190,10 +193,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
 		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
+		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
-		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlacklistMode();
+		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlockMode();
 
 		gameModes = config.getAllowedGameModes();
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
