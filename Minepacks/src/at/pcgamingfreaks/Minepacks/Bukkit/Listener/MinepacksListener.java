@@ -21,12 +21,10 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.event.Listener;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 abstract class MinepacksListener implements Listener
 {
 	protected final Minepacks plugin;
-
-	protected MinepacksListener(Minepacks plugin)
-	{
-		this.plugin = plugin;
-	}
 }

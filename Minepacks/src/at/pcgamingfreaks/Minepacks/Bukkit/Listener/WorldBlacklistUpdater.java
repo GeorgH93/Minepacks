@@ -20,18 +20,17 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldInitEvent;
 import org.jetbrains.annotations.NotNull;
 
-import lombok.AllArgsConstructor;
-
 import java.util.Locale;
 
-@AllArgsConstructor
-public class WorldBlacklistUpdater implements Listener
+public class WorldBlacklistUpdater extends MinepacksListener
 {
-	private final @NotNull Minepacks plugin;
+	public WorldBlacklistUpdater(final @NotNull Minepacks plugin)
+	{
+		super(plugin);
+	}
 
 	@EventHandler
 	public void onWorldInit(final WorldInitEvent event)
