@@ -44,6 +44,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +78,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private CooldownManager cooldownManager = null;
 	private ItemFilter itemFilter = null;
 	private Sound openSound = null;
+	private ItemShortcut shortcut = null;
 
 	public static Minepacks getInstance()
 	{
@@ -192,7 +194,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			pluginManager.registerEvents(itemFilter, this);
 		}
 		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
-		if(config.isItemShortcutEnabled()) pluginManager.registerEvents(new ItemShortcut(this), this);
+		if(config.isItemShortcutEnabled())
+		{
+			shortcut = new ItemShortcut(this);
+			pluginManager.registerEvents(shortcut, this);
+		}
+		else shortcut = null;
 		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
 		//endregion
 		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
@@ -356,7 +363,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public boolean isPlayerGameModeAllowed(Player player)
+	public boolean isPlayerGameModeAllowed(final @NotNull Player player)
 	{
 		return gameModes.contains(player.getGameMode()) || player.hasPermission(Permissions.IGNORE_GAME_MODE);
 	}
@@ -370,5 +377,12 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public @Nullable ItemFilter getItemFilter()
 	{
 		return itemFilter;
+	}
+
+	@Override
+	public boolean isBackpackItem(final @Nullable ItemStack itemStack)
+	{
+		if(shortcut == null) return false;
+		return shortcut.isItemShortcut(itemStack);
 	}
 }

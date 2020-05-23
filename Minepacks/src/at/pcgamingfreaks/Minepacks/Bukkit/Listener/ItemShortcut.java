@@ -31,7 +31,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -39,6 +38,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -46,19 +46,18 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
-public class ItemShortcut implements Listener
+public class ItemShortcut extends MinepacksListener
 {
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
-	private final Minepacks plugin;
 	private final String itemName, value, openCommand;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
 
-	public ItemShortcut(Minepacks plugin)
+	public ItemShortcut(final @NotNull Minepacks plugin)
 	{
-		this.plugin = plugin;
+		super(plugin);
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
@@ -84,7 +83,7 @@ public class ItemShortcut implements Listener
 		}
 	}
 
-	private boolean isItemShortcut(@Nullable ItemStack stack)
+	public boolean isItemShortcut(final @Nullable ItemStack stack)
 	{
 		//noinspection ConstantConditions
 		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && itemName.equals(stack.getItemMeta().getDisplayName());

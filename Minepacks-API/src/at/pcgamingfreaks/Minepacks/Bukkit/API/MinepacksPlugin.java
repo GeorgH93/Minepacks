@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.API;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -134,4 +135,12 @@ public interface MinepacksPlugin
 	 * @return The item filter. Null if item filter is disabled
 	 */
 	@Nullable ItemFilter getItemFilter();
+
+	/**
+	 * Checks if an item is a backpack shortcut item.
+	 *
+	 * @param itemStack item to check.
+	 * @return
+	 */
+	boolean isBackpackItem(final @Nullable ItemStack itemStack);
 }

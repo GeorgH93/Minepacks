@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.API;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -125,5 +126,10 @@ public interface Backpack extends InventoryHolder
 	{
 		setChanged();
 		return getInventory().addItem(itemStacks);
+	}
+
+	static boolean isBackpack(@Nullable Inventory inventory)
+	{
+		return inventory instanceof Backpack;
 	}
 }
