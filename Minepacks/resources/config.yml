@@ -148,10 +148,12 @@ ItemFilter:
 
 # These settings allow control over how the plugin behave in different worlds
 WorldSettings:
+  # Options: blacklist (all worlds listed in FilteredWorlds will be blocked), whitelist (all worlds listed in FilteredWorlds will be allowed)
+  FilterType: "blacklist"
   # All worlds listed here will not have the plugin usable
-  # Blacklist: ["creative_world"]
-  # Blacklist: ["creative_world1", "creative_world2"]
-  Blacklist: []
+  # FilteredWorlds: ["creative_world"]
+  # FilteredWorlds: ["creative_world1", "creative_world2"]
+  FilteredWorlds: []
   # Defines how the Blacklist will be enforced
   # Options:
   #   Message           = The player will see a message that the usage of the backpack is not allowed in this world.
@@ -159,7 +161,7 @@ WorldSettings:
   #   NoPlugin          = The plugin will not be available at all and act as if it was not installed.
   #                       This also exclude players with permission to bypass the world restriction from using it!
   #                       It will not disable the Shulkerboxes filter!
-  BlacklistMode: "Message"
+  BlockMode: "Message"
 
 # Gives the players an item they can interact with to open their backpack. Only works on MC 1.8 or newer.
 ItemShortcut:

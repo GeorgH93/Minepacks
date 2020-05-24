@@ -31,7 +31,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -47,9 +46,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class ItemShortcut implements Listener
+public class ItemShortcut extends MinepacksListener
 {
-	private final Minepacks plugin;
 	private final String openCommand;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
@@ -57,9 +55,9 @@ public class ItemShortcut implements Listener
 	private final Set<Material> containerMaterials = new HashSet<>();
 	private final ItemConfig itemConfig;
 
-	public ItemShortcut(Minepacks plugin)
+	public ItemShortcut(final @NotNull Minepacks plugin)
 	{
-		this.plugin = plugin;
+		super(plugin);
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
@@ -90,7 +88,7 @@ public class ItemShortcut implements Listener
 		}
 	}
 
-	private boolean isItemShortcut(@Nullable ItemStack stack)
+	public boolean isItemShortcut(final @Nullable ItemStack stack)
 	{
 		if(stack == null || !stack.hasItemMeta()) return false;
 		ItemMeta meta = stack.getItemMeta();

@@ -27,9 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
 import at.pcgamingfreaks.YamlFileManager;
 
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +38,7 @@ import java.util.*;
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
 	private static final int CONFIG_VERSION = 31, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+
 	public Config(JavaPlugin plugin)
 	{
 		super(plugin, CONFIG_VERSION, UPGRADE_THRESHOLD);
@@ -65,6 +64,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			Map<String, String> remappedKeys = new HashMap<>();
 			if(oldConfig.getVersion() <= 23) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
 			if(oldConfig.getVersion() <= 28) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
+			if(oldConfig.getVersion() <= 30)
+			{
+				remappedKeys.put("WorldSettings.FilteredWorlds", "WorldSettings.Blacklist");
+				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
+			}
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
@@ -359,19 +363,39 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//endregion
 
 	//region World settings
-	public Collection<String> getWorldBlacklist()
+	public boolean isWorldWhitelistMode()
 	{
-		HashSet<String> blacklist = new HashSet<>();
-		for(String world : getConfigE().getStringList("WorldSettings.Blacklist", new LinkedList<>()))
-		{
-			blacklist.add(world.toLowerCase(Locale.ROOT));
-		}
-		return blacklist;
+		return getConfigE().getString("WorldSettings.FilterType", "blacklist").equalsIgnoreCase("whitelist");
 	}
 
-	public WorldBlacklistMode getWorldBlacklistMode()
+	public Set<String> getWorldFilteredList()
 	{
-		String mode = getConfigE().getString("WorldSettings.BlacklistMode", "Message");
+		Set<String> worldList = new HashSet<>();
+		for(String world : getConfigE().getStringList("WorldSettings.FilteredWorlds", new ArrayList<>(0)))
+		{
+			worldList.add(world.toLowerCase(Locale.ROOT));
+		}
+		return worldList;
+	}
+
+	public Set<String> getWorldBlacklist()
+	{
+		if(isWorldWhitelistMode())
+		{
+			Set<String> whitelist = getWorldFilteredList(), blacklist = new HashSet<>();
+			for(World world : Bukkit.getServer().getWorlds())
+			{
+				String worldName = world.getName().toLowerCase(Locale.ROOT);
+				if(!whitelist.contains(worldName)) blacklist.add(worldName);
+			}
+			return blacklist;
+		}
+		else return getWorldFilteredList();
+	}
+
+	public WorldBlacklistMode getWorldBlockMode()
+	{
+		String mode = getConfigE().getString("WorldSettings.BlockMode", "Message");
 		WorldBlacklistMode blacklistMode = WorldBlacklistMode.Message;
 		try
 		{
@@ -379,7 +403,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 		catch(IllegalArgumentException ignored)
 		{
-			logger.warning(ConsoleColor.YELLOW + "Unsupported mode \"" + mode + "\" for option \"WorldSettings.BlacklistMode\"" + ConsoleColor.RESET);
+			logger.warning(ConsoleColor.YELLOW + "Unsupported mode \"" + mode + "\" for option \"WorldSettings.BlockMode\"" + ConsoleColor.RESET);
 		}
 		return blacklistMode;
 	}
