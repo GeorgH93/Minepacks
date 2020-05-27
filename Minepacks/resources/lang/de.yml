@@ -61,6 +61,8 @@ Language:
       ClearedOtherTarget: "Dein Inventar wurde von {DisplayName}&r gelöscht."
     Shortcut:
       Given: "Du hast das Rucksack Item erhalten."
+      GivenOther: "Rucksack Item hinzugefügt."
+      UnknownPlayer: "&cSpieler {Name} konnte nicht gefunden werden!"
       Set: "Shortcut style set."
       UnknownShortcutStyle: "[\"\",{\"text\":\"Unknown shortcut style: {ShortcutStyle}\",\"color\":\"red\"}]"
       GUI:

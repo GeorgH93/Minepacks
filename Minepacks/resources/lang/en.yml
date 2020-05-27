@@ -62,7 +62,9 @@ Language:
       ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
     Shortcut:
       Given: "The backpack shortcut item has been added to your inventory."
+      GivenOther: "The backpack shortcut item has been added to your inventory."
       Set: "Shortcut style set."
+      UnknownPlayer: "&cCould not find player {Name}!"
       UnknownShortcutStyle: "[\"\",{\"text\":\"Unknown shortcut style: {ShortcutStyle}\",\"color\":\"red\"}]"
       GUI:
         # No Json!!!

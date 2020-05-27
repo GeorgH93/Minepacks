@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.GUI.GuiBuilder;
 import at.pcgamingfreaks.Bukkit.GUI.GuiButton;
 import at.pcgamingfreaks.Bukkit.GUI.IGui;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
@@ -29,6 +30,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -47,7 +49,7 @@ public class ShortcutCommand extends MinepacksCommand
 {
 	private final String[] setSwitch;
 	private final String descriptionChose;
-	private final Message messageItemGiven, messageShortcutSet, messageUnknownShortcutStyle;
+	private final Message messageItemGiven, messageItemGivenOther, messageShortcutSet, messageUnknownShortcutStyle, messageUnknownPlayer;
 	private final ItemShortcut itemShortcut;
 	private final Set<String> validShortcutStyles;
 	private final IGui gui;
@@ -55,11 +57,13 @@ public class ShortcutCommand extends MinepacksCommand
 
 	public ShortcutCommand(final @NotNull Minepacks plugin, final @NotNull ItemShortcut itemShortcut)
 	{
-		super(plugin, "shortcut", plugin.getLanguage().getTranslated("Commands.Description.Shortcut"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Shortcut"));
+		super(plugin, "shortcut", plugin.getLanguage().getTranslated("Commands.Description.Shortcut"), Permissions.USE, false, plugin.getLanguage().getCommandAliases("Shortcut"));
 		this.itemShortcut = itemShortcut;
 		descriptionChose = plugin.getLanguage().getTranslated("Commands.Description.ShortcutChose");
 		messageItemGiven = plugin.getLanguage().getMessage("Ingame.Shortcut.Given");
+		messageItemGivenOther = plugin.getLanguage().getMessage("Ingame.Shortcut.GivenOther");
 		messageShortcutSet = plugin.getLanguage().getMessage("Ingame.Shortcut.Set");
+		messageUnknownPlayer = plugin.getLanguage().getMessage("Ingame.Shortcut.UnknownPlayer").replaceAll("\\{Name}", "%s");
 		messageUnknownShortcutStyle = plugin.getLanguage().getMessage("Ingame.Shortcut.UnknownShortcutStyle").replaceAll("\\{ShortcutStyle}", "%s");
 
 		setSwitch = plugin.getLanguage().getSwitch("Set", "set");
@@ -123,39 +127,67 @@ public class ShortcutCommand extends MinepacksCommand
 	@Override
 	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
-		if(playerChoice && args.length >= 1 && sender.hasPermission(Permissions.CHOSE_DESIGN) && StringUtils.arrayContainsIgnoreCase(setSwitch, args[0]))
+		if(!(sender instanceof Player))
 		{
-			if(args.length == 1) gui.show((Player) sender);
-			else
-			{
-				if(validShortcutStyles.contains(args[1])) //TODO make test case insensitive
-				{
-					//TODO set shortcut
-					messageShortcutSet.send(sender); //TODO add more information
-				}
-				else
-				{
-					messageUnknownShortcutStyle.send(sender, args[1]);
-				}
-			}
+			if(args.length == 1) giveItemOther(sender, args[0]);
+			else showHelp(sender, mainCommandAlias);
 		}
 		else
 		{
-			itemShortcut.addItem((Player) sender);
-			messageItemGiven.send(sender);
+			if(args.length >= 1)
+			{
+				if(playerChoice && sender.hasPermission(Permissions.CHOSE_DESIGN) && StringUtils.arrayContainsIgnoreCase(setSwitch, args[0]))
+				{
+					if(args.length == 1) gui.show((Player) sender);
+					else
+					{
+						if(validShortcutStyles.contains(args[1])) //TODO make test case insensitive
+						{
+							//TODO set shortcut
+							messageShortcutSet.send(sender); //TODO add more information
+						}
+						else
+						{
+							messageUnknownShortcutStyle.send(sender, args[1]);
+						}
+					}
+				}
+				else if(sender.hasPermission(Permissions.OTHERS)) giveItemOther(sender, args[1]);
+				else showHelp(sender, mainCommandAlias);
+			}
+			else
+			{
+				itemShortcut.addItem((Player) sender);
+				messageItemGiven.send(sender);
+			}
 		}
+	}
+
+	private void giveItemOther(final @NotNull CommandSender sender, final @NotNull String target)
+	{
+		Player player = Bukkit.getPlayer(target);
+		if(player != null)
+		{
+			itemShortcut.addItem(player);
+			messageItemGivenOther.send(sender);
+		}
+		else messageUnknownPlayer.send(sender, target);
 	}
 
 	@Override
 	public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
-		if(playerChoice && sender.hasPermission(Permissions.CHOSE_DESIGN) && args.length > 0)
+		if(args.length > 0)
 		{
-			final String arg = args[args.length - 1].toLowerCase(Locale.ENGLISH);
-			if(args.length == 1)
-				return Arrays.stream(setSwitch).filter(s -> s.toLowerCase(Locale.ENGLISH).startsWith(arg)).collect(Collectors.toList());
-			else if(args.length == 2)
-				return validShortcutStyles.stream().filter(style -> style.toLowerCase(Locale.ENGLISH).startsWith(arg)).collect(Collectors.toList());
+			List<String> help = new ArrayList<>();
+			if(playerChoice && sender.hasPermission(Permissions.CHOSE_DESIGN))
+			{
+				final String arg = args[args.length - 1].toLowerCase(Locale.ENGLISH);
+				if(args.length == 1) help.addAll(Arrays.stream(setSwitch).filter(s -> s.toLowerCase(Locale.ENGLISH).startsWith(arg)).collect(Collectors.toList()));
+				else if(args.length == 2) return validShortcutStyles.stream().filter(style -> style.toLowerCase(Locale.ENGLISH).startsWith(arg)).collect(Collectors.toList());
+			}
+			if(args.length == 1 && sender.hasPermission(Permissions.OTHERS)) help.addAll(Utils.getPlayerNamesStartingWith(args[args.length - 1], sender));
+			return help;
 		}
 		return null;
 	}
