@@ -26,18 +26,23 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DropOnDeath extends MinepacksListener
 {
+	private final boolean honorKeepOnDeath;
+
 	public DropOnDeath(Minepacks plugin)
 	{
 		super(plugin);
+		honorKeepOnDeath = plugin.getConfiguration().getHonorKeepInventoryOnDeath();
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
+		if(honorKeepOnDeath && event.getKeepInventory()) return;
 		final Player player = event.getEntity();
 		if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
 		if (!player.hasPermission(Permissions.KEEP_ON_DEATH))
