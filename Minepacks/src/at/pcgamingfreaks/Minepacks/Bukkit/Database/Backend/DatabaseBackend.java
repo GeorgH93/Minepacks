@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.InventorySerializer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;

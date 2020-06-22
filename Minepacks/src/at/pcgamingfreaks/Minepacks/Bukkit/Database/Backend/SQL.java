@@ -23,7 +23,7 @@ import at.pcgamingfreaks.DataHandler.IStringFieldsWithPlaceholdersHolder;
 import at.pcgamingfreaks.DataHandler.Loadable;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
-import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackupHandler;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;

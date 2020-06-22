@@ -15,14 +15,17 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.BackpackMultiPage;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
@@ -44,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack
 {
-	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
+	@Setter private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;
 	private static Message titleOtherFormat;
 	private final Object titleOtherComponent;

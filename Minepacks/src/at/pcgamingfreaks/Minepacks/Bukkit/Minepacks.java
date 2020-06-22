@@ -189,8 +189,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			return;
 		}
 		maxSize = configuration.getBackpackMaxSize();
-		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(configuration.getShrinkApproach());
-		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(new Message(configuration.getBPTitle()), new Message(configuration.getBPTitleOther()));
+		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setShrinkApproach(configuration.getShrinkApproach());
+		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setTitle(new Message(configuration.getBPTitle()), new Message(configuration.getBPTitleOther()));
 		messageNotFromConsole = language.getMessage("NotFromConsole");
 		messageNoPermission   = language.getMessage("Ingame.NoPermission");
 		messageWorldDisabled  = language.getMessage("Ingame.WorldDisabled");

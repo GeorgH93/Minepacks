@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -49,7 +50,7 @@ public class BackupCommand extends MinepacksCommand
 		{
 			//noinspection deprecation
 			getMinepacksPlugin().getBackpack(plugin.getServer().getOfflinePlayer(args[0]), backpack -> {
-				((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
+				((Backpack) backpack).backup();
 				messageCreated.send(sender);
 			}, false);
 		}
