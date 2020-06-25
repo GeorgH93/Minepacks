@@ -118,7 +118,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		updater = new ManagedUpdater(this);
 
 		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_15_R1))
+		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R1))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
