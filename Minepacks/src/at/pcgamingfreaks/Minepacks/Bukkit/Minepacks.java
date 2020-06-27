@@ -98,6 +98,36 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Override
 	public void onEnable()
 	{
+		checkOldDataFolder();
+
+		if(!checkPCGF_PluginLib()) return;
+
+		updater = new ManagedUpdater(this);
+		instance = this;
+		config = new Config(this);
+		if(config.useUpdater()) updater.update();
+
+		if(!checkMcVersion()) return;
+
+		lang = new Language(this);
+		load();
+
+		getLogger().info(StringUtils.getPluginEnabledMessage(getDescription().getName()));
+	}
+
+	private boolean checkMcVersion()
+	{
+		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R1))
+		{
+			this.warnOnVersionIncompatibility();
+			this.setEnabled(false);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean checkPCGF_PluginLib()
+	{
 		// Check if running as standalone edition
 		/*if[STANDALONE]
 		getLogger().info("Starting Minepacks in standalone mode!");
@@ -111,39 +141,23 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			getLogger().warning("You are using an outdated version of the PCGF PluginLib! Please update it!");
 			setEnabled(false);
-			return;
+			return false;
 		}
 		/*end[STANDALONE]*/
+		return true;
+	}
 
-		updater = new ManagedUpdater(this);
-
-		//region Check compatibility with used minecraft version
-		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R1))
-		{
-			this.warnOnVersionIncompatibility();
-			this.setEnabled(false);
-			return;
-		}
-		//endregion
-
-		//region check if a plugin folder exists (was renamed from MinePacks to Minepacks with the V2.0 update)
+	private void checkOldDataFolder()
+	{
 		if(!getDataFolder().exists())
 		{
 			File oldPluginFolder = new File(getDataFolder().getParentFile(), "MinePacks");
 			if(oldPluginFolder.exists() && !oldPluginFolder.renameTo(getDataFolder()))
 			{
 				getLogger().warning("Failed to rename the plugins data-folder.\n" +
-						            "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
+						                    "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
 			}
 		}
-		//endregion
-		instance = this;
-		config = new Config(this);
-		lang = new Language(this);
-		load();
-
-		if(config.useUpdater()) updater.update();
-		getLogger().info(StringUtils.getPluginEnabledMessage(getDescription().getName()));
 	}
 
 	@Override
