@@ -105,6 +105,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		updater = new ManagedUpdater(this);
 		instance = this;
 		config = new Config(this);
+		updater.setChannel(config.getUpdateChannel());
 		if(config.useUpdater()) updater.update();
 
 		if(!checkMcVersion()) return;

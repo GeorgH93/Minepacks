@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
+import at.pcgamingfreaks.Bukkit.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.StringUtils;
 
@@ -48,7 +49,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;
-	private static String titleOtherFormat, titleOther;
+	private static String titleOtherFormat, titleOther, titleOwnString;
 	private final OfflinePlayer owner;
 	private final Object titleOtherOBC;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
@@ -58,6 +59,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
 	{
+		titleOwnString = title;
 		titleOwn = prepareTitle(title);
 		titleOtherFormat = titleOther;
 	}
@@ -194,25 +196,33 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		opened.put(player, editable);
 
 		//region Set backpack title
-		// It's not perfect, but it is the only way of doing this.
-		// This sets the title of the inventory based on the person who is opening it.
-		// The owner will see an other title, then everyone else.
-		// This way we can add owner name to the tile for everyone else.
-		final Object usedTitle = (title == null) ? (player.equals(owner) ? titleOwn : titleOtherOBC) : prepareTitle(title);
-		if(usedTitle != null && FIELD_TITLE != null && METHOD_GET_INVENTORY != null)
+		if(MCVersion.isOlderThan(MCVersion.MC_1_14))
 		{
-			try
+			// It's not perfect, but it is the only way of doing this.
+			// This sets the title of the inventory based on the person who is opening it.
+			// The owner will see an other title, then everyone else.
+			// This way we can add owner name to the tile for everyone else.
+			final Object usedTitle = (title == null) ? (player.equals(owner) ? titleOwn : titleOtherOBC) : prepareTitle(title);
+			if(usedTitle != null && FIELD_TITLE != null && METHOD_GET_INVENTORY != null)
 			{
-				FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), usedTitle);
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
+				try
+				{
+					FIELD_TITLE.set(METHOD_GET_INVENTORY.invoke(bp), usedTitle);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 		//endregion
 
 		player.openInventory(bp);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14))
+		{
+			final String usedTitle = (title == null) ? (player.equals(owner) ? titleOwnString : titleOther) : title;
+			Bukkit.getScheduler().runTaskLater(Minepacks.getInstance(), () -> Utils.updateInventoryTitle(player, usedTitle), 2);
+		}
 	}
 
 	public void close(Player p)
