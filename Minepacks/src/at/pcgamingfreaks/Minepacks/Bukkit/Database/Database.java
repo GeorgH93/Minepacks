@@ -92,10 +92,10 @@ public abstract class Database implements Listener
 			ConnectionProvider connectionProvider = null;
 			if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 			{
-			/*if[STANDALONE]
-			plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
-			return null;
-			else[STANDALONE]*/
+				/*if[STANDALONE]
+				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+				return null;
+				else[STANDALONE]*/
 				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
 				if(pool == null)
 				{
