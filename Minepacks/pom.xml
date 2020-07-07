@@ -38,12 +38,13 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.25-SNAPSHOT</version>		</dependency>
+			<version>1.0.28-SNAPSHOT</version>
+		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
-			<version>1.4</version>
+			<version>1.6</version>
 		</dependency>
 		<!-- Tests -->
 		<dependency>

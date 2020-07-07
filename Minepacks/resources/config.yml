@@ -17,6 +17,9 @@ BackpackTitle: "&bBackpack"
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.keepOnDeath" permission.
 DropOnDeath: true
+# If this option is enabled the backpack will not drop if the keepInventory flag for the death event is set.
+# This should add compatibility with plugins protecting the players inventory on death (like SaveRod). But might prevent the backpack form dropping on death with some plugins.
+HonorKeepInventoryOnDeath: false
 # Defines the max amount of columns for a backpack.
 # The size of the user's backpack will be defined by the permission, permissions for bigger backpacks than this value will be ignored.
 # Can be set to anything > 0. Backpacks with more than 6 columns will have a broken UI! Sizes bigger than 9 may not work with all permission plugins.
@@ -210,4 +213,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 31
+Version: 32
