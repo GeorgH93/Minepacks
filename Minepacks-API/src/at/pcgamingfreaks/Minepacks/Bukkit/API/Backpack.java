@@ -75,7 +75,6 @@ public interface Backpack extends InventoryHolder
 	 *
 	 * @return The size of the backpack.
 	 */
-	@SuppressWarnings("unused")
 	int getSize();
 
 	/**

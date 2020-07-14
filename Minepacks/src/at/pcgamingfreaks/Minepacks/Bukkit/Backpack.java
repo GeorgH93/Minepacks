@@ -49,7 +49,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private final static Field FIELD_TITLE = NMSReflection.getOBCField("inventory.CraftInventoryCustom$MinecraftInventory", "title");
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;
-	private static String titleOtherFormat, titleOther, titleOwnString;
+	private static String titleOtherFormat, titleOwnString;
+	private final String titleOther;
 	private final OfflinePlayer owner;
 	private final Object titleOtherOBC;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
