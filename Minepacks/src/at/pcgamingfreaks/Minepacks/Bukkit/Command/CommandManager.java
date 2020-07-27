@@ -81,6 +81,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		registerSubCommand(new RestoreCommand(plugin));
 		registerSubCommand(new MigrateCommand(plugin));
 		registerSubCommand(new VersionCommand(plugin));
+		registerSubCommand(new DebugCommand(plugin));
 		registerSubCommand(new HelpCommand(plugin, commands, this));
 	}
 
