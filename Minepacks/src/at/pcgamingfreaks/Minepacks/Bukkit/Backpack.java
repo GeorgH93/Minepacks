@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.NMSReflection;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.StringUtils;
 
@@ -222,7 +222,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14))
 		{
 			final String usedTitle = (title == null) ? (player.equals(owner) ? titleOwnString : titleOther) : title;
-			Bukkit.getScheduler().runTaskLater(Minepacks.getInstance(), () -> Utils.updateInventoryTitle(player, usedTitle), 2);
+			Bukkit.getScheduler().runTaskLater(Minepacks.getInstance(), () -> InventoryUtils.updateInventoryTitle(player, usedTitle), 2);
 		}
 	}
 
@@ -332,15 +332,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	}
 
 	@Override
-	public void drop(Location location)
+	public void drop(final @NotNull Location location)
 	{
-		for(ItemStack i : bp.getContents())
-		{
-			if(i != null)
-			{
-				location.getWorld().dropItemNaturally(location, i);
-			}
-		}
-		clear();
+		InventoryUtils.dropInventory(bp, location);
 	}
 }

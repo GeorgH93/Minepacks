@@ -18,7 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Material;
@@ -110,7 +110,7 @@ public class DisableShulkerboxes extends MinepacksListener
 				Block shulkerBlock = ((ShulkerBox) event.getInventory().getHolder()).getBlock();
 				if(dropExistingContent)
 				{
-					Utils.dropInventory(event.getInventory(), shulkerBlock.getLocation());
+					InventoryUtils.dropInventory(event.getInventory(), shulkerBlock.getLocation());
 				}
 				event.getInventory().clear();
 				shulkerBlock.setType(Material.AIR);
@@ -198,7 +198,7 @@ public class DisableShulkerboxes extends MinepacksListener
 			if(removeExisting)
 			{
 				ShulkerBox shulkerBox = (ShulkerBox) block.getState();
-				if(dropExistingContent) Utils.dropInventory(shulkerBox.getInventory(), shulkerBox.getLocation());
+				if(dropExistingContent) InventoryUtils.dropInventory(shulkerBox.getInventory(), shulkerBox.getLocation());
 				shulkerBox.getInventory().clear();
 				block.setType(Material.AIR);
 			}
