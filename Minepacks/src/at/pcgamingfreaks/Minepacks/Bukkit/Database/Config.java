@@ -24,6 +24,7 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
 import at.pcgamingfreaks.YamlFileManager;
 
@@ -199,7 +200,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//region Misc getters
 	public boolean useUpdater()
 	{
-		return getConfigE().getBoolean("Misc.AutoUpdate.Enabled", getConfigE().getBoolean("Misc.AutoUpdate", true));
+		return (MCVersion.isNewerOrEqualThan(MagicValues.MIN_MC_VERSION_FOR_UPDATES)) && getConfigE().getBoolean("Misc.AutoUpdate.Enabled", getConfigE().getBoolean("Misc.AutoUpdate", true));
 	}
 
 	public String getUpdateChannel()

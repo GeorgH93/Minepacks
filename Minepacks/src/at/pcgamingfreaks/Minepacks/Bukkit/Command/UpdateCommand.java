@@ -17,11 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
+import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,21 +46,28 @@ public class UpdateCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull final CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(@NotNull final CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
-		messageCheckingForUpdates.send(sender);
-		/*if_not[STANDALONE]*/
-		((at.pcgamingfreaks.PluginLib.Bukkit.PluginLib) at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance()).update(null); // Make the PluginLib check for updates too
-		/*end[STANDALONE]*/
-		((Minepacks) plugin).update(result -> {
-			switch(result)
-			{
-				case SUCCESS: messageUpdated.send(sender); break;
-				case NO_UPDATE: messageNoUpdate.send(sender); break;
-				case UPDATE_AVAILABLE: messageUpdateAvailable.send(sender); break;
-				default: messageUpdateFail.send(sender); break;
-			}
-		});
+		if(MCVersion.isNewerOrEqualThan(MagicValues.MIN_MC_VERSION_FOR_UPDATES))
+		{
+			messageCheckingForUpdates.send(sender);
+			/*if_not[STANDALONE]*/
+			((at.pcgamingfreaks.PluginLib.Bukkit.PluginLib) at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance()).update(null); // Make the PluginLib check for updates too
+			/*end[STANDALONE]*/
+			((Minepacks) plugin).update(result -> {
+				switch(result)
+				{
+					case SUCCESS: messageUpdated.send(sender); break;
+					case NO_UPDATE: messageNoUpdate.send(sender); break;
+					case UPDATE_AVAILABLE: messageUpdateAvailable.send(sender); break;
+					default: messageUpdateFail.send(sender); break;
+				}
+			});
+		}
+		else
+		{
+			sender.sendMessage(ChatColor.RED + "There are no more updates for Minecraft 1.7. If you would like to use new features please update your Minecraft version.");
+		}
 	}
 
 	@Override
