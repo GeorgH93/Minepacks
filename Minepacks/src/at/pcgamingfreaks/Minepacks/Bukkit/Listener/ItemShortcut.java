@@ -26,6 +26,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -100,6 +101,7 @@ public class ItemShortcut extends MinepacksListener
 				else if(isItemShortcut(itemStack))
 				{
 					item = true;
+					if(itemStack.getAmount() > 1) itemStack.setAmount(1);
 					break;
 				}
 			}
@@ -124,21 +126,21 @@ public class ItemShortcut extends MinepacksListener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(PlayerChangedWorldEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
