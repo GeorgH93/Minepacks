@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
-			<version>1.6</version>
+			<version>1.7</version>
 		</dependency>
 		<!-- Tests -->
 		<dependency>
