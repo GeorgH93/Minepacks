@@ -19,7 +19,8 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -27,6 +28,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -107,6 +109,7 @@ public class ItemShortcut extends MinepacksListener
 				if(itemStack == null || itemStack.getType() == Material.AIR) empty = true; // Empty inventory slot found
 				else if(isItemShortcut(itemStack))
 				{ //TODO update item
+					if(itemStack.getAmount() > 1) itemStack.setAmount(1);
 					return;
 				}
 			}
@@ -131,21 +134,21 @@ public class ItemShortcut extends MinepacksListener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(PlayerChangedWorldEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		addItem(event.getPlayer());
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -284,7 +287,7 @@ public class ItemShortcut extends MinepacksListener
 			}
 			else if(isItemShortcut(event.getCursor()))
 			{
-				if(!player.getInventory().equals(Utils.getClickedInventory(event)))
+				if(!player.getInventory().equals(InventoryUtils.getClickedInventory(event)))
 				{
 					event.setCancelled(true);
 					messageDoNotRemoveItem.send(player);

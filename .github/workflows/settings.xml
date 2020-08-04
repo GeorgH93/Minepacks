@@ -1,0 +1,11 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>pcgf-public</id>
+      <name>PCGF Public</name>
+      <url>https://repo.pcgamingfreaks.at/repository/maven-public/</url>
+      <mirrorOf>central,spigot-nexus,spigot-repo,placeholderapi,sonatype-nexus-snapshots,pcgf-repo,herocraftonline-repo,sk89q-repo,CodeMC,mvdw-software</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>

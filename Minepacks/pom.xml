@@ -38,13 +38,13 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.28-SNAPSHOT</version>
+			<version>1.0.30-SNAPSHOT</version>
 		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
-			<version>1.6</version>
+			<version>1.8</version>
 		</dependency>
 		<!-- Tests -->
 		<dependency>
@@ -162,7 +162,7 @@
 									<shadedArtifactAttached>true</shadedArtifactAttached>
 									<shadedClassifierName>Standalone</shadedClassifierName>
 									<createDependencyReducedPom>false</createDependencyReducedPom>
-									<minimizeJar>true</minimizeJar>
+									<minimizeJar>false</minimizeJar>
 									<outputDirectory>${project.build.directory}</outputDirectory>
 									<artifactSet>
 										<includes>
@@ -195,14 +195,6 @@
 											</excludes>
 										</relocation>
 									</relocations>
-									<filters>
-										<filter>
-											<artifact>at.pcgamingfreaks:PluginLib</artifact>
-											<excludes>
-												<exclude>*.yml</exclude>
-											</excludes>
-										</filter>
-									</filters>
 								</configuration>
 							</execution>
 						</executions>

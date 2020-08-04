@@ -25,7 +25,7 @@ jobs:
 
     - name: Build with Maven
       run: |
-        mvn -B install package --file pom.xml
+        mvn -B -s .github/workflows/settings.xml install --file pom.xml
         cp Minepacks/target/M*.jar artifacts/
 
     - name: Publish to GitHub Packages Apache Maven
@@ -35,12 +35,12 @@ jobs:
 
     - name: Build with Maven (Standalone)
       run: |
-        mvn -B clean install package --file pom.xml -P Standalone,ExcludeBadRabbit
+        mvn -B -s .github/workflows/settings.xml clean install --file pom.xml -P Standalone,ExcludeBadRabbit
         mv Minepacks/target/M*-Standalone.jar artifacts/
 
     - name: Build with Maven (Release)
       run: |
-        mvn -B clean package --file pom.xml -P Release
+        mvn -B -s .github/workflows/settings.xml clean package --file pom.xml -P Release
         mv Minepacks/target/M*-Release.jar artifacts/
 
     - name: Upload the artifacts
