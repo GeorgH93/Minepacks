@@ -67,7 +67,7 @@ public class BackpackEventListener extends MinepacksListener
 			}
 			if(closeSound != null)
 			{
-				closer.getWorld().playSound(closer.getLocation(), closeSound, 1, 0);
+				closer.getWorld().playSound(closer.getEyeLocation(), closeSound, 1, 0);
 			}
 	    }
 	}

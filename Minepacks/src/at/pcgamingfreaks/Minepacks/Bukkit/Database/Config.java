@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 32, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 33, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -481,6 +481,16 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public @Nullable Sound getCloseSound()
 	{
 		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
+	}
+
+	public @Nullable Sound getAutoCollectSound()
+	{
+		return getSound("AutoCollectSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "ENTITY_ITEM_PICKUP" : "ITEM_PICKUP");
+	}
+
+	public @Nullable Sound getDragAndDropSound()
+	{
+		return getSound("DragAndDropSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "ENTITY_ITEM_PICKUP" : "ITEM_PICKUP");
 	}
 	//endregion
 

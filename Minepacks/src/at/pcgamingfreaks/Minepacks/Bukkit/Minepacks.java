@@ -343,7 +343,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
-			opener.getWorld().playSound(opener.getLocation(), openSound, 1, 0);
+			opener.getWorld().playSound(opener.getEyeLocation(), openSound, 1, 0);
 		}
 		backpack.open(opener, editable);
 	}

@@ -197,6 +197,14 @@ Sound:
   # disabled or false to disable the sound effect
   # auto will play the chest sound for minecraft versions older than 1.11, and the shulker-box sound for newer MC versions
   CloseSound: auto
+  # The sound effect that should be played when the auto-pickup feature collects an item into the backpack
+  # disabled or false to disable the sound effect
+  # auto will play the item pickup sound
+  AutoCollectSound: auto
+  # The sound effect that should be played when an item is deposited into the backpack through drag and drop
+  # disabled or false to disable the sound effect
+  # auto will play the item pickup sound
+  DragAndDropSound: auto
 
 # Settings for the inventory management
 InventoryManagement:
@@ -213,4 +221,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 32
+Version: 33

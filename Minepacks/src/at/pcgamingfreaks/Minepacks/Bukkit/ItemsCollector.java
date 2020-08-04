@@ -21,12 +21,14 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -37,12 +39,14 @@ public class ItemsCollector extends BukkitRunnable
 	private final double radius;
 	private final BukkitTask task;
 	private final ItemFilter itemFilter;
+	private final Sound collectSound;
 
-	public ItemsCollector(Minepacks plugin)
+	public ItemsCollector(final @NotNull Minepacks plugin)
 	{
 		this.plugin = plugin;
 		this.radius = plugin.getConfiguration().getFullInvRadius();
 		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+		collectSound = plugin.getConfiguration().getAutoCollectSound();
 		itemFilter = plugin.getItemFilter();
 	}
 
@@ -73,11 +77,16 @@ public class ItemsCollector extends BukkitRunnable
 							backpack.setChanged();
 							if(!full.isEmpty())
 							{
+								if(collectSound != null && item.getItemStack().getAmount() != full.get(0).getAmount())
+								{ // Play sound for partially collected item stacks
+									player.getWorld().playSound(player.getLocation(), collectSound, 1, 0);
+								}
 								item.setItemStack(full.get(0));
 							}
 							else
 							{
 								item.remove();
+								if(collectSound != null) player.getWorld().playSound(player.getLocation(), collectSound, 1, 0);
 							}
 						}
 					}

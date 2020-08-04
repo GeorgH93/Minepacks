@@ -19,7 +19,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
@@ -30,6 +29,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -56,6 +56,7 @@ public class ItemShortcut extends MinepacksListener
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
 	private final ItemConfig itemConfig;
+	private final Sound dragAndDropSound;
 
 	public ItemShortcut(final @NotNull Minepacks plugin)
 	{
@@ -65,6 +66,7 @@ public class ItemShortcut extends MinepacksListener
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
 		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
 		blockItemFromMoving = plugin.getConfiguration().getItemShortcutBlockItemFromMoving();
+		dragAndDropSound = plugin.getConfiguration().getDragAndDropSound();
 		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
@@ -219,6 +221,55 @@ public class ItemShortcut extends MinepacksListener
 	//endregion
 
 	//region Handle inventory actions
+	private void handleDragAndDrop(final @NotNull InventoryClickEvent event)
+	{
+		final Player player = (Player) event.getWhoClicked();
+		if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission(Permissions.USE) || !plugin.isPlayerGameModeAllowed(player)) return;
+		Backpack backpack = plugin.getBackpackCachedOnly(player);
+		if(backpack != null)
+		{
+			final ItemStack stack = event.getCursor();
+			if(stack != null && stack.getAmount() > 0)
+			{
+				if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
+				{
+					if(event.getClick() == ClickType.RIGHT)
+					{ // right click should place only one
+						ItemStack place = stack.clone();
+						place.setAmount(1);
+						ItemStack full = backpack.addItem(place);
+						if(full == null)
+						{
+							stack.setAmount(stack.getAmount() - 1);
+							event.setCursor(stack);
+							if(dragAndDropSound != null) player.playSound(player.getEyeLocation(), dragAndDropSound, 1, 0);
+						}
+					}
+					else
+					{
+						ItemStack full = backpack.addItem(stack);
+						if(full == null)
+						{
+							stack.setAmount(0);
+							if(dragAndDropSound != null) player.playSound(player.getEyeLocation(), dragAndDropSound, 1, 0);
+						}
+						else
+						{
+							if(dragAndDropSound != null && stack.getAmount() != full.getAmount()) player.playSound(player.getEyeLocation(), dragAndDropSound, 1, 0);
+							stack.setAmount(full.getAmount());
+						}
+						event.setCursor(stack);
+					}
+					event.setCancelled(true);
+				}
+				else
+				{
+					plugin.getItemFilter().messageNotAllowedInBackpack.send(player, plugin.getItemFilter().itemNameResolver.getName(stack));
+				}
+			}
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onItemClick(InventoryClickEvent event)
 	{
@@ -229,40 +280,7 @@ public class ItemShortcut extends MinepacksListener
 			{
 				if(event.getAction() == InventoryAction.SWAP_WITH_CURSOR)
 				{
-					if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission(Permissions.USE) || !plugin.isPlayerGameModeAllowed(player)) return;
-					Backpack backpack = plugin.getBackpackCachedOnly(player);
-					if(backpack != null)
-					{
-						final ItemStack stack = event.getCursor();
-						if(stack != null && stack.getAmount() > 0)
-						{
-							if(plugin.getItemFilter() == null || !plugin.getItemFilter().isItemBlocked(stack))
-							{
-								if(event.getClick() == ClickType.RIGHT)
-								{ // right click should place only one
-									ItemStack place = stack.clone();
-									place.setAmount(1);
-									ItemStack full = backpack.addItem(place);
-									if(full == null)
-									{
-										stack.setAmount(stack.getAmount() - 1);
-										event.setCursor(stack);
-									}
-								}
-								else
-								{
-									ItemStack full = backpack.addItem(stack);
-									stack.setAmount((full == null) ? 0 : full.getAmount());
-									event.setCursor(stack);
-								}
-								event.setCancelled(true);
-							}
-							else
-							{
-								plugin.getItemFilter().messageNotAllowedInBackpack.send(player, plugin.getItemFilter().itemNameResolver.getName(stack));
-							}
-						}
-					}
+					handleDragAndDrop(event);
 				}
 				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
 				{
