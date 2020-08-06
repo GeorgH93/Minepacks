@@ -281,5 +281,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	public void drop(final @NotNull Location location)
 	{
 		InventoryUtils.dropInventory(bp, location);
+		setChanged();
+		save();
 	}
 }

@@ -87,7 +87,7 @@ public class DebugCommand extends MinepacksCommand
 		writer.append(plugin.getDescription().getName()).append(" Version: ").append(plugin.getDescription().getVersion());
 		writer.append("\nServer: ").append(Bukkit.getServer().getBukkitVersion()).append(" (").append(Bukkit.getServer().getVersion()).append(")");
 		writer.append("\nJava: ").append(System.getProperty("java.version"));
-		writer.append("\\n\\nPlugins:\n");
+		writer.append("\n\nPlugins:\n");
 		for(Plugin p : Bukkit.getServer().getPluginManager().getPlugins())
 		{
 			writer.append(p.getName()).append(' ').append(p.getDescription().getVersion()).append('\n');
@@ -99,6 +99,7 @@ public class DebugCommand extends MinepacksCommand
 			while((line = configReader.readLine()) != null)
 			{
 				if(line.isEmpty()) continue;
+				if(line.contains("Host") || line.contains("Password") || line.contains("User")) line = line.replaceAll("^(\\s+\\w+):.*$", "$1: ********");
 				writer.append(line).append('\n');
 			}
 		}
