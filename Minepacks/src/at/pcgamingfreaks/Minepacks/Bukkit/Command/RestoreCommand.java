@@ -148,7 +148,7 @@ public class RestoreCommand extends MinepacksCommand
 				return;
 			}
 		}
-		ArrayList<String> backups = ((Minepacks) getMinepacksPlugin()).getDatabase().getBackups();
+		List<String> backups = ((Minepacks) getMinepacksPlugin()).getDatabase().getBackups();
 		int pages = backups.size() / elementsPerPage + 1;
 		page = Math.min(page, pages - 1);
 		int offset = page * elementsPerPage, end = Math.min(offset + elementsPerPage, backups.size());

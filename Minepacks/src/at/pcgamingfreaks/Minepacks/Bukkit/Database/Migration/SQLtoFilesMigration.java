@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 

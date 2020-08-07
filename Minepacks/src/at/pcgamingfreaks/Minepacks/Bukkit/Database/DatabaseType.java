@@ -15,24 +15,30 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
-
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.DatabaseBackend;
-import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public abstract class Migration
+import java.util.Locale;
+
+public enum DatabaseType
 {
-	protected final Minepacks plugin;
-	protected final DatabaseBackend oldDb;
+	MYSQL,
+	SQLITE,
+	FILES,
+	SHARED,
+	UNKNOWN;
 
-	protected Migration(@NotNull Minepacks plugin, @NotNull DatabaseBackend oldDb)
+	public static @NotNull DatabaseType fromName(@NotNull String typeName)
 	{
-		this.plugin = plugin;
-		this.oldDb = oldDb;
+		typeName = typeName.toLowerCase(Locale.ENGLISH);
+		switch(typeName)
+		{
+			case "mysql": return MYSQL;
+			case "sqlite": return SQLITE;
+			case "files": case "file": case "flat": return FILES;
+			case "shared": case "external": case "global": return SHARED;
+		}
+		return UNKNOWN;
 	}
-
-	public abstract @Nullable MigrationResult migrate() throws Exception;
 }

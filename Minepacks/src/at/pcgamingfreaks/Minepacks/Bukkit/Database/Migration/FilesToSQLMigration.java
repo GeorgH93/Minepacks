@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,7 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Files;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.intellij.lang.annotations.Language;
@@ -35,7 +36,7 @@ public class FilesToSQLMigration extends ToSQLMigration
 	private final @Language("SQL") String queryInsertUsers, queryInsertBackpacks;
 	private final File saveFolder;
 
-	protected FilesToSQLMigration(@NotNull Minepacks plugin, @NotNull Files oldDb, @NotNull String dbType, boolean global) throws Exception
+	protected FilesToSQLMigration(@NotNull Minepacks plugin, @NotNull Files oldDb, @NotNull DatabaseType dbType, boolean global) throws Exception
 	{
 		super(plugin, oldDb, dbType, global);
 		saveFolder = new File(this.plugin.getDataFolder(), Files.FOLDER_NAME);

@@ -15,12 +15,13 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackupHandler;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
@@ -32,10 +33,12 @@ import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
+import lombok.AllArgsConstructor;
+
 import java.sql.*;
 import java.util.*;
 
-public abstract class SQL extends Database
+public abstract class SQL extends DatabaseBackend
 {
 	private final ConnectionProvider dataSource;
 
@@ -104,23 +107,17 @@ public abstract class SQL extends Database
 	@Override
 	public void close()
 	{
-		super.close();
 		Utils.blockThread(1); // Give the database some time to perform async operations
 		dataSource.close();
 	}
 
 	protected void checkUUIDs()
 	{
+		@AllArgsConstructor
 		class UpdateData // Helper class for fixing UUIDs
 		{
-			int id;
 			String  uuid;
-
-			public UpdateData(String uuid, int id)
-			{
-				this.id = id;
-				this.uuid = uuid;
-			}
+			final int id;
 		}
 		try(Connection connection = getConnection())
 		{
@@ -262,17 +259,17 @@ public abstract class SQL extends Database
 
 	// Plugin Functions
 	@Override
-	public void updatePlayer(final Player player)
+	public void updatePlayer(final @NotNull Player player)
 	{
 		runStatementAsync(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player), player.getName());
 	}
 
 	@Override
-	public void saveBackpack(final Backpack backpack)
+	public void saveBackpack(final @NotNull Backpack backpack)
 	{
 		final byte[] data = itsSerializer.serialize(backpack.getInventory());
 		final int id = backpack.getOwnerID(), usedSerializer = itsSerializer.getUsedSerializer();
-		final String nameOrUUID = getPlayerFormattedUUID(backpack.getOwner()), name = backpack.getOwner().getName();
+		final String uuid = getPlayerFormattedUUID(backpack.getOwner()), name = backpack.getOwner().getName();
 
 		Runnable runnable = () -> {
 			try(Connection connection = getConnection())
@@ -281,7 +278,7 @@ public abstract class SQL extends Database
 				{
 					try(PreparedStatement ps = connection.prepareStatement(queryGetPlayerID))
 					{
-						ps.setString(1, nameOrUUID);
+						ps.setString(1, uuid);
 						try(ResultSet rs = ps.executeQuery())
 						{
 							if(rs.next())
@@ -293,7 +290,7 @@ public abstract class SQL extends Database
 							else
 							{
 								plugin.getLogger().warning("Failed saving backpack for: " + name + " (Unable to get players ID from database)");
-								writeBackup(name, nameOrUUID, usedSerializer, data);
+								BackupHandler.getInstance().writeBackup(name, uuid, usedSerializer, data);
 							}
 						}
 					}
@@ -307,14 +304,14 @@ public abstract class SQL extends Database
 			{
 				plugin.getLogger().warning("Failed to save backpack in database! Error: " + e.getMessage());
 				e.printStackTrace();
-				writeBackup(name, nameOrUUID, usedSerializer, data);
+				BackupHandler.getInstance().writeBackup(name, uuid, usedSerializer, data);
 			}
 		};
 		if(asyncSave) Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable); else runnable.run();
 	}
 
 	@Override
-	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	public void loadBackpack(final @NotNull OfflinePlayer player, final @NotNull Callback<Backpack> callback)
 	{
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
@@ -360,14 +357,14 @@ public abstract class SQL extends Database
 	}
 	
 	@Override
-	public void syncCooldown(Player player, long cooldownTime)
+	public void syncCooldown(final @NotNull Player player, final long cooldownTime)
 	{
 		Timestamp ts = new Timestamp(cooldownTime);
 		runStatementAsync(querySyncCooldown, ts, getPlayerFormattedUUID(player), ts);
 	}
 
 	@Override
-	public void getCooldown(final Player player, final Callback<Long> callback)
+	public void getCooldown(final @NotNull Player player, final @NotNull Callback<Long> callback)
 	{
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetCooldown))

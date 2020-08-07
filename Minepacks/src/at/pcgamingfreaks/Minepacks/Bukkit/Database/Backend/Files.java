@@ -15,10 +15,11 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.InventorySerializer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 
@@ -33,17 +34,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.logging.Logger;
 
-public class Files extends Database
+public class Files extends DatabaseBackend
 {
 	public static final String EXT = ".backpack", EXT_REGEX = "\\.backpack", FOLDER_NAME = "backpacks";
 
 	private final File saveFolder;
 	
-	public Files(Minepacks plugin)
+	public Files(final @NotNull Minepacks plugin)
 	{
 		super(plugin);
 		maxAge *= 24 * 3600000L;
-		saveFolder = new File(this.plugin.getDataFolder(), FOLDER_NAME);
+		saveFolder = new File(plugin.getDataFolder(), FOLDER_NAME);
 		if(!saveFolder.exists())
 		{
 			if(!saveFolder.mkdirs())
@@ -58,9 +59,9 @@ public class Files extends Database
 	}
 
 	@Override
-	public void updatePlayer(Player player)
+	public void updatePlayer(final @NotNull Player player)
 	{
-		// Files are stored with the users name or the uuid, there is no reason to update anything
+		// Files are stored with the users uuid, there is no reason to update anything
 	}
 
 	private void checkFiles()
@@ -118,7 +119,7 @@ public class Files extends Database
 	
 	// DB Functions
 	@Override
-	public void saveBackpack(Backpack backpack)
+	public void saveBackpack(@NotNull Backpack backpack)
 	{
 		File save = new File(saveFolder, getFileName(backpack.getOwner()));
 		try(FileOutputStream fos = new FileOutputStream(save))
@@ -134,7 +135,7 @@ public class Files extends Database
 	}
 
 	@Override
-	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	public void loadBackpack(final @NotNull OfflinePlayer player, final @NotNull Callback<Backpack> callback)
 	{ //TODO this needs to be done async!
 		File save = new File(saveFolder, getFileName(player));
 		ItemStack[] itemStacks = readFile(itsSerializer, save, plugin.getLogger());
@@ -148,7 +149,7 @@ public class Files extends Database
 		}
 	}
 
-	protected static @Nullable ItemStack[] readFile(@NotNull InventorySerializer itsSerializer, @NotNull File file, @NotNull Logger logger)
+	public static @Nullable ItemStack[] readFile(final @NotNull InventorySerializer itsSerializer, final @NotNull File file, final @NotNull Logger logger)
 	{
 		if(file.exists())
 		{

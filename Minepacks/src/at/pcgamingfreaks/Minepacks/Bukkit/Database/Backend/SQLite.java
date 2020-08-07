@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.Database;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
@@ -107,7 +107,7 @@ public class SQLite extends SQL
 	}
 
 	@Override
-	public void updatePlayer(final Player player)
+	public void updatePlayer(final @NotNull Player player)
 	{
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));

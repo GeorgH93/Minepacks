@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQLite;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQLite;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.intellij.lang.annotations.Language;
@@ -33,7 +34,7 @@ public class SQLtoSQLMigration extends ToSQLMigration
 {
 	private final @Language("SQL") String queryInsertUsers, queryInsertBackpacks;
 
-	protected SQLtoSQLMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb, @NotNull String dbType, boolean global) throws Exception
+	protected SQLtoSQLMigration(@NotNull Minepacks plugin, @NotNull SQL oldDb, @NotNull DatabaseType dbType, boolean global) throws Exception
 	{
 		super(plugin, oldDb, dbType, global);
 

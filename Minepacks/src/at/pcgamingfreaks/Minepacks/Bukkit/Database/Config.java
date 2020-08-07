@@ -82,9 +82,14 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getInt("Database.AutoCleanup.MaxInactiveDays", -1);
 	}
 
-	public String getDatabaseType()
+	public @NotNull String getDatabaseTypeName()
 	{
 		return getConfigE().getString("Database.Type", "sqlite");
+	}
+
+	public @NotNull DatabaseType getDatabaseType()
+	{
+		return DatabaseType.fromName(getDatabaseTypeName());
 	}
 
 	public void setDatabaseType(String type)

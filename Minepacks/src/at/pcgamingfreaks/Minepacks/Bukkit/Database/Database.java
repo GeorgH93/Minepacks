@@ -21,6 +21,10 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.DatabaseBackend;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.MySQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -35,90 +39,85 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
+import lombok.Getter;
+
 import java.util.Collection;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
-public abstract class Database implements Listener
+public final class Database implements Listener
 {
-	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 	public static final String MESSAGE_UNKNOWN_DB_TYPE = ConsoleColor.RED + "Unknown database type \"%s\"!" + ConsoleColor.RESET;
 
 	protected final Minepacks plugin;
-	protected final InventorySerializer itsSerializer;
-	protected final boolean onlineUUIDs, bungeeCordMode;
-	protected boolean useUUIDSeparators, asyncSave = true;
-	protected long maxAge;
+	private final boolean bungeeCordMode;
+	private final BackupHandler backupHandler;
+	@Getter private final DatabaseBackend backend;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
 	private final UnCacheStrategie unCacheStrategie;
-	private final File backupFolder;
 
-	public Database(Minepacks mp)
+	public Database(final @NotNull Minepacks plugin)
 	{
-		plugin = mp;
-		itsSerializer = new InventorySerializer(plugin.getLogger());
-		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
-		onlineUUIDs = plugin.getConfiguration().useOnlineUUIDs();
+		this.plugin = plugin;
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
-		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
-		backupFolder = new File(this.plugin.getDataFolder(), "backups");
-		if(!backupFolder.exists() && !backupFolder.mkdirs()) mp.getLogger().info("Failed to create backups folder.");
-	}
+		backupHandler = new BackupHandler(plugin);
+		backend = getDatabaseBackend(plugin);
+		if(!available()) return;
 
-	public void init()
-	{
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	public void close()
 	{
 		HandlerList.unregisterAll(this);
-		asyncSave = false;
+		backend.setAsyncSave(false);
 		backpacks.forEach((key, value) -> value.closeAll());
 		backpacks.clear();
 		unCacheStrategie.close();
+		backend.close();
 	}
 
-	public static @Nullable Database getDatabase(Minepacks plugin)
+	public boolean available()
+	{
+		return backend != null;
+	}
+
+	public static @Nullable ConnectionProvider getGlobalConnectionProvider(final @NotNull Logger logger)
+	{
+		/*if[STANDALONE]
+		plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+		return null;
+		else[STANDALONE]*/
+		at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
+		if(pool == null)
+		{
+			logger.warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
+			return null;
+		}
+		return pool.getConnectionProvider();
+		/*end[STANDALONE]*/
+	}
+
+	protected static @Nullable DatabaseBackend getDatabaseBackend(Minepacks plugin)
 	{
 		try
 		{
-			String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase(Locale.ROOT);
-			ConnectionProvider connectionProvider = null;
-			if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
-			{
-				/*if[STANDALONE]
-				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
-				return null;
-				else[STANDALONE]*/
-				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
-				if(pool == null)
-				{
-					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-					return null;
-				}
-				dbType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
-				connectionProvider = pool.getConnectionProvider();
-				/*end[STANDALONE]*/
-			}
-			Database database;
+			DatabaseType dbType = plugin.getConfiguration().getDatabaseType();
+			ConnectionProvider connectionProvider = dbType == DatabaseType.SHARED ? getGlobalConnectionProvider(plugin.getLogger()) : null;
+			if(connectionProvider != null) dbType = DatabaseType.fromName(connectionProvider.getDatabaseType());
+			DatabaseBackend databaseBackend;
 			switch(dbType)
 			{
-				case "mysql": database = new MySQL(plugin, connectionProvider); break;
-				case "sqlite": database = new SQLite(plugin, connectionProvider); break;
-				case "flat":
-				case "file":
-				case "files":
-					database = new Files(plugin); break;
-				default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
+				case MYSQL: databaseBackend = new MySQL(plugin, connectionProvider); break;
+				case SQLITE: databaseBackend = new SQLite(plugin, connectionProvider); break;
+				case FILES: databaseBackend = new Files(plugin); break;
+				default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseTypeName())); return null;
 			}
-			database.init();
-			return database;
+			//databaseBackend.init();
+			return databaseBackend;
 		}
 		catch(IllegalStateException ignored) {}
 		catch(Exception e)
@@ -130,51 +129,17 @@ public abstract class Database implements Listener
 
 	public void backup(@NotNull Backpack backpack)
 	{
-		writeBackup(backpack.getOwner().getName(), getPlayerFormattedUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
-	}
-
-	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
-	{
-		if(userIdentifier.equalsIgnoreCase(userName)) userName = null;
-		if(userName != null) userIdentifier = userName + "_" + userIdentifier;
-		final File save = new File(backupFolder, userIdentifier + "_" + System.currentTimeMillis() + Files.EXT);
-		try(FileOutputStream fos = new FileOutputStream(save))
-		{
-			fos.write(usedSerializer);
-			fos.write(data);
-			plugin.getLogger().info("Backup of the backpack has been created: " + save.getAbsolutePath());
-		}
-		catch(Exception e)
-		{
-			plugin.getLogger().warning(ConsoleColor.RED + "Failed to write backup! Error: " + e.getMessage() + ConsoleColor.RESET);
-		}
+		backupHandler.backup(backpack);
 	}
 
 	public @Nullable ItemStack[] loadBackup(final String backupName)
 	{
-		File backup = new File(backupFolder, backupName + Files.EXT);
-		return Files.readFile(itsSerializer, backup, plugin.getLogger());
+		return backupHandler.loadBackup(backupName);
 	}
 
-	public ArrayList<String> getBackups()
+	public List<String> getBackups()
 	{
-		File[] files = backupFolder.listFiles((dir, name) -> name.endsWith(Files.EXT));
-		if(files != null)
-		{
-			ArrayList<String> backups = new ArrayList<>(files.length);
-			for(File file : files)
-			{
-				if(!file.isFile()) continue;
-				backups.add(file.getName().replaceAll(Files.EXT_REGEX, ""));
-			}
-			return backups;
-		}
-		return new ArrayList<>();
-	}
-
-	protected String getPlayerFormattedUUID(OfflinePlayer player)
-	{
-		return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
+		return backupHandler.getBackups();
 	}
 
 	public @NotNull Collection<Backpack> getLoadedBackpacks()
@@ -270,20 +235,35 @@ public abstract class Database implements Listener
 		updatePlayerAndLoadBackpack(event.getPlayer());
 	}
 
-	// DB Functions
 	public void updatePlayerAndLoadBackpack(Player player)
 	{
 		updatePlayer(player);
 		if(!bungeeCordMode) asyncLoadBackpack(player);
 	}
 
-	public abstract void updatePlayer(Player player);
+	// DB Functions
+	public void updatePlayer(final @NotNull Player player)
+	{
+		backend.updatePlayer(player);
+	}
 
-	public abstract void saveBackpack(Backpack backpack);
+	public void saveBackpack(final @NotNull Backpack backpack)
+	{
+		backend.saveBackpack(backpack);
+	}
 
-	public void syncCooldown(Player player, long time) {}
+	public void syncCooldown(final @NotNull Player player, final long time)
+	{
+		backend.syncCooldown(player, time);
+	}
 
-	public void getCooldown(final Player player, final Callback<Long> callback) {}
+	public void getCooldown(final Player player, final Callback<Long> callback)
+	{
+		backend.getCooldown(player, callback);
+	}
 
-	protected abstract void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback);
+	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
+	{
+		backend.loadBackpack(player, callback);
+	}
 }

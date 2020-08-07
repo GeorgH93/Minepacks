@@ -18,10 +18,12 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.DatabaseBackend;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.MySQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQL;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.MySQL;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQL;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.SQLite;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 
@@ -49,18 +51,15 @@ public abstract class ToSQLMigration extends Migration
 
 	protected final SQL newDb;
 
-	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull Database oldDb, @NotNull String dbType, boolean global)
+	protected ToSQLMigration(@NotNull Minepacks plugin, @NotNull DatabaseBackend oldDb, @NotNull DatabaseType dbType, boolean global)
 	{
 		super(plugin, oldDb);
-		/*if[STANDALONE]
-		ConnectionProvider connectionProvider = null;
-		else[STANDALONE]*/
-		ConnectionProvider connectionProvider = (global) ? at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool().getConnectionProvider() : null;
-		/*end[STANDALONE]*/
+		ConnectionProvider connectionProvider = (global) ? Database.getGlobalConnectionProvider(plugin.getLogger()) : null;
+
 		switch(dbType)
 		{
-			case "mysql": newDb = new MySQL(plugin, connectionProvider); break;
-			case "sqlite":
+			case MYSQL: newDb = new MySQL(plugin, connectionProvider); break;
+			case SQLITE:
 				final File dbFile = new File(SQLite.getDbFile(plugin));
 				if(dbFile.exists()) dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis()));
 				newDb = new SQLite(plugin, connectionProvider);

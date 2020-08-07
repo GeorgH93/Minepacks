@@ -186,8 +186,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		updater.setChannel(config.getUpdateChannel());
 		lang.load(config);
 		backpacksConfig.loadData();
-		database = Database.getDatabase(this);
-		if(database == null)
+		database = new Database(this);
+		if(!database.available())
 		{
 			new NoDatabaseWorker(this);
 			return;

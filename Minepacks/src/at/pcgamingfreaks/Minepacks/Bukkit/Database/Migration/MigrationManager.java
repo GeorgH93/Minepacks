@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,13 +18,14 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.ConsoleColor;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
+import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.*;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 
 import org.bukkit.event.HandlerList;
-
-import java.util.Locale;
 
 public class MigrationManager
 {
@@ -107,39 +108,25 @@ public class MigrationManager
 	{
 		try
 		{
-			boolean global = false;
-			if(targetDatabaseType.toLowerCase(Locale.ROOT).equals("external") || targetDatabaseType.toLowerCase(Locale.ROOT).equals("global") || targetDatabaseType.toLowerCase(Locale.ROOT).equals("shared"))
+			DatabaseType targetDbType = DatabaseType.fromName(targetDatabaseType);
+			ConnectionProvider cp = targetDbType == DatabaseType.SHARED ? Database.getGlobalConnectionProvider(plugin.getLogger()) : null;
+			boolean global = cp != null;
+			if(cp != null) targetDbType = DatabaseType.fromName(cp.getDatabaseType());
+			DatabaseBackend oldBackend = plugin.getDatabase().getBackend();
+			switch(targetDbType)
 			{
-				/*if[STANDALONE]
-				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
-				return null;
-				else[STANDALONE]*/
-				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
-				if(pool == null)
-				{
-					plugin.getLogger().warning(ConsoleColor.RED + "The shared connection pool is not initialized correctly!" + ConsoleColor.RESET);
-					return null;
-				}
-				targetDatabaseType = pool.getDatabaseType().toLowerCase(Locale.ROOT);
-				global = true;
-				/*end[STANDALONE]*/
-			}
-			switch(targetDatabaseType.toLowerCase(Locale.ROOT))
-			{
-				case "flat":
-				case "file":
-				case "files":
-					if(!(plugin.getDatabase() instanceof SQL)) return null;
-					return new SQLtoFilesMigration(plugin, (SQL) plugin.getDatabase());
-				case "mysql":
-					if(plugin.getDatabase() instanceof MySQL) return null;
-					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "mysql", global);
-					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "mysql", global);
-				case "sqlite":
-					if(plugin.getDatabase() instanceof SQLite) return null;
-					if(plugin.getDatabase() instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) plugin.getDatabase(), "sqlite", global);
-					else return new FilesToSQLMigration(plugin, (Files) plugin.getDatabase(), "sqlite", global);
-				default: plugin.getLogger().warning(String.format(Database.MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseType())); return null;
+				case FILES:
+					if(!(oldBackend instanceof SQL)) return null;
+					return new SQLtoFilesMigration(plugin, (SQL) plugin.getDatabase().getBackend());
+				case MYSQL:
+					if(oldBackend instanceof MySQL) return null;
+					if(oldBackend instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) oldBackend, DatabaseType.MYSQL, global);
+					else return new FilesToSQLMigration(plugin, (Files) oldBackend, DatabaseType.MYSQL, global);
+				case SQLITE:
+					if(oldBackend instanceof SQLite) return null;
+					if(oldBackend instanceof SQL) return new SQLtoSQLMigration(plugin, (SQL) oldBackend, DatabaseType.SQLITE, global);
+					else return new FilesToSQLMigration(plugin, (Files) oldBackend, DatabaseType.SQLITE, global);
+				default: plugin.getLogger().warning(String.format(Database.MESSAGE_UNKNOWN_DB_TYPE,  targetDatabaseType)); return null;
 			}
 		}
 		catch(Exception e)
