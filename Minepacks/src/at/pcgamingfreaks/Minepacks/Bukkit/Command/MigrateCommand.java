@@ -48,7 +48,7 @@ public class MigrateCommand extends MinepacksCommand
 		}
 		else
 		{
-			sender.sendMessage("/" + mainCommandAlias + ' ' + alias + "database");
+			sender.sendMessage("/" + mainCommandAlias + ' ' + alias + ' ' + "database");
 		}
 	}
 
