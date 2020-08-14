@@ -17,8 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
+import at.pcgamingfreaks.Bukkit.Command.RegisterablePluginCommand;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.RegisterablePluginCommand;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
@@ -72,14 +72,13 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 		if(sender.equals(player))
 		{
 			messageOwnInventoryCleared.send(player);
-			Bukkit.getPluginManager().callEvent(new InventoryClearedEvent(player, sender));
 		}
 		else
 		{
 			messageInventoryWasCleared.send(player, sender.getName(), (sender instanceof Player) ? ((Player) sender).getDisplayName() : ChatColor.GRAY + sender.getName());
 			messageOtherInventoryCleared.send(sender, player.getName(), player.getDisplayName());
-			Bukkit.getPluginManager().callEvent(new InventoryClearedEvent(player, sender));
 		}
+		Bukkit.getPluginManager().callEvent(new InventoryClearedEvent(player, sender));
 	}
 
 	@Override
