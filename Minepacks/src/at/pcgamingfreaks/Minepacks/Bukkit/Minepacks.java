@@ -117,9 +117,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private boolean checkMcVersion()
 	{
-		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R2))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isOlderThan(MCVersion.MC_1_8) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R2))
 		{
-			this.warnOnVersionIncompatibility();
+			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
+			getLogger().warning(ConsoleColor.RED + String.format("Your server version (%1$s) is currently not compatible with your current version (%2$s) of the plugin. " +
+					                                                     "Please check for updates!" + ConsoleColor.RESET, Bukkit.getVersion(), getDescription().getVersion()));
+			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
+			Utils.blockThread(5);
 			this.setEnabled(false);
 			return false;
 		}
@@ -260,17 +264,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		config.reload();
 		backpacksConfig.reload();
 		load();
-	}
-
-	public void warnOnVersionIncompatibility()
-	{
-		String name = Bukkit.getServer().getClass().getPackage().getName();
-		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
-		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
-		getLogger().warning(ConsoleColor.RED + String.format("Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). " +
-				                                                     "Please check for updates!", version[0] + "." + version[1], getDescription().getVersion()) + ConsoleColor.RESET);
-		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
-		Utils.blockThread(5);
 	}
 
 	public Config getConfiguration()
