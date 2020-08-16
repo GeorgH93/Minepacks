@@ -78,8 +78,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	private CommandManager commandManager;
 	private InventoryClearCommand inventoryClearCommand;
 	private Collection<GameMode> gameModes;
-	private CooldownManager cooldownManager = null;
-	private ItemFilter itemFilter = null;
+	@Getter private CooldownManager cooldownManager = null;
+	@Getter private ItemFilter itemFilter = null;
 	private Sound openSound = null;
 	private ItemShortcut shortcut = null;
 
@@ -363,7 +363,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		return 9;
 	}
 
-	public WorldBlacklistMode isDisabled(final @NotNull Player player)
+	public @NotNull WorldBlacklistMode isDisabled(final @NotNull Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission(Permissions.IGNORE_WORLD_BLACKLIST))) return WorldBlacklistMode.None;
 		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase(Locale.ROOT))) return worldBlacklistMode;
@@ -374,17 +374,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public boolean isPlayerGameModeAllowed(final @NotNull Player player)
 	{
 		return gameModes.contains(player.getGameMode()) || player.hasPermission(Permissions.IGNORE_GAME_MODE);
-	}
-
-	public @Nullable CooldownManager getCooldownManager()
-	{
-		return cooldownManager;
-	}
-
-	@Override
-	public @Nullable ItemFilter getItemFilter()
-	{
-		return itemFilter;
 	}
 
 	@Override

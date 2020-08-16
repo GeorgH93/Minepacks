@@ -170,6 +170,16 @@
 											<include>at.pcgamingfreaks:PluginLib</include>
 										</includes>
 									</artifactSet>
+									<filters>
+										<filter>
+											<artifact>at.pcgamingfreaks:PluginLib</artifact>
+											<excludes>
+												<exclude>at/pcgamingfreaks/Bukkit/Particles/**</exclude>
+												<exclude>at/pcgamingfreaks/Bungee/**</exclude>
+												<exclude>at/pcgamingfreaks/PluginLib/**</exclude>
+											</excludes>
+										</filter>
+									</filters>
 									<relocations>
 										<relocation>
 											<pattern>at.pcgf.libs</pattern>

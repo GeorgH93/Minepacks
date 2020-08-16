@@ -88,7 +88,7 @@ public final class Database implements Listener
 	public static @Nullable ConnectionProvider getGlobalConnectionProvider(final @NotNull Logger logger)
 	{
 		/*if[STANDALONE]
-		plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+		logger.warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
 		return null;
 		else[STANDALONE]*/
 		at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
