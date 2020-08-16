@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>Minepacks-API</artifactId>
+	<artifactId>Minepacks-API-Extended</artifactId>
 	<parent>
 		<artifactId>Minepacks-Parent</artifactId>
 		<groupId>at.pcgamingfreaks</groupId>
@@ -11,8 +11,22 @@
 	<version>${revision}</version>
 	<packaging>jar</packaging>
 
-	<name>Minepacks-API</name>
-	<description>API for the Bukkit/Spigot plugin Minepacks.</description>
+	<name>Minepacks-API-Extended</name>
+	<description>Extended API for the Bukkit/Spigot plugin Minepacks. The extended API is only available when the plugin is running in normal mode!</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>Minepacks-API</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>at.pcgamingfreaks.pcgf_pluginlib</groupId>
+			<artifactId>pcgf_pluginlib-bukkit</artifactId>
+			<version>${pcgfPluginLibVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>

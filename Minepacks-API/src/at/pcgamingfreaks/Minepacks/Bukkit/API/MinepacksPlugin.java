@@ -25,7 +25,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("unused")
 public interface MinepacksPlugin
 {
 	/**
@@ -113,13 +112,6 @@ public interface MinepacksPlugin
 	 * @param createNewIfNotExists If set to true, a new backpack will be created if there currently is no backpack for this player.
 	 */
 	void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<Backpack> callback, boolean createNewIfNotExists);
-
-	/**
-	 * Gets the command manager of the Minepacks plugin.
-	 *
-	 * @return The command manager instance. null if the plugin is running in standalone mode
-	 */
-	@Nullable MinepacksCommandManager getCommandManager();
 
 	/**
 	 * Checks if the player is allowed to open a backpack based on is permissions and current game-mode.

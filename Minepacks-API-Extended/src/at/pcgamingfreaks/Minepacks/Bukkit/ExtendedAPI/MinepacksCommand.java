@@ -15,7 +15,7 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.API;
+package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
 import at.pcgamingfreaks.Bukkit.Command.SubCommand;
 import at.pcgamingfreaks.Bukkit.Message.Message;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 public abstract class MinepacksCommand extends SubCommand
 {
-	private static MinepacksPlugin minepacksPlugin = null;
+	private static MinepacksPluginExtended minepacksPlugin = null;
 	private static Method showHelp = null;
 	private static Message messageNoPermission   = new Message(ChatColor.RED + "You don't have the permission to do that.");
 	private static Message messageNotFromConsole = new Message(ChatColor.RED + "This command can't be used from console!");
@@ -95,7 +95,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 *
 	 * @return The instance of the marriage master plugin.
 	 */
-	protected @NotNull MinepacksPlugin getMinepacksPlugin()
+	protected @NotNull MinepacksPluginExtended getMinepacksPlugin()
 	{
 		return minepacksPlugin;
 	}

@@ -15,35 +15,17 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.API;
+package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import at.pcgamingfreaks.Bukkit.Message.IMessage;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public interface MinepacksPlayer
+public interface MinepacksPlayerExtended extends MinepacksPlayer
 {
-	@NotNull String getName();
+	void send(@NotNull IMessage message, @Nullable Object... args);
 
-	@NotNull UUID getUUID();
-
-	@NotNull OfflinePlayer getPlayer();
-
-	@Nullable Player getPlayerOnline();
-
-	@NotNull String getDisplayName();
-
-	boolean hasPermission(final @NotNull String permission);
-
-	boolean isOnline();
-
-	void setBackpackStyle(final @NotNull String style);
-
-	@Nullable ItemStack getBackpackItem();
-
-	@NotNull Backpack getBackpack();
+	void sendMessage(@NotNull IMessage message, @Nullable Object... args);
 }

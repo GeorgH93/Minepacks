@@ -23,7 +23,7 @@ import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Message.MessageColor;
 import at.pcgamingfreaks.Message.MessageFormat;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 

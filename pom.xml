@@ -10,6 +10,7 @@
 		<revision>3.0-ALPHA-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<pcgfPluginLibVersion>1.0.30-SNAPSHOT</pcgfPluginLibVersion>
 	</properties>
 
 	<scm>
@@ -72,6 +73,7 @@
 	</dependencies>
 
 	<build>
+		<sourceDirectory>src</sourceDirectory>
 		<defaultGoal>clean package</defaultGoal>
 		<plugins>
 			<plugin>
@@ -102,6 +104,7 @@
 				<artifactId>flatten-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
+					<flattenedPomFilename>target/.flattened-pom.xml</flattenedPomFilename>
 					<updatePomFile>true</updatePomFile>
 					<pomElements>
 						<description/>
@@ -139,6 +142,7 @@
 
 	<modules>
 		<module>Minepacks-API</module>
+		<module>Minepacks-API-Extended</module>
 		<module>Minepacks</module>
 	</modules>
 

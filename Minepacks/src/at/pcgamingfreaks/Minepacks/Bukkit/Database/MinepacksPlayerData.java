@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Message.IMessage;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.UUIDConverter;
 
@@ -36,7 +36,7 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-public abstract class MinepacksPlayerData implements MinepacksPlayer
+public abstract class MinepacksPlayerData implements MinepacksPlayerExtended
 {
 	@Getter @Setter private @NotNull String name;
 	private final @NotNull UUID uuid;

@@ -18,7 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 

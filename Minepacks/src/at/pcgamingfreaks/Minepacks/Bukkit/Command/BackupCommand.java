@@ -22,7 +22,7 @@ import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 

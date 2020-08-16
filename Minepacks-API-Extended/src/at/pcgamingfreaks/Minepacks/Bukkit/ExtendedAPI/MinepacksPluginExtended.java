@@ -15,35 +15,18 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit.API;
+package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
-public interface MinepacksPlayer
+public interface MinepacksPluginExtended extends MinepacksPlugin
 {
-	@NotNull String getName();
-
-	@NotNull UUID getUUID();
-
-	@NotNull OfflinePlayer getPlayer();
-
-	@Nullable Player getPlayerOnline();
-
-	@NotNull String getDisplayName();
-
-	boolean hasPermission(final @NotNull String permission);
-
-	boolean isOnline();
-
-	void setBackpackStyle(final @NotNull String style);
-
-	@Nullable ItemStack getBackpackItem();
-
-	@NotNull Backpack getBackpack();
+	/**
+	 * Gets the command manager of the Minepacks plugin.
+	 *
+	 * @return The command manager instance. null if the plugin is running in standalone mode
+	 */
+	@Nullable MinepacksCommandManager getCommandManager();
 }
