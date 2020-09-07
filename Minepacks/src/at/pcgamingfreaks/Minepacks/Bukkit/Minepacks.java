@@ -345,13 +345,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public MinepacksCommandManager getCommandManager()
+	public @NotNull MinepacksCommandManager getCommandManager()
 	{
-		/*if[STANDALONE]
-		return null;
-		else[STANDALONE]*/
 		return commandManager;
-		/*end[STANDALONE]*/
 	}
 
 	public int getBackpackPermSize(final @NotNull Player player)

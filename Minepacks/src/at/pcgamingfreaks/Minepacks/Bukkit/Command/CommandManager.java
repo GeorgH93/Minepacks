@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> /*if_not[STANDALONE]*/ implements MinepacksCommandManager /*end[STANDALONE]*/
+public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> implements MinepacksCommandManager
 {
 	private final Minepacks plugin;
 	private final RegisterablePluginCommand backpackCommand;
@@ -53,7 +53,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		backpackCommand.setExecutor(this);
 		backpackCommand.setTabCompleter(this);
 
-		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand\\}", "%1\\$s").replaceAll("\\{SubCommand\\}", "%2\\$s").replaceAll("\\{Parameters\\}", "%3\\$s").replaceAll("\\{Description\\}", "%4\\$s").replaceAll("suggest_command", "%5\\$s");
+		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand}", "%1\\$s").replaceAll("\\{SubCommand}", "%2\\$s").replaceAll("\\{Parameters}", "%3\\$s").replaceAll("\\{Description}", "%4\\$s").replaceAll("suggest_command", "%5\\$s");
 
 		// Setting the help format for the marry commands as well as the no permissions and not from console message
 		try
