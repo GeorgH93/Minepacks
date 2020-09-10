@@ -229,6 +229,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private void unload()
 	{
+		if(lang == null) return;
 		if(inventoryClearCommand != null)
 		{
 			inventoryClearCommand.close();
