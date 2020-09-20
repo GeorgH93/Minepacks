@@ -29,7 +29,7 @@ jobs:
         cp Minepacks/target/M*.jar artifacts/
 
     - name: Publish to GitHub Packages Apache Maven
-      run: 'mvn deploy -pl Minepacks-API,Minepacks -s $GITHUB_WORKSPACE/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
+      run: 'mvn deploy -pl Minepacks-API,Minepacks -s .github/workflows/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
