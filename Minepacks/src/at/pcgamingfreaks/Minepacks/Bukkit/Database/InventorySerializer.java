@@ -17,32 +17,36 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Bukkit.ItemStackSerializer.BukkitItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
-import at.pcgamingfreaks.Bukkit.ItemStackSerializer.NBTItemStackSerializerGen2;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.ConsoleColor;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import lombok.Getter;
+
 import java.util.logging.Logger;
 
 public class InventorySerializer
 {
-	private static final ItemStackSerializer BUKKIT_ITEM_STACK_SERIALIZER = new BukkitItemStackSerializer();
+	@SuppressWarnings("deprecation")
+	private static final ItemStackSerializer BUKKIT_ITEM_STACK_SERIALIZER = ItemStackSerializer.makeBukkitItemStackSerializer();
+
 	private final Logger logger;
-	private ItemStackSerializer serializer;
-	private int usedSerializer = 2;
+	private final ItemStackSerializer serializer;
+	@Getter private final int usedSerializer;
 	
 	public InventorySerializer(Logger logger)
 	{
 		this.logger = logger;
+		ItemStackSerializer serializer = null;
+		int usedSerializer = 2;
 		try
 		{
-			if(NBTItemStackSerializerGen2.isMCVersionCompatible())
+			if(ItemStackSerializer.isNBTItemStackSerializerAvailable())
 			{
-				serializer = new NBTItemStackSerializerGen2(logger);
+				serializer = ItemStackSerializer.makeNBTItemStackSerializer(logger);
 			}
 		}
 		catch(Exception e)
@@ -54,6 +58,8 @@ public class InventorySerializer
 			usedSerializer = 0;
 			serializer = BUKKIT_ITEM_STACK_SERIALIZER;
 		}
+		this.serializer = serializer;
+		this.usedSerializer = usedSerializer;
 	}
 	
 	public byte[] serialize(Inventory inv)
@@ -67,15 +73,10 @@ public class InventorySerializer
 		switch(usedSerializer)
 		{
 			case 0: return BUKKIT_ITEM_STACK_SERIALIZER.deserialize(data);
-			case 1: if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) logger.warning(ConsoleColor.YELLOW + "Backpack was created with an old version of minecraft. There is the chance that some items will disappear from it.");
+			case 1: if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) logger.warning(ConsoleColor.YELLOW + "Backpack was created with an old version of minepacks and minecraft. There is the chance that some items will disappear from it." + ConsoleColor.RESET);
 			case 2: return serializer.deserialize(data);
 			default: logger.warning(ConsoleColor.RED + "No compatible deserializer for backpack format available!" + ConsoleColor.RESET);
 		}
 		return null;
-	}
-	
-	public int getUsedSerializer()
-	{
-		return usedSerializer;
 	}
 }
