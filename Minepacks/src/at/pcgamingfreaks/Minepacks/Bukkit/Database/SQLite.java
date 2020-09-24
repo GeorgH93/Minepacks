@@ -19,7 +19,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
+import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Version;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -56,7 +58,6 @@ public class SQLite extends SQL
 		//noinspection SpellCheckingInspection
 		fieldBpIts        = "itemstacks";
 		fieldBpVersion    = "version";
-		//noinspection SpellCheckingInspection
 		fieldBpLastUpdate = "lastupdate";
 		tablePlayers      = "backpack_players";
 		tableBackpacks    = "backpacks";
@@ -83,29 +84,42 @@ public class SQLite extends SQL
 	{
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
+			Version dbVersion = getDatabaseVersion(stmt);
+
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
 			try
 			{
 				stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
 			}
 			catch(SQLException ignored) {}
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0, `lastupdate` DATE);");
 			try
 			{
 				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
 			}
 			catch(SQLException ignored) {}
-			try(ResultSet rs = stmt.executeQuery("SELECT DATE('now');"))
+			try
 			{
-				rs.next();
-				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '" + rs.getString(1) + "';");
+				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '2020-09-24';");
 			}
 			catch(SQLException ignored) {}
+
+			DBTools.runStatement(connection, "INSERT OR REPLACE INTO `minepacks_metadata` (`key`, `value`) VALUES ('db_version',?);", plugin.getDescription().getVersion());
 		}
 		catch(SQLException e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private @NotNull Version getDatabaseVersion(final @NotNull Statement stmt) throws SQLException
+	{
+		stmt.execute("CREATE TABLE IF NOT EXISTS `minepacks_metadata` (`key` CHAR(32) PRIMARY KEY NOT NULL, `value` TEXT);");
+		try(ResultSet rs = stmt.executeQuery("SELECT `value` FROM `minepacks_metadata` WHERE `key`='db_version';"))
+		{
+			if(rs.next()) return new Version(rs.getString("value"));
+		}
+		return new Version("0");
 	}
 
 	@Override
