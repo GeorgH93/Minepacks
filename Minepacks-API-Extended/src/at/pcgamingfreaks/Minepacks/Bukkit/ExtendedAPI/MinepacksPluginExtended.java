@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
+import at.pcgamingfreaks.Version;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,4 +30,6 @@ public interface MinepacksPluginExtended extends MinepacksPlugin
 	 * @return The command manager instance. null if the plugin is running in standalone mode
 	 */
 	@NotNull MinepacksCommandManager getCommandManager();
+
+	@NotNull Version getVersion();
 }

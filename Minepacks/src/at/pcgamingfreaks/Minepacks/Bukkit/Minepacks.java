@@ -378,4 +378,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		if(shortcut == null) return false;
 		return shortcut.isItemShortcut(itemStack);
 	}
+
+	@Override
+	public @NotNull Version getVersion()
+	{
+		return new Version(getDescription().getVersion());
+	}
 }
