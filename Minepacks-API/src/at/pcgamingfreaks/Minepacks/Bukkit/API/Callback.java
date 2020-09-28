@@ -21,5 +21,5 @@ public interface Callback<T>
 {
 	void onResult(T done);
 
-	void onFail();
+	default void onFail() {}
 }
