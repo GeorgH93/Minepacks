@@ -64,7 +64,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Getter private static Minepacks instance = null;
 
 	private ManagedUpdater updater = null;
-	private Config config;
+	@Getter private Config configuration;
 	@Getter private BackpacksConfig backpacksConfig;
 	@Getter private Language language;
 	@Getter private Database database;
@@ -102,9 +102,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 
 		updater = new ManagedUpdater(this);
 		instance = this;
-		config = new Config(this);
-		updater.setChannel(config.getUpdateChannel());
-		if(config.useUpdater()) updater.update();
+		configuration = new Config(this);
+		updater.setChannel(configuration.getUpdateChannel());
+		if(configuration.useUpdater()) updater.update();
 
 		if(!checkMcVersion()) return;
 
@@ -121,7 +121,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		{
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + String.format("Your server version (%1$s) is currently not compatible with your current version (%2$s) of the plugin. " +
-					                                                     "Please check for updates!" + ConsoleColor.RESET, Bukkit.getVersion(), getDescription().getVersion()));
+					                                             "Please check for updates!", Bukkit.getVersion(), getDescription().getVersion()) + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			Utils.blockThread(5);
 			this.setEnabled(false);
@@ -167,8 +167,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Override
 	public void onDisable()
 	{
-		if(config == null) return;
-		if(config.useUpdater()) updater.update();
+		if(configuration == null) return;
+		if(configuration.useUpdater()) updater.update();
 		unload();
 		updater.waitForAsyncOperation(); // Wait for an update to finish
 		getLogger().info(StringUtils.getPluginDisabledMessage(getDescription().getName()));
@@ -182,8 +182,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 
 	private void load()
 	{
-		updater.setChannel(config.getUpdateChannel());
-		language.load(config);
+		updater.setChannel(configuration.getUpdateChannel());
+		language.load(configuration);
 		backpacksConfig.loadData();
 		database = new Database(this);
 		if(!database.available())
@@ -191,9 +191,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			new NoDatabaseWorker(this);
 			return;
 		}
-		maxSize = config.getBackpackMaxSize();
-		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(config.getShrinkApproach());
-		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.getBPTitle(), config.getBPTitleOther());
+		maxSize = configuration.getBackpackMaxSize();
+		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(configuration.getShrinkApproach());
+		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(configuration.getBPTitle(), configuration.getBPTitleOther());
 		messageNotFromConsole  = language.getMessage("NotFromConsole");
 		messageNoPermission    = language.getMessage("Ingame.NoPermission");
 		messageInvalidBackpack = language.getMessage("Ingame.InvalidBackpack");
@@ -201,19 +201,19 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		messageNotANumber      = language.getMessage("Ingame.NaN");
 
 		commandManager = new CommandManager(this);
-		if(config.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
+		if(configuration.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
 
 		//region register events
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new BackpackEventListener(this), this);
-		if(config.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
-		if(config.isItemFilterEnabled())
+		if(configuration.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
+		if(configuration.isItemFilterEnabled())
 		{
 			itemFilter = new ItemFilter(this);
 			pluginManager.registerEvents(itemFilter, this);
 		}
-		if(config.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
-		if(config.isItemShortcutEnabled() && backpacksConfig.isAllowItemShortcut())
+		if(configuration.isShulkerboxesDisable()) pluginManager.registerEvents(new DisableShulkerboxes(this), this);
+		if(configuration.isItemShortcutEnabled() && backpacksConfig.isAllowItemShortcut())
 		{
 			try
 			{
@@ -228,16 +228,16 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			}
 		}
 		else shortcut = null;
-		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
+		if(configuration.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
 		//endregion
-		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
-		worldBlacklist = config.getWorldBlacklist();
-		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlockMode();
+		if(configuration.getFullInvCollect()) collector = new ItemsCollector(this);
+		worldBlacklist = configuration.getWorldBlacklist();
+		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
 
-		gameModes = config.getAllowedGameModes();
-		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
+		gameModes = configuration.getAllowedGameModes();
+		if(configuration.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
 
-		openSound = config.getOpenSound();
+		openSound = configuration.getOpenSound();
 	}
 
 	private void unload()
@@ -261,14 +261,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	public void reload()
 	{
 		unload();
-		config.reload();
+		configuration.reload();
 		backpacksConfig.reload();
 		load();
-	}
-
-	public Config getConfiguration()
-	{
-		return config;
 	}
 
 	@Override
@@ -286,17 +281,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Override
 	public void openBackpack(final @NotNull Player opener, final @NotNull OfflinePlayer owner, final boolean editable, final @Nullable String title)
 	{
-		database.getBackpack(owner, new Callback<Backpack>()
-		{
-			@Override
-			public void onResult(Backpack backpack)
-			{
-				openBackpack(opener, backpack, editable, title);
-			}
-
-			@Override
-			public void onFail() {}
-		});
+		database.getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
 	}
 
 	@Override
