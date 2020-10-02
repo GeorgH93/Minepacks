@@ -28,10 +28,10 @@ import org.jetbrains.annotations.Nullable;
 public interface MinepacksPlugin
 {
 	/**
-	 * Gets the instance of the minepacks plugin.
+	 * Gets the instance of the Minepacks plugin.
 	 * WARNING use this function at your own risk! If the plugin is not installed the MinepacksPlugin class will be unknown!
 	 *
-	 * @return The instance of the minepacks plugin.
+	 * @return The instance of the Minepacks plugin.
 	 */
 	static @Nullable MinepacksPlugin getInstance()
 	{
@@ -132,7 +132,7 @@ public interface MinepacksPlugin
 	 * Checks if an item is a backpack shortcut item.
 	 *
 	 * @param itemStack item to check.
-	 * @return
+	 * @return True if the item is a backpack shortcut item.
 	 */
 	boolean isBackpackItem(final @Nullable ItemStack itemStack);
 }
