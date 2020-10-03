@@ -60,6 +60,8 @@ Temporary Items
 target/
 /bin/
 *.iml
-/.idea/
+/.idea/*
+!/.idea/sqldialects.xml
+!/.idea/dictionaries
 
 .flattened-pom.xml
