@@ -25,6 +25,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public interface MinepacksPlugin
 {
 	/**
@@ -53,7 +54,10 @@ public interface MinepacksPlugin
 	 * @param owner    The owner of the backpack that should be opened.
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 */
-	void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable);
+	default void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
+	{
+		openBackpack(opener, owner, editable, null);
+	}
 
 	/**
 	 * Let a given player open a given {@link Backpack}.
@@ -62,7 +66,10 @@ public interface MinepacksPlugin
 	 * @param backpack The backpack to be opened. null will result in an error message for the player.
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 */
-	void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable);
+	default void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable)
+	{
+		openBackpack(opener, backpack, editable, null);
+	}
 
 	/**
 	 * Let a given player open the backpack of an other player.
@@ -89,9 +96,23 @@ public interface MinepacksPlugin
 	 * This method only returns a backpack if it is in the cache.
 	 *
 	 * @param owner The player who's backpack should be retrieved.
-	 * @return The backpack of the given player. null if the backpack is in the cache.
+	 * @return The backpack of the given player. null if the backpack is not loaded.
+	 * @deprecated Replaced by {@link MinepacksPlugin#getBackpackLoadedOnly(OfflinePlayer)}!
 	 */
-	@Nullable Backpack getBackpackCachedOnly(@NotNull final OfflinePlayer owner);
+	@Deprecated
+	default @Nullable Backpack getBackpackCachedOnly(@NotNull final OfflinePlayer owner)
+	{
+		return getBackpackLoadedOnly(owner);
+	}
+
+	/**
+	 * Retrieves the backpack for a given player.
+	 * This method only returns a backpack if it is fully loaded.
+	 *
+	 * @param owner The player who's backpack should be retrieved.
+	 * @return The backpack of the given player. null if the backpack is not loaded.
+	 */
+	@Nullable Backpack getBackpackLoadedOnly(final @NotNull OfflinePlayer owner);
 
 	/**
 	 * Retrieves the backpack for a given player.

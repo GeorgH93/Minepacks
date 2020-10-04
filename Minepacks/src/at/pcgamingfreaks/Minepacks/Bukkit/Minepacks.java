@@ -159,7 +159,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			if(oldPluginFolder.exists() && !oldPluginFolder.renameTo(getDataFolder()))
 			{
 				getLogger().warning("Failed to rename the plugins data-folder.\n" +
-						                    "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
+						            "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
 			}
 		}
 	}
@@ -267,18 +267,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
-	{
-		openBackpack(opener, owner, editable, null);
-	}
-
-	@Override
-	public void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, final boolean editable)
-	{
-		openBackpack(opener, backpack, editable, null);
-	}
-
-	@Override
 	public void openBackpack(final @NotNull Player opener, final @NotNull OfflinePlayer owner, final boolean editable, final @Nullable String title)
 	{
 		database.getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
@@ -312,7 +300,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public @Nullable Backpack getBackpackCachedOnly(final @NotNull OfflinePlayer owner)
+	public @Nullable Backpack getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
 	{
 		return database.getBackpack(owner);
 	}
