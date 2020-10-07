@@ -200,6 +200,10 @@
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone</shadedPattern>
 											<excludes>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.**</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.MagicValues</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.Permissions</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType</exclude>
 											</excludes>
 										</relocation>
 										<relocation>
