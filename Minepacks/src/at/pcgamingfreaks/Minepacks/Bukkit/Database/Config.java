@@ -37,7 +37,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration
 {
-	private static final int CONFIG_VERSION = 33, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 35, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
