@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.UUIDConverter;
 
 import org.bukkit.Bukkit;
@@ -43,7 +44,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	private final @NotNull UUID uuid;
 	private final int hash;
 	@Getter private final @NotNull OfflinePlayer player;
-	@Getter private String backpackStyleName = "default";
+	@Getter private String backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
 	private ItemConfig backpackStyle = null;
 	@Getter @Setter private Backpack backpack = null;
 	@Getter @Setter	private Object databaseKey = null;
@@ -116,16 +117,16 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	@Override
 	public void setBackpackStyle(@NotNull String style)
 	{
-		if(style.equals("none"))
+		if(style.equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED))
 		{
 			backpackStyleName = style;
 			backpackStyle = null;
 		}
 		else
 		{
-			if(style.equals("default") || !BackpacksConfig.getInstance().getValidShortcutStyles().contains(style))
+			if(style.equals(MagicValues.BACKPACK_STYLE_NAME_DEFAULT) || !BackpacksConfig.getInstance().getValidShortcutStyles().contains(style))
 			{
-				backpackStyleName = "default";
+				backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
 				style = BackpacksConfig.getInstance().getDefaultBackpackItem();
 			}
 			else backpackStyleName = style;

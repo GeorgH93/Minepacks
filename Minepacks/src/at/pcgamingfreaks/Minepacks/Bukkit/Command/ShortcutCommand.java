@@ -26,6 +26,7 @@ import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemShortcut;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
@@ -78,8 +79,8 @@ public class ShortcutCommand extends MinepacksCommand
 		if(playerChoice)
 		{
 			validShortcutStyles = plugin.getBackpacksConfig().getBackpackItems().stream().map(ItemConfig::getName).collect(Collectors.toSet());
-			validShortcutStyles.add("default");
-			if(allowPlayerDisable) validShortcutStyles.add("none");
+			validShortcutStyles.add(MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
+			if(allowPlayerDisable) validShortcutStyles.add(MagicValues.BACKPACK_STYLE_NAME_DISABLED);
 
 			gui = buildGui(plugin);
 		}
@@ -111,14 +112,14 @@ public class ShortcutCommand extends MinepacksCommand
 		}
 		//endregion
 		//region set default button
-		ItemStack item = new ItemConfig("default", "BARRIER", 1, "default", null, -1, null).make();
-		guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + "default"); player.closeInventory(); }));
+		ItemStack item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, "BARRIER", 1, MagicValues.BACKPACK_STYLE_NAME_DEFAULT, null, -1, null).make();
+		guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DEFAULT); player.closeInventory(); }));
 		//endregion
 		//region set disable button
 		if(allowPlayerDisable)
 		{
 			item = new ItemStack(Material.BARRIER);
-			guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + "none"); player.closeInventory(); }));
+			guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DISABLED); player.closeInventory(); }));
 		}
 		//endregion
 		return guiBuilder.build();
