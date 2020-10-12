@@ -56,7 +56,7 @@ public abstract class SQL extends DatabaseBackend
 		if(!dataSource.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
 
 		loadSettings();
-		buildQuerys();
+		buildQueries();
 		checkDB();
 		checkUUIDs(); // Check if there are user accounts without UUID
 
@@ -181,7 +181,7 @@ public abstract class SQL extends DatabaseBackend
 
 	protected abstract void checkDB();
 
-	protected final void buildQuerys()
+	protected final void buildQueries()
 	{
 		// Build the SQL querys with placeholders for the table and field names
 		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE {FieldUUID}=?;";
@@ -203,7 +203,7 @@ public abstract class SQL extends DatabaseBackend
 		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 
-		updateQuerysForDialect();
+		updateQueriesForDialect();
 
 		setTableAndFieldNames();
 	}
@@ -224,7 +224,7 @@ public abstract class SQL extends DatabaseBackend
 		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
 	}
 
-	protected abstract void updateQuerysForDialect();
+	protected abstract void updateQueriesForDialect();
 
 	protected String replacePlaceholders(@Language("SQL") String query)
 	{

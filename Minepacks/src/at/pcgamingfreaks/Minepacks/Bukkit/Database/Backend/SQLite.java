@@ -68,7 +68,7 @@ public class SQLite extends SQL
 	}
 
 	@Override
-	protected void updateQuerysForDialect()
+	protected void updateQueriesForDialect()
 	{
 		queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", ",{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
