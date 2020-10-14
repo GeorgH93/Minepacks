@@ -42,6 +42,7 @@ Cooldown:
   # If enabled, cooldowns will be synced between servers (BungeeCord network). It will also allow keeping the cooldown through server restarts.
   # You should only use it with long cooldown times.
   Sync: false
+  # Adds the cooldown when the player joins the server
   AddOnJoin: true
   # You can turn this on when using sync to reduce the memory consumption a little
   ClearOnLeave: false
