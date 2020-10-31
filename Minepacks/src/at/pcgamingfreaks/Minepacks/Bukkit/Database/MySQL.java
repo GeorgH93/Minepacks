@@ -38,7 +38,7 @@ public class MySQL extends SQL
 	@Override
 	protected void updateQuerysForDialect()
 	{
-		queryDeleteOldBackpacks = "DELETE FROM `{TableBackpacks}` WHERE `{FieldBPLastUpdate}` + INTERVAL {VarMaxAge} day < NOW()";
+		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} + INTERVAL {VarMaxAge} day < NOW()";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "NOW()");
 	}
 
