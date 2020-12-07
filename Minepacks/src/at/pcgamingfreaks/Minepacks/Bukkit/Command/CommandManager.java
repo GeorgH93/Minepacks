@@ -25,7 +25,7 @@ import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 

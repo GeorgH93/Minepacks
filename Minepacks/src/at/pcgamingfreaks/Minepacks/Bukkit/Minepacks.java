@@ -23,15 +23,13 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.StringUtils;
@@ -371,6 +369,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		return 9;
 	}
 
+	@Override
 	public WorldBlacklistMode isDisabled(Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission(Permissions.IGNORE_WORLD_BLACKLIST))) return WorldBlacklistMode.None;

@@ -22,7 +22,7 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
