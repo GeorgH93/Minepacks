@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
+import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
@@ -84,7 +85,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getDatabaseType()
 	{
-		return getConfigE().getString("Database.Type", "sqlite");
+		return getConfigE().getString("Database.Type", "sqlite").toLowerCase(Locale.ENGLISH);
 	}
 
 	public void setDatabaseType(String type)
@@ -216,7 +217,17 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public boolean isBungeeCordModeEnabled()
 	{
-		return getConfigE().getBoolean("Misc.UseBungeeCord", false);
+		boolean useBungee = getConfigE().getBoolean("Misc.UseBungeeCord", false);
+		boolean spigotUsesBungee = Utils.detectBungeeCord();
+		if(useBungee && !spigotUsesBungee)
+		{
+			logger.warning("You have BungeeCord enabled, but it looks like you have not enabled it in your spigot.yml! You probably should check your configuration.");
+		}
+		else if(!useBungee && spigotUsesBungee && getDatabaseType().equals("mysql"))
+		{
+			logger.warning("Your server is running behind a BungeeCord server. If you are using the plugin please make sure to also enable the 'UseBungeeCord' config option.");
+		}
+		return useBungee;
 	}
 	//endregion
 

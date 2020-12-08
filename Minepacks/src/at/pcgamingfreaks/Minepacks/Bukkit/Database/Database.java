@@ -88,7 +88,7 @@ public abstract class Database implements Listener
 	{
 		try
 		{
-			String dbType = plugin.getConfiguration().getDatabaseType().toLowerCase(Locale.ROOT);
+			String dbType = plugin.getConfiguration().getDatabaseType();
 			ConnectionProvider connectionProvider = null;
 			if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 			{
