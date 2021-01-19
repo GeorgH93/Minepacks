@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -327,7 +327,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
-			opener.getWorld().playSound(opener.getLocation(), openSound, 1, 0);
+			opener.playSound(opener.getLocation(), openSound, 1, 0);
 		}
 		backpack.open(opener, editable);
 	}
