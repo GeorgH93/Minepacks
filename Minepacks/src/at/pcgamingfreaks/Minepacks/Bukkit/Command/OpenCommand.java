@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -42,7 +43,7 @@ public class OpenCommand extends MinepacksCommand
 	private final String allowedGameModes, descriptionOpenOthers, helpParam;
 	private final Minepacks plugin;
 
-	public OpenCommand(Minepacks plugin)
+	public OpenCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
@@ -65,30 +66,30 @@ public class OpenCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull CommandSender sender, @NotNull String main, @NotNull String s1, @NotNull String[] args)
+	public void execute(@NotNull CommandSender sender, @NotNull String main, @NotNull String alias, @NotNull String[] args)
 	{
 		Player player = (Player) sender;
 		if(args.length == 0)
 		{
-			if(getMinepacksPlugin().isPlayerGameModeAllowed(player))
+			if(getMinepacksPlugin().isPlayerGameModeAllowed((Player) sender))
 			{
+				MinepacksPlayerExtended minepacksPlayer = plugin.getMinepacksPlayer((Player) sender);
 				if(plugin.getCooldownManager() != null && !player.hasPermission(Permissions.NO_COOLDOWN))
 				{
-					long cd = plugin.getCooldownManager().getRemainingCooldown(player);
+					long cd = plugin.getCooldownManager().getRemainingCooldown(minepacksPlayer);
 					if(cd > 0)
 					{
 						TimeSpan ts = TimeSpan.fromMilliseconds(cd);
 						messageCooldown.send(sender, cd / 1000f, ts.toString());
 						return;
 					}
-					plugin.getCooldownManager().setCooldown(player);
+					minepacksPlayer.setCooldown(System.currentTimeMillis());
 				}
-				plugin.openBackpack(player, player, true);
+				plugin.openBackpack((Player) sender, minepacksPlayer.getPlayer(), true); //TODO cleanup
 			}
 			else
 			{
-				//noinspection StringToUpperCaseOrToLowerCaseWithoutLocale
-				messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(), allowedGameModes);
+				messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(Locale.ENGLISH), allowedGameModes); //TODO translate gamemode
 			}
 		}
 		else
@@ -96,7 +97,7 @@ public class OpenCommand extends MinepacksCommand
 			if(player.hasPermission(Permissions.OTHERS))
 			{
 				//noinspection deprecation
-				plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission(Permissions.OTHERS_EDIT));
+				plugin.openBackpack((Player) sender, Bukkit.getOfflinePlayer(args[0]), player.hasPermission(Permissions.OTHERS_EDIT));
 			}
 			else
 			{

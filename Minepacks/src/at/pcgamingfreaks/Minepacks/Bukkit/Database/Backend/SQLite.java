@@ -19,10 +19,10 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
+import at.pcgamingfreaks.Database.DBTools;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,7 +55,6 @@ public class SQLite extends SQL
 		//noinspection SpellCheckingInspection
 		fieldBpIts        = "itemstacks";
 		fieldBpVersion    = "version";
-		//noinspection SpellCheckingInspection
 		fieldBpLastUpdate = "lastupdate";
 		tablePlayers      = "backpack_players";
 		tableBackpacks    = "backpacks";
@@ -107,11 +106,9 @@ public class SQLite extends SQL
 	}
 
 	@Override
-	public void updatePlayer(final @NotNull Player player)
+	protected void updatePlayer(@NotNull Connection connection, @NotNull MinepacksPlayerData player) throws SQLException
 	{
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-			runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
-			runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
-		});
+		DBTools.runStatement(connection, queryUpdatePlayerAdd, player.getName(), formatUUID(player.getUUID()));
+		DBTools.runStatement(connection, "UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), formatUUID(player.getUUID()));
 	}
 }

@@ -100,5 +100,31 @@ public interface MinepacksPlayer
 	 *
 	 * @return The players {@link Backpack}.
 	 */
-	@NotNull Backpack getBackpack();
+	@Nullable Backpack getBackpack();
+
+
+	/**
+	 * Checks whether the player has been loaded.
+	 * While the player is not loaded data might not be available or valid.
+	 *
+	 * @return True if the player has been loaded. False if not.
+	 */
+	boolean isLoaded();
+
+	void notifyOnLoad(Callback<MinepacksPlayer> callback);
+
+	/**
+	 * Checks whether the backpack of the player has been loaded.
+	 * While the backpack is not loaded the backpack won't be available.
+	 * Loading the backpack will be delayed when using a BungeeCord setup.
+	 *
+	 * @return True if the players backpack has been loaded. False if not.
+	 */
+	boolean isBackpackLoaded();
+
+	void getBackpack(Callback<Backpack> callback);
+
+	void setCooldown(long cooldown);
+
+	long getCooldown();
 }

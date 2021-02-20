@@ -44,10 +44,6 @@ Cooldown:
   Sync: false
   # Adds the cooldown when the player joins the server
   AddOnJoin: true
-  # You can turn this on when using sync to reduce the memory consumption a little
-  ClearOnLeave: false
-  # Removes old cooldowns from the cache to free memory. Time in seconds.
-  CleanupInterval: 600
 
 # Controls for the auto pickup on full inventory function
 FullInventory:

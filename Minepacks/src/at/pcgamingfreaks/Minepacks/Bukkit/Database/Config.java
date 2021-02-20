@@ -21,6 +21,8 @@ import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Database.Cache.IUnCacheStrategyConfig;
+import at.pcgamingfreaks.Database.Cache.UnCacheStrategy;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
@@ -35,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class Config extends Configuration implements DatabaseConnectionConfiguration
+public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig
 {
 	private static final int CONFIG_VERSION = 35, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
@@ -140,21 +142,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		return getConfigE().getBoolean("Database.UseUUIDSeparators", false);
 	}
-
-	public String getUnCacheStrategie()
-	{
-		return getConfigE().getString("Database.Cache.UnCache.Strategy", "interval").toLowerCase(Locale.ENGLISH);
-	}
-
-	public long getUnCacheInterval()
-	{
-		return getConfigE().getLong("Database.Cache.UnCache.Interval", 600) * 20L;
-	}
-
-	public long getUnCacheDelay()
-	{
-		return getConfigE().getLong("Database.Cache.UnCache.Delay", 600) * 20L;
-	}
 	//endregion
 
 	public String getBPTitleOther()
@@ -236,19 +223,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getBoolean("Cooldown.Sync", false);
 	}
 
-	public boolean isCommandCooldownClearOnLeaveEnabled()
-	{
-		return getConfigE().getBoolean("Cooldown.ClearOnLeave", false);
-	}
-
 	public boolean isCommandCooldownAddOnJoinEnabled()
 	{
 		return getConfigE().getBoolean("Cooldown.AddOnJoin", true);
-	}
-
-	public long getCommandCooldownCleanupInterval()
-	{
-		return getConfigE().getInt("Cooldown.CleanupInterval", 600) * 20L;
 	}
 
 	public Collection<GameMode> getAllowedGameModes()
@@ -499,6 +476,14 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getSound("DragAndDropSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "ENTITY_ITEM_PICKUP" : "ITEM_PICKUP");
 	}
 	//endregion
+
+
+	@Override
+	public @NotNull UnCacheStrategy getUnCacheStrategy()
+	{
+		if(isBungeeCordModeEnabled()) return UnCacheStrategy.ON_DISCONNECT;
+		return IUnCacheStrategyConfig.super.getUnCacheStrategy();
+	}
 
 	//region InventoryManagement settings
 	public boolean isInventoryManagementClearCommandEnabled()

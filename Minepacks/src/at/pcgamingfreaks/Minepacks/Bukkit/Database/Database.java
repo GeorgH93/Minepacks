@@ -17,20 +17,22 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Bukkit.Database.Cache.UnCacheStrategies.UnCacheStrategyMaker;
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Database.Cache.BaseUnCacheStrategy;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.MinepacksPlayerJoinEvent;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.DatabaseBackend;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.MySQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQLite;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -41,28 +43,24 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 public final class Database implements Listener
 {
 	public static final String MESSAGE_UNKNOWN_DB_TYPE = ConsoleColor.RED + "Unknown database type \"%s\"!" + ConsoleColor.RESET;
 
-	protected final Minepacks plugin;
-	private final boolean bungeeCordMode;
+	private final boolean bungeeCordMode, syncCooldown;
 	private final BackupHandler backupHandler;
 	@Getter private final DatabaseBackend backend;
-	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
-	private final UnCacheStrategie unCacheStrategie;
+	private final Cache cache = new Cache();
+	private final BaseUnCacheStrategy unCacheStrategy;
 
 	public Database(final @NotNull Minepacks plugin)
 	{
-		this.plugin = plugin;
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
-		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
+		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
+		unCacheStrategy = UnCacheStrategyMaker.make(plugin, cache, plugin.getConfiguration());
 		backupHandler = new BackupHandler(plugin);
 		backend = getDatabaseBackend(plugin);
 		if(!available()) return;
@@ -74,9 +72,12 @@ public final class Database implements Listener
 	{
 		HandlerList.unregisterAll(this);
 		backend.setAsyncSave(false);
-		backpacks.forEach((key, value) -> value.closeAll());
-		backpacks.clear();
-		unCacheStrategie.close();
+		unCacheStrategy.close();
+		cache.getCachedPlayers().forEach(player -> {
+			Backpack bp = ((Backpack) player.getBackpack());
+			if(bp != null) bp.closeAll();
+		}); //TODO change when multi-page backpacks are added
+		cache.close();
 		backend.close();
 	}
 
@@ -142,128 +143,54 @@ public final class Database implements Listener
 		return backupHandler.getBackups();
 	}
 
-	public @NotNull Collection<Backpack> getLoadedBackpacks()
+	private void loadPlayer(final @NotNull MinepacksPlayerData player)
 	{
-		return backpacks.values();
-	}
+		if(syncCooldown)
+			player.setCooldownData(System.currentTimeMillis());
 
-	/**
-	 * Gets a backpack for a player. This only includes backpacks that are cached! Do not use it unless you are sure that you only want to use cached data!
-	 *
-	 * @param player The player who's backpack should be retrieved.
-	 * @return The backpack for the player. null if the backpack is not in the cache.
-	 */
-	public @Nullable Backpack getBackpack(@Nullable OfflinePlayer player)
-	{
-		return (player == null) ? null : backpacks.get(player);
-	}
+		backend.loadPlayer(player);
 
-	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback, final boolean createNewOnFail)
-	{
-		if(player == null)
-		{
-			return;
-		}
-		Backpack lbp = backpacks.get(player);
-		if(lbp == null)
-		{
-			loadBackpack(player, new Callback<Backpack>()
+		player.notifyOnLoad(p -> {
+			if(bungeeCordMode)
 			{
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					backpacks.put(player, backpack);
-					callback.onResult(backpack);
-				}
-
-				@Override
-				public void onFail()
-				{
-					if(createNewOnFail)
-					{
-						Backpack backpack = new Backpack(player);
-						backpacks.put(player, backpack);
-						callback.onResult(backpack);
-					}
-					else
-					{
-						callback.onFail();
-					}
-				}
-			});
-		}
-		else
-		{
-			callback.onResult(lbp);
-		}
-	}
-
-	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback)
-	{
-		getBackpack(player, callback, true);
-	}
-
-	public void unloadBackpack(Backpack backpack)
-	{
-		backpacks.remove(backpack.getOwner());
-	}
-
-	public void asyncLoadBackpack(final OfflinePlayer player)
-	{
-		if(player != null && backpacks.get(player) == null)
-		{
-			loadBackpack(player, new Callback<Backpack>()
+				//TODO delayed backpack loading
+			}
+			else
 			{
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					backpacks.put(player, backpack);
-				}
-
-				@Override
-				public void onFail()
-				{
-					backpacks.put(player, new Backpack(player));
-				}
-			});
-		}
+				backend.loadBackpack(player);
+			}
+		});
 	}
 
 	@EventHandler
-	public void onPlayerLoginEvent(PlayerJoinEvent event)
+	public void onPlayerLoginEvent(final @NotNull PlayerJoinEvent event)
 	{
-		updatePlayerAndLoadBackpack(event.getPlayer());
+		getPlayer(event.getPlayer()) // Trigger player data prefetch
+				.notifyOnLoad(player -> {  // Trigger MinepacksPlayerJoinEvent
+					if(player.isOnline())
+						Bukkit.getPluginManager().callEvent(new MinepacksPlayerJoinEvent(player));
+				});
 	}
 
-	public void updatePlayerAndLoadBackpack(Player player)
+	public @NotNull MinepacksPlayerExtended getPlayer(final @NotNull OfflinePlayer offlinePlayer)
 	{
-		updatePlayer(player);
-		if(!bungeeCordMode) asyncLoadBackpack(player);
+		MinepacksPlayerData player = cache.getCachedPlayer(offlinePlayer.getUniqueId());
+		if(player != null) return player;
+		player = new MinepacksPlayerData(offlinePlayer);
+		cache.cache(player);
+		loadPlayer(player);
+		return player;
 	}
 
 	// DB Functions
-	public void updatePlayer(final @NotNull Player player)
-	{
-		backend.updatePlayer(player);
-	}
-
 	public void saveBackpack(final @NotNull Backpack backpack)
 	{
 		backend.saveBackpack(backpack);
 	}
 
-	public void syncCooldown(final @NotNull Player player, final long time)
+	public void saveCooldown(final @NotNull MinepacksPlayerData player)
 	{
-		backend.syncCooldown(player, time);
-	}
-
-	public void getCooldown(final Player player, final Callback<Long> callback)
-	{
-		backend.getCooldown(player, callback);
-	}
-
-	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
-	{
-		backend.loadBackpack(player, callback);
+		if(syncCooldown)
+			backend.saveCooldown(player);
 	}
 }

@@ -18,11 +18,10 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,13 +29,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class BackpackEventListener extends MinepacksListener
 {
 	private final Message messageOwnBackpackClose, messageOtherBackpackClose;
 	private final Sound closeSound;
 	
-	public BackpackEventListener(Minepacks plugin)
+	public BackpackEventListener(final @NotNull Minepacks plugin)
 	{
 		super(plugin);
 		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
@@ -56,14 +56,14 @@ public class BackpackEventListener extends MinepacksListener
 				backpack.save();
 			}
 			backpack.close(closer);
-			if(event.getPlayer().getUniqueId().equals(backpack.getOwner().getUniqueId()))
+			if(event.getPlayer().getUniqueId().equals(backpack.getOwner().getUUID()))
 			{
 				messageOwnBackpackClose.send(closer);
 			}
 			else
 			{
-				OfflinePlayer owner = backpack.getOwner();
-				messageOtherBackpackClose.send(closer, owner.getName(), owner.isOnline() ? owner.getPlayer().getDisplayName() : ChatColor.GRAY + owner.getName());
+				MinepacksPlayer owner = backpack.getOwner();
+				messageOtherBackpackClose.send(closer, owner.getName(), owner.getDisplayName());
 			}
 			if(closeSound != null)
 			{
@@ -90,9 +90,9 @@ public class BackpackEventListener extends MinepacksListener
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLeaveEvent(PlayerQuitEvent event)
+	public void onDisconnect(PlayerQuitEvent event)
 	{
-		Backpack backpack = plugin.getDatabase().getBackpack(event.getPlayer());
+		Backpack backpack = (Backpack) plugin.getMinepacksPlayer(event.getPlayer()).getBackpack();
 		if(backpack != null) backpack.save();
 	}
 }

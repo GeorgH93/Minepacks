@@ -132,7 +132,38 @@ public interface MinepacksPlugin
 	 * @param callback The callback delivering the result of the request.
 	 * @param createNewIfNotExists If set to true, a new backpack will be created if there currently is no backpack for this player.
 	 */
-	void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<Backpack> callback, boolean createNewIfNotExists);
+	@Deprecated
+	default void getBackpack(@NotNull final OfflinePlayer owner, @NotNull final Callback<Backpack> callback, boolean createNewIfNotExists)
+	{
+		getBackpack(owner, callback);
+	}
+
+	/**
+	 * Retrieves the {@link MinepacksPlayer} representing a given player.
+	 * The player might not have been loaded by now. Make sure to check the {@link MinepacksPlayer#isLoaded()} state.
+	 *
+	 * @param player The player for which the data should be retrieved.
+	 * @return The players data.
+	 */
+	@NotNull MinepacksPlayer getMinepacksPlayer(final @NotNull OfflinePlayer player);
+
+	/**
+	 * Retrieves the {@link MinepacksPlayer} representing a given player.
+	 * The callback will trigger one the player is fully loaded.
+	 *
+	 * @param player The player for which the data should be retrieved.
+	 * @param callback The callback to be called once the player data is fully loaded.
+	 */
+	void getMinepacksPlayer(final @NotNull OfflinePlayer player, final @NotNull Callback<MinepacksPlayer> callback);
+
+	/**
+	 * Retrieves the {@link MinepacksPlayer} representing a given player.
+	 * If the player is not loaded it will return null.
+	 *
+	 * @param player The player for which the data should be retrieved.
+	 * @return The players data. Null if the player is not loaded.
+	 */
+	@Nullable MinepacksPlayer getMinepacksPlayerLoadedOnly(final @NotNull OfflinePlayer player);
 
 	/**
 	 * Checks if the player is allowed to open a backpack based on is permissions and current game-mode.

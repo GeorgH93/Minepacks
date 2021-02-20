@@ -20,11 +20,11 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -45,10 +46,10 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private static Object titleOwn;
 	private static String titleOtherFormat;
 	private final String titleOther;
-	private final OfflinePlayer owner;
+	@Getter private final MinepacksPlayerData owner;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
 	private Inventory bp;
-	private int size, ownerID;
+	private int size;
 	private boolean hasChanged;
 
 	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
@@ -57,17 +58,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		titleOtherFormat = titleOther;
 	}
 
-	public Backpack(OfflinePlayer owner)
+	public Backpack(MinepacksPlayerData owner)
 	{
 		this(owner, 9);
 	}
-	
-	public Backpack(OfflinePlayer owner, int size)
-	{
-		this(owner, size, -1);
-	}
 
-	public Backpack(OfflinePlayer owner, int size, int ID)
+	public Backpack(MinepacksPlayerData owner, int size)
 	{
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && size > 54)
 		{
@@ -78,12 +74,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		titleOther = StringUtils.limitLength(String.format(titleOtherFormat, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, size, titleOther);
 		this.size = size;
-		ownerID = ID;
 	}
 	
-	public Backpack(final OfflinePlayer owner, ItemStack[] backpack, final int ID)
+	public Backpack(final MinepacksPlayerData owner, ItemStack[] backpack)
 	{
-		this(owner, backpack.length, ID);
+		this(owner, backpack.length);
 		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_14) && backpack.length > 54)
 		{ // Try to optimize space usage to compress items into only 6 rows
 			InventoryCompressor compressor = new InventoryCompressor(backpack, 54);
@@ -97,7 +92,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> {
 						if(owner.isOnline())
 						{
-							Player player = owner.getPlayer();
+							Player player = owner.getPlayerOnline();
 							assert player != null;
 							Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
 							left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
@@ -110,28 +105,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 		bp.setContents(backpack);
 	}
-	
-	public int getOwnerID()
-	{
-		return ownerID;
-	}
-	
-	public void setOwnerID(int id)
-	{
-		ownerID = id;
-	}
-
-	@Override
-	public @NotNull OfflinePlayer getOwner()
-	{
-		return owner;
-	}
 
 	private void checkResize()
 	{
 		if(owner.isOnline())
 		{
-			Player owner = this.owner.getPlayer();
+			Player owner = this.owner.getPlayerOnline();
 			if(owner != null && owner.hasPermission(Permissions.USE))
 			{
 				int size = Minepacks.getInstance().getBackpackPermSize(owner);
@@ -155,7 +134,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	{
 		checkResize();
 		opened.put(player, editable);
-		if(owner.equals(player)) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
+		if(owner.getPlayer().equals(player)) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
 		else player.openInventory(bp);
 	}
 

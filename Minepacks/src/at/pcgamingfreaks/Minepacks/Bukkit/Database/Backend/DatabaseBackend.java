@@ -17,17 +17,17 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.InventorySerializer;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 public abstract class DatabaseBackend
 {
@@ -49,22 +49,20 @@ public abstract class DatabaseBackend
 		itsSerializer = new InventorySerializer(plugin.getLogger());
 	}
 
-	public @NotNull String getPlayerFormattedUUID(final @NotNull OfflinePlayer player)
+	public @NotNull String formatUUID(final @NotNull UUID player)
 	{
-		return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
+		return (useUUIDSeparators) ? player.toString() : player.toString().replace("-", "");
 	}
 
 	public void close() {}
 
 	//region DB Functions
-	public abstract void updatePlayer(final @NotNull Player player);
+	public abstract void loadPlayer(final @NotNull MinepacksPlayerData player);
+
+	public abstract void loadBackpack(final @NotNull MinepacksPlayerData player);
 
 	public abstract void saveBackpack(final @NotNull Backpack backpack);
 
-	public void syncCooldown(final @NotNull Player player, long time) {}
-
-	public void getCooldown(final @NotNull Player player, final @NotNull Callback<Long> callback) {}
-
-	public abstract void loadBackpack(final @NotNull OfflinePlayer player, final @NotNull Callback<Backpack> callback);
+	public void saveCooldown(final @NotNull MinepacksPlayerData player) {}
 	//endregion
 }

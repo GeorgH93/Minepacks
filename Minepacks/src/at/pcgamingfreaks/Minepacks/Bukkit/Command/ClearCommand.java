@@ -78,7 +78,7 @@ public class ClearCommand extends MinepacksCommand
 						{
 							if(backpack.getOwner().isOnline())
 							{
-								Player owner = backpack.getOwner().getPlayer();
+								Player owner = backpack.getOwner().getPlayer().getPlayer();
 								messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
 								messageClearedBy.send(owner, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
 							}

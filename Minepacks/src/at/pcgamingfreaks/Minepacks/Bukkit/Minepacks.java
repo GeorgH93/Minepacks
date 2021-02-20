@@ -24,6 +24,7 @@ import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
@@ -33,6 +34,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
@@ -78,7 +80,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	private CommandManager commandManager;
 	private InventoryClearCommand inventoryClearCommand;
 	private Collection<GameMode> gameModes;
-	@Getter private CooldownManager cooldownManager = null;
+	@Getter private CooldownHandler cooldownManager = null;
 	@Getter private ItemFilter itemFilter = null;
 	private Sound openSound = null;
 	private ItemShortcut shortcut = null;
@@ -229,13 +231,17 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		}
 		else shortcut = null;
 		if(configuration.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
+		if(configuration.getCommandCooldown() > 0)
+		{
+			cooldownManager = new CooldownHandler(this);
+			if(configuration.isCommandCooldownSyncEnabled()) pluginManager.registerEvents(cooldownManager, this);
+		}
 		//endregion
 		if(configuration.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = configuration.getWorldBlacklist();
 		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
 
 		gameModes = configuration.getAllowedGameModes();
-		if(configuration.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
 
 		openSound = configuration.getOpenSound();
 	}
@@ -252,7 +258,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		if(collector != null) collector.cancel();
 		if(database != null) database.close(); // Close the DB connection, we won't need them any longer
 		HandlerList.unregisterAll(this); // Stop the listeners
-		if(cooldownManager != null) cooldownManager.close();
 		cooldownManager = null;
 		getServer().getScheduler().cancelTasks(this); // Kill all running task
 		itemFilter = null;
@@ -269,7 +274,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Override
 	public void openBackpack(final @NotNull Player opener, final @NotNull OfflinePlayer owner, final boolean editable, final @Nullable String title)
 	{
-		database.getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
+		getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
 	}
 
 	@Override
@@ -302,19 +307,32 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Override
 	public @Nullable Backpack getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
 	{
-		return database.getBackpack(owner);
+		MinepacksPlayer minepacksPlayer = getMinepacksPlayerLoadedOnly(owner);
+		return (minepacksPlayer != null) ? minepacksPlayer.getBackpack() : null;
 	}
 
 	@Override
 	public void getBackpack(final @NotNull OfflinePlayer owner, final @NotNull Callback<Backpack> callback)
 	{
-		database.getBackpack(owner, callback);
+		getMinepacksPlayer(owner).getBackpack(callback);
 	}
 
 	@Override
-	public void getBackpack(final @NotNull OfflinePlayer owner, final @NotNull Callback<Backpack> callback, final boolean createNewIfNotExists)
+	public @NotNull MinepacksPlayerExtended getMinepacksPlayer(final @NotNull OfflinePlayer player)
 	{
-		database.getBackpack(owner, callback, createNewIfNotExists);
+		return database.getPlayer(player);
+	}
+
+	@Override
+	public void getMinepacksPlayer(final @NotNull OfflinePlayer player, final @NotNull Callback<MinepacksPlayer> callback)
+	{
+		getMinepacksPlayer(player).notifyOnLoad(callback);
+	}
+
+	@Override
+	public @Nullable MinepacksPlayerExtended getMinepacksPlayerLoadedOnly(@NotNull OfflinePlayer player)
+	{//TODO
+		return null;
 	}
 
 	@Override

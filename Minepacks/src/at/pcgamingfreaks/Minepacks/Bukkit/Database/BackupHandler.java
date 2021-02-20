@@ -31,6 +31,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,14 +60,34 @@ public final class BackupHandler
 
 	public void backup(final @NotNull Backpack backpack)
 	{
-		final String formattedUUID = (useUUIDSeparators) ? backpack.getOwner().getUniqueId().toString() : backpack.getOwner().getUniqueId().toString().replace("-", "");
+		final String formattedUUID = (useUUIDSeparators) ? backpack.getOwner().getUUID().toString() : backpack.getOwner().getUUID().toString().replace("-", "");
 		writeBackup(backpack.getOwner().getName(), formattedUUID, itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
 	public @Nullable ItemStack[] loadBackup(final String backupName)
 	{
 		File backup = new File(backupFolder, backupName + Files.EXT);
-		return Files.readFile(itsSerializer, backup, logger);
+		return readFile(itsSerializer, backup, logger);
+	}
+
+	protected static @Nullable ItemStack[] readFile(@NotNull InventorySerializer itsSerializer, @NotNull File file, @NotNull Logger logger)
+	{
+		if(file.exists())
+		{
+			try(FileInputStream fis = new FileInputStream(file))
+			{
+				int version = fis.read();
+				byte[] out = new byte[(int) (file.length() - 1)];
+				int readCount = fis.read(out);
+				if(file.length() - 1 != readCount) logger.warning("Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
+				return itsSerializer.deserialize(out, version);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 
 	public void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final @NotNull byte[] data)

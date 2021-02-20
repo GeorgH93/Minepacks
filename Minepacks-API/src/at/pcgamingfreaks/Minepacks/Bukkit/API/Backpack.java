@@ -18,7 +18,6 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
 
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public interface Backpack extends InventoryHolder
 {
 	/**
@@ -36,7 +34,7 @@ public interface Backpack extends InventoryHolder
 	 *
 	 * @return The owner of the backpack;
 	 */
-	@NotNull OfflinePlayer getOwner();
+	@NotNull MinepacksPlayer getOwner();
 
 	/**
 	 * Let a given player open this backpack.
@@ -127,6 +125,7 @@ public interface Backpack extends InventoryHolder
 		return getInventory().addItem(itemStacks);
 	}
 
+	@SuppressWarnings("unused")
 	static boolean isBackpack(@Nullable Inventory inventory)
 	{
 		return inventory instanceof Backpack;

@@ -58,7 +58,12 @@ public class InventorySerializer
 	
 	public byte[] serialize(Inventory inv)
 	{
-		return serializer.serialize(inv.getContents());
+		return serialize(inv.getContents());
+	}
+
+	public byte[] serialize(ItemStack[] items)
+	{
+		return serializer.serialize(items);
 	}
 
 	public ItemStack[] deserialize(byte[] data, int usedSerializer)

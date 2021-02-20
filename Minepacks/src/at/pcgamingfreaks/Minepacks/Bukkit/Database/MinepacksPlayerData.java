@@ -20,9 +20,12 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Message.IMessage;
 import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 
 import org.bukkit.Bukkit;
@@ -36,7 +39,9 @@ import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Queue;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheablePlayer
 {
@@ -44,10 +49,15 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	private final @NotNull UUID uuid;
 	private final int hash;
 	@Getter private final @NotNull OfflinePlayer player;
+
 	@Getter private String backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
 	private ItemConfig backpackStyle = null;
-	@Getter @Setter private Backpack backpack = null;
+	@Getter private Backpack backpack = null;
+	@Getter private long cooldown = 0;
+
 	@Getter @Setter	private Object databaseKey = null;
+	private final Queue<Callback<Backpack>> backpackLoadedQueue = new ConcurrentLinkedQueue<>();
+	private final Queue<Callback<MinepacksPlayer>> playerLoadedQueue = new ConcurrentLinkedQueue<>();
 
 	public MinepacksPlayerData(final @Nullable UUID uuid, final @NotNull String name)
 	{
@@ -55,6 +65,28 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 		this.uuid = (uuid != null) ? uuid : UUIDConverter.getUUIDFromNameAsUUID(name, false);
 		this.hash = this.uuid.hashCode();
 		this.player = Bukkit.getOfflinePlayer(this.uuid);
+	}
+
+	public MinepacksPlayerData(final @NotNull OfflinePlayer offlinePlayer)
+	{
+		this(offlinePlayer.getUniqueId(), offlinePlayer.getName() == null ? "Unknown" : offlinePlayer.getName());
+	}
+
+	public void setBackpack(final @NotNull Backpack backpack)
+	{
+		this.backpack = backpack;
+		backpackLoadedQueue.forEach(backpackCallback -> backpackCallback.onResult(backpack));
+	}
+
+	public void setLoaded(final @NotNull Object databaseKey)
+	{
+		this.databaseKey = databaseKey;
+		playerLoadedQueue.forEach(loadedCallback -> loadedCallback.onResult(this));
+	}
+
+	public void setCooldownData(final long cooldown)
+	{
+		this.cooldown = cooldown;
 	}
 
 	@Override
@@ -111,7 +143,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	@Override
 	public boolean canBeUncached()
 	{
-		return !isOnline();
+		return !isOnline() && (backpack == null || !backpack.isOpen());
 	}
 
 	@Override
@@ -136,9 +168,43 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
+	public void setCooldown(long cooldown)
+	{
+		this.cooldown = cooldown;
+		if(isLoaded())
+			Minepacks.getInstance().getDatabase().saveCooldown(this);
+	}
+
+	@Override
 	public @Nullable ItemStack getBackpackItem()
 	{
 		return (backpackStyle == null) ? null : backpackStyle.make();
+	}
+
+	@Override
+	public boolean isLoaded()
+	{
+		return databaseKey != null;
+	}
+
+	@Override
+	public void notifyOnLoad(Callback<MinepacksPlayer> callback)
+	{
+		if(isLoaded()) callback.onResult(this);
+		else playerLoadedQueue.add(callback);
+	}
+
+	@Override
+	public boolean isBackpackLoaded()
+	{
+		return backpack != null;
+	}
+
+	@Override
+	public void getBackpack(Callback<Backpack> callback)
+	{
+		if(isBackpackLoaded()) callback.onResult(backpack);
+		else backpackLoadedQueue.add(callback);
 	}
 
 	@Override

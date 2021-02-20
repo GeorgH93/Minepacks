@@ -17,22 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.InventorySerializer;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.logging.Logger;
 
 public class Files extends DatabaseBackend
 {
@@ -56,12 +48,6 @@ public class Files extends DatabaseBackend
 		{
 			checkFiles();
 		}
-	}
-
-	@Override
-	public void updatePlayer(final @NotNull Player player)
-	{
-		// Files are stored with the users uuid, there is no reason to update anything
 	}
 
 	private void checkFiles()
@@ -111,61 +97,37 @@ public class Files extends DatabaseBackend
 			}
 		}
 	}
-	
-	private String getFileName(OfflinePlayer player)
+
+	private void savePlayer(final @NotNull MinepacksPlayerData player)
 	{
-		return getPlayerFormattedUUID(player) + EXT;
+		if(!player.isLoaded()) return;
+		BackpackFile backpackFile = new BackpackFile(player);
+		backpackFile.writeFile((File) player.getDatabaseKey());
 	}
 	
 	// DB Functions
 	@Override
-	public void saveBackpack(@NotNull Backpack backpack)
+	public void saveBackpack(final @NotNull Backpack backpack)
 	{
-		File save = new File(saveFolder, getFileName(backpack.getOwner()));
-		try(FileOutputStream fos = new FileOutputStream(save))
-		{
-			fos.write(itsSerializer.getUsedSerializer());
-			fos.write(itsSerializer.serialize(backpack.getInventory()));
-			fos.flush();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		savePlayer(backpack.getOwner());
 	}
 
 	@Override
-	public void loadBackpack(final @NotNull OfflinePlayer player, final @NotNull Callback<Backpack> callback)
-	{ //TODO this needs to be done async!
-		File save = new File(saveFolder, getFileName(player));
-		ItemStack[] itemStacks = readFile(itsSerializer, save, plugin.getLogger());
-		if(itemStacks != null)
-		{
-			callback.onResult(new Backpack(player, itemStacks, -1));
-		}
-		else
-		{
-			callback.onFail();
-		}
-	}
-
-	public static @Nullable ItemStack[] readFile(final @NotNull InventorySerializer itsSerializer, final @NotNull File file, final @NotNull Logger logger)
+	public void loadPlayer(final @NotNull MinepacksPlayerData player)
 	{
+		File file = new File(saveFolder, formatUUID(player.getUUID()) + EXT);
+		Backpack bp = null;
 		if(file.exists())
 		{
-			try(FileInputStream fis = new FileInputStream(file))
-			{
-				int version = fis.read();
-				byte[] out = new byte[(int) (file.length() - 1)];
-				int readCount = fis.read(out);
-				if(file.length() - 1 != readCount) logger.warning("Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
-				return itsSerializer.deserialize(out, version);
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			BackpackFile backpackFile = BackpackFile.loadFile(file);
+			if(backpackFile != null)
+				bp = new Backpack(player, backpackFile.getItemStacks()[0]);
 		}
-		return null;
+		if(bp == null) bp = new Backpack(player);
+		player.setLoaded(file);
+		player.setBackpack(bp);
 	}
+
+	@Override
+	public void loadBackpack(@NotNull MinepacksPlayerData player) {} // Already loaded with the player
 }
