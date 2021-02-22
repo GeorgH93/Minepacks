@@ -331,7 +331,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 
 	@Override
 	public @Nullable MinepacksPlayerExtended getMinepacksPlayerLoadedOnly(@NotNull OfflinePlayer player)
-	{//TODO
+	{
+		MinepacksPlayerExtended mpPlayer = database.getPlayerCached(player);
+		if(mpPlayer != null && mpPlayer.isLoaded()) return mpPlayer;
 		return null;
 	}
 

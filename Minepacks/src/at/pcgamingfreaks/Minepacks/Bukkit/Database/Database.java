@@ -182,6 +182,11 @@ public final class Database implements Listener
 		return player;
 	}
 
+	public @Nullable MinepacksPlayerExtended getPlayerCached(final @NotNull OfflinePlayer offlinePlayer)
+	{
+		return cache.getCachedPlayer(offlinePlayer.getUniqueId());
+	}
+
 	// DB Functions
 	public void saveBackpack(final @NotNull Backpack backpack)
 	{
