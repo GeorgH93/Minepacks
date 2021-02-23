@@ -123,7 +123,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		{
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + String.format("Your server version (%1$s) is currently not compatible with your current version (%2$s) of the plugin. " +
-					                                             "Please check for updates!", Bukkit.getVersion(), getDescription().getVersion()) + ConsoleColor.RESET);
+			                                                     "Please check for updates!", Bukkit.getVersion(), getDescription().getVersion()) + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			Utils.blockThread(5);
 			this.setEnabled(false);
