@@ -184,7 +184,16 @@ public interface MinepacksPlugin
 	 * Checks if an item is a backpack shortcut item.
 	 *
 	 * @param itemStack item to check.
-	 * @return True if the item is a backpack shortcut item.
+	 * @return true if the item is a backpack shortcut item, false if not.
 	 */
 	boolean isBackpackItem(final @Nullable ItemStack itemStack);
+
+	/**
+	 * Checks if a player can use the backpack at its current location (or if the world is disabled in the config).
+	 * <b>Does not check if the player has the permission to use the backpack!!!</b>
+	 *
+	 * @param player The player that should be checked.
+	 * @return The configured reason why the player can not access at its current location. {@link WorldBlacklistMode#None} if the player can use the backpack.
+	 */
+	@NotNull WorldBlacklistMode isDisabled(Player player);
 }

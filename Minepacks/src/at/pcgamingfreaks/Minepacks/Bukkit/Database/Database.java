@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.Cache.BaseUnCacheStrategy;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.MinepacksPlayerJoinEvent;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.DatabaseBackend;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;

@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 
 import org.bukkit.Bukkit;

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,17 +25,18 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.StringUtils;
@@ -119,7 +120,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 
 	private boolean checkMcVersion()
 	{
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isOlderThan(MCVersion.MC_1_8) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R2))
+		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isOlderThan(MCVersion.MC_1_8) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_16_R3))
 		{
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + String.format("Your server version (%1$s) is currently not compatible with your current version (%2$s) of the plugin. " +
@@ -299,7 +300,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
-			opener.getWorld().playSound(opener.getEyeLocation(), openSound, 1, 0);
+			opener.playSound(opener.getEyeLocation(), openSound, 1, 0);
 		}
 		backpack.open(opener, editable);
 	}
@@ -352,6 +353,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		return 9;
 	}
 
+	@Override
 	public @NotNull WorldBlacklistMode isDisabled(final @NotNull Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission(Permissions.IGNORE_WORLD_BLACKLIST))) return WorldBlacklistMode.None;

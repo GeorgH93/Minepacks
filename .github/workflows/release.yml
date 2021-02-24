@@ -28,11 +28,6 @@ jobs:
         mvn -B -s .github/workflows/settings.xml install --file pom.xml
         cp Minepacks/target/M*.jar artifacts/
 
-    - name: Publish to GitHub Packages Apache Maven
-      run: 'mvn deploy -pl Minepacks-API,Minepacks -s $GITHUB_WORKSPACE/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-
     - name: Build with Maven (Standalone)
       run: |
         mvn -B -s .github/workflows/settings.xml clean install --file pom.xml -P Standalone,ExcludeBadRabbit
@@ -49,3 +44,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: 'artifacts/M*'
+
+    - name: Publish to GitHub Packages Apache Maven
+      run: 'mvn clean install deploy -pl Minepacks-API,Minepacks -s .github/workflows/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
+      env:
+        GITHUB_TOKEN: ${{ github.token }}

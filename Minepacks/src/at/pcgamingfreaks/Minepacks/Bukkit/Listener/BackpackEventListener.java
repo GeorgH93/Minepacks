@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ public class BackpackEventListener extends MinepacksListener
 			}
 			if(closeSound != null)
 			{
-				closer.getWorld().playSound(closer.getEyeLocation(), closeSound, 1, 0);
+				closer.playSound(closer.getEyeLocation(), closeSound, 1, 0);
 			}
 	    }
 	}

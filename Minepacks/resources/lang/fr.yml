@@ -22,7 +22,7 @@ Language:
       #Parameter: {CurrentGameMode}, {AllowedGameModes}
       WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sac à dos dans votre mode de jeu actuel."
     Clean:
-      BackpackCleaned: "Sac à dos nettoyé."s
+      BackpackCleaned: "Sac à dos nettoyé."
       BackpackCleanedBy: "Votre sac à dos a été nettoyé par {DisplayName}&r."
       BackpackCleanedOther: "Sac à dos de {DisplayName} &rnettoyé."
     Sort:
