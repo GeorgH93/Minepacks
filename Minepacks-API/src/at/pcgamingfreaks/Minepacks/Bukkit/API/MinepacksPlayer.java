@@ -102,7 +102,6 @@ public interface MinepacksPlayer
 	 */
 	@Nullable Backpack getBackpack();
 
-
 	/**
 	 * Checks whether the player has been loaded.
 	 * While the player is not loaded data might not be available or valid.
@@ -111,6 +110,12 @@ public interface MinepacksPlayer
 	 */
 	boolean isLoaded();
 
+	/**
+	 * If the player is loaded the callback will be called instantly.
+	 * If the player is not loaded the callback will be called as soon as it is loaded.
+	 *
+	 * @param callback Callback that should be called once the player is loaded.
+	 */
 	void notifyOnLoad(Callback<MinepacksPlayer> callback);
 
 	/**
@@ -122,9 +127,26 @@ public interface MinepacksPlayer
 	 */
 	boolean isBackpackLoaded();
 
+	/**
+	 * Gets the backpack of the player.
+	 * If the backpack is loaded the callback will be executed instantly.
+	 * If the backpack is not yet loaded the callback will be called once it is loaded.
+	 *
+	 * @param callback The callback that should be called once the backpack is loaded.
+	 */
 	void getBackpack(Callback<Backpack> callback);
 
+	/**
+	 * Sets the command cooldown time for the player.
+	 *
+	 * @param cooldown The cooldown timestamp for the command. Unix time in milliseconds.
+	 */
 	void setCooldown(long cooldown);
 
+	/**
+	 * Gets the command cooldown time for the player.
+	 *
+	 * @return The cooldown timestamp for the command. Unix time in milliseconds.
+	 */
 	long getCooldown();
 }
