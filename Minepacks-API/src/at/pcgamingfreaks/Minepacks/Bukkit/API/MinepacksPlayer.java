@@ -28,6 +28,7 @@ import java.util.UUID;
 /**
  * Represents a player in the Minepacks plugin.
  */
+@SuppressWarnings("unused")
 public interface MinepacksPlayer
 {
 	/**
@@ -116,7 +117,7 @@ public interface MinepacksPlayer
 	 *
 	 * @param callback Callback that should be called once the player is loaded.
 	 */
-	void notifyOnLoad(Callback<MinepacksPlayer> callback);
+	void notifyOnLoad(@NotNull Callback<MinepacksPlayer> callback);
 
 	/**
 	 * Checks whether the backpack of the player has been loaded.
@@ -134,7 +135,7 @@ public interface MinepacksPlayer
 	 *
 	 * @param callback The callback that should be called once the backpack is loaded.
 	 */
-	void getBackpack(Callback<Backpack> callback);
+	void getBackpack(@NotNull Callback<Backpack> callback);
 
 	/**
 	 * Sets the command cooldown time for the player.
@@ -149,4 +150,24 @@ public interface MinepacksPlayer
 	 * @return The cooldown timestamp for the command. Unix time in milliseconds.
 	 */
 	long getCooldown();
+
+	/**
+	 * Opens the backpack of the player for the player.
+	 * Will do nothing if the player is offline.
+	 *
+	 * @param editable True if the player should be able to open the backpack. False if not.
+	 */
+	default void openBackpack(boolean editable)
+	{
+		openBackpack(editable, null);
+	}
+
+	/**
+	 * Opens the backpack of the player for the player.
+	 * Will do nothing if the player is offline.
+	 *
+	 * @param editable True if the player should be able to open the backpack. False if not.
+	 * @param customTitle A custom title that should be used as title for the backpack inventory. Null = default title.
+	 */
+	void openBackpack(boolean editable, @Nullable String customTitle);
 }

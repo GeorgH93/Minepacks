@@ -176,6 +176,13 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
+	public void openBackpack(boolean editable, @Nullable String customTitle)
+	{
+		if(!isOnline()) return;
+		Minepacks.getInstance().openBackpack(getPlayerOnline(), this, editable, customTitle);
+	}
+
+	@Override
 	public @Nullable ItemStack getBackpackItem()
 	{
 		return (backpackStyle == null) ? null : backpackStyle.make();
@@ -188,7 +195,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
-	public void notifyOnLoad(Callback<MinepacksPlayer> callback)
+	public void notifyOnLoad(final @NotNull Callback<MinepacksPlayer> callback)
 	{
 		if(isLoaded()) callback.onResult(this);
 		else playerLoadedQueue.add(callback);
@@ -201,20 +208,20 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
-	public void getBackpack(Callback<Backpack> callback)
+	public void getBackpack(final @NotNull Callback<Backpack> callback)
 	{
 		if(isBackpackLoaded()) callback.onResult(backpack);
 		else backpackLoadedQueue.add(callback);
 	}
 
 	@Override
-	public void send(@NotNull IMessage message, @Nullable Object... args)
+	public void send(final @NotNull IMessage message, final @Nullable Object... args)
 	{
 		sendMessage(message, args);
 	}
 
 	@Override
-	public void sendMessage(@NotNull IMessage message, @Nullable Object... args)
+	public void sendMessage(final @NotNull IMessage message, final @Nullable Object... args)
 	{
 		Player bukkitPlayer = getPlayerOnline();
 		if(bukkitPlayer == null) return; // Is only null if the player is not online

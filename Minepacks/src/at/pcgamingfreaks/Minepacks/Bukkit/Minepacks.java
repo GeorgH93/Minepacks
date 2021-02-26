@@ -25,7 +25,7 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.*;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
@@ -36,7 +36,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
-import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.StringUtils;
@@ -273,9 +272,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public void openBackpack(final @NotNull Player opener, final @NotNull OfflinePlayer owner, final boolean editable, final @Nullable String title)
+	public void openBackpack(final @NotNull Player opener, final @NotNull MinepacksPlayer owner, final boolean editable, final @Nullable String title)
 	{
-		getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
+		owner.getBackpack(backpack -> openBackpack(opener, backpack, editable, title));
 	}
 
 	@Override

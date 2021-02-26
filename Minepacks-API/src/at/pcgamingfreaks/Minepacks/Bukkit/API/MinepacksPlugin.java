@@ -54,6 +54,21 @@ public interface MinepacksPlugin
 	 * @param owner    The owner of the backpack that should be opened.
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 */
+	@Deprecated
+	default void openBackpack(@NotNull final Player opener, @NotNull final MinepacksPlayer owner, final boolean editable)
+	{
+		openBackpack(opener, owner, editable, null);
+	}
+
+	/**
+	 * Let a given player open the backpack of an other player.
+	 *
+	 * @param opener   The player who opens the backpack.
+	 * @param owner    The owner of the backpack that should be opened.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @deprecated     Use {@link #openBackpack(Player, MinepacksPlayer, boolean)} instead!
+	 */
+	@Deprecated
 	default void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
 	{
 		openBackpack(opener, owner, editable, null);
@@ -66,7 +81,7 @@ public interface MinepacksPlugin
 	 * @param backpack The backpack to be opened. null will result in an error message for the player.
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 */
-	default void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable)
+	default void openBackpack(@NotNull final Player opener, @NotNull final Backpack backpack, boolean editable)
 	{
 		openBackpack(opener, backpack, editable, null);
 	}
@@ -79,17 +94,32 @@ public interface MinepacksPlugin
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
 	 */
-	void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable, @Nullable String title);
+	void openBackpack(@NotNull final Player opener, @NotNull final MinepacksPlayer owner, final boolean editable, @Nullable String title);
+
+	/**
+	 * Let a given player open the backpack of an other player.
+	 *
+	 * @param opener   The player who opens the backpack.
+	 * @param owner    The owner of the backpack that should be opened.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 * @deprecated     Use {@link #openBackpack(Player, MinepacksPlayer, boolean, String)} instead!
+	 */
+	@Deprecated
+	default void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable, @Nullable String title)
+	{
+		openBackpack(opener, getMinepacksPlayer(owner), editable, title);
+	}
 
 	/**
 	 * Let a given player open a given {@link Backpack}.
 	 *
 	 * @param opener   The player who opens the backpack.
-	 * @param backpack The backpack to be opened. null will result in an error message for the player.
+	 * @param backpack The backpack to be opened.
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
 	 */
-	void openBackpack(@NotNull final Player opener, @Nullable final Backpack backpack, boolean editable, @Nullable String title);
+	void openBackpack(@NotNull final Player opener, @NotNull final Backpack backpack, boolean editable, @Nullable String title);
 
 	/**
 	 * Retrieves the backpack for a given player.
