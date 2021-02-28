@@ -20,8 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -34,15 +32,14 @@ import java.util.List;
 
 public class BackupCommand extends MinepacksCommand
 {
-	private final Message messageCreated, messageNoBackpack;
+	private final Message messageCreated;
 	private final String helpParam;
 
-	public BackupCommand(Minepacks plugin)
+	public BackupCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), Permissions.BACKUP, plugin.getLanguage().getCommandAliases("Backup"));
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 		messageCreated = plugin.getLanguage().getMessage("Ingame.Backup.Created");
-		messageNoBackpack = plugin.getLanguage().getMessage("Ingame.Backup.NoBackpack");
 	}
 
 	@Override
@@ -51,19 +48,9 @@ public class BackupCommand extends MinepacksCommand
 		if(args.length == 1)
 		{
 			//noinspection deprecation
-			getMinepacksPlugin().getBackpack(plugin.getServer().getOfflinePlayer(args[0]), new Callback<Backpack>() {
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
-					messageCreated.send(sender);
-				}
-
-				@Override
-				public void onFail()
-				{
-					messageNoBackpack.send(sender);
-				}
+			getMinepacksPlugin().getBackpack(plugin.getServer().getOfflinePlayer(args[0]), backpack -> {
+				((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
+				messageCreated.send(sender);
 			}, false);
 		}
 		else

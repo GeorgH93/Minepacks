@@ -126,7 +126,7 @@ public class ShortcutCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		if(!(sender instanceof Player))
 		{
@@ -176,7 +176,7 @@ public class ShortcutCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		if(args.length > 0)
 		{

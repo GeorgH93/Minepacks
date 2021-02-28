@@ -11,7 +11,6 @@ Language:
     #Parameter: {OwnerName}, {OwnerDisplayName}
     PlayerBackpackClose: "{OwnerName}'s Rucksack geschlossen."
     PlayerBackpackClose_SendMethod: "action_bar"
-    InvalidBackpack: "Rucksack fehlerhaft."
     NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
     DontRemoveShortcut: "&cDu darfst den Rucksack nicht aus deinem Inventar entfernen!"
     DontRemoveShortcut_SendMethod: "action_bar"
@@ -41,7 +40,6 @@ Language:
       UpdateAvailable: "[{\"text\":\"Es ist eine Aktualisierung verfügbar! Bitte gehe auf \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" um es herunter zu laden!\"}]"
     Backup:
       Created: "Rucksack wurde gesichert."
-      NoBackpack: "Der Spieler hat keinen Rucksack oder keine Items in seinem Rucksack."
     Restore:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"Seite {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"

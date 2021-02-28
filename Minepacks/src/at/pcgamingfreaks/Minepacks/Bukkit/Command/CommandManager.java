@@ -93,7 +93,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	}
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+	public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String alias, String[] args)
 	{
 		if(sender instanceof Player)
 		{
@@ -117,7 +117,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 	}
 
 	@Override
-	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+	public List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String alias, final String[] args)
 	{
 		if(sender instanceof Player)
 		{
@@ -136,7 +136,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		return super.onTabComplete(sender, command, alias, args);
 	}
 
-	public void sendHelp(CommandSender target, String mainCommandAlias, Collection<HelpData> data)
+	public void sendHelp(final CommandSender target, final String mainCommandAlias, final Collection<HelpData> data)
 	{
 		for(HelpData d : data)
 		{

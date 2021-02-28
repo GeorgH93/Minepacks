@@ -30,14 +30,14 @@ public class VersionCommand extends MinepacksCommand
 {
 	private final String minepacksVersion;
 
-	public VersionCommand(Minepacks plugin)
+	public VersionCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "version", plugin.getLanguage().getTranslated("Commands.Description.Version"), Permissions.VERSION, plugin.getLanguage().getCommandAliases("Version"));
 		minepacksVersion = plugin.getDescription().getName() + ": " + plugin.getDescription().getVersion();
 	}
 
 	@Override
-	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		sender.sendMessage("##### Start Minepacks version info #####");
 		sender.sendMessage(minepacksVersion);
@@ -50,7 +50,7 @@ public class VersionCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		return null;
 	}

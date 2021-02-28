@@ -33,6 +33,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
@@ -71,7 +72,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Getter private Language language;
 	@Getter private Database database;
 
-	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
+	public Message messageNoPermission, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
 	private int maxSize;
 	@Getter private Set<String> worldBlacklist;
@@ -196,11 +197,10 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		maxSize = configuration.getBackpackMaxSize();
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(configuration.getShrinkApproach());
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(configuration.getBPTitle(), configuration.getBPTitleOther());
-		messageNotFromConsole  = language.getMessage("NotFromConsole");
-		messageNoPermission    = language.getMessage("Ingame.NoPermission");
-		messageInvalidBackpack = language.getMessage("Ingame.InvalidBackpack");
-		messageWorldDisabled   = language.getMessage("Ingame.WorldDisabled");
-		messageNotANumber      = language.getMessage("Ingame.NaN");
+		messageNotFromConsole = language.getMessage("NotFromConsole");
+		messageNoPermission   = language.getMessage("Ingame.NoPermission");
+		messageWorldDisabled  = language.getMessage("Ingame.WorldDisabled");
+		messageNotANumber     = language.getMessage("Ingame.NaN");
 
 		commandManager = new CommandManager(this);
 		if(configuration.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
@@ -278,7 +278,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public void openBackpack(final @NotNull Player opener, final @Nullable Backpack backpack, final boolean editable, final @Nullable String title)
+	public void openBackpack(final @NotNull Player opener, final @NotNull Backpack backpack, final boolean editable, final @Nullable String title)
 	{
 		WorldBlacklistMode disabled = isDisabled(opener);
 		if(disabled != WorldBlacklistMode.None)
@@ -288,11 +288,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 				case Message: messageWorldDisabled.send(opener); break;
 				case MissingPermission: messageNoPermission.send(opener); break;
 			}
-			return;
-		}
-		if(backpack == null)
-		{
-			messageInvalidBackpack.send(opener);
 			return;
 		}
 		//noinspection ObjectEquality
@@ -305,9 +300,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public @Nullable Backpack getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
+	public @Nullable BackpackExtended getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
 	{
-		MinepacksPlayer minepacksPlayer = getMinepacksPlayerLoadedOnly(owner);
+		MinepacksPlayerExtended minepacksPlayer = getMinepacksPlayerLoadedOnly(owner);
 		return (minepacksPlayer != null) ? minepacksPlayer.getBackpack() : null;
 	}
 

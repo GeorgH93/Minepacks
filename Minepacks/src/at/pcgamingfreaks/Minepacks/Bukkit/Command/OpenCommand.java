@@ -66,7 +66,7 @@ public class OpenCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull CommandSender sender, @NotNull String main, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender sender, final @NotNull String main, final @NotNull String alias, final @NotNull String[] args)
 	{
 		Player player = (Player) sender;
 		if(args.length == 0)
@@ -85,7 +85,7 @@ public class OpenCommand extends MinepacksCommand
 					}
 					minepacksPlayer.setCooldown(System.currentTimeMillis());
 				}
-				plugin.openBackpack((Player) sender, minepacksPlayer.getPlayer(), true); //TODO cleanup
+				minepacksPlayer.openBackpack(true);
 			}
 			else
 			{
@@ -107,7 +107,7 @@ public class OpenCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.OTHERS)))
 		{
@@ -117,7 +117,7 @@ public class OpenCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<HelpData> getHelp(@NotNull CommandSender requester)
+	public List<HelpData> getHelp(final @NotNull CommandSender requester)
 	{
 		List<HelpData> help = new ArrayList<>(2);
 		help.add(new HelpData(getTranslatedName(), null, getDescription(), MessageClickEvent.ClickEventAction.RUN_COMMAND));

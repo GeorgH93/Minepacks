@@ -45,7 +45,7 @@ public class BackpackEventListener extends MinepacksListener
 	}
 	
 	@EventHandler
-	public void onClose(InventoryCloseEvent event)
+	public void onClose(final InventoryCloseEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getPlayer() instanceof Player)
 	    {
@@ -73,7 +73,7 @@ public class BackpackEventListener extends MinepacksListener
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onClick(InventoryClickEvent event)
+	public void onClick(final InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
 	    {
@@ -90,7 +90,7 @@ public class BackpackEventListener extends MinepacksListener
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onDisconnect(PlayerQuitEvent event)
+	public void onDisconnect(final PlayerQuitEvent event)
 	{
 		Backpack backpack = (Backpack) plugin.getMinepacksPlayer(event.getPlayer()).getBackpack();
 		if(backpack != null) backpack.save();

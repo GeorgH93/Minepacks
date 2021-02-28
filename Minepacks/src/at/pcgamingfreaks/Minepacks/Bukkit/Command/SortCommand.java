@@ -35,39 +35,31 @@ public class SortCommand extends MinepacksCommand
 {
 	private final Message messageSorted;
 
-	public SortCommand(Minepacks plugin)
+	public SortCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "sort", plugin.getLanguage().getTranslated("Commands.Description.Sort"), Permissions.SORT, true, plugin.getLanguage().getCommandAliases("Sort"));
 		messageSorted = plugin.getLanguage().getMessage("Ingame.Sort.Sorted");
 	}
 
 	@Override
-	public void execute(final @NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		final Player player = (Player) commandSender;
-		getMinepacksPlugin().getBackpack(player, new Callback<Backpack>()
-		{
-			@Override
-			public void onResult(Backpack backpack)
+		getMinepacksPlugin().getBackpack(player, backpack -> {
+			InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
+			if(!compressor.sort().isEmpty())
 			{
-				InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
-				if(!compressor.sort().isEmpty())
-				{
-					plugin.getLogger().warning("Failed to sort backpack!"); //this should not happen
-					return;
-				}
-				backpack.getInventory().setContents(compressor.getTargetStacks());
-				backpack.setChanged();
-				messageSorted.send(player);
+				plugin.getLogger().warning("Failed to sort backpack!"); //this should not happen
+				return;
 			}
-
-			@Override
-			public void onFail() {} // This should not happen
+			backpack.getInventory().setContents(compressor.getTargetStacks());
+			backpack.setChanged();
+			messageSorted.send(player);
 		});
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		return null;
 	}

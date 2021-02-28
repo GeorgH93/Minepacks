@@ -17,8 +17,6 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -28,19 +26,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class DropOnDeath extends MinepacksListener
 {
 	private final boolean honorKeepOnDeath;
 
-	public DropOnDeath(Minepacks plugin)
+	public DropOnDeath(final @NotNull Minepacks plugin)
 	{
 		super(plugin);
 		honorKeepOnDeath = plugin.getConfiguration().getHonorKeepInventoryOnDeath();
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onDeath(PlayerDeathEvent event)
+	public void onDeath(final PlayerDeathEvent event)
 	{
 		if(honorKeepOnDeath && event.getKeepInventory()) return;
 		final Player player = event.getEntity();
@@ -48,17 +47,7 @@ public class DropOnDeath extends MinepacksListener
 		if (!player.hasPermission(Permissions.KEEP_ON_DEATH))
 		{
 			final Location location = player.getLocation();
-			plugin.getBackpack(player, new Callback<Backpack>()
-			{
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					backpack.drop(location);
-				}
-
-				@Override
-				public void onFail() {}
-			});
+			plugin.getBackpack(player, backpack -> backpack.drop(location));
 		}
 	}
 }

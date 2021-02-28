@@ -19,9 +19,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Message.IMessage;
 import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
@@ -56,7 +56,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	@Getter private long cooldown = 0;
 
 	@Getter @Setter	private Object databaseKey = null;
-	private final Queue<Callback<Backpack>> backpackLoadedQueue = new ConcurrentLinkedQueue<>();
+	private final Queue<Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack>> backpackLoadedQueue = new ConcurrentLinkedQueue<>();
 	private final Queue<Callback<MinepacksPlayer>> playerLoadedQueue = new ConcurrentLinkedQueue<>();
 
 	public MinepacksPlayerData(final @Nullable UUID uuid, final @NotNull String name)
@@ -179,6 +179,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	public void openBackpack(boolean editable, @Nullable String customTitle)
 	{
 		if(!isOnline()) return;
+		//noinspection ConstantConditions
 		Minepacks.getInstance().openBackpack(getPlayerOnline(), this, editable, customTitle);
 	}
 
@@ -208,7 +209,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
-	public void getBackpack(final @NotNull Callback<Backpack> callback)
+	public void getBackpack(final @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback)
 	{
 		if(isBackpackLoaded()) callback.onResult(backpack);
 		else backpackLoadedQueue.add(callback);

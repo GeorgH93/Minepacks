@@ -31,7 +31,7 @@ public class ReloadCommand extends MinepacksCommand
 {
 	private final Message messageReloading, messageReloaded;
 
-	public ReloadCommand(Minepacks plugin)
+	public ReloadCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "reload", plugin.getLanguage().getTranslated("Commands.Description.Reload"), Permissions.RELOAD, plugin.getLanguage().getCommandAliases("Reload"));
 
@@ -41,7 +41,7 @@ public class ReloadCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		messageReloading.send(sender);
 		((Minepacks) plugin).reload();
@@ -49,7 +49,7 @@ public class ReloadCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		return null;
 	}

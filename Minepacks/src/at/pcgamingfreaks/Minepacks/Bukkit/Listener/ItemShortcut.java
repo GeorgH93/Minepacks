@@ -225,7 +225,7 @@ public class ItemShortcut extends MinepacksListener
 	{
 		final Player player = (Player) event.getWhoClicked();
 		if(plugin.isDisabled(player) != WorldBlacklistMode.None || !player.hasPermission(Permissions.USE) || !plugin.isPlayerGameModeAllowed(player)) return;
-		Backpack backpack = plugin.getBackpackCachedOnly(player);
+		Backpack backpack = plugin.getBackpackLoadedOnly(player);
 		if(backpack != null)
 		{
 			final ItemStack stack = event.getCursor();

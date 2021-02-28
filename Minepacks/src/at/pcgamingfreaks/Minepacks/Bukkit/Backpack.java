@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
+public class Backpack implements BackpackExtended
 {
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;

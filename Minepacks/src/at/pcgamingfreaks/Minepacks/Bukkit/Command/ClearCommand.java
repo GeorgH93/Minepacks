@@ -20,9 +20,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -40,7 +40,7 @@ public class ClearCommand extends MinepacksCommand
 	private final Message messageCleared, messageClearedOther, messageClearedBy;
 	private final String helpParam, descriptionCleanOthers;
 
-	public ClearCommand(Minepacks plugin)
+	public ClearCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "clear", plugin.getLanguage().getTranslated("Commands.Description.Clean"), Permissions.CLEAN, plugin.getLanguage().getCommandAliases("Clean"));
 		descriptionCleanOthers = plugin.getLanguage().getTranslated("Commands.Description.CleanOthers");
@@ -51,7 +51,7 @@ public class ClearCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(final @NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public void execute(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		OfflinePlayer target = null;
 		if(commandSender instanceof Player && args.length < 2)
@@ -62,42 +62,24 @@ public class ClearCommand extends MinepacksCommand
 		else if(args.length == 1) target = Bukkit.getOfflinePlayer(args[0]);
 		if(target != null)
 		{
-			getMinepacksPlugin().getBackpack(target, new Callback<Backpack>()
-			{
-				@Override
-				public void onResult(Backpack backpack)
+			getMinepacksPlugin().getBackpack(target, backpack -> {
+				backpack.clear();
+				if(commandSender.equals(backpack.getOwner().getPlayerOnline()))
 				{
-					if(backpack != null)
+					messageCleared.send(commandSender);
+				}
+				else
+				{
+					if(backpack.getOwner().isOnline())
 					{
-						backpack.clear();
-						if(commandSender.equals(backpack.getOwner()))
-						{
-							messageCleared.send(commandSender);
-						}
-						else
-						{
-							if(backpack.getOwner().isOnline())
-							{
-								Player owner = backpack.getOwner().getPlayer().getPlayer();
-								messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
-								messageClearedBy.send(owner, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
-							}
-							else
-							{
-								messageClearedOther.send(commandSender, backpack.getOwner().getName(), ChatColor.GRAY + backpack.getOwner().getName());
-							}
-						}
+						MinepacksPlayerExtended owner = ((BackpackExtended)backpack).getOwner();
+						messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
+						owner.sendMessage(messageClearedBy, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
 					}
 					else
 					{
-						((Minepacks) getMinepacksPlugin()).messageInvalidBackpack.send(commandSender);
+						messageClearedOther.send(commandSender, backpack.getOwner().getName(), ChatColor.GRAY + backpack.getOwner().getName());
 					}
-				}
-
-				@Override
-				public void onFail()
-				{
-					((Minepacks) getMinepacksPlugin()).messageInvalidBackpack.send(commandSender);
 				}
 			});
 		}
@@ -108,7 +90,7 @@ public class ClearCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		if(args.length > 0 && (!(commandSender instanceof Player) || commandSender.hasPermission(Permissions.CLEAN_OTHER)))
 		{
@@ -118,7 +100,7 @@ public class ClearCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<HelpData> getHelp(@NotNull CommandSender requester)
+	public List<HelpData> getHelp(final @NotNull CommandSender requester)
 	{
 		List<HelpData> help = super.getHelp(requester);
 		if(!(requester instanceof Player) || requester.hasPermission(Permissions.CLEAN_OTHER))

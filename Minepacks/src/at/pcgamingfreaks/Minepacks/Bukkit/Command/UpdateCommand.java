@@ -31,7 +31,7 @@ public class UpdateCommand extends MinepacksCommand
 {
 	private final Message messageCheckingForUpdates, messageUpdated, messageNoUpdate, messageUpdateFail, messageUpdateAvailable;
 
-	public UpdateCommand(Minepacks plugin)
+	public UpdateCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "update", plugin.getLanguage().getTranslated("Commands.Description.Update"), Permissions.UPDATE, plugin.getLanguage().getCommandAliases("Update"));
 
@@ -43,7 +43,7 @@ public class UpdateCommand extends MinepacksCommand
 	}
 
 	@Override
-	public void execute(@NotNull final CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
+	public void execute(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		messageCheckingForUpdates.send(sender);
 		/*if_not[STANDALONE]*/
@@ -61,7 +61,7 @@ public class UpdateCommand extends MinepacksCommand
 	}
 
 	@Override
-	public List<String> tabComplete(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	public List<String> tabComplete(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
 		return null;
 	}

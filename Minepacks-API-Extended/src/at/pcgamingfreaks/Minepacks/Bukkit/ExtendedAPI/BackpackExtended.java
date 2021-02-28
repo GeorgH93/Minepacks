@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,18 +17,13 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
-import at.pcgamingfreaks.Bukkit.Message.IMessage;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface MinepacksPlayerExtended extends MinepacksPlayer
+public interface BackpackExtended extends Backpack
 {
 	@Override
-	BackpackExtended getBackpack();
-
-	void send(@NotNull IMessage message, @Nullable Object... args);
-
-	void sendMessage(@NotNull IMessage message, @Nullable Object... args);
+	@NotNull MinepacksPlayerExtended getOwner();
 }

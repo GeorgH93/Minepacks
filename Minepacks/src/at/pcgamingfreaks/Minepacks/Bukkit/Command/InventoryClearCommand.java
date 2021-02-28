@@ -63,7 +63,7 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 		command.unregisterCommand();
 	}
 
-	private void clearInventory(Player player, CommandSender sender)
+	private void clearInventory(final @NotNull Player player, final @NotNull CommandSender sender)
 	{
 		InventoryClearEvent clearEvent = new InventoryClearEvent(player, sender);
 		Bukkit.getPluginManager().callEvent(clearEvent);
@@ -82,7 +82,7 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 	}
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args)
+	public boolean onCommand(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String label, final @NotNull String[] args)
 	{
 		if(sender.hasPermission(Permissions.INVENTORY_CLEAR))
 		{
@@ -125,7 +125,7 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 	}
 
 	@Override
-	public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args)
+	public @Nullable List<String> onTabComplete(final @NotNull CommandSender sender, final @NotNull Command command, final @NotNull String alias, final @NotNull String[] args)
 	{
 		if(args.length > 0 && (!(sender instanceof Player) || sender.hasPermission(Permissions.INVENTORY_CLEAR_OTHER)))
 		{

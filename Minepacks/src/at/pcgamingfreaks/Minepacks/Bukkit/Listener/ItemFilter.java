@@ -20,7 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Bukkit.ItemNameResolver;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -154,7 +154,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 					event.setCancelled(true);
 				}
 			}
-			else if(!player.getInventory().equals(Utils.getClickedInventory(event)) && checkIsBlockedAndShowMessage(player, event.getCursor()))
+			else if(!player.getInventory().equals(InventoryUtils.getClickedInventory(event)) && checkIsBlockedAndShowMessage(player, event.getCursor()))
 			{
 				event.setCancelled(true);
 			}

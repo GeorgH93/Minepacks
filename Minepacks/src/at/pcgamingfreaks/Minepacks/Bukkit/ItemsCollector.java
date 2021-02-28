@@ -59,11 +59,8 @@ public class ItemsCollector extends BukkitRunnable
 			if(player.getInventory().firstEmpty() == -1 && player.hasPermission(Permissions.USE) && player.hasPermission(Permissions.FULL_PICKUP))
 			{
 				// Only check loaded backpacks (loading them would take to much time for a repeating task, the backpack will be loaded async soon enough)
-				Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
-				if(backpack == null)
-				{
-					continue;
-				}
+				Backpack backpack = (Backpack) plugin.getBackpackLoadedOnly(player);
+				if(backpack == null) continue;
 				List<Entity> entities = player.getNearbyEntities(radius, radius, radius);
 				for(Entity entity : entities)
 				{

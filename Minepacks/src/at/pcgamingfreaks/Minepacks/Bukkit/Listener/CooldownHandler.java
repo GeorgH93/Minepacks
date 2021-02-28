@@ -31,13 +31,13 @@ public class CooldownHandler implements Listener
 	private final long cooldown;
 	private final boolean addOnJoin;
 
-	public CooldownHandler(Minepacks plugin)
+	public CooldownHandler(final @NotNull Minepacks plugin)
 	{
 		cooldown  = plugin.getConfiguration().getCommandCooldown();
 		addOnJoin = plugin.getConfiguration().isCommandCooldownAddOnJoinEnabled();
 	}
 
-	public long getRemainingCooldown(@NotNull MinepacksPlayer player)
+	public long getRemainingCooldown(final @NotNull MinepacksPlayer player)
 	{
 		long cd = player.getCooldown() + cooldown;
 		if(cd > System.currentTimeMillis())
@@ -48,7 +48,7 @@ public class CooldownHandler implements Listener
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoinEvent(MinepacksPlayerJoinEvent event)
+	public void onPlayerJoinEvent(final MinepacksPlayerJoinEvent event)
 	{
 		if(addOnJoin)
 		{

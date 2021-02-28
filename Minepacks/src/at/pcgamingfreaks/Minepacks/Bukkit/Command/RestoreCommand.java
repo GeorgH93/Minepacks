@@ -45,7 +45,7 @@ public class RestoreCommand extends MinepacksCommand
 	private final String[] listCommands;
 	private final int elementsPerPage;
 
-	public RestoreCommand(Minepacks plugin)
+	public RestoreCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "restore", plugin.getLanguage().getTranslated("Commands.Description.Restore"), Permissions.RESTORE, plugin.getLanguage().getCommandAliases("Restore"));
 		helpParam = "<" + plugin.getLanguage().get("Ingame.Restore.ParameterBackupName") + "> (" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ")";
@@ -82,7 +82,6 @@ public class RestoreCommand extends MinepacksCommand
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void restore(final @NotNull CommandSender sender, final @NotNull String[] args)
 	{
 		ItemStack[] items = ((Minepacks) getMinepacksPlugin()).getDatabase().loadBackup(args[0]);
@@ -91,6 +90,7 @@ public class RestoreCommand extends MinepacksCommand
 			OfflinePlayer target = null;
 			if(args.length == 2)
 			{
+				//noinspection deprecation
 				target = plugin.getServer().getOfflinePlayer(args[1]);
 			}
 			else
@@ -98,6 +98,7 @@ public class RestoreCommand extends MinepacksCommand
 				String[] components = args[0].split("_");
 				if(components.length == 2)
 				{
+					//noinspection deprecation
 					target = plugin.getServer().getOfflinePlayer(components[0]);
 				}
 				else if(components.length == 3)

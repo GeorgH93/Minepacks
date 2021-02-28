@@ -17,10 +17,14 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
 import at.pcgamingfreaks.Version;
 
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface MinepacksPluginExtended extends MinepacksPlugin
 {
@@ -30,6 +34,16 @@ public interface MinepacksPluginExtended extends MinepacksPlugin
 	 * @return The command manager instance. null if the plugin is running in standalone mode
 	 */
 	@NotNull MinepacksCommandManager getCommandManager();
+
+	/**
+	 * Retrieves the backpack for a given player.
+	 * This method only returns a backpack if it is fully loaded.
+	 *
+	 * @param owner The player who's backpack should be retrieved.
+	 * @return The backpack of the given player. null if the backpack is not loaded.
+	 */
+	@Override
+	@Nullable BackpackExtended getBackpackLoadedOnly(final @NotNull OfflinePlayer owner);
 
 	@NotNull Version getVersion();
 }

@@ -11,7 +11,6 @@ Language:
     #Parameter: {OwnerName}, {OwnerDisplayName}
     PlayerBackpackClose: "{OwnerName}'s backpack closed!"
     PlayerBackpackClose_SendMethod: "action_bar"
-    InvalidBackpack: "Invalid backpack."
     NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cYou must not remove the backpack shortcut from your inventory!"
@@ -42,7 +41,6 @@ Language:
       UpdateAvailable: "[{\"text\":\"There is an update available! Please go to \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" to download it!\"}]"
     Backup:
       Created: "The backpack has been backed up successful."
-      NoBackpack: "The player doesn't have a backpack or his backpack is empty."
     Restore:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
