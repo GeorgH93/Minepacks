@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -115,17 +113,10 @@ public class RestoreCommand extends MinepacksCommand
 				messageNoUserFound.send(sender);
 				return;
 			}
-			getMinepacksPlugin().getBackpack(target, new Callback<Backpack>() {
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					backpack.getInventory().setContents(items);
-					backpack.setChanged();
-					messageRestored.send(sender);
-				}
-
-				@Override
-				public void onFail() {}
+			getMinepacksPlugin().getBackpack(target, backpack -> {
+				backpack.getInventory().setContents(items);
+				backpack.setChanged();
+				messageRestored.send(sender);
 			});
 		}
 		else
