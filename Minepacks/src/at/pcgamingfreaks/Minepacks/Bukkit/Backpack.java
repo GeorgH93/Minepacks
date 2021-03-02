@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;

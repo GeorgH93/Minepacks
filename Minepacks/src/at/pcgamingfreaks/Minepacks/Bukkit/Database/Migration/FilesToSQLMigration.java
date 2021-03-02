@@ -18,7 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.Files;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.intellij.lang.annotations.Language;

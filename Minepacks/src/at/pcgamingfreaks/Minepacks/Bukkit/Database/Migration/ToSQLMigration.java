@@ -23,7 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.MySQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQL;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.SQLite;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 

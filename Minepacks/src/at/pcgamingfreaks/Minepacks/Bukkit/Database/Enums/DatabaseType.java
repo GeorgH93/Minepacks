@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,11 +15,30 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit;
+package at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums;
 
-public enum ShrinkApproach
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
+
+public enum DatabaseType
 {
-	FAST,
-	COMPRESS,
-	SORT;
+	MYSQL,
+	SQLITE,
+	FILES,
+	SHARED,
+	UNKNOWN;
+
+	public static @NotNull DatabaseType fromName(@NotNull String typeName)
+	{
+		typeName = typeName.toLowerCase(Locale.ENGLISH);
+		switch(typeName)
+		{
+			case "mysql": return MYSQL;
+			case "sqlite": return SQLITE;
+			case "files": case "file": case "flat": return FILES;
+			case "shared": case "external": case "global": return SHARED;
+		}
+		return UNKNOWN;
+	}
 }

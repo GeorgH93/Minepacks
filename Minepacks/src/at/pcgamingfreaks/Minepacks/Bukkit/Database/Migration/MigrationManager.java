@@ -21,7 +21,7 @@ import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.DatabaseType;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
 

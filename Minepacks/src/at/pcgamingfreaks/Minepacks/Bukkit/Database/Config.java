@@ -26,8 +26,9 @@ import at.pcgamingfreaks.Database.Cache.IUnCacheStrategyConfig;
 import at.pcgamingfreaks.Database.Cache.UnCacheStrategy;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
-import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.*;
