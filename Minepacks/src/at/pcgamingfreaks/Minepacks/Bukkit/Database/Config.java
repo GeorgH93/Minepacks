@@ -110,19 +110,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 	}
 
-	public String getUserTable()
+	public @NotNull String getDBTable(final @NotNull String table, final @NotNull String defaultValue)
 	{
-		return getConfigE().getString("Database.Tables.User", "backpack_players");
-	}
-
-	public String getBackpackTable()
-	{
-		return getConfigE().getString("Database.Tables.Backpack", "backpacks");
-	}
-
-	public String getCooldownTable()
-	{
-		return getConfigE().getString("Database.Tables.Cooldown", "backpack_cooldowns");
+		return getConfigE().getString("Database.Tables." + table, defaultValue);
 	}
 
 	public String getDBFields(String sub, String def)

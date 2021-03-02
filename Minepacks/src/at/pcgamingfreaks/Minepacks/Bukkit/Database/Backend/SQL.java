@@ -40,7 +40,7 @@ public abstract class SQL extends DatabaseBackend
 {
 	private final ConnectionProvider dataSource;
 
-	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
+	protected String tablePlayers = "backpack_players", tableBackpacks = "backpacks", tableCooldowns = "backpack_cooldowns"; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
 	@Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
@@ -87,9 +87,9 @@ public abstract class SQL extends DatabaseBackend
 	protected void loadSettings()
 	{
 		// Load table and field names
-		tablePlayers      = plugin.getConfiguration().getUserTable();
-		tableBackpacks    = plugin.getConfiguration().getBackpackTable();
-		tableCooldowns    = plugin.getConfiguration().getCooldownTable();
+		tablePlayers      = plugin.getConfiguration().getDBTable("User", tablePlayers);
+		tableBackpacks    = plugin.getConfiguration().getDBTable("Backpack", tableBackpacks);
+		tableCooldowns    = plugin.getConfiguration().getDBTable("Cooldown", tableCooldowns);
 		fieldPlayerID     = plugin.getConfiguration().getDBFields("User.Player_ID", "id");
 		fieldPlayerName   = plugin.getConfiguration().getDBFields("User.Name", "name");
 		fieldPlayerUUID   = plugin.getConfiguration().getDBFields("User.UUID", "uuid");
