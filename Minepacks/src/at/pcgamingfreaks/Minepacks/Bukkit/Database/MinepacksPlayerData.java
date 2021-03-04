@@ -54,6 +54,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	private ItemConfig backpackStyle = null;
 	@Getter private Backpack backpack = null;
 	@Getter private long cooldown = 0;
+	@Getter @Setter private boolean backpackLoadingRequested = false;
 
 	@Getter @Setter	private Object databaseKey = null;
 	private final Queue<Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack>> backpackLoadedQueue = new ConcurrentLinkedQueue<>();
@@ -212,7 +213,11 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	public void getBackpack(final @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback)
 	{
 		if(isBackpackLoaded()) callback.onResult(backpack);
-		else backpackLoadedQueue.add(callback);
+		else
+		{
+			if(!backpackLoadingRequested) Minepacks.getInstance().getDatabase().loadBackpack(this);
+			backpackLoadedQueue.add(callback);
+		}
 	}
 
 	@Override

@@ -162,7 +162,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			if(oldPluginFolder.exists() && !oldPluginFolder.renameTo(getDataFolder()))
 			{
 				getLogger().warning("Failed to rename the plugins data-folder.\n" +
-						            "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
+				                    "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
 			}
 		}
 	}

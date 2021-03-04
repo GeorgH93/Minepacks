@@ -74,7 +74,7 @@ public final class Database implements Listener
 		backend.setAsyncSave(false);
 		unCacheStrategy.close();
 		cache.getCachedPlayers().forEach(player -> {
-			Backpack bp = ((Backpack) player.getBackpack());
+			Backpack bp = player.getBackpack();
 			if(bp != null) bp.closeAll();
 		}); //TODO change when multi-page backpacks are added
 		cache.close();
@@ -151,15 +151,17 @@ public final class Database implements Listener
 		backend.loadPlayer(player);
 
 		player.notifyOnLoad(p -> {
-			if(bungeeCordMode)
+			if(!bungeeCordMode)
 			{
-				//TODO delayed backpack loading
-			}
-			else
-			{
-				backend.loadBackpack(player);
+				loadBackpack(player);
 			}
 		});
+	}
+
+	public void loadBackpack(final @NotNull MinepacksPlayerData player)
+	{
+		player.setBackpackLoadingRequested(true);
+		backend.loadPlayer(player);
 	}
 
 	@EventHandler

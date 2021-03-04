@@ -207,7 +207,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			logger.warning("You have BungeeCord enabled, but it looks like you have not enabled it in your spigot.yml! You probably should check your configuration.");
 		}
-		else if(!useBungee && spigotUsesBungee && getDatabaseType().equals("mysql"))
+		else if(!useBungee && spigotUsesBungee && getDatabaseType() == DatabaseType.MYSQL)
 		{
 			logger.warning("Your server is running behind a BungeeCord server. If you are using the plugin on more than one server please make sure to also enable the 'UseBungeeCord' config option.");
 		}
