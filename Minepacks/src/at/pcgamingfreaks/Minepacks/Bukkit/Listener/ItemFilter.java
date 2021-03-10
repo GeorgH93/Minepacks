@@ -32,27 +32,24 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter
 {
 	public final Message messageNotAllowedInBackpack;
 	public final ItemNameResolver itemNameResolver;
-	private final boolean whitelistMode;
-	private final Collection<MinecraftMaterial> filteredMaterials = new HashSet<>();
-	private final Set<String> filteredNames, filteredLore;
+	private final at.pcgamingfreaks.Bukkit.ItemFilter filter;
 
 	public ItemFilter(final Minepacks plugin)
 	{
 		super(plugin);
 
-		whitelistMode = plugin.getConfiguration().isItemFilterModeWhitelist();
+		boolean whitelistMode = plugin.getConfiguration().isItemFilterModeWhitelist();
+		filter = new at.pcgamingfreaks.Bukkit.ItemFilter(whitelistMode);
+		Collection<MinecraftMaterial> filteredMaterials = plugin.getConfiguration().getItemFilterMaterials();
 		if(plugin.getConfiguration().isShulkerboxesPreventInBackpackEnabled() && !whitelistMode)
 		{
 			for(Material mat : DisableShulkerboxes.SHULKER_BOX_MATERIALS)
@@ -60,9 +57,9 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 				filteredMaterials.add(new MinecraftMaterial(mat, (short) -1));
 			}
 		}
-		filteredMaterials.addAll(plugin.getConfiguration().getItemFilterMaterials());
-		filteredNames = plugin.getConfiguration().getItemFilterNames();
-		filteredLore = plugin.getConfiguration().getItemFilterLore();
+		filter.addFilteredMaterials(filteredMaterials);
+		filter.addFilteredNames(plugin.getConfiguration().getItemFilterNames());
+		filter.addFilteredLore(plugin.getConfiguration().getItemFilterLore());
 
 		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
 
@@ -90,27 +87,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	@Override
 	public boolean isItemBlocked(final @Nullable ItemStack item)
 	{
-		if(item == null) return false;
-		if(filteredMaterials.contains(new MinecraftMaterial(item))) return !whitelistMode;
-		if(item.hasItemMeta())
-		{
-			ItemMeta meta = item.getItemMeta();
-			assert meta != null; //TODO remove after testing
-			if(meta.hasDisplayName() && filteredNames.contains(meta.getDisplayName())) return !whitelistMode;
-			if(meta.hasLore() && !filteredLore.isEmpty())
-			{
-				StringBuilder loreBuilder = new StringBuilder();
-				//noinspection ConstantConditions
-				for(String loreLine : meta.getLore())
-				{
-					if(filteredLore.contains(loreLine)) return !whitelistMode;
-					if(loreBuilder.length() > 0) loreBuilder.append("\n");
-					loreBuilder.append(loreLine);
-				}
-				if(filteredLore.contains(loreBuilder.toString())) return !whitelistMode;
-			}
-		}
-		return whitelistMode;
+		return filter.isItemBlocked(item);
 	}
 
 	@Override
