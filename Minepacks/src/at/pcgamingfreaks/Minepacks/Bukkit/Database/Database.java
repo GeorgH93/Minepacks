@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -195,7 +195,7 @@ public abstract class Database implements Listener
 
 	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback, final boolean createNewOnFail)
 	{
-		if(player == null)
+		if(player == null || player.getClass().getName().contains("NPC"))
 		{
 			return;
 		}
