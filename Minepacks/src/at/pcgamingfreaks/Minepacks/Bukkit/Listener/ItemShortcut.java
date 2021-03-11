@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ import java.util.UUID;
 public class ItemShortcut extends MinepacksListener
 {
 	private static final UUID MINEPACKS_UUID = UUID.nameUUIDFromBytes("Minepacks".getBytes());
-	private final String itemName, value, openCommand;
+	private final String itemName, itemNameNoReset, value, openCommand;
 	private final Message messageDoNotRemoveItem;
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
 	private final int preferredSlotId;
@@ -60,6 +60,7 @@ public class ItemShortcut extends MinepacksListener
 	{
 		super(plugin);
 		itemName = ChatColor.translateAlternateColorCodes('&', plugin.getConfiguration().getItemShortcutItemName());
+		itemNameNoReset = itemName.replace(ChatColor.RESET.toString(), "");
 		value = plugin.getConfiguration().getItemShortcutHeadValue();
 		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
@@ -86,8 +87,9 @@ public class ItemShortcut extends MinepacksListener
 
 	public boolean isItemShortcut(final @Nullable ItemStack stack)
 	{
-		//noinspection ConstantConditions
-		return stack != null && stack.getType() == HeadUtils.HEAD_MATERIAL && stack.hasItemMeta() && itemName.equals(stack.getItemMeta().getDisplayName());
+		if(stack == null || stack.getType() != HeadUtils.HEAD_MATERIAL || !stack.hasItemMeta()) return false;
+		String itemDisplayName = stack.getItemMeta().getDisplayName();
+		return itemDisplayName != null && itemNameNoReset.equals(itemDisplayName.replace(ChatColor.RESET.toString(), ""));
 	}
 
 	private void addItem(Player player)
