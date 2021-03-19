@@ -24,6 +24,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Version;
 
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,18 +52,9 @@ public class SQLite extends SQL
 	{
 		// Set table and field names to fixed values to prevent users from destroying old databases.
 		fieldPlayerID     = "player_id";
-		fieldPlayerName   = "name";
-		fieldPlayerUUID   = "uuid";
 		fieldBpOwner      = "owner";
 		//noinspection SpellCheckingInspection
 		fieldBpIts        = "itemstacks";
-		fieldBpVersion    = "version";
-		fieldBpLastUpdate = "lastupdate";
-		tablePlayers      = "backpack_players";
-		tableBackpacks    = "backpacks";
-		tableCooldowns    = "backpack_cooldowns";
-		fieldCdPlayer     = "player_id";
-		fieldCdTime       = "time";
 		// Set fixed settings
 		useUUIDSeparators = false;
 		syncCooldown = false;
@@ -77,6 +69,15 @@ public class SQLite extends SQL
 		queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
 	}
 
+	private void tryQuery(final @NotNull Statement statement, final @NotNull @Language("SQL") String query)
+	{
+		try
+		{
+			statement.execute(query);
+		}
+		catch(SQLException ignored) {}
+	}
+
 	@SuppressWarnings("SqlResolve")
 	@Override
 	protected void checkDB()
@@ -84,24 +85,15 @@ public class SQLite extends SQL
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
 			Version dbVersion = getDatabaseVersion(stmt);
+			if(dbVersion.olderThan(new Version("3.0-PRE-ALPHA-SNAPSHOT")))
+			{
+				tryQuery(stmt, "ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
+				tryQuery(stmt, "ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
+				tryQuery(stmt, "ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '2020-09-24';");
+			}
 
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
-			try
-			{
-				stmt.execute("ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
-			}
-			catch(SQLException ignored) {}
+			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INT UNSIGNED PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0, `lastupdate` DATE DEFAULT CURRENT_DATE);");
-			try
-			{
-				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
-			}
-			catch(SQLException ignored) {}
-			try
-			{
-				stmt.execute("ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '2020-09-24';");
-			}
-			catch(SQLException ignored) {}
 
 			DBTools.runStatement(connection, "INSERT OR REPLACE INTO `minepacks_metadata` (`key`, `value`) VALUES ('db_version',?);", plugin.getDescription().getVersion());
 		}
@@ -118,7 +110,11 @@ public class SQLite extends SQL
 		{
 			if(rs.next()) return new Version(rs.getString("value"));
 		}
-		return new Version("0");
+		try(ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='backpack_players';"))
+		{ // Check if players table exists
+			if(rs.next()) return new Version(2);
+		}
+		return plugin.getVersion();
 	}
 
 	@Override

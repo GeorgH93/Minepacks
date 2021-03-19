@@ -41,7 +41,10 @@ public abstract class SQL extends DatabaseBackend
 	private final ConnectionProvider dataSource;
 
 	protected String tablePlayers = "backpack_players", tableBackpacks = "backpacks", tableCooldowns = "backpack_cooldowns"; // Table Names
-	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
+	protected String fieldPlayerName = "name", fieldPlayerID = "id", fieldPlayerUUID = "uuid"; // Table players
+	protected String fieldBpOwner = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table Backpack
+	protected String fieldCdPlayer = "id", fieldCdTime = "time"; // Table Fields
+
 	@Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
 	protected boolean syncCooldown;
@@ -90,15 +93,15 @@ public abstract class SQL extends DatabaseBackend
 		tablePlayers      = plugin.getConfiguration().getDBTable("User", tablePlayers);
 		tableBackpacks    = plugin.getConfiguration().getDBTable("Backpack", tableBackpacks);
 		tableCooldowns    = plugin.getConfiguration().getDBTable("Cooldown", tableCooldowns);
-		fieldPlayerID     = plugin.getConfiguration().getDBFields("User.Player_ID", "id");
-		fieldPlayerName   = plugin.getConfiguration().getDBFields("User.Name", "name");
-		fieldPlayerUUID   = plugin.getConfiguration().getDBFields("User.UUID", "uuid");
-		fieldBpOwner      = plugin.getConfiguration().getDBFields("Backpack.Owner_ID", "owner");
-		fieldBpIts        = plugin.getConfiguration().getDBFields("Backpack.ItemStacks", "its");
-		fieldBpVersion    = plugin.getConfiguration().getDBFields("Backpack.Version", "version");
-		fieldBpLastUpdate = plugin.getConfiguration().getDBFields("Backpack.LastUpdate", "lastUpdate");
-		fieldCdPlayer     = plugin.getConfiguration().getDBFields("Cooldown.Player_ID", "id");
-		fieldCdTime       = plugin.getConfiguration().getDBFields("Cooldown.Time", "time");
+		fieldPlayerID     = plugin.getConfiguration().getDBFields("User.Player_ID", fieldPlayerID);
+		fieldPlayerName   = plugin.getConfiguration().getDBFields("User.Name", fieldPlayerName);
+		fieldPlayerUUID   = plugin.getConfiguration().getDBFields("User.UUID", fieldPlayerUUID);
+		fieldBpOwner      = plugin.getConfiguration().getDBFields("Backpack.Owner_ID", fieldBpOwner);
+		fieldBpIts        = plugin.getConfiguration().getDBFields("Backpack.ItemStacks", fieldBpIts);
+		fieldBpVersion    = plugin.getConfiguration().getDBFields("Backpack.Version", fieldBpVersion);
+		fieldBpLastUpdate = plugin.getConfiguration().getDBFields("Backpack.LastUpdate", fieldBpLastUpdate);
+		fieldCdPlayer     = plugin.getConfiguration().getDBFields("Cooldown.Player_ID", fieldCdPlayer);
+		fieldCdTime       = plugin.getConfiguration().getDBFields("Cooldown.Time", fieldCdTime);
 		syncCooldown      = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 	}
 
