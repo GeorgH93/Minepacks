@@ -39,6 +39,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
+import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoUpgradesFromV1;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
@@ -57,7 +58,6 @@ import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
@@ -99,13 +99,23 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	@Override
 	public void onEnable()
 	{
-		checkOldDataFolder();
-
 		if(!checkPCGF_PluginLib()) return;
 
 		updater = new ManagedUpdater(this);
 		instance = this;
-		configuration = new Config(this);
+		try
+		{
+			configuration = new Config(this);
+		}
+		catch(IllegalStateException e)
+		{
+			if(e.getMessage().equals("Upgrading from Minepacks v1.x is not supported!"))
+			{
+				getLogger().severe(e.getMessage());
+				new NoUpgradesFromV1(this);
+				return;
+			}
+		}
 		updater.setChannel(configuration.getUpdateChannel());
 		if(configuration.useUpdater()) updater.update();
 
@@ -152,19 +162,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 		}
 		/*end[STANDALONE]*/
 		return true;
-	}
-
-	private void checkOldDataFolder()
-	{
-		if(!getDataFolder().exists())
-		{
-			File oldPluginFolder = new File(getDataFolder().getParentFile(), "MinePacks");
-			if(oldPluginFolder.exists() && !oldPluginFolder.renameTo(getDataFolder()))
-			{
-				getLogger().warning("Failed to rename the plugins data-folder.\n" +
-				                    "Please rename the \"MinePacks\" folder to \"Minepacks\" and restart the server, to move your data from Minepacks V1.X to Minepacks V2.X!");
-			}
-		}
 	}
 
 	@Override

@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
+import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,22 +28,22 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 19, UPGRADE_THRESHOLD = LANG_VERSION;
+	private static final int LANG_VERSION = 19;
 
-	public Language(JavaPlugin plugin)
+	public Language(final @NotNull JavaPlugin plugin)
 	{
-		super(plugin, LANG_VERSION, UPGRADE_THRESHOLD);
+		super(plugin, LANG_VERSION, LANG_VERSION);
 	}
 
 	@Override
 	protected void doUpdate() {}
 
 	@Override
-	protected void doUpgrade(@NotNull YamlFileManager oldLang)
+	protected void doUpgrade(final @NotNull YamlFileManager oldLang)
 	{
-		if(oldLang.getVersion() < 10) // Pre v2.0 versions
+		if(oldLang.version().olderThan(new Version(10))) // Pre v2.0 versions
 		{
-			OldFileUpdater.updateLanguage(oldLang.getYamlE(), getYaml(), plugin.getLogger());
+			logger.warning("Upgrading from v1.x language files is not supported!");
 		}
 		else
 		{

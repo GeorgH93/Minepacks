@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Message.MessageBuilder;
-import at.pcgamingfreaks.Bukkit.RegisterablePluginCommand;
+import at.pcgamingfreaks.Bukkit.Command.RegisterablePluginCommand;
 import at.pcgamingfreaks.Message.MessageColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;

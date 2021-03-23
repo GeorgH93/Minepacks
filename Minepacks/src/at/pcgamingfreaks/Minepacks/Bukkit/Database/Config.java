@@ -27,7 +27,6 @@ import at.pcgamingfreaks.Database.Cache.UnCacheStrategy;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.YamlFileManager;
 
@@ -61,7 +60,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		if(oldConfig.getVersion() < PRE_V2_VERSION) // Pre V2.0 config file
 		{
-			OldFileUpdater.updateConfig(oldConfig.getYamlE(), getConfigE());
+			throw new IllegalStateException("Upgrading from Minepacks v1.x is not supported!");
 		}
 		else
 		{
