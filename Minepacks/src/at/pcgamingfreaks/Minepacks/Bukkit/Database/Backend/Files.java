@@ -124,10 +124,10 @@ public class Files extends DatabaseBackend
 				bp = new Backpack(player, backpackFile.getItemStacks()[0]);
 		}
 		if(bp == null) bp = new Backpack(player);
-		player.setLoaded(file);
+		player.setLoaded(file, 0);
 		player.setBackpack(bp);
 	}
 
 	@Override
-	public void loadBackpack(@NotNull MinepacksPlayerData player) {} // Already loaded with the player
+	public void loadBackpack(final @NotNull MinepacksPlayerData player) {} // Already loaded with the player
 }

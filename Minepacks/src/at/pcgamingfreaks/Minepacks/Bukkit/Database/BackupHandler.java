@@ -107,7 +107,7 @@ public final class BackupHandler
 		}
 	}
 
-	public List<String> getBackups()
+	public @NotNull List<String> getBackups()
 	{
 		File[] files = backupFolder.listFiles((dir, name) -> name.endsWith(Files.EXT));
 		if(files != null)
@@ -120,6 +120,6 @@ public final class BackupHandler
 			}
 			return backups;
 		}
-		return new ArrayList<>();
+		return new ArrayList<>(0);
 	}
 }

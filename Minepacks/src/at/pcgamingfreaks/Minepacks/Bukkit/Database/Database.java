@@ -138,7 +138,7 @@ public final class Database implements Listener
 		return backupHandler.loadBackup(backupName);
 	}
 
-	public List<String> getBackups()
+	public @NotNull List<String> getBackups()
 	{
 		return backupHandler.getBackups();
 	}

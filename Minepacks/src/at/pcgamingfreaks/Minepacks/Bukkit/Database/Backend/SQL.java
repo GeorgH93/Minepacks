@@ -46,7 +46,7 @@ public abstract class SQL extends DatabaseBackend
 	protected String fieldCdPlayer = "id", fieldCdTime = "time"; // Table Fields
 
 	@Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
-	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
+	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown; // DB Querys
 	protected boolean syncCooldown;
 
 	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider)
@@ -185,11 +185,12 @@ public abstract class SQL extends DatabaseBackend
 	protected final void buildQueries()
 	{
 		// Build the SQL queries with placeholders for the table and field names
-		queryGetPlayer = "SELECT * FROM {TablePlayers} WHERE {FieldUUID}=?;";
+		queryGetPlayer = "SELECT * FROM {TablePlayers}" +
+				(syncCooldown ? " LEFT JOIN {TableCooldowns} ON {TablePlayers}.{FieldPlayerID} = {TableCooldowns}.{FieldCDPlayer}" : "") +
+				" WHERE {FieldUUID}=?;";
 		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
 		queryGetBP = "SELECT * FROM {TableBackpacks} WHERE {FieldBPOwner}=?;";
-		queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
-		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
+		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUE (?,?) ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
@@ -221,7 +222,6 @@ public abstract class SQL extends DatabaseBackend
 		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
 		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
 		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
-		queryGetCooldown            = replacePlaceholders(queryGetCooldown);
 		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
 	}
 
@@ -277,7 +277,10 @@ public abstract class SQL extends DatabaseBackend
 							if(rs.next())
 							{
 								final int id = rs.getInt(fieldPlayerID);
-								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id));
+								long cooldown = 0;
+								if(syncCooldown) cooldown = rs.getTimestamp(fieldCdPlayer).getTime();
+								final long cd = cooldown;
+								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd));
 								return;
 							}
 						}
@@ -349,6 +352,6 @@ public abstract class SQL extends DatabaseBackend
 	public void saveCooldown(final @NotNull MinepacksPlayerData player)
 	{
 		final Timestamp ts = new Timestamp(player.getCooldown());
-		runStatementAsync(querySyncCooldown, ts, formatUUID(player.getUUID()), ts);
+		runStatementAsync(querySyncCooldown, player.getDatabaseKey(), ts, ts);
 	}
 }

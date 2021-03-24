@@ -7,7 +7,6 @@ Language:
   # Options:
   #     Overwrite (deletes all changes from the file and extracts a new language file)
   #     Upgrade (extracts a new language file and copy's all settings from the old language file)
-  #     Update (adds the default (english) text values for all missing values, just some basic formatting)
   UpdateMode: Upgrade
 
 # Title to be shown for the opened inventory for everyone except the owner of the backpack. Can contain {OwnerName} (which will be replaced with the players name).

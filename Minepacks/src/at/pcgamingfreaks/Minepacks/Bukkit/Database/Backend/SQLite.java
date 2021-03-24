@@ -57,7 +57,8 @@ public class SQLite extends SQL
 		fieldBpIts        = "itemstacks";
 		// Set fixed settings
 		useUUIDSeparators = false;
-		syncCooldown = false;
+
+		tableCooldowns = "minepacks_cooldown";
 	}
 
 	@Override
@@ -94,6 +95,8 @@ public class SQLite extends SQL
 
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INT UNSIGNED PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
 			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0, `lastupdate` DATE DEFAULT CURRENT_DATE);");
+			stmt.execute("CREATE TABLE IF NOT EXISTS `minepacks_cooldown` (`id` INT UNSIGNED PRIMARY KEY, `time` UNSIGNED BIG INT NOT NULL, " +
+					             "CONSTRAINT fk_minepacks_cooldown_minepacks_players FOREIGN KEY (id) REFERENCES backpack_players (player_id) ON DELETE CASCADE ON UPDATE CASCADE);");
 
 			DBTools.runStatement(connection, "INSERT OR REPLACE INTO `minepacks_metadata` (`key`, `value`) VALUES ('db_version',?);", plugin.getDescription().getVersion());
 		}
