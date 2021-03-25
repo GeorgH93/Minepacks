@@ -56,16 +56,25 @@ public abstract class ToSQLMigration extends Migration
 		super(plugin, oldDb);
 		ConnectionProvider connectionProvider = (global) ? Database.getGlobalConnectionProvider(plugin.getLogger()) : null;
 
-		switch(dbType)
+		SQL newDb = null;
+		try
 		{
-			case MYSQL: newDb = new MySQL(plugin, connectionProvider); break;
-			case SQLITE:
-				final File dbFile = new File(SQLite.getDbFile(plugin));
-				if(dbFile.exists()) dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis()));
-				newDb = new SQLite(plugin, connectionProvider);
-				break;
-			default: newDb = null;
+			switch(dbType)
+			{
+				case MYSQL: newDb = new MySQL(plugin, connectionProvider); break;
+				case SQLITE:
+					final File dbFile = new File(SQLite.getDbFile(plugin));
+					if(dbFile.exists()) dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis()));
+					newDb = new SQLite(plugin, connectionProvider);
+					break;
+			}
 		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		this.newDb = newDb;
 	}
 
 	protected  @Language("SQL") String replacePlaceholders(SQL database, @Language("SQL") String query) throws Exception

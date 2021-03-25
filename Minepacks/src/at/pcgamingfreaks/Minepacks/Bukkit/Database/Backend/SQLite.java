@@ -42,7 +42,7 @@ public class SQLite extends SQL
 	}
 
 	//TODO add cooldown sync table
-	public SQLite(final @NotNull Minepacks plugin, final @Nullable ConnectionProvider connectionProvider)
+	public SQLite(final @NotNull Minepacks plugin, final @Nullable ConnectionProvider connectionProvider) throws SQLException
 	{
 		super(plugin, (connectionProvider == null) ? new SQLiteConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), getDbFile(plugin)) : connectionProvider);
 	}

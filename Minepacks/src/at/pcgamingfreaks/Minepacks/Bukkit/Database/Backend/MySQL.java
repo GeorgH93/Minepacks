@@ -30,7 +30,7 @@ import java.sql.SQLException;
 
 public class MySQL extends SQL
 {
-	public MySQL(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider)
+	public MySQL(@NotNull Minepacks plugin, @Nullable ConnectionProvider connectionProvider) throws SQLException
 	{
 		super(plugin, (connectionProvider == null) ? new MySQLConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), plugin.getConfiguration()) : connectionProvider);
 	}

@@ -49,7 +49,7 @@ public abstract class SQL extends DatabaseBackend
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown; // DB Querys
 	protected boolean syncCooldown;
 
-	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider)
+	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider) throws SQLException
 	{
 		super(plugin);
 
@@ -62,28 +62,10 @@ public abstract class SQL extends DatabaseBackend
 		checkUUIDs(); // Check if there are user accounts without UUID
 
 		// Delete old backpacks
-		if(maxAge > 0)
+		try(Connection connection = getConnection())
 		{
-			try(Connection connection = getConnection(); Statement statement = connection.createStatement())
-			{
-				statement.execute(queryDeleteOldBackpacks);
-			}
-			catch(SQLException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		// Delete old cooldowns
-		if(syncCooldown)
-		{
-			try(Connection connection = getConnection())
-			{
-				DBTools.runStatement(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
-			}
-			catch(SQLException e)
-			{
-				e.printStackTrace();
-			}
+			DBTools.runStatementWithoutException(connection, queryDeleteOldBackpacks);
+			if(syncCooldown) DBTools.runStatementWithoutException(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
 		}
 	}
 
@@ -229,11 +211,13 @@ public abstract class SQL extends DatabaseBackend
 
 	protected String replacePlaceholders(@Language("SQL") String query)
 	{
-		return query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
+		query = query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
 				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
 				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwner).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
 				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
 				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayer).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
+		if(query.matches(".*\\{\\w+}.*")) plugin.getLogger().warning("Found unresolved placeholder in query:\n" + query);
+		return query;
 	}
 
 	protected void runStatementAsync(final @NotNull @Language("SQL") String query, final Object... args)

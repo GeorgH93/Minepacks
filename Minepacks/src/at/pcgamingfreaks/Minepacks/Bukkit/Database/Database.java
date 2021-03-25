@@ -123,6 +123,7 @@ public final class Database implements Listener
 		catch(IllegalStateException ignored) {}
 		catch(Exception e)
 		{
+			plugin.getLogger().severe("Failed to create database backend!");
 			e.printStackTrace();
 		}
 		return null;
