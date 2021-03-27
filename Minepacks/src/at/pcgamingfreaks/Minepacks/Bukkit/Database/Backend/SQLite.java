@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
+import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
@@ -58,7 +59,9 @@ public class SQLite extends SQL
 		// Set fixed settings
 		useUUIDSeparators = false;
 
-		tableCooldowns = "minepacks_cooldown";
+		tablePlayers = "minepacks_players";
+		tableBackpacks = "minepacks_backpacks";
+		tableCooldowns = "minepacks_cooldowns";
 	}
 
 	@Override
@@ -70,13 +73,9 @@ public class SQLite extends SQL
 		queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
 	}
 
-	private void tryQuery(final @NotNull Statement statement, final @NotNull @Language("SQL") String query)
+	private void doPHQuery(final @NotNull Statement statement, final @NotNull @Language("SQL") String query) throws SQLException
 	{
-		try
-		{
-			statement.execute(query);
-		}
-		catch(SQLException ignored) {}
+		statement.execute(replacePlaceholders(query));
 	}
 
 	@SuppressWarnings("SqlResolve")
@@ -86,17 +85,21 @@ public class SQLite extends SQL
 		try(Connection connection = getConnection(); Statement stmt = connection.createStatement())
 		{
 			Version dbVersion = getDatabaseVersion(stmt);
-			if(dbVersion.olderThan(new Version("3.0-PRE-ALPHA-SNAPSHOT")))
-			{
-				tryQuery(stmt, "ALTER TABLE `backpack_players` ADD COLUMN `uuid` CHAR(32);");
-				tryQuery(stmt, "ALTER TABLE `backpacks` ADD COLUMN `version` INT DEFAULT 0;");
-				tryQuery(stmt, "ALTER TABLE `backpacks` ADD COLUMN `lastupdate` DATE DEFAULT '2020-09-24';");
-			}
 
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpack_players` (`player_id` INT UNSIGNED PRIMARY KEY AUTOINCREMENT, `name` CHAR(16) NOT NULL , `uuid` CHAR(32) UNIQUE);");
-			stmt.execute("CREATE TABLE IF NOT EXISTS `backpacks` (`owner` INT UNSIGNED PRIMARY KEY, `itemstacks` BLOB, `version` INT DEFAULT 0, `lastupdate` DATE DEFAULT CURRENT_DATE);");
-			stmt.execute("CREATE TABLE IF NOT EXISTS `minepacks_cooldown` (`id` INT UNSIGNED PRIMARY KEY, `time` UNSIGNED BIG INT NOT NULL, " +
-					             "CONSTRAINT fk_minepacks_cooldown_minepacks_players FOREIGN KEY (id) REFERENCES backpack_players (player_id) ON DELETE CASCADE ON UPDATE CASCADE);");
+			// Create tables if they do not exist
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayers} ({FieldPlayerID} INTEGER PRIMARY KEY AUTOINCREMENT, {FieldName} CHAR(16) NOT NULL, {FieldUUID} CHAR(32) UNIQUE);");
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpacks} ({FieldBPOwner} INTEGER PRIMARY KEY, {FieldBPITS} BLOB, {FieldBPVersion} INT NOT NULL, {FieldBPLastUpdate} DATE NOT NULL," +
+					"CONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldBPOwner}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableCooldowns} ({FieldCDPlayer} INTEGER PRIMARY KEY, {FieldCDTime} UNSIGNED BIG INT NOT NULL, " +
+					"CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldCDPlayer}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
+
+			if(dbVersion.olderThan(new Version("3.0-ALPHA-SNAPSHOT")))
+			{ // Copy old data to new tables
+				plugin.getLogger().info(ConsoleColor.YELLOW + "Migrating data to new table structure. Please do not stop the server till it is done!" + ConsoleColor.RESET);
+				doPHQuery(stmt, "INSERT OR IGNORE INTO {TablePlayers} SELECT * FROM `backpack_players`;");
+				doPHQuery(stmt, "INSERT OR IGNORE INTO {TableBackpacks} ({FieldBPOwner}, {FieldBPITS}, {FieldBPVersion}, {FieldBPLastUpdate}) SELECT owner, itemstacks, version, lastupdate FROM backpacks WHERE owner IN (SELECT player_id FROM minepacks_players);");
+				plugin.getLogger().info(ConsoleColor.GREEN + "Data migrated successful!" + ConsoleColor.RESET);
+			}
 
 			DBTools.runStatement(connection, "INSERT OR REPLACE INTO `minepacks_metadata` (`key`, `value`) VALUES ('db_version',?);", plugin.getDescription().getVersion());
 		}
