@@ -226,7 +226,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public boolean isCommandCooldownAddOnJoinEnabled()
 	{
-		return getConfigE().getBoolean("Cooldown.AddOnJoin", true);
+		return getConfigE().getBoolean("Cooldown.AddOnJoin", true) && !isCommandCooldownSyncEnabled();
 	}
 
 	public Collection<GameMode> getAllowedGameModes()

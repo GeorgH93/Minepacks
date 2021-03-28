@@ -30,10 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class SQLite extends SQL
 {
@@ -71,6 +68,7 @@ public class SQLite extends SQL
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
 		queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
+		querySyncCooldown = "INSERT OR REPLACE INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?);";
 	}
 
 	private void doPHQuery(final @NotNull Statement statement, final @NotNull @Language("SQL") String query) throws SQLException
@@ -128,5 +126,11 @@ public class SQLite extends SQL
 	{
 		DBTools.runStatement(connection, queryUpdatePlayerAdd, player.getName(), formatUUID(player.getUUID()));
 		DBTools.runStatement(connection, "UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), formatUUID(player.getUUID()));
+	}
+
+	@Override
+	public void saveCooldown(final @NotNull MinepacksPlayerData player)
+	{
+		runStatementAsync(querySyncCooldown, player.getDatabaseKey(), new Timestamp(player.getCooldown()));
 	}
 }

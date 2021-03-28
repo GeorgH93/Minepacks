@@ -172,7 +172,7 @@ public abstract class SQL extends DatabaseBackend
 				" WHERE {FieldUUID}=?;";
 		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
 		queryGetBP = "SELECT * FROM {TableBackpacks} WHERE {FieldBPOwner}=?;";
-		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUE (?,?) ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
+		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";

@@ -41,7 +41,7 @@ Cooldown:
   # If enabled, cooldowns will be synced between servers (BungeeCord network). It will also allow keeping the cooldown through server restarts.
   # You should only use it with long cooldown times.
   Sync: false
-  # Adds the cooldown when the player joins the server
+  # Adds the cooldown when the player joins the server. Will be disabled if sync is enabled.
   AddOnJoin: true
 
 # Controls for the auto pickup on full inventory function

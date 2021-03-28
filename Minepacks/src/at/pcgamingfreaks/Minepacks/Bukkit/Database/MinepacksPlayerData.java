@@ -53,7 +53,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	@Getter private String backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
 	private ItemConfig backpackStyle = null;
 	@Getter private Backpack backpack = null;
-	@Getter private long cooldown = 0;
+	@Getter private long cooldown = System.currentTimeMillis();
 	@Getter @Setter private boolean backpackLoadingRequested = false;
 
 	@Getter @Setter	private Object databaseKey = null;

@@ -39,11 +39,8 @@ public class CooldownHandler implements Listener
 
 	public long getRemainingCooldown(final @NotNull MinepacksPlayer player)
 	{
-		long cd = player.getCooldown() + cooldown;
-		if(cd > System.currentTimeMillis())
-		{
-			return cd - System.currentTimeMillis();
-		}
+		long cd = player.getCooldown() + cooldown - System.currentTimeMillis();
+		if(cd > 0) return cd;
 		return 0;
 	}
 
