@@ -77,6 +77,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	{
 		this.backpack = backpack;
 		backpackLoadedQueue.forEach(backpackCallback -> backpackCallback.onResult(backpack));
+		backpackLoadedQueue.clear();
 	}
 
 	public void setLoaded(final @NotNull Object databaseKey, final long cooldown)
@@ -84,6 +85,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 		this.databaseKey = databaseKey;
 		this.cooldown = cooldown;
 		playerLoadedQueue.forEach(loadedCallback -> loadedCallback.onResult(this));
+		playerLoadedQueue.clear();
 	}
 
 	public void setCooldownData(final long cooldown)

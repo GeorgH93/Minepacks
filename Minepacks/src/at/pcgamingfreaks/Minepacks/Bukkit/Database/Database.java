@@ -162,7 +162,7 @@ public final class Database implements Listener
 	public void loadBackpack(final @NotNull MinepacksPlayerData player)
 	{
 		player.setBackpackLoadingRequested(true);
-		backend.loadPlayer(player);
+		backend.loadBackpack(player);
 	}
 
 	@EventHandler
