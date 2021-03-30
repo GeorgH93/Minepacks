@@ -28,6 +28,7 @@ import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
+import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.*;
@@ -58,21 +59,21 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
-		if(oldConfig.getVersion() < PRE_V2_VERSION) // Pre V2.0 config file
+		if(oldConfig.version().olderThan(new Version(PRE_V2_VERSION))) // Pre V2.0 config file
 		{
 			throw new IllegalStateException("Upgrading from Minepacks v1.x is not supported!");
 		}
 		else
 		{
 			Map<String, String> remappedKeys = new HashMap<>();
-			if(oldConfig.getVersion() <= 23) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
-			if(oldConfig.getVersion() <= 28) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
-			if(oldConfig.getVersion() <= 30)
+			if(oldConfig.version().olderOrEqualThan(new Version(23))) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
+			if(oldConfig.version().olderOrEqualThan(new Version(28))) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
+			if(oldConfig.version().olderOrEqualThan(new Version(30)))
 			{
 				remappedKeys.put("WorldSettings.FilteredWorlds", "WorldSettings.Blacklist");
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
 			}
-			if(oldConfig.getVersion() <= 34) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
+			if(oldConfig.version().olderOrEqualThan(new Version(34))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
