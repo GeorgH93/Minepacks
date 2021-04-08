@@ -1,0 +1,118 @@
+#Teisingam vertimui naudokite: https://ptp.pcgamingfreaks.at Use UTF8 instead
+
+Language:
+  NotFromConsole: "&cKomanda negali būti naudojama konsolėje!"
+  Ingame:
+    NoPermission: "&cApgailestaujame, tačiau Jūs neturite tam leidimoĄ"
+    WorldDisabled: "&cKuprinė negali būti naudojama šiame pasaulyje!"
+    NaN: "[\"\",{\"text\":\"Įvestas skaičius nėra skaičius!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Kuprinė uždaryta!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Nustatymai: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} uždarė kuprinę!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Kuprinės klaida!"
+    NotAllowedInBackpack: "&c{ItemName} draudžiama dėti į kuprinę!"
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cPrašome neišesti kuprinės iš savo inventoriaus!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Nustatymai: {TimeLeft} laikas kada vėl bus galima atidaryti, {TimeSpanLeft} laikas formatuotas kuprinės atidarymui
+      Cooldown: "[{\"text\":\"Prašome palaukti \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} s\"}},{\"text\":\" kol vėl galėsite naudoti kuprinę!\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Najudojantis kūrybiniu rėžimu kuprine naudotis draudžiama!"
+    Clean:
+      BackpackCleaned: "Kuprinė išvalyta!"
+      BackpackCleanedBy: "Jūsų kuprinę išvalė: {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName} &r išvalė kuprinę1"
+    Sort:
+      Sorted: "Kuprinėje esantys daiktai surūšiuoti sėkmingai!"
+    Help:
+      Header: "&6###   Kuprinių Komandos   ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Perkraunamos kuprinės ..."
+      Reloaded: "&1Kuprinė perkrautos!"
+    Update:
+      CheckingForUpdates: "&1Tikrinami kuprinių sistemos atnaujinimai ..."
+      Updated: "[\"\",{\"text\":\"Kuprinių sistema atnaujinta, norint kad įsigaliotų sistemos pakeitimai privalote perkrauti serverį!\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Nėra kuprinių sistemos atnaujinimų, Jūs naudojate naujausią kuprinių sistemos versiją!\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Iškilo problema gaunat kuprinių sistemos atnaujinimų informaciją! Serverio klaida!\",\"color\":\"red\"}]"
+      #Prašome neištrinti plugino sisteminio linko kitu atveju negausite update!
+      UpdateAvailable: "[{\"text\":\"Kuprinių sistema turi atnaujinimą! Prašome nueiti į \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" ir parsisiūsti atnaujinimą!\"}]"
+    Backup:
+      Created: "Kuprinė išsaugota!"
+      NoBackpack: "Žaidėjas neturi kuprinės, arba jo kuprinė tuščia!"
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Archyvas\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Ankst. <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Rodomas puslapis {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Kt. >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Žaidėjas: {BackupPlayerName} ({BackupPlayerUUID})\\nPridėta: {BackupDate}\"}}]"
+      NoValidBackup: "No backup matching {BackupIdentifier} found"
+      NoUserToRestoreToFound: "Nėra galimo atstatymo archyvo įrašuose!"
+      #Ne sisteminis!!!
+      ParameterBackupName: "backup_name"
+      #Ne sisteminis!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Kuprinė buvo atstatyta iš archyvo!"
+    InventoryClear:
+      UnknownPlayer: "&cŽaidėjas: {Name} nerastas!"
+      Cleared: "Inventorius išvalytas!"
+      ClearedOther: "{DisplayName}&r išvalė inventorių!"
+      ClearedOtherTarget: "Jūsų inventorių išvalė: {DisplayName}&r."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Atidarys kuprinę"
+      Sort: "Surūšiuos daiktus kuprinėje"
+      Clean: "Išvalys kuprinę"
+      CleanOthers: "Išvalys kuprinę kitam žaidėjui"
+      OpenOthers: "Atidarys kuprinę kitam žaidėjui"
+      Reload: "Perkraus kuprinių sistemos nustatymus"
+      Update: "Patikrins ar kuprinių sistema turi atnaujinimų"
+      Version: "Parodys kuprinių sistemos esamą versijos aprašą"
+      Backup: "Sukurs kuprinės įrašą archyve"
+      Restore: "Atsatys kuprinę pagal įrašą archyve"
+      RestoreList: "parodys archyvo įrašus"
+      Help: "Parodys visas galimas kuprinių sistemos komandas"
+      Migrate: "Perkels duomenų bazės įrašus nauju formatu"
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+
+#Bus rodoma konsolėje starto metu!
+LanguageName: "lithuanian"
+Author: "Vyciokazz"
+
+# Language file version. Use UTF8 instead!
+Version: 18
