@@ -96,10 +96,7 @@ public class CooldownManager extends BukkitRunnable implements Listener
 				@Override
 				public void onResult(Long dbCooldownTime)
 				{
-					if(dbCooldownTime > System.currentTimeMillis())
-					{
-						cooldowns.put(uuid, dbCooldownTime);
-					}
+					cooldowns.put(uuid, dbCooldownTime);
 				}
 
 				@Override

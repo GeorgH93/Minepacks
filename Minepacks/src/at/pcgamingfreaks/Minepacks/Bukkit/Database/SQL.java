@@ -375,7 +375,7 @@ public abstract class SQL extends Database
 				ps.setString(1, getPlayerFormattedUUID(player));
 				try(ResultSet rs = ps.executeQuery())
 				{
-					final long time = (rs.next()) ? rs.getLong(fieldCdTime) : 0;
+					final long time = (rs.next()) ? rs.getTimestamp(fieldCdTime).getTime() : 0;
 					plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(time));
 				}
 			}
