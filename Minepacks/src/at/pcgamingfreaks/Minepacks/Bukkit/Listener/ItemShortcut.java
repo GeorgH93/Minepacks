@@ -200,7 +200,7 @@ public class ItemShortcut extends MinepacksListener
 		}
 	}
 
-	@EventHandler
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
 		if(isItemShortcut(event.getItemInHand()))
