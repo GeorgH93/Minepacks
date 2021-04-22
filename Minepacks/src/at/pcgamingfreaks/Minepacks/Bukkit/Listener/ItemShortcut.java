@@ -262,6 +262,14 @@ public class ItemShortcut extends MinepacksListener
 					messageDoNotRemoveItem.send(player);
 				}
 			}
+			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getClick().name().equals("SWAP_OFFHAND"))
+			{
+				if(isItemShortcut(player.getInventory().getItemInOffHand()))
+				{
+					event.setCancelled(true);
+					messageDoNotRemoveItem.send(player);
+				}
+			}
 			else if(isItemShortcut(event.getCursor()))
 			{
 				if(!player.getInventory().equals(event.getClickedInventory()))
