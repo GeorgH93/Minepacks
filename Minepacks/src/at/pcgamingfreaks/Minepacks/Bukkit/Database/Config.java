@@ -125,6 +125,10 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		String type = getConfigE().getString("Database.UUID_Type", "auto").toLowerCase(Locale.ENGLISH);
 		if(type.equals("auto"))
 		{
+			if(isBungeeCordModeEnabled())
+			{
+				logger.warning("When using BungeeCord please make sure to set the UUID_Type config option explicitly!");
+			}
 			return plugin.getServer().getOnlineMode();
 		}
 		return type.equals("online");

@@ -56,7 +56,7 @@ public class MySQL extends SQL
 					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
 			if(syncCooldown)
 			{
-				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED NOT NULL,\n{FieldCDTime} LONG NOT NULL,\nPRIMARY KEY ({FieldCDPlayer}),\n" +
+				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED NOT NULL,\n{FieldCDTime} DATETIME NOT NULL,\nPRIMARY KEY ({FieldCDPlayer}),\n" +
 						                                                 "CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldCDPlayer} FOREIGN KEY ({FieldCDPlayer}) " +
 						                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
 			}
