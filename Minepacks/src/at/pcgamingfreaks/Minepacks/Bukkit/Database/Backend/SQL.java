@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
+import at.pcgamingfreaks.DataHandler.HasPlaceholders;
+import at.pcgamingfreaks.DataHandler.IStringFieldsWithPlaceholdersHolder;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
@@ -36,7 +38,7 @@ import lombok.AllArgsConstructor;
 import java.sql.*;
 import java.util.*;
 
-public abstract class SQL extends DatabaseBackend
+public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPlaceholdersHolder
 {
 	private final ConnectionProvider dataSource;
 
@@ -45,8 +47,8 @@ public abstract class SQL extends DatabaseBackend
 	protected String fieldBpOwner = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table Backpack
 	protected String fieldCdPlayer = "id", fieldCdTime = "time"; // Table Fields
 
-	@Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
-	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown; // DB Querys
+	@HasPlaceholders @Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown; // DB queries
+	@HasPlaceholders @Language("SQL") protected String queryDeleteOldCooldowns, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // Maintenance queries
 	protected boolean syncCooldown;
 
 	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider) throws SQLException
@@ -189,27 +191,13 @@ public abstract class SQL extends DatabaseBackend
 
 		updateQueriesForDialect();
 
-		setTableAndFieldNames();
-	}
-
-	protected void setTableAndFieldNames()
-	{
-		// Replace the table and filed names with the names from the config
-		queryUpdatePlayerAdd        = replacePlaceholders(queryUpdatePlayerAdd);
-		queryGetPlayer              = replacePlaceholders(queryGetPlayer);
-		queryGetBP                  = replacePlaceholders(queryGetBP);
-		queryInsertBp               = replacePlaceholders(queryInsertBp);
-		queryUpdateBp               = replacePlaceholders(queryUpdateBp);
-		queryFixUUIDs               = replacePlaceholders(queryFixUUIDs);
-		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
-		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
-		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
-		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
+		replacePlaceholders();
 	}
 
 	protected abstract void updateQueriesForDialect();
 
-	protected String replacePlaceholders(@Language("SQL") String query)
+	@Override
+	public @NotNull String replacePlaceholders(@NotNull @Language("SQL") String query)
 	{
 		query = query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
 				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players

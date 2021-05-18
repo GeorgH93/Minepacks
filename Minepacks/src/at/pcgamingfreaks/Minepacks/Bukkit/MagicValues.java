@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.30-SNAPSHOT";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.32-SNAPSHOT";
 	public static final String BACKPACK_STYLE_NAME_DEFAULT = "default";
 	public static final String BACKPACK_STYLE_NAME_DISABLED = "none";
 }
