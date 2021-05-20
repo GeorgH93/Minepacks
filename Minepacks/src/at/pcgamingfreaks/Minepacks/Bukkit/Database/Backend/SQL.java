@@ -18,7 +18,9 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.DataHandler.HasPlaceholders;
+import at.pcgamingfreaks.DataHandler.ILoadableStringFieldsHolder;
 import at.pcgamingfreaks.DataHandler.IStringFieldsWithPlaceholdersHolder;
+import at.pcgamingfreaks.DataHandler.Loadable;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
@@ -32,20 +34,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import lombok.AllArgsConstructor;
 
 import java.sql.*;
 import java.util.*;
 
-public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPlaceholdersHolder
+public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPlaceholdersHolder, ILoadableStringFieldsHolder
 {
 	private final ConnectionProvider dataSource;
 
-	protected String tablePlayers = "backpack_players", tableBackpacks = "backpacks", tableCooldowns = "backpack_cooldowns"; // Table Names
-	protected String fieldPlayerName = "name", fieldPlayerID = "id", fieldPlayerUUID = "uuid"; // Table players
-	protected String fieldBpOwner = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table Backpack
-	protected String fieldCdPlayer = "id", fieldCdTime = "time"; // Table Fields
+	@Loadable protected String tablePlayers = "minepacks_players", tableBackpacks = "minepacks_backpacks", tableCooldowns = "minepacks_cooldowns"; // Table names
+	@Loadable(metadata = "User") protected String fieldPlayerName = "name", fieldPlayerID = "id", fieldPlayerUUID = "uuid"; // Table fields players
+	@Loadable(metadata = "Backpack") protected String fieldBpOwnerID = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table fields backpack
+	@Loadable(metadata = "Cooldown") protected String fieldCdPlayerID = "id", fieldCdTime = "time"; // Table fields cooldown
 
 	@HasPlaceholders @Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown; // DB queries
 	@HasPlaceholders @Language("SQL") protected String queryDeleteOldCooldowns, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // Maintenance queries
@@ -73,20 +76,30 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 	protected void loadSettings()
 	{
-		// Load table and field names
-		tablePlayers      = plugin.getConfiguration().getDBTable("User", tablePlayers);
-		tableBackpacks    = plugin.getConfiguration().getDBTable("Backpack", tableBackpacks);
-		tableCooldowns    = plugin.getConfiguration().getDBTable("Cooldown", tableCooldowns);
-		fieldPlayerID     = plugin.getConfiguration().getDBFields("User.Player_ID", fieldPlayerID);
-		fieldPlayerName   = plugin.getConfiguration().getDBFields("User.Name", fieldPlayerName);
-		fieldPlayerUUID   = plugin.getConfiguration().getDBFields("User.UUID", fieldPlayerUUID);
-		fieldBpOwner      = plugin.getConfiguration().getDBFields("Backpack.Owner_ID", fieldBpOwner);
-		fieldBpIts        = plugin.getConfiguration().getDBFields("Backpack.ItemStacks", fieldBpIts);
-		fieldBpVersion    = plugin.getConfiguration().getDBFields("Backpack.Version", fieldBpVersion);
-		fieldBpLastUpdate = plugin.getConfiguration().getDBFields("Backpack.LastUpdate", fieldBpLastUpdate);
-		fieldCdPlayer     = plugin.getConfiguration().getDBFields("Cooldown.Player_ID", fieldCdPlayer);
-		fieldCdTime       = plugin.getConfiguration().getDBFields("Cooldown.Time", fieldCdTime);
-		syncCooldown      = plugin.getConfiguration().isCommandCooldownSyncEnabled();
+		loadFields(); // Load table and field names
+
+		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
+	}
+
+	@Override
+	public String loadField(@NotNull String fieldName, @NotNull String metadata, @Nullable String currentValue)
+	{
+		if(fieldName.startsWith("table"))
+		{
+			return plugin.getConfiguration().getDBTable(fieldName.substring("table".length(), fieldName.length() - 1), currentValue);
+		}
+		else if(fieldName.startsWith("field"))
+		{
+			fieldName = fieldName.substring("field".length());
+			if(fieldName.startsWith("Player") && !fieldName.equals("PlayerID"))
+			{
+				fieldName = fieldName.substring("Player".length());
+			}
+			else if(fieldName.startsWith("BP") || fieldName.startsWith("Cd"))
+				fieldName = fieldName.substring(2);
+			return plugin.getConfiguration().getDBFields(metadata + "." + fieldName, currentValue);
+		}
+		return null;
 	}
 
 	@Override
@@ -191,6 +204,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 		updateQueriesForDialect();
 
+		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + "");
 		replacePlaceholders();
 	}
 
@@ -201,9 +215,9 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	{
 		query = query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
 				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
-				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwner).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
+				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwnerID).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
 				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
-				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayer).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
+				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayerID).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
 		if(query.matches(".*\\{\\w+}.*")) plugin.getLogger().warning("Found unresolved placeholder in query:\n" + query);
 		return query;
 	}
@@ -250,7 +264,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 							{
 								final int id = rs.getInt(fieldPlayerID);
 								long cooldown = 0;
-								if(syncCooldown) cooldown = rs.getTimestamp(fieldCdPlayer).getTime();
+								if(syncCooldown) cooldown = rs.getTimestamp(fieldCdPlayerID).getTime();
 								final long cd = cooldown;
 								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd));
 								return;

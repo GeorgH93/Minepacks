@@ -41,7 +41,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig
 {
-	private static final int CONFIG_VERSION = 35, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 36, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
 
 	public Config(JavaPlugin plugin)
 	{
@@ -74,8 +74,15 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
 			}
 			if(oldConfig.version().olderOrEqualThan(new Version(34))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
+			if(oldConfig.version().olderOrEqualThan(new Version(35)))
+			{
+				remappedKeys.put("Database.Tables.User", "Database.Tables.Player");
+				remappedKeys.put("Database.Tables.Fields.User.PlayerID", "Database.Tables.Fields.User.Player_ID");
+				remappedKeys.put("Database.Tables.Fields.Backpack.OwnerID", "Database.Tables.Fields.Backpack.Owner_ID");
+				remappedKeys.put("Database.Tables.Fields.Cooldown.PlayerID", "Database.Tables.Fields.Cooldown.Player_ID");
+			}
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
-			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
+			//keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
 		}
 	}
@@ -110,7 +117,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 	}
 
-	public @NotNull String getDBTable(final @NotNull String table, final @NotNull String defaultValue)
+	public @NotNull String getDBTable(final @NotNull String table, final String defaultValue)
 	{
 		return getConfigE().getString("Database.Tables." + table, defaultValue);
 	}

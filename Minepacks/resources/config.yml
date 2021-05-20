@@ -91,7 +91,7 @@ Database:
   Tables:
     # Table names
     # Don't change the players table if you have backpacks stored in your database already! Player id's might won't match anymore resulting data inconsistency.
-    User: backpack_players
+    Player: backpack_players
     Backpack: backpacks
     Cooldown: backpack_cooldowns
     # Field settings for the tables
@@ -99,16 +99,16 @@ Database:
     # If you like to change them after the tables have been generated alter the tables manually or delete them (the system then will regenerate them).
     Fields:
       User:
-        Player_ID: player_id
+        PlayerID: player_id
         Name: name
         UUID: uuid
       Backpack:
-        Owner_ID: owner
+        OwnerID: owner
         ItemStacks: itemstacks
         Version: version
         LastUpdate: lastupdate
       Cooldown:
-        Player_ID: id
+        PlayerID: id
         Time: time
   # Settings controlling the cache behavior of the plugin. You may optimize it a little depending on your player count, ram or cpu bottlenecks.
   Cache:
@@ -217,4 +217,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 35
+Version: 36

@@ -39,7 +39,6 @@ public class SQLite extends SQL
 		return plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db";
 	}
 
-	//TODO add cooldown sync table
 	public SQLite(final @NotNull Minepacks plugin, final @Nullable ConnectionProvider connectionProvider) throws SQLException
 	{
 		super(plugin, (connectionProvider == null) ? new SQLiteConnectionProvider(plugin.getLogger(), plugin.getDescription().getName(), getDbFile(plugin)) : connectionProvider);
@@ -48,17 +47,10 @@ public class SQLite extends SQL
 	@Override
 	protected void loadSettings()
 	{
-		// Set table and field names to fixed values to prevent users from destroying old databases.
-		fieldPlayerID     = "player_id";
-		fieldBpOwner      = "owner";
-		//noinspection SpellCheckingInspection
-		fieldBpIts        = "itemstacks";
 		// Set fixed settings
 		useUUIDSeparators = false;
 
-		tablePlayers = "minepacks_players";
-		tableBackpacks = "minepacks_backpacks";
-		tableCooldowns = "minepacks_cooldowns";
+		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 	}
 
 	@Override
@@ -94,8 +86,8 @@ public class SQLite extends SQL
 			if(dbVersion.olderThan(new Version("3.0-ALPHA-SNAPSHOT")))
 			{ // Copy old data to new tables
 				plugin.getLogger().info(ConsoleColor.YELLOW + "Migrating data to new table structure. Please do not stop the server till it is done!" + ConsoleColor.RESET);
-				doPHQuery(stmt, "INSERT OR IGNORE INTO {TablePlayers} SELECT * FROM `backpack_players`;");
-				doPHQuery(stmt, "INSERT OR IGNORE INTO {TableBackpacks} ({FieldBPOwner}, {FieldBPITS}, {FieldBPVersion}, {FieldBPLastUpdate}) SELECT owner, itemstacks, version, lastupdate FROM backpacks WHERE owner IN (SELECT player_id FROM minepacks_players);");
+				doPHQuery(stmt, "INSERT OR IGNORE INTO {TablePlayers} ({FieldPlayerID}, {FieldName}, {FieldUUID}) SELECT player_id, name, uuid FROM `backpack_players`;");
+				doPHQuery(stmt, "INSERT OR IGNORE INTO {TableBackpacks} ({FieldBPOwner}, {FieldBPITS}, {FieldBPVersion}, {FieldBPLastUpdate}) SELECT owner, itemstacks, version, lastupdate FROM backpacks WHERE owner IN (SELECT {FieldPlayerID} FROM {TablePlayers});");
 				plugin.getLogger().info(ConsoleColor.GREEN + "Data migrated successful!" + ConsoleColor.RESET);
 			}
 
