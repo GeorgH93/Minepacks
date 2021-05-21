@@ -30,6 +30,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
+import at.pcgamingfreaks.YamlFileUpdateMethod;
 
 import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,22 +39,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig
 {
-	private static final int CONFIG_VERSION = 36, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 36, PRE_V2_VERSION = 20;
 
-	public Config(JavaPlugin plugin)
+	public Config(final @NotNull JavaPlugin plugin)
 	{
-		super(plugin, CONFIG_VERSION, UPGRADE_THRESHOLD);
+		super(plugin, new Version(CONFIG_VERSION));
 		languageKey = "Language.Language";
 		languageUpdateKey = "Language.UpdateMode";
 	}
 
 	@Override
-	protected void doUpdate()
+	protected @Nullable YamlFileUpdateMethod getYamlUpdateMode()
 	{
-		// Nothing to update yet
+		return YamlFileUpdateMethod.UPGRADE;
 	}
 
 	@Override
@@ -244,7 +246,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public Collection<GameMode> getAllowedGameModes()
 	{
 		Collection<GameMode> gameModes = new HashSet<>();
-		for(String string : getConfigE().getStringList("AllowedGameModes", new LinkedList<>()))
+		for(String string : getConfigE().getStringList("AllowedGameModes", new ArrayList<>(0)))
 		{
 			GameMode gm = null;
 			try
@@ -329,23 +331,17 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public Collection<MinecraftMaterial> getItemFilterMaterials()
 	{
-		if(!isItemFilterEnabledNoShulker()) return new LinkedList<>();
-		List<String> stringMaterialList = getConfigE().getStringList("ItemFilter.Materials", new LinkedList<>());
+		if(!isItemFilterEnabledNoShulker()) return new ArrayList<>(0);
+		List<String> stringMaterialList = getConfigE().getStringList("ItemFilter.Materials", new ArrayList<>(0));
 		if(isItemFilterModeWhitelist()) stringMaterialList.add("air");
-		Collection<MinecraftMaterial> blacklist = new LinkedList<>();
-		for(String item : stringMaterialList)
-		{
-			MinecraftMaterial mat = MinecraftMaterial.fromInput(item);
-			if(mat != null) blacklist.add(mat);
-		}
-		return blacklist;
+		return stringMaterialList.stream().map(MinecraftMaterial::fromInput).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	public Set<String> getItemFilterNames()
 	{
 		if(!isItemFilterEnabledNoShulker()) return new HashSet<>();
 		Set<String> names = new HashSet<>();
-		getConfigE().getStringList("ItemFilter.Names", new LinkedList<>()).forEach(name -> names.add(ChatColor.translateAlternateColorCodes('&', name)));
+		getConfigE().getStringList("ItemFilter.Names", new ArrayList<>(0)).forEach(name -> names.add(ChatColor.translateAlternateColorCodes('&', name)));
 		return names;
 	}
 
@@ -353,7 +349,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		if(!isItemFilterEnabledNoShulker()) return new HashSet<>();
 		Set<String> loreSet = new HashSet<>();
-		getConfigE().getStringList("ItemFilter.Lore", new LinkedList<>()).forEach(lore -> loreSet.add(ChatColor.translateAlternateColorCodes('&', lore)));
+		getConfigE().getStringList("ItemFilter.Lore", new ArrayList<>(0)).forEach(lore -> loreSet.add(ChatColor.translateAlternateColorCodes('&', lore)));
 		return loreSet;
 	}
 
