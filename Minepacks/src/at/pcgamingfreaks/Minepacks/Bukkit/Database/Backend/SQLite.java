@@ -107,7 +107,7 @@ public class SQLite extends SQL
 			if(rs.next()) return new Version(rs.getString("value"));
 		}
 		try(ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='backpack_players';"))
-		{ // Check if players table exists
+		{ // Check if old players table exists
 			if(rs.next()) return new Version(2);
 		}
 		return plugin.getVersion();

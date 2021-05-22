@@ -113,7 +113,7 @@ Database:
   # Settings controlling the cache behavior of the plugin. You may optimize it a little depending on your player count, ram or cpu bottlenecks.
   Cache:
     UnCache:
-      # The strategy used to uncache offline players. Options
+      # The strategy used to uncache offline players. Options:
       #     interval (offline players get uncached every x seconds)
       #     intervalChecked (like interval, but also ensures that the player is already offline for at least the interval time, adds a cpu overhead)
       #     ondisconnect (player instantly gets uncached as soon as he disconnects, may adds overhead if other plugins try to access the player data when they go offline, also it may be problematic for players with unstable connections)
@@ -124,11 +124,11 @@ Database:
       Delay: 600
 
 Shulkerboxes:
-  # This setting controls whether players can put shulkerboxes into their backpacks.
+  # This setting controls whether players can put shulker-boxes into their backpacks.
   PreventInBackpack: true
-  # This setting allows disabling shulkerboxes all together. Players won't be able to craft or use them.
+  # This setting allows disabling shulker-boxes all together. Players won't be able to craft or use them.
   DisableShulkerboxes: false
-  # This setting controls how existing shulkerboxes are handled if they are disabled.
+  # This setting controls how existing shulker-boxes are handled if they are disabled.
   # Options: Ignore, Remove = shulker-box will be removed including its content, Destroy = shulker-box will be destroyed, and it's content will be dropped
   Existing: "Ignore"
 
