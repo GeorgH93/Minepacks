@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
+import at.pcgamingfreaks.Config.ILanguageConfiguration;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.Cache.IUnCacheStrategyConfig;
 import at.pcgamingfreaks.Database.Cache.UnCacheStrategy;
@@ -41,15 +42,25 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig
+public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig, ILanguageConfiguration
 {
 	private static final int CONFIG_VERSION = 36, PRE_V2_VERSION = 20;
 
 	public Config(final @NotNull JavaPlugin plugin)
 	{
 		super(plugin, new Version(CONFIG_VERSION));
-		languageKey = "Language.Language";
-		languageUpdateKey = "Language.UpdateMode";
+	}
+
+	@Override
+	public @NotNull String getLanguageKey()
+	{
+		return "Language.Language";
+	}
+
+	@Override
+	public @NotNull String getLanguageUpdateModeKey()
+	{
+		return "Language.UpdateMode";
 	}
 
 	@Override
