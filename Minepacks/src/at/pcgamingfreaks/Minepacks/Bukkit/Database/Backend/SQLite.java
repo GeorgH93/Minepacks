@@ -59,7 +59,6 @@ public class SQLite extends SQL
 		queryInsertBp = queryInsertBp.replaceAll("\\) VALUES \\(\\?,\\?,\\?", ",{FieldBPLastUpdate}) VALUES (?,?,?,DATE('now')");
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
-		queryUpdatePlayerAdd = "INSERT OR IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
 		querySyncCooldown = "INSERT OR REPLACE INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?);";
 	}
 
@@ -106,18 +105,11 @@ public class SQLite extends SQL
 		{
 			if(rs.next()) return new Version(rs.getString("value"));
 		}
-		try(ResultSet rs = stmt.executeQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='backpack_players';"))
+		try(ResultSet rs = stmt.executeQuery("SELECT `name` FROM `sqlite_master` WHERE `type`='table' AND `name`='backpack_players';"))
 		{ // Check if old players table exists
 			if(rs.next()) return new Version(2);
 		}
 		return plugin.getVersion();
-	}
-
-	@Override
-	protected void updatePlayer(@NotNull Connection connection, @NotNull MinepacksPlayerData player) throws SQLException
-	{
-		DBTools.runStatement(connection, queryUpdatePlayerAdd, player.getName(), formatUUID(player.getUUID()));
-		DBTools.runStatement(connection, "UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), formatUUID(player.getUUID()));
 	}
 
 	@Override

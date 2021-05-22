@@ -26,6 +26,7 @@ import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackupHandler;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
+import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
@@ -43,14 +44,14 @@ import java.util.*;
 
 public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPlaceholdersHolder, ILoadableStringFieldsHolder
 {
-	private final ConnectionProvider dataSource;
+	private final ConnectionProvider connectionProvider;
 
 	@Loadable protected String tablePlayers = "minepacks_players", tableBackpacks = "minepacks_backpacks", tableCooldowns = "minepacks_cooldowns"; // Table names
 	@Loadable(metadata = "User") protected String fieldPlayerName = "name", fieldPlayerID = "id", fieldPlayerUUID = "uuid"; // Table fields players
 	@Loadable(metadata = "Backpack") protected String fieldBpOwnerID = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table fields backpack
 	@Loadable(metadata = "Cooldown") protected String fieldCdPlayerID = "id", fieldCdTime = "time"; // Table fields cooldown
 
-	@HasPlaceholders @Language("SQL") protected String queryUpdatePlayerAdd, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown; // DB queries
+	@HasPlaceholders @Language("SQL") protected String queryInsertPlayer, queryUpdatePlayer, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown; // DB queries
 	@HasPlaceholders @Language("SQL") protected String queryDeleteOldCooldowns, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // Maintenance queries
 	protected boolean syncCooldown;
 
@@ -58,8 +59,8 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	{
 		super(plugin);
 
-		dataSource = connectionProvider;
-		if(!dataSource.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
+		this.connectionProvider = connectionProvider;
+		if(!this.connectionProvider.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
 
 		loadSettings();
 		buildQueries();
@@ -106,7 +107,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	public void close()
 	{
 		Utils.blockThread(1); // Give the database some time to perform async operations
-		dataSource.close();
+		connectionProvider.close();
 	}
 
 	protected void checkUUIDs()
@@ -174,7 +175,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 	public Connection getConnection() throws SQLException
 	{
-		return dataSource.getConnection();
+		return connectionProvider.getConnection();
 	}
 
 	protected abstract void checkDB();
@@ -182,10 +183,13 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	protected final void buildQueries()
 	{
 		// Build the SQL queries with placeholders for the table and field names
-		queryGetPlayer = "SELECT * FROM {TablePlayers}" +
-				(syncCooldown ? " LEFT JOIN {TableCooldowns} ON {TablePlayers}.{FieldPlayerID} = {TableCooldowns}.{FieldCDPlayer}" : "") +
-				" WHERE {FieldUUID}=?;";
-		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
+		queryGetPlayer = "SELECT {TablePlayers}.{FieldPlayerID} AS {FieldPlayerID}, " +
+				(syncCooldown ? "{TableCooldowns}.{FieldCDTime} AS {FieldCDTime}, " : "") +
+				"FROM {TablePlayers} " +
+				(syncCooldown ? " LEFT JOIN {TableCooldowns} ON {TablePlayers}.{FieldPlayerID} = {TableCooldowns}.{FieldCDPlayer} " : "") +
+				"WHERE {FieldUUID}=?;";
+		queryInsertPlayer = "INSERT IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
+		queryUpdatePlayer = "UPDATE {TablePlayers} SET {FieldName}=? WHERE {FieldUUID}=?;";
 		queryGetBP = "SELECT * FROM {TableBackpacks} WHERE {FieldBPOwner}=?;";
 		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
@@ -243,7 +247,8 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	// Plugin Functions
 	protected void updatePlayer(final @NotNull Connection connection, final @NotNull MinepacksPlayerData player) throws SQLException
 	{
-		DBTools.runStatement(connection, queryUpdatePlayerAdd, player.getName(), formatUUID(player.getUUID()), player.getName());
+		DBTools.runStatement(connection, queryInsertPlayer, player.getName(), formatUUID(player.getUUID()));
+		DBTools.runStatement(connection, queryUpdatePlayer, player.getName(), formatUUID(player.getUUID()));
 	}
 
 	@Override

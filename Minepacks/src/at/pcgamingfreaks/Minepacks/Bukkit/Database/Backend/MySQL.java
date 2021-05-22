@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -40,6 +40,9 @@ public class MySQL extends SQL
 	{
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} + INTERVAL {VarMaxAge} day < NOW()";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "NOW()");
+
+		// Prevent auto id incrementing if no insert was performed
+		queryInsertPlayer = "INSERT IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) SELECT ?,? FROM (SELECT 1) AS `tmp` WHERE NOT EXISTS (SELECT {FieldUUID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
 	}
 
 	@Override
@@ -49,16 +52,16 @@ public class MySQL extends SQL
 		{
 			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} VARCHAR(16) NOT NULL,\n" +
 					                                                 "{FieldUUID} CHAR(" +  ((useUUIDSeparators) ? "36" : "32") + ") DEFAULT NULL," + "\nPRIMARY KEY ({FieldPlayerID}),\n" +
-					                                                 "UNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
+					                                                 "UNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n) ENGINE=InnoDB;"));
 			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
 					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
 					                                                 "PRIMARY KEY ({FieldBPOwner}),\nCONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) " +
-					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
+					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB;"));
 			if(syncCooldown)
 			{
 				DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED NOT NULL,\n{FieldCDTime} DATETIME NOT NULL,\nPRIMARY KEY ({FieldCDPlayer}),\n" +
 						                                                 "CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldCDPlayer} FOREIGN KEY ({FieldCDPlayer}) " +
-						                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
+						                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB;"));
 			}
 		}
 		catch (SQLException e)
