@@ -29,10 +29,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
@@ -310,7 +307,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public @NotNull MinepacksPlayerExtended getMinepacksPlayer(final @NotNull OfflinePlayer player)
+	public @NotNull MinepacksPlayerData getMinepacksPlayer(final @NotNull OfflinePlayer player)
 	{
 		return database.getPlayer(player);
 	}

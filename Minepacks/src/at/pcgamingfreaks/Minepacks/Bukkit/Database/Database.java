@@ -146,17 +146,14 @@ public final class Database implements Listener
 
 	private void loadPlayer(final @NotNull MinepacksPlayerData player)
 	{
-		if(syncCooldown)
-			player.setCooldownData(System.currentTimeMillis());
-
 		backend.loadPlayer(player);
 
-		player.notifyOnLoad(p -> {
-			if(!bungeeCordMode)
-			{
+		if(!bungeeCordMode)
+		{
+			player.notifyOnLoad(p -> {
 				loadBackpack(player);
-			}
-		});
+			});
+		}
 	}
 
 	public void loadBackpack(final @NotNull MinepacksPlayerData player)
@@ -175,7 +172,7 @@ public final class Database implements Listener
 				});
 	}
 
-	public @NotNull MinepacksPlayerExtended getPlayer(final @NotNull OfflinePlayer offlinePlayer)
+	public @NotNull MinepacksPlayerData getPlayer(final @NotNull OfflinePlayer offlinePlayer)
 	{
 		MinepacksPlayerData player = cache.getCachedPlayer(offlinePlayer.getUniqueId());
 		if(player != null) return player;
