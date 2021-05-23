@@ -70,7 +70,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		// Delete old backpacks
 		try(Connection connection = getConnection())
 		{
-			DBTools.runStatementWithoutException(connection, queryDeleteOldBackpacks);
+			if(maxAge > 0) DBTools.runStatementWithoutException(connection, queryDeleteOldBackpacks);
 			if(syncCooldown) DBTools.runStatementWithoutException(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
 		}
 	}
@@ -96,7 +96,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			{
 				fieldName = fieldName.substring("Player".length());
 			}
-			else if(fieldName.startsWith("BP") || fieldName.startsWith("Cd"))
+			else if(fieldName.startsWith("Bp") || fieldName.startsWith("Cd"))
 				fieldName = fieldName.substring(2);
 			return plugin.getConfiguration().getDBFields(metadata + "." + fieldName, currentValue);
 		}
