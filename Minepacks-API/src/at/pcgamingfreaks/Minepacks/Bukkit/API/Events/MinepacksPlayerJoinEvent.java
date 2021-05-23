@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.API.Events;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import lombok.Getter;
 public class MinepacksPlayerJoinEvent extends Event
 {
 	@Getter private final MinepacksPlayer player;
+	@Getter private final Player bukkitPlayer;
 
 	//region Bukkit handler stuff
 	private static final HandlerList handlers = new HandlerList();

@@ -168,7 +168,7 @@ public final class Database implements Listener
 		getPlayer(event.getPlayer()) // Trigger player data prefetch
 				.notifyOnLoad(player -> {  // Trigger MinepacksPlayerJoinEvent
 					if(player.isOnline())
-						Bukkit.getPluginManager().callEvent(new MinepacksPlayerJoinEvent(player));
+						Bukkit.getPluginManager().callEvent(new MinepacksPlayerJoinEvent(player, event.getPlayer()));
 				});
 	}
 
