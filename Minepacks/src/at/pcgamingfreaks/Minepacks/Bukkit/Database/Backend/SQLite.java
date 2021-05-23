@@ -60,6 +60,21 @@ public class SQLite extends SQL
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "DATE('now')");
 		querySyncCooldown = "INSERT OR REPLACE INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?);";
+		queryInsertPlayer = queryInsertPlayer.replace("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
+		queryAddStyle = queryAddStyle.replace("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
+		queryAddIDedStyle = queryAddIDedStyle.replace("REPLACE INTO", "INSERT OR REPLACE INTO");
+		querySyncCooldown = "INSERT OR IGNORE INTO {TablePlayerSettings} ({FieldPSPlayerID},{FieldPSBackpackStyle}) VALUES (?,?); UPDATE {TablePlayerSettings} SET {FieldPSBackpackStyle}=? WHERE {FieldPSPlayerID}=?;";
+	}
+
+	@Override
+	public @NotNull Connection getConnection() throws SQLException
+	{
+		Connection connection = super.getConnection();
+		try(Statement statement = connection.createStatement())
+		{
+			statement.execute("PRAGMA foreign_keys = ON"); // We need foreign keys!
+		}
+		return connection;
 	}
 
 	private void doPHQuery(final @NotNull Statement statement, final @NotNull @Language("SQL") String query) throws SQLException
@@ -78,9 +93,15 @@ public class SQLite extends SQL
 			// Create tables if they do not exist
 			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayers} ({FieldPlayerID} INTEGER PRIMARY KEY AUTOINCREMENT, {FieldName} CHAR(16) NOT NULL, {FieldUUID} CHAR(32) UNIQUE);");
 			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpacks} ({FieldBPOwner} INTEGER PRIMARY KEY, {FieldBPITS} BLOB, {FieldBPVersion} INT NOT NULL, {FieldBPLastUpdate} DATE NOT NULL," +
-					"CONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldBPOwner}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
-			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableCooldowns} ({FieldCDPlayer} INTEGER PRIMARY KEY, {FieldCDTime} UNSIGNED BIG INT NOT NULL, " +
-					"CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldCDPlayer}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
+							"CONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldBPOwner}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
+			if(syncCooldown)
+			{
+				doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableCooldowns} ({FieldCDPlayer} INTEGER PRIMARY KEY, {FieldCDTime} UNSIGNED BIG INT NOT NULL, " +
+								"CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldCDPlayer}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
+			}
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpackStyles} ({FieldBSStyleID} INTEGER PRIMARY KEY AUTOINCREMENT, {FieldBSStyleName} TEXT NOT NULL UNIQUE);");
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayerSettings} ({FieldPSPlayerID} INTEGER PRIMARY KEY, {FieldPSBackpackStyle} INTEGER DEFAULT 0," +
+							"CONSTRAINT fk_{TablePlayerSettings}_{TableBackpackStyles}_{FieldBSStyleID} FOREIGN KEY ({FieldPSBackpackStyle}) REFERENCES {TableBackpackStyles} ({FieldBSStyleID}) ON DELETE SET DEFAULT ON UPDATE CASCADE);");
 
 			if(dbVersion.olderThan(new Version("3.0-ALPHA-SNAPSHOT")))
 			{ // Copy old data to new tables
@@ -116,5 +137,12 @@ public class SQLite extends SQL
 	public void saveCooldown(final @NotNull MinepacksPlayerData player)
 	{
 		runStatementAsync(querySyncCooldown, player.getDatabaseKey(), new Timestamp(player.getCooldown()));
+	}
+
+	@Override
+	public void saveBackpackStyle(final @NotNull MinepacksPlayerData player)
+	{
+		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : null;
+		runStatementAsync(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle, backpackStyle, player.getDatabaseKey());
 	}
 }

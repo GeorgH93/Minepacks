@@ -67,6 +67,11 @@ public class MySQL extends SQL
 				mkTable(connection, "CREATE TABLE IF NOT EXISTS {TableCooldowns} (\n{FieldCDPlayer} INT UNSIGNED NOT NULL,\n{FieldCDTime} DATETIME NOT NULL,\nPRIMARY KEY ({FieldCDPlayer}),\n" +
 									"CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldCDPlayer} FOREIGN KEY ({FieldCDPlayer}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB;");
 			}
+			mkTable(connection, "CREATE TABLE IF NOT EXISTS {TableBackpackStyles} (\n{FieldBSStyleID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldBSStyleName} VARCHAR(100) NOT NULL,\n" +
+								"PRIMARY KEY ({FieldBSStyleID}),\nUNIQUE INDEX {FieldBSStyleName}_UNIQUE ({FieldBSStyleName})\n) ENGINE=InnoDB;");
+			mkTable(connection, "CREATE TABLE IF NOT EXISTS {TablePlayerSettings} (\n{FieldPSPlayerID} INT UNSIGNED NOT NULL,\n{FieldPSBackpackStyle} INT UNSIGNED DEFAULT 0,\nPRIMARY KEY ({FieldPSPlayerID}),\n" +
+					            "CONSTRAINT fk_{TablePlayerSettings}_{TablePlayers}_{FieldPSPlayerID} FOREIGN KEY ({FieldPSPlayerID}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE,\n" +
+								"CONSTRAINT fk_{TablePlayerSettings}_{TableBackpackStyles}_{FieldBSStyleID} FOREIGN KEY ({FieldPSBackpackStyle}) REFERENCES {TableBackpackStyles} ({FieldBSStyleID}) ON DELETE RESTRICT ON UPDATE CASCADE\n) ENGINE=InnoDB;");
 		}
 		catch (SQLException e)
 		{

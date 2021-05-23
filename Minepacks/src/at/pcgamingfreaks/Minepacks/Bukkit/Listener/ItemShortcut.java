@@ -22,7 +22,9 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.MinepacksPlayerJoinEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -55,7 +57,6 @@ public class ItemShortcut extends MinepacksListener
 	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
-	private final ItemConfig itemConfig;
 	private final Sound dragAndDropSound;
 
 	public ItemShortcut(final @NotNull Minepacks plugin)
@@ -70,10 +71,9 @@ public class ItemShortcut extends MinepacksListener
 		openCommand = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Open", "open")[0];
 		messageDoNotRemoveItem = plugin.getLanguage().getMessage("Ingame.DontRemoveShortcut");
 
-		itemConfig = plugin.getBackpacksConfig().getItemConfig("Items." + plugin.getBackpacksConfig().getDefaultBackpackItem());
-		if(itemConfig == null)
+		if(!plugin.getBackpacksConfig().isAllowItemShortcut())
 		{
-			plugin.getLogger().severe("Item '" + plugin.getBackpacksConfig().getDefaultBackpackItem() + "' is not defined in the backpacks.yml file! Item shortcut will be disabled!");
+			plugin.getLogger().severe("No shortcut item defined in the backpacks.yml file! Item shortcut will be disabled!");
 			throw new IllegalArgumentException("The item is not defined.");
 		}
 
@@ -92,7 +92,15 @@ public class ItemShortcut extends MinepacksListener
 		}
 	}
 
-	public boolean isItemShortcut(final @Nullable ItemStack stack)
+	public boolean isItemShortcut(final @NotNull Player player, final @Nullable ItemStack stack)
+	{
+		MinepacksPlayerData playerData = plugin.getMinepacksPlayer(player);
+		ItemConfig itemConfig = playerData.getBackpackStyle();
+		if(itemConfig == null) return false;
+		return isItemShortcut(stack, itemConfig);
+	}
+
+	public boolean isItemShortcut(final @Nullable ItemStack stack, final @NotNull ItemConfig itemConfig)
 	{
 		if(stack == null || !stack.hasItemMeta()) return false;
 		ItemMeta meta = stack.getItemMeta();
@@ -105,38 +113,46 @@ public class ItemShortcut extends MinepacksListener
 	{
 		if(player.hasPermission(Permissions.USE))
 		{
-			boolean empty = false; // Stores if there is an empty inventory slot available
-			for(ItemStack itemStack : player.getInventory())
+			MinepacksPlayerData minepacksPlayer = plugin.getMinepacksPlayer(player);
+			addItem(minepacksPlayer, player);
+		}
+	}
+
+	public void addItem(final @NotNull MinepacksPlayerData minepacksPlayer, final @NotNull Player player)
+	{
+		ItemConfig itemConfig = minepacksPlayer.getBackpackStyle();
+		if(itemConfig == null) return; // Null = disabled
+		boolean empty = false; // Stores if there is an empty inventory slot available
+		for(ItemStack itemStack : player.getInventory())
+		{
+			if(itemStack == null || itemStack.getType() == Material.AIR) empty = true; // Empty inventory slot found
+			else if(isItemShortcut(itemStack, itemConfig))
+			{ //TODO update item
+				if(itemStack.getAmount() > 1) itemStack.setAmount(1);
+				return;
+			}
+		}
+		if(empty) // There is an empty inventory slot available that the item can be added to
+		{
+			if(preferredSlotId >= 0 && preferredSlotId < 36)
 			{
-				if(itemStack == null || itemStack.getType() == Material.AIR) empty = true; // Empty inventory slot found
-				else if(isItemShortcut(itemStack))
-				{ //TODO update item
-					if(itemStack.getAmount() > 1) itemStack.setAmount(1);
+				ItemStack stack = player.getInventory().getItem(preferredSlotId);
+				if(stack == null || stack.getType() == Material.AIR)
+				{
+					player.getInventory().setItem(preferredSlotId, itemConfig.make(1));
 					return;
 				}
 			}
-			if(empty) // There is an empty inventory slot available that the item can be added to
-			{
-				if(preferredSlotId >= 0 && preferredSlotId < 36)
-				{
-					ItemStack stack = player.getInventory().getItem(preferredSlotId);
-					if(stack == null || stack.getType() == Material.AIR)
-					{
-						player.getInventory().setItem(preferredSlotId, itemConfig.make(1));
-						return;
-					}
-				}
-				player.getInventory().addItem(itemConfig.make(1));
-			}
+			player.getInventory().addItem(itemConfig.make(1));
 		}
 	}
 
 	//region Add backpack item
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onJoin(PlayerJoinEvent event)
+	public void onJoin(MinepacksPlayerJoinEvent event)
 	{
-		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		if(plugin.isDisabled(event.getBukkitPlayer()) != WorldBlacklistMode.None || !event.getBukkitPlayer().hasPermission(Permissions.USE)) return;
+		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem((MinepacksPlayerData) event.getPlayer(), event.getBukkitPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -166,7 +182,7 @@ public class ItemShortcut extends MinepacksListener
 	public void onItemInteract(PlayerInteractEvent event)
 	{
 		if ((event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)) return;
-		if(isItemShortcut(event.getItem()))
+		if(isItemShortcut(event.getPlayer(), event.getItem()))
 		{
 			if(allowRightClickOnContainers && event.getAction() == Action.RIGHT_CLICK_BLOCK)
 			{
@@ -182,7 +198,7 @@ public class ItemShortcut extends MinepacksListener
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onArmorStandManipulation(PlayerArmorStandManipulateEvent event)
 	{
-		if(isItemShortcut(event.getPlayerItem()))
+		if(isItemShortcut(event.getPlayer(), event.getPlayerItem()))
 		{
 			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
@@ -200,9 +216,9 @@ public class ItemShortcut extends MinepacksListener
 		}
 		else
 		{
-			item = player.getItemInHand();
+			item = InventoryUtils.getItemInHand(player);
 		}
-		if(isItemShortcut(item))
+		if(isItemShortcut(event.getPlayer(), item))
 		{
 			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
@@ -212,7 +228,7 @@ public class ItemShortcut extends MinepacksListener
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		if(isItemShortcut(event.getItemInHand()))
+		if(isItemShortcut(event.getPlayer(), event.getItemInHand()))
 		{
 			event.getPlayer().performCommand(openCommand);
 			event.setCancelled(true);
@@ -276,7 +292,10 @@ public class ItemShortcut extends MinepacksListener
 		if(event.getWhoClicked() instanceof Player)
 		{
 			final Player player = (Player) event.getWhoClicked();
-			if(isItemShortcut(event.getCurrentItem()))
+			MinepacksPlayerData minepacksPlayer = plugin.getMinepacksPlayer(player);
+			ItemConfig itemConfig = minepacksPlayer.getBackpackStyle();
+			if(itemConfig == null) return;
+			if(isItemShortcut(event.getCurrentItem(), itemConfig))
 			{
 				if(event.getAction() == InventoryAction.SWAP_WITH_CURSOR)
 				{
@@ -297,7 +316,7 @@ public class ItemShortcut extends MinepacksListener
 			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getHotbarButton() != -1)
 			{
 				ItemStack item = player.getInventory().getItem(event.getHotbarButton());
-				if(isItemShortcut(item))
+				if(isItemShortcut(item, itemConfig))
 				{
 					event.setCancelled(true);
 					messageDoNotRemoveItem.send(player);
@@ -305,13 +324,13 @@ public class ItemShortcut extends MinepacksListener
 			}
 			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getClick().name().equals("SWAP_OFFHAND"))
 			{
-				if(isItemShortcut(player.getInventory().getItemInOffHand()))
+				if(isItemShortcut(player.getInventory().getItemInOffHand(), itemConfig))
 				{
 					event.setCancelled(true);
 					messageDoNotRemoveItem.send(player);
 				}
 			}
-			else if(isItemShortcut(event.getCursor()))
+			else if(isItemShortcut(event.getCursor(), itemConfig))
 			{
 				if(!player.getInventory().equals(InventoryUtils.getClickedInventory(event)))
 				{
@@ -331,7 +350,10 @@ public class ItemShortcut extends MinepacksListener
 	{
 		if(!event.getInventory().equals(event.getWhoClicked().getInventory()) && event.getRawSlots().containsAll(event.getInventorySlots()))
 		{
-			if(isItemShortcut(event.getCursor()) || isItemShortcut(event.getOldCursor()))
+			MinepacksPlayerData minepacksPlayer = plugin.getMinepacksPlayer((Player) event.getWhoClicked());
+			ItemConfig itemConfig = minepacksPlayer.getBackpackStyle();
+			if(itemConfig == null) return;
+			if(isItemShortcut(event.getCursor(), itemConfig) || isItemShortcut(event.getOldCursor(), itemConfig))
 			{
 				event.setCancelled(true);
 				messageDoNotRemoveItem.send(event.getWhoClicked());
@@ -342,7 +364,7 @@ public class ItemShortcut extends MinepacksListener
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onDropItem(PlayerDropItemEvent event)
 	{
-		if(isItemShortcut(event.getItemDrop().getItemStack()))
+		if(isItemShortcut(event.getPlayer(), event.getItemDrop().getItemStack()))
 		{
 			event.setCancelled(true);
 			messageDoNotRemoveItem.send(event.getPlayer());
@@ -356,11 +378,14 @@ public class ItemShortcut extends MinepacksListener
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onDeath(PlayerDeathEvent event)
 	{
+		MinepacksPlayerData minepacksPlayer = plugin.getMinepacksPlayer(event.getEntity());
+		ItemConfig itemConfig = minepacksPlayer.getBackpackStyle();
+		if(itemConfig == null) return;
 		//region prevent drop
 		Iterator<ItemStack> itemStackIterator = event.getDrops().iterator();
 		while(itemStackIterator.hasNext())
 		{
-			if(isItemShortcut(itemStackIterator.next()))
+			if(isItemShortcut(itemStackIterator.next(), itemConfig))
 			{
 				itemStackIterator.remove();
 				break;
@@ -371,7 +396,7 @@ public class ItemShortcut extends MinepacksListener
 		{ // improveDeathChestCompatibility
 			for(ItemStack itemStack : event.getEntity().getInventory())
 			{
-				if(isItemShortcut(itemStack))
+				if(isItemShortcut(itemStack, itemConfig))
 				{
 					itemStack.setAmount(0);
 					itemStack.setType(Material.AIR);

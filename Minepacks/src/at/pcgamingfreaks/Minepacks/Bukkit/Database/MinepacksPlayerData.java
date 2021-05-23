@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -50,8 +50,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	private final int hash;
 	@Getter private final @NotNull OfflinePlayer player;
 
-	@Getter private String backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
-	private ItemConfig backpackStyle = null;
+	@Getter private ItemConfig backpackStyle = null;
 	@Getter private Backpack backpack = null;
 	@Getter private long cooldown = System.currentTimeMillis();
 	@Getter @Setter private boolean backpackLoadingRequested = false;
@@ -80,17 +79,13 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 		backpackLoadedQueue.clear();
 	}
 
-	public void setLoaded(final @NotNull Object databaseKey, final long cooldown)
+	public void setLoaded(final @NotNull Object databaseKey, final long cooldown, final ItemConfig backpackStyle)
 	{
 		this.databaseKey = databaseKey;
 		this.cooldown = cooldown;
+		this.backpackStyle = backpackStyle;
 		playerLoadedQueue.forEach(loadedCallback -> loadedCallback.onResult(this));
 		playerLoadedQueue.clear();
-	}
-
-	public void setCooldownData(final long cooldown)
-	{
-		this.cooldown = cooldown;
 	}
 
 	@Override
@@ -155,20 +150,26 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	{
 		if(style.equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED))
 		{
-			backpackStyleName = style;
-			backpackStyle = null;
+			setBackpackStyle((ItemConfig) null);
 		}
 		else
 		{
-			if(style.equals(MagicValues.BACKPACK_STYLE_NAME_DEFAULT) || !BackpacksConfig.getInstance().getValidShortcutStyles().contains(style))
-			{
-				backpackStyleName = MagicValues.BACKPACK_STYLE_NAME_DEFAULT;
-				style = BackpacksConfig.getInstance().getDefaultBackpackItem();
-			}
-			else backpackStyleName = style;
-			backpackStyle = BackpacksConfig.getInstance().getItemConfig("Items." + style);
+			ItemConfig itemConfig = BackpacksConfig.getInstance().getBackpackStylesMap().get(style);
+			if(itemConfig == null) BackpacksConfig.getInstance().getBackpackStylesMap().get(MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
+			setBackpackStyle(itemConfig);
 		}
-		//TODO update database
+	}
+
+	public void setBackpackStyle(final @Nullable ItemConfig style)
+	{
+		this.backpackStyle = style;
+		notifyOnLoad((player) -> Minepacks.getInstance().getDatabase().saveBackpackStyle(this));
+	}
+
+	@Override
+	public @NotNull String getBackpackStyleName()
+	{
+		return backpackStyle != null ? backpackStyle.getName() : MagicValues.BACKPACK_STYLE_NAME_DISABLED;
 	}
 
 	@Override

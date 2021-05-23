@@ -198,4 +198,9 @@ public final class Database implements Listener
 		if(syncCooldown)
 			backend.saveCooldown(player);
 	}
+
+	public void saveBackpackStyle(final @NotNull MinepacksPlayerData player)
+	{
+		backend.saveBackpackStyle(player);
+	}
 }

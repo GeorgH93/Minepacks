@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,8 +20,11 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
+import at.pcgamingfreaks.YamlFileUpdateMethod;
 
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
@@ -41,16 +44,21 @@ public class BackpacksConfig extends Configuration
 	@Getter private static BackpacksConfig instance;
 
 	private final @NotNull Minepacks plugin;
-	private final Map<String, ItemConfig> itemConfigs = new HashMap<>();
-	@Getter private final Set<String> validShortcutStyles = new HashSet<>();
-	@Getter private String defaultBackpackItem = "";
+	@Getter private Set<String> validShortcutStyles;
+	@Getter private final Map<String, ItemConfig> backpackStylesMap = new HashMap<>();
 	@Getter private boolean allowItemShortcut = true;
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
 	{
-		super(plugin, CONFIG_VERSION, CONFIG_VERSION, "backpacks.yml");
+		super(plugin, new Version(CONFIG_VERSION), "backpacks.yml");
 		this.plugin = plugin;
 		instance = this;
+	}
+
+	@Override
+	protected @Nullable YamlFileUpdateMethod getYamlUpdateMode()
+	{
+		return YamlFileUpdateMethod.UPGRADE;
 	}
 
 	@Override
@@ -73,30 +81,37 @@ public class BackpacksConfig extends Configuration
 	public void loadData()
 	{
 		allowItemShortcut = true;
-		itemConfigs.clear();
-		loadItemConfigs("Items");
-		if(itemConfigs.isEmpty())
+		backpackStylesMap.clear();
+		loadItemConfigs("Items", backpackStylesMap);
+		if(backpackStylesMap.isEmpty())
 		{
 			logger.warning("There musst be at least one item defined to use the items feature!");
 			allowItemShortcut = false;
+			return;
 		}
-		validShortcutStyles.addAll(getBackpackItems().stream().map(ItemConfig::getName).collect(Collectors.toList()));
-		defaultBackpackItem = getString("Defaults.BackpackItem", "unknown");
-		if(!validShortcutStyles.contains(defaultBackpackItem))
+		validShortcutStyles = backpackStylesMap.keySet();
+		if(!backpackStylesMap.containsKey(MagicValues.BACKPACK_STYLE_NAME_DEFAULT))
 		{
-			String tmp = validShortcutStyles.iterator().next();
-			logger.warning("Unknown default backpack item '" + defaultBackpackItem + "'. Using '" + tmp + "' instead.");
-			defaultBackpackItem = tmp;
+			String defaultBackpackItemName = getString("Defaults.BackpackItem", "unknown");
+			if(!backpackStylesMap.containsKey(defaultBackpackItemName))
+			{
+				String tmp = validShortcutStyles.iterator().next();
+				logger.warning("Unknown default backpack item '" + defaultBackpackItemName + "'. Using '" + tmp + "' instead.");
+				defaultBackpackItemName = tmp;
+			}
+			backpackStylesMap.put(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, backpackStylesMap.get(defaultBackpackItemName)));
 		}
 	}
 
-	private void loadItemConfigs(final @NotNull String parentKey)
+	private void loadItemConfigs(final @NotNull String parentKey, final @NotNull Map<String, ItemConfig> itemConfigs)
 	{
 		getYamlE().getKeysFiltered(parentKey + "\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
 			try
 			{
 				if(!getConfigE().getBoolean(key + "Enabled", true)) return;
+				final String name = key.substring(parentKey.length() + 1);
+				if(parentKey.equals("Items") && name.equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED)) return;
 				final List<String> lore = getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
 				final List<String> loreFinal;
 				if(lore.size() == 0) loreFinal = null;
@@ -109,7 +124,7 @@ public class BackpacksConfig extends Configuration
 				final String material = getYamlE().getString(key + ".Material");
 				final int model = getYamlE().getInt(key + ".Model", 0);
 				final int amount = getYamlE().getInt(key + ".Amount", 1);
-				itemConfigs.put(key, new ItemConfig(key.substring(parentKey.length() + 1), material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
+				itemConfigs.put(name, new ItemConfig(name, material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
 			}
 			catch(Exception e)
 			{
@@ -137,13 +152,8 @@ public class BackpacksConfig extends Configuration
 		return buffer.toString();
 	}
 
-	public @Nullable ItemConfig getItemConfig(final @NotNull String name)
-	{
-		return itemConfigs.get(name);
-	}
-
 	public @NotNull List<ItemConfig> getBackpackItems()
 	{
-		return itemConfigs.entrySet().stream().filter(entry -> entry.getKey().startsWith("Items.")).map(Map.Entry::getValue).collect(Collectors.toList());
+		return backpackStylesMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
 	}
 }

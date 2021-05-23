@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -103,6 +103,7 @@ public class Files extends DatabaseBackend
 		if(!player.isLoaded()) return;
 		BackpackFile backpackFile = new BackpackFile(player);
 		backpackFile.writeFile((File) player.getDatabaseKey());
+		//TODO handle player settings
 	}
 	
 	// DB Functions
@@ -110,6 +111,12 @@ public class Files extends DatabaseBackend
 	public void saveBackpack(final @NotNull Backpack backpack)
 	{
 		savePlayer(backpack.getOwner());
+	}
+
+	@Override
+	public void saveBackpackStyle(@NotNull MinepacksPlayerData player)
+	{
+		savePlayer(player);
 	}
 
 	@Override
@@ -124,7 +131,7 @@ public class Files extends DatabaseBackend
 				bp = new Backpack(player, backpackFile.getItemStacks()[0]);
 		}
 		if(bp == null) bp = new Backpack(player);
-		player.setLoaded(file, 0);
+		player.setLoaded(file, 0, null); // TODO
 		player.setBackpack(bp);
 	}
 

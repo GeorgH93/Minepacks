@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@ import at.pcgamingfreaks.Bukkit.GUI.GuiBuilder;
 import at.pcgamingfreaks.Bukkit.GUI.GuiButton;
 import at.pcgamingfreaks.Bukkit.GUI.IGui;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.Utils;
+import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemShortcut;
@@ -33,6 +34,7 @@ import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,10 +43,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-/*if[STANDALONE]
-import at.pcgamingfreaks.Bukkit.GUI.GuiListener;
-end[STANDALONE]*/
 
 public class ShortcutCommand extends MinepacksCommand
 {
@@ -73,13 +71,12 @@ public class ShortcutCommand extends MinepacksCommand
 		allowPlayerDisable = plugin.getConfiguration().isItemShortcutPlayerDisableItemEnabled();
 
 		/*if[STANDALONE]
-		plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
+		plugin.getServer().getPluginManager().registerEvents(new at.pcgamingfreaks.Bukkit.GUI.GuiListener(), plugin);
 		end[STANDALONE]*/
 
 		if(playerChoice)
 		{
 			validShortcutStyles = plugin.getBackpacksConfig().getBackpackItems().stream().map(ItemConfig::getName).collect(Collectors.toSet());
-			validShortcutStyles.add(MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
 			if(allowPlayerDisable) validShortcutStyles.add(MagicValues.BACKPACK_STYLE_NAME_DISABLED);
 
 			gui = buildGui(plugin);
@@ -95,12 +92,13 @@ public class ShortcutCommand extends MinepacksCommand
 	{
 		final String setCommandBase = plugin.getLanguage().getCommandAliases("Backpack", "backpack")[0] + ' ' + plugin.getLanguage().getCommandAliases("Shortcut", "shortcut")[0] + ' ' + setSwitch[0] + ' ';
 		final List<ItemConfig> backpackItems = plugin.getBackpacksConfig().getBackpackItems();
-		final int buttonCount = backpackItems.size() + (allowPlayerDisable ? 2 : 1);
+		final int buttonCount = backpackItems.size() + (allowPlayerDisable ? 1: 0);
 		final int buttonCountAligned = ((buttonCount / 9) + 1) * 9; // Aligns it to a multiple of 9
 		final GuiBuilder guiBuilder = new GuiBuilder(plugin.getLanguage().getTranslated("Ingame.Shortcut.GUI.Title"));
 		//region add item buttons
 		for(ItemConfig itemConfig : backpackItems)
 		{
+			if(itemConfig.getName().equals(MagicValues.BACKPACK_STYLE_NAME_DEFAULT)) continue;
 			GuiButton button = new GuiButton(itemConfig.make(1), (player, clickType, cursor) -> { player.performCommand(setCommandBase + itemConfig.getName()); player.closeInventory(); });
 			guiBuilder.addButton(button);
 		}
@@ -112,13 +110,14 @@ public class ShortcutCommand extends MinepacksCommand
 		}
 		//endregion
 		//region set default button
-		ItemStack item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, "BARRIER", 1, MagicValues.BACKPACK_STYLE_NAME_DEFAULT, null, -1, null).make();
+		ItemConfig defaultItem = plugin.getBackpacksConfig().getBackpackStylesMap().get(MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
+		ItemStack item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, defaultItem.getMaterial().name(), defaultItem.getAmount(), MagicValues.BACKPACK_STYLE_NAME_DEFAULT, defaultItem.getLore(), defaultItem.getModel(), defaultItem.getValue()).make(1);
 		guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DEFAULT); player.closeInventory(); }));
 		//endregion
 		//region set disable button
 		if(allowPlayerDisable)
 		{
-			item = new ItemStack(Material.BARRIER);
+			item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DISABLED, "BARRIER", 1, MagicValues.BACKPACK_STYLE_NAME_DISABLED, null, -1, null).make(1);
 			guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DISABLED); player.closeInventory(); }));
 		}
 		//endregion
@@ -144,8 +143,26 @@ public class ShortcutCommand extends MinepacksCommand
 					{
 						if(validShortcutStyles.contains(args[1])) //TODO make test case insensitive
 						{
-							//TODO set shortcut
-							messageShortcutSet.send(sender); //TODO add more information
+							((Minepacks) plugin).getMinepacksPlayer((OfflinePlayer) sender).notifyOnLoad(player -> {
+								MinepacksPlayerData playerData = ((MinepacksPlayerData) player);
+								ItemConfig itemConfig = ((Minepacks) plugin).getBackpacksConfig().getBackpackStylesMap().get(args[1]);
+								ItemConfig oldItemConfig = playerData.getBackpackStyle();
+								if(itemConfig == oldItemConfig) return; // == is fine here
+								playerData.setBackpackStyle(itemConfig);
+								if(oldItemConfig != null)
+								{ // Remove old item
+									for(ItemStack itemStack : ((Player) sender).getInventory())
+									{
+										if(itemShortcut.isItemShortcut(itemStack, oldItemConfig))
+										{
+											itemStack.setAmount(0);
+											itemStack.setType(Material.AIR);
+										}
+									}
+								}
+								itemShortcut.addItem(playerData, ((Player) sender));
+								messageShortcutSet.send(sender); //TODO add more information
+							});
 						}
 						else
 						{

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -81,6 +81,13 @@ public interface MinepacksPlayer
 	 * @return True if the player is online. False if not.
 	 */
 	boolean isOnline();
+
+	/**
+	 * Gets the name of the players backpack shortcut style.
+	 *
+	 * @return The name of the backpack shortcut style.
+	 */
+	@NotNull String getBackpackStyleName();
 
 	/**
 	 * Sets the style of the players backpack shortcut.

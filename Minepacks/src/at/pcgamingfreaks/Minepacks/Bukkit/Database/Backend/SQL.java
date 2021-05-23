@@ -27,6 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackupHandler;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
@@ -47,15 +48,20 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	private final ConnectionProvider connectionProvider;
 
 	@Loadable protected String tablePlayers = "minepacks_players", tableBackpacks = "minepacks_backpacks", tableCooldowns = "minepacks_cooldowns"; // Table names
+	@Loadable protected String tableBackpackStyles = "minepacks_backpack_styles", tablePlayerSettings = "minepacks_player_settings"; // Table names
 	@Loadable(metadata = "User") protected String fieldPlayerName = "name", fieldPlayerID = "id", fieldPlayerUUID = "uuid"; // Table fields players
-	@Loadable(metadata = "Backpack") protected String fieldBpOwnerID = "owner", fieldBpIts = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table fields backpack
+	@Loadable(metadata = "Backpack") protected String fieldBpOwnerID = "owner", fieldBpItemStacks = "its", fieldBpVersion = "version", fieldBpLastUpdate = "lastupdate"; // Table fields backpack
 	@Loadable(metadata = "Cooldown") protected String fieldCdPlayerID = "id", fieldCdTime = "time"; // Table fields cooldown
+	@Loadable(metadata = "BackpackStyles") protected String fieldBsStyleID = "id", fieldBsStyleName = "name"; // Table fields backpack styles
+	@Loadable(metadata = "PlayerSettings") protected String fieldPsPlayerID = "id", fieldPsStyleID = "bp_style"; // Table fields player settings
 
-	@HasPlaceholders @Language("SQL") protected String queryInsertPlayer, queryUpdatePlayer, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown; // DB queries
-	@HasPlaceholders @Language("SQL") protected String queryDeleteOldCooldowns, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // Maintenance queries
+	@HasPlaceholders @Language("SQL") protected String queryInsertPlayer, queryUpdatePlayer, queryInsertBp, queryUpdateBp, queryGetPlayer, queryGetBP, querySyncCooldown, querySaveBackpackStyle; // DB queries
+	@HasPlaceholders @Language("SQL") protected String queryDeleteOldCooldowns, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs, queryGetStyleId, queryAddStyle, queryAddIDedStyle; // Maintenance queries
 	protected boolean syncCooldown;
 
-	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider) throws SQLException
+	protected final Map<Integer, ItemConfig> backpackStyleMap = new HashMap<>();
+
+	public SQL(final @NotNull Minepacks plugin, final @NotNull ConnectionProvider connectionProvider) throws SQLException
 	{
 		super(plugin);
 
@@ -73,6 +79,8 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			if(maxAge > 0) DBTools.runStatementWithoutException(connection, queryDeleteOldBackpacks);
 			if(syncCooldown) DBTools.runStatementWithoutException(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
 		}
+
+		loadBackpackStylesMap();
 	}
 
 	protected void loadSettings()
@@ -96,7 +104,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			{
 				fieldName = fieldName.substring("Player".length());
 			}
-			else if(fieldName.startsWith("Bp") || fieldName.startsWith("Cd"))
+			else if(fieldName.startsWith("Bp") || fieldName.startsWith("Cd") || fieldName.startsWith("Bs") || fieldName.startsWith("Ps"))
 				fieldName = fieldName.substring(2);
 			return plugin.getConfiguration().getDBFields(metadata + "." + fieldName, currentValue);
 		}
@@ -185,13 +193,15 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		// Build the SQL queries with placeholders for the table and field names
 		queryGetPlayer = "SELECT {TablePlayers}.{FieldPlayerID} AS {FieldPlayerID}, " +
 				(syncCooldown ? "{TableCooldowns}.{FieldCDTime} AS {FieldCDTime}, " : "") +
-				"FROM {TablePlayers} " +
+				"{TablePlayerSettings}.{FieldPSBackpackStyle} AS {FieldPSBackpackStyle} FROM {TablePlayers} " +
 				(syncCooldown ? " LEFT JOIN {TableCooldowns} ON {TablePlayers}.{FieldPlayerID} = {TableCooldowns}.{FieldCDPlayer} " : "") +
+				"LEFT JOIN {TablePlayerSettings} ON {TablePlayerSettings}.{FieldPSPlayerID} = {TablePlayers}.{FieldPlayerID} " +
 				"WHERE {FieldUUID}=?;";
 		queryInsertPlayer = "INSERT IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?);";
 		queryUpdatePlayer = "UPDATE {TablePlayers} SET {FieldName}=? WHERE {FieldUUID}=?;";
 		queryGetBP = "SELECT * FROM {TableBackpacks} WHERE {FieldBPOwner}=?;";
 		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
+		querySaveBackpackStyle = "INSERT INTO {TablePlayerSettings} ({FieldPSPlayerID},{FieldPSBackpackStyle}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldPSBackpackStyle}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
@@ -205,6 +215,9 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} LIKE '%-%';";
 		}
 		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
+		queryGetStyleId = "SELECT {FieldBSStyleID} FROM {TableBackpackStyles} WHERE {FieldBSStyleName}=?;";
+		queryAddStyle = "INSERT IGNORE INTO {TableBackpackStyles} ({FieldBSStyleName}) VALUES (?);";
+		queryAddIDedStyle = "REPLACE INTO {TableBackpackStyles} ({FieldBSStyleID}, {FieldBSStyleName}) VALUES (?,?);";
 
 		updateQueriesForDialect();
 
@@ -219,9 +232,12 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	{
 		query = query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
 				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
-				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwnerID).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
+				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwnerID).replaceAll("\\{FieldBPITS}", fieldBpItemStacks) // Backpacks
 				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
-				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayerID).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
+				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayerID).replaceAll("\\{FieldCDTime}", fieldCdTime) // Cooldowns
+				.replaceAll("\\{TableBackpackStyles}", tableBackpackStyles).replaceAll("\\{FieldBSStyleID}", fieldBsStyleID).replaceAll("\\{FieldBSStyleName}", fieldBsStyleName) // Backpack styles
+				.replaceAll("\\{TablePlayerSettings}", tablePlayerSettings).replaceAll("\\{FieldPSPlayerID}", fieldPsPlayerID).replaceAll("\\{FieldPSBackpackStyle}", fieldPsStyleID) // Player settings
+		;
 		if(query.matches(".*\\{\\w+}.*")) plugin.getLogger().warning("Found unresolved placeholder in query:\n" + query);
 		return query;
 	}
@@ -241,6 +257,47 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		{
 			plugin.getLogger().severe("Query: " + query);
 			e.printStackTrace();
+		}
+	}
+
+	protected void loadBackpackStylesMap() throws SQLException
+	{
+		List<String> noId = new ArrayList<>();
+		try(Connection connection = getConnection())
+		{
+			DBTools.runStatement(connection, queryAddIDedStyle, 0, MagicValues.BACKPACK_STYLE_NAME_DEFAULT); // Make sure default is always id 0
+			Collection<ItemConfig> itemConfigs = plugin.getBackpacksConfig().getBackpackItems();
+			try(PreparedStatement ps = connection.prepareStatement(queryAddStyle))
+			{
+				for(ItemConfig style : itemConfigs)
+				{
+					ps.setString(1, style.getName());
+					ps.addBatch();
+				}
+				ps.executeBatch();
+			}
+			catch(SQLException ignored) {}
+			try(PreparedStatement ps = connection.prepareStatement(queryGetStyleId))
+			{
+				for(ItemConfig style : itemConfigs)
+				{
+					if(style.getDatabaseKey() != null) continue;
+					ps.setString(1, style.getName());
+					try(ResultSet rs = ps.executeQuery())
+					{
+						if(rs.next())
+						{
+							style.setDatabaseKey(rs.getInt(fieldBsStyleID));
+							backpackStyleMap.put((Integer) style.getDatabaseKey(), style);
+						}
+						else noId.add(style.getName());
+					}
+				}
+			}
+		}
+		if(!noId.isEmpty())
+		{
+			plugin.getLogger().warning("Failed to obtain id for backpack styles: " + String.join(", ", noId));
 		}
 	}
 
@@ -271,7 +328,10 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 								long cooldown = 0;
 								if(syncCooldown && rs.getTimestamp(fieldCdTime) != null) cooldown = rs.getTimestamp(fieldCdTime).getTime();
 								final long cd = cooldown;
-								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd));
+								int styleId = rs.getInt(fieldPsStyleID);
+								final ItemConfig backpackItem = (!rs.wasNull()) ? backpackStyleMap.get(styleId) : null;
+
+								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd, backpackItem));
 								return;
 							}
 						}
@@ -296,7 +356,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 				ps.setInt(1, (int) player.getDatabaseKey());
 				try(ResultSet rs = ps.executeQuery())
 				{
-					ItemStack[] its = (rs.next()) ? itsSerializer.deserialize(rs.getBytes(fieldBpIts), rs.getInt(fieldBpVersion)) : null;
+					ItemStack[] its = (rs.next()) ? itsSerializer.deserialize(rs.getBytes(fieldBpItemStacks), rs.getInt(fieldBpVersion)) : null;
 					final Backpack backpack = (its != null) ? new Backpack(player, its) : new Backpack(player);
 					plugin.getServer().getScheduler().runTask(plugin, () -> player.setBackpack(backpack));
 				}
@@ -344,5 +404,12 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	{
 		final Timestamp ts = new Timestamp(player.getCooldown());
 		runStatementAsync(querySyncCooldown, player.getDatabaseKey(), ts, ts);
+	}
+
+	@Override
+	public void saveBackpackStyle(@NotNull MinepacksPlayerData player)
+	{
+		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : null;
+		runStatementAsync(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle, backpackStyle);
 	}
 }

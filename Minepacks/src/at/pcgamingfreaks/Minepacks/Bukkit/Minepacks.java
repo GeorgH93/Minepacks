@@ -34,6 +34,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoUpgradesFromV1;
@@ -359,7 +360,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	public boolean isBackpackItem(final @Nullable ItemStack itemStack)
 	{
 		if(shortcut == null) return false;
-		return shortcut.isItemShortcut(itemStack);
+		for(ItemConfig itemConfig : backpacksConfig.getBackpackItems())
+		{
+			if(shortcut.isItemShortcut(itemStack, itemConfig)) return true;
+		}
+		return false;
 	}
 
 	@Override

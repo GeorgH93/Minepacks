@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 
-import at.pcgamingfreaks.Bukkit.HeadUtils;
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +41,7 @@ public final class ItemConfig
 	private final int amount, model;
 	private final @Nullable String value;
 	private final @NotNull IItemProducer producer;
+	@Getter @Setter private @Nullable Object databaseKey;
 
 	public ItemConfig(final @NotNull String name, final @NotNull String material, final int amount, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
 	{
@@ -61,6 +63,18 @@ public final class ItemConfig
 		this.lore = lore;
 		this.model = model;
 		this.value = value;
+	}
+
+	public ItemConfig(final @NotNull String name, final @NotNull ItemConfig item)
+	{
+		this.name = name;
+		this.material = item.material;
+		this.displayName = item.displayName;
+		this.lore = item.lore;
+		this.amount = item.amount;
+		this.model = item.model;
+		this.value = item.value;
+		this.producer = item.producer;
 	}
 
 	public @NotNull ItemStack make() { return producer.make(this); }
