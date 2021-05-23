@@ -269,7 +269,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 							{
 								final int id = rs.getInt(fieldPlayerID);
 								long cooldown = 0;
-								if(syncCooldown) cooldown = rs.getTimestamp(fieldCdPlayerID).getTime();
+								if(syncCooldown && rs.getTimestamp(fieldCdTime) != null) cooldown = rs.getTimestamp(fieldCdTime).getTime();
 								final long cd = cooldown;
 								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd));
 								return;

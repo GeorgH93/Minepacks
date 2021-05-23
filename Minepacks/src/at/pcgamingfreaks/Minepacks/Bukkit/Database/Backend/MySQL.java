@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.MySQLConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.intellij.lang.annotations.Language;
@@ -71,5 +72,12 @@ public class MySQL extends SQL
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void updatePlayer(final @NotNull Connection connection, final @NotNull MinepacksPlayerData player) throws SQLException
+	{
+		DBTools.runStatement(connection, queryInsertPlayer, player.getName(), formatUUID(player.getUUID()), formatUUID(player.getUUID()));
+		DBTools.runStatement(connection, queryUpdatePlayer, player.getName(), formatUUID(player.getUUID()));
 	}
 }
