@@ -52,6 +52,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 
 	@Getter private ItemConfig backpackStyle = null;
 	@Getter private Backpack backpack = null;
+	@Getter @Setter private int lastBackpackSlot = -1;
 	@Getter private long cooldown = System.currentTimeMillis();
 	@Getter @Setter private boolean backpackLoadingRequested = false;
 

@@ -171,8 +171,6 @@ ItemShortcut:
   AllowPlayersToChoseItem: true
   # Allows players to disable the backpack item. Only effective if AllowPlayersToChoseItem is enabled.
   AllowPlayersToDisableItem: true
-  # Increases compatibility with some death chest plugins. Enable this if the backpack item gets added to your death chest!
-  ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat
   BlockAsHat: false
   # Opens a container if right clicked while holding the backpack shortcut in the hand. This option will only work on MC 1.13 or newer.

@@ -43,18 +43,18 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class ItemShortcut extends MinepacksListener
 {
 	private final String openCommand;
 	private final Message messageDoNotRemoveItem;
-	private final boolean improveDeathChestCompatibility, blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
+	private final boolean blockAsHat, allowRightClickOnContainers, blockItemFromMoving;
 	private final int preferredSlotId;
 	private final Set<Material> containerMaterials = new HashSet<>();
 	private final Sound dragAndDropSound;
@@ -62,7 +62,6 @@ public class ItemShortcut extends MinepacksListener
 	public ItemShortcut(final @NotNull Minepacks plugin)
 	{
 		super(plugin);
-		improveDeathChestCompatibility = plugin.getConfiguration().isItemShortcutImproveDeathChestCompatibilityEnabled();
 		blockAsHat = plugin.getConfiguration().isItemShortcutBlockAsHatEnabled();
 		allowRightClickOnContainers = plugin.getConfiguration().isItemShortcutRightClickOnContainerAllowed();
 		preferredSlotId = plugin.getConfiguration().getItemShortcutPreferredSlotId();
@@ -100,6 +99,7 @@ public class ItemShortcut extends MinepacksListener
 		return isItemShortcut(stack, itemConfig);
 	}
 
+	@Contract("null,_->false")
 	public boolean isItemShortcut(final @Nullable ItemStack stack, final @NotNull ItemConfig itemConfig)
 	{
 		if(stack == null || !stack.hasItemMeta()) return false;
@@ -134,6 +134,7 @@ public class ItemShortcut extends MinepacksListener
 		}
 		if(empty) // There is an empty inventory slot available that the item can be added to
 		{
+			int preferredSlotId = minepacksPlayer.getLastBackpackSlot() >= 0 ? minepacksPlayer.getLastBackpackSlot() : this.preferredSlotId;
 			if(preferredSlotId >= 0 && preferredSlotId < 36)
 			{
 				ItemStack stack = player.getInventory().getItem(preferredSlotId);
@@ -382,26 +383,24 @@ public class ItemShortcut extends MinepacksListener
 		ItemConfig itemConfig = minepacksPlayer.getBackpackStyle();
 		if(itemConfig == null) return;
 		//region prevent drop
-		Iterator<ItemStack> itemStackIterator = event.getDrops().iterator();
-		while(itemStackIterator.hasNext())
-		{
-			if(isItemShortcut(itemStackIterator.next(), itemConfig))
-			{
-				itemStackIterator.remove();
-				break;
-			}
-		}
+		event.getDrops().removeIf(itemStack -> isItemShortcut(itemStack, itemConfig));
 		//endregion
-		if(improveDeathChestCompatibility)
-		{ // improveDeathChestCompatibility
-			for(ItemStack itemStack : event.getEntity().getInventory())
+		minepacksPlayer.setLastBackpackSlot(removeBackpackItem(event.getEntity(), itemConfig));
+	}
+
+	public int removeBackpackItem(final @NotNull Player player, final @NotNull ItemConfig itemConfig)
+	{
+		int slot = -1;
+		for(int i = 0; i < player.getInventory().getSize(); i++)
+		{
+			ItemStack itemStack = player.getInventory().getItem(i);
+			if(isItemShortcut(itemStack, itemConfig))
 			{
-				if(isItemShortcut(itemStack, itemConfig))
-				{
-					itemStack.setAmount(0);
-					itemStack.setType(Material.AIR);
-				}
+				itemStack.setAmount(0);
+				itemStack.setType(Material.AIR);
+				slot = i;
 			}
 		}
+		return slot;
 	}
 }

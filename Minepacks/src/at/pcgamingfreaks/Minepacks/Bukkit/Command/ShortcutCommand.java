@@ -151,14 +151,7 @@ public class ShortcutCommand extends MinepacksCommand
 								playerData.setBackpackStyle(itemConfig);
 								if(oldItemConfig != null)
 								{ // Remove old item
-									for(ItemStack itemStack : ((Player) sender).getInventory())
-									{
-										if(itemShortcut.isItemShortcut(itemStack, oldItemConfig))
-										{
-											itemStack.setAmount(0);
-											itemStack.setType(Material.AIR);
-										}
-									}
+									playerData.setLastBackpackSlot(itemShortcut.removeBackpackItem((Player) sender, oldItemConfig));
 								}
 								itemShortcut.addItem(playerData, ((Player) sender));
 								messageShortcutSet.send(sender); //TODO add more information

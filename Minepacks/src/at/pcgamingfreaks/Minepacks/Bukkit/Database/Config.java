@@ -423,11 +423,6 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_8) && getConfigE().getBoolean("ItemShortcut.Enabled", true);
 	}
 
-	public boolean isItemShortcutImproveDeathChestCompatibilityEnabled()
-	{
-		return getConfigE().getBoolean("ItemShortcut.ImproveDeathChestCompatibility", false);
-	}
-
 	public boolean isItemShortcutBlockAsHatEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.BlockAsHat", false);
