@@ -95,7 +95,7 @@ public class SQLite extends SQL
 			Version dbVersion = getDatabaseVersion(stmt);
 
 			// Create tables if they do not exist
-			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayers} ({FieldPlayerID} INTEGER PRIMARY KEY AUTOINCREMENT, {FieldName} CHAR(16) NOT NULL, {FieldUUID} CHAR(32) UNIQUE);");
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayers} ({FieldPlayerID} INTEGER PRIMARY KEY, {FieldName} CHAR(16) NOT NULL, {FieldUUID} CHAR(32) UNIQUE);");
 			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpacks} ({FieldBPOwner} INTEGER PRIMARY KEY, {FieldBPITS} BLOB, {FieldBPVersion} INT NOT NULL, {FieldBPLastUpdate} DATE NOT NULL," +
 							"CONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldBPOwner}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
 			if(syncCooldown)
@@ -103,7 +103,7 @@ public class SQLite extends SQL
 				doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableCooldowns} ({FieldCDPlayer} INTEGER PRIMARY KEY, {FieldCDTime} UNSIGNED BIG INT NOT NULL, " +
 								"CONSTRAINT fk_{TableCooldowns}_{TablePlayers}_{FieldPlayerID} FOREIGN KEY ({FieldCDPlayer}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE);");
 			}
-			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpackStyles} ({FieldBSStyleID} INTEGER PRIMARY KEY AUTOINCREMENT, {FieldBSStyleName} TEXT NOT NULL UNIQUE);");
+			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TableBackpackStyles} ({FieldBSStyleID} INTEGER PRIMARY KEY, {FieldBSStyleName} TEXT NOT NULL UNIQUE);");
 			doPHQuery(stmt, "CREATE TABLE IF NOT EXISTS {TablePlayerSettings} ({FieldPSPlayerID} INTEGER PRIMARY KEY, {FieldPSBackpackStyle} INTEGER DEFAULT 0," +
 							"CONSTRAINT fk_{TablePlayerSettings}_{TableBackpackStyles}_{FieldBSStyleID} FOREIGN KEY ({FieldPSBackpackStyle}) REFERENCES {TableBackpackStyles} ({FieldBSStyleID}) ON DELETE SET DEFAULT ON UPDATE CASCADE);");
 
