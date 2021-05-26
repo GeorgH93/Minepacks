@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.DataHandler.HasPlaceholders;
 import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
@@ -25,6 +26,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Version;
 
+import org.bukkit.Bukkit;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,8 @@ public class SQLite extends SQL
 	{
 		return plugin.getDataFolder().getAbsolutePath() + File.separator + "backpack.db";
 	}
+
+	@HasPlaceholders @Language("SQL") private String queryUpdateBackpackStyle = "UPDATE {TablePlayerSettings} SET {FieldPSBackpackStyle}=? WHERE {FieldPSPlayerID}=?;";
 
 	public SQLite(final @NotNull Minepacks plugin, final @Nullable ConnectionProvider connectionProvider) throws SQLException
 	{
@@ -62,8 +66,8 @@ public class SQLite extends SQL
 		querySyncCooldown = "INSERT OR REPLACE INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) VALUES (?,?);";
 		queryInsertPlayer = queryInsertPlayer.replace("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
 		queryAddStyle = queryAddStyle.replace("INSERT IGNORE INTO", "INSERT OR IGNORE INTO");
-		queryAddIDedStyle = queryAddIDedStyle.replace("REPLACE INTO", "INSERT OR REPLACE INTO");
-		querySyncCooldown = "INSERT OR IGNORE INTO {TablePlayerSettings} ({FieldPSPlayerID},{FieldPSBackpackStyle}) VALUES (?,?); UPDATE {TablePlayerSettings} SET {FieldPSBackpackStyle}=? WHERE {FieldPSPlayerID}=?;";
+		queryAddIDedStyle = "INSERT OR REPLACE INTO {TableBackpackStyles} ({FieldBSStyleID}, {FieldBSStyleName}) VALUES (?,?);";
+		querySaveBackpackStyle = "INSERT OR IGNORE INTO {TablePlayerSettings} ({FieldPSPlayerID},{FieldPSBackpackStyle}) VALUES (?,?);";
 	}
 
 	@Override
@@ -142,7 +146,10 @@ public class SQLite extends SQL
 	@Override
 	public void saveBackpackStyle(final @NotNull MinepacksPlayerData player)
 	{
-		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : null;
-		runStatementAsync(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle, backpackStyle, player.getDatabaseKey());
+		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : 0;
+		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+			runStatement(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle);
+			runStatement(queryUpdateBackpackStyle, backpackStyle, player.getDatabaseKey());
+		});
 	}
 }

@@ -49,6 +49,8 @@ public abstract class DatabaseBackend
 		itsSerializer = new InventorySerializer(plugin.getLogger());
 	}
 
+	public void init() throws Exception {}
+
 	public @NotNull String formatUUID(final @NotNull UUID player)
 	{
 		return (useUUIDSeparators) ? player.toString() : player.toString().replace("-", "");

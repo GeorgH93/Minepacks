@@ -68,6 +68,7 @@ public abstract class ToSQLMigration extends Migration
 					newDb = new SQLite(plugin, connectionProvider);
 					break;
 			}
+			newDb.init();
 		}
 		catch(Exception e)
 		{

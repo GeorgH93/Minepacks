@@ -32,6 +32,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
@@ -67,13 +68,17 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 		this.connectionProvider = connectionProvider;
 		if(!this.connectionProvider.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
+	}
 
+	@Override
+	public void init() throws SQLException
+	{
 		loadSettings();
 		buildQueries();
 		checkDB();
 		checkUUIDs(); // Check if there are user accounts without UUID
 
-		// Delete old backpacks
+		// Delete old backpacks and cooldowns
 		try(Connection connection = getConnection())
 		{
 			if(maxAge > 0) DBTools.runStatementWithoutException(connection, queryDeleteOldBackpacks);
@@ -217,7 +222,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
 		queryGetStyleId = "SELECT {FieldBSStyleID} FROM {TableBackpackStyles} WHERE {FieldBSStyleName}=?;";
 		queryAddStyle = "INSERT IGNORE INTO {TableBackpackStyles} ({FieldBSStyleName}) VALUES (?);";
-		queryAddIDedStyle = "REPLACE INTO {TableBackpackStyles} ({FieldBSStyleID}, {FieldBSStyleName}) VALUES (?,?);";
+		queryAddIDedStyle = "INSERT IGNORE INTO {TableBackpackStyles} ({FieldBSStyleID}, {FieldBSStyleName}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldBSStyleName}=?;";
 
 		updateQueriesForDialect();
 
@@ -265,7 +270,17 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		List<String> noId = new ArrayList<>();
 		try(Connection connection = getConnection())
 		{
-			DBTools.runStatement(connection, queryAddIDedStyle, 0, MagicValues.BACKPACK_STYLE_NAME_DEFAULT); // Make sure default is always id 0
+			// Make sure disabled is always id 0 and default is always 1
+			if(StringUtils.countMatches(queryAddIDedStyle, "?") == 3)
+			{
+				DBTools.runStatement(connection, queryAddIDedStyle, 0, MagicValues.BACKPACK_STYLE_NAME_DEFAULT, MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
+				DBTools.runStatement(connection, queryAddIDedStyle, 1, MagicValues.BACKPACK_STYLE_NAME_DEFAULT, MagicValues.BACKPACK_STYLE_NAME_DISABLED);
+			}
+			else
+			{
+				DBTools.runStatement(connection, queryAddIDedStyle, 0, MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
+				DBTools.runStatement(connection, queryAddIDedStyle, 1, MagicValues.BACKPACK_STYLE_NAME_DISABLED);
+			}
 			Collection<ItemConfig> itemConfigs = plugin.getBackpacksConfig().getBackpackItems();
 			try(PreparedStatement ps = connection.prepareStatement(queryAddStyle))
 			{
@@ -294,6 +309,8 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 					}
 				}
 			}
+			backpackStyleMap.put(1, null);
+			backpackStyleMap.put(null, plugin.getBackpacksConfig().getBackpackStylesMap().get(MagicValues.BACKPACK_STYLE_NAME_DEFAULT));
 		}
 		if(!noId.isEmpty())
 		{
@@ -328,8 +345,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 								long cooldown = 0;
 								if(syncCooldown && rs.getTimestamp(fieldCdTime) != null) cooldown = rs.getTimestamp(fieldCdTime).getTime();
 								final long cd = cooldown;
-								int styleId = rs.getInt(fieldPsStyleID);
-								final ItemConfig backpackItem = (!rs.wasNull()) ? backpackStyleMap.get(styleId) : null;
+								final ItemConfig backpackItem = backpackStyleMap.get(rs.getInt(fieldPsStyleID));
 
 								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd, backpackItem));
 								return;
@@ -409,7 +425,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	@Override
 	public void saveBackpackStyle(@NotNull MinepacksPlayerData player)
 	{
-		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : null;
+		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : 1;
 		runStatementAsync(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle, backpackStyle);
 	}
 }

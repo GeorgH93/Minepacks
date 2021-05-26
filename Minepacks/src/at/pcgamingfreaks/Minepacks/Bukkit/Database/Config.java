@@ -442,6 +442,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		return getConfigE().getBoolean("ItemShortcut.BlockItemFromMoving", false);
 	}
+
 	public boolean isItemShortcutPlayerChoiceEnabled()
 	{
 		return getConfigE().getBoolean("ItemShortcut.AllowPlayersToChoseItem", true);

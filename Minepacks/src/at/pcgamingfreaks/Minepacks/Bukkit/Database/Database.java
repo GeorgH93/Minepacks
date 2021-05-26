@@ -117,7 +117,7 @@ public final class Database implements Listener
 				case FILES: databaseBackend = new Files(plugin); break;
 				default: plugin.getLogger().warning(String.format(MESSAGE_UNKNOWN_DB_TYPE,  plugin.getConfiguration().getDatabaseTypeName())); return null;
 			}
-			//databaseBackend.init();
+			databaseBackend.init();
 			return databaseBackend;
 		}
 		catch(IllegalStateException ignored) {}
