@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
+import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 
@@ -40,14 +41,18 @@ public class ItemsCollector extends BukkitRunnable
 	private final BukkitTask task;
 	private final ItemFilter itemFilter;
 	private final Sound collectSound;
+	private final Message messageBackpackFull;
 
 	public ItemsCollector(final @NotNull Minepacks plugin)
 	{
 		this.plugin = plugin;
-		this.radius = plugin.getConfiguration().getFullInvRadius();
-		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+		this.radius = plugin.getConfiguration().getItemCollectorRadius();
+		task = runTaskTimer(plugin, plugin.getConfiguration().getItemCollectorCheckInterval(), plugin.getConfiguration().getItemCollectorCheckInterval());
 		collectSound = plugin.getConfiguration().getAutoCollectSound();
 		itemFilter = plugin.getItemFilter();
+		if(plugin.getConfiguration().isItemCollectorWarnIfFullEnabled())
+			messageBackpackFull = plugin.getLanguage().getMessage("Ingame.ItemCollector.BackpackFullWarning");
+		else messageBackpackFull = null;
 	}
 
 	@Override
@@ -79,6 +84,7 @@ public class ItemsCollector extends BukkitRunnable
 									player.getWorld().playSound(player.getLocation(), collectSound, 1, 0);
 								}
 								item.setItemStack(full.get(0));
+								if(messageBackpackFull != null) messageBackpackFull.send(player);
 							}
 							else
 							{

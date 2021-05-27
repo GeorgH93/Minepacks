@@ -57,6 +57,9 @@ Language:
       Cleared: "Inventar gelöscht."
       ClearedOther: "Das Inventar von {DisplayName}&r wurde gelöscht."
       ClearedOtherTarget: "Dein Inventar wurde von {DisplayName}&r gelöscht."
+    ItemCollector:
+      BackpackFullWarning: "&eDein Rucksack und dein Inventar sind voll! Du lässt Items zurück."
+      BackpackFullWarning_SendMethod: "action_bar"
     Shortcut:
       Given: "Du hast das Rucksack Item erhalten."
       GivenOther: "Rucksack Item hinzugefügt."

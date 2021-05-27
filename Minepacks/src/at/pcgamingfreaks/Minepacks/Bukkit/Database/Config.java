@@ -93,6 +93,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				remappedKeys.put("Database.Tables.Fields.User.PlayerID", "Database.Tables.Fields.User.Player_ID");
 				remappedKeys.put("Database.Tables.Fields.Backpack.OwnerID", "Database.Tables.Fields.Backpack.Owner_ID");
 				remappedKeys.put("Database.Tables.Fields.Cooldown.PlayerID", "Database.Tables.Fields.Cooldown.Player_ID");
+				remappedKeys.put("ItemCollector.Enabled", "FullInventory.CollectItems");
+				remappedKeys.put("ItemCollector.CheckInterval", "FullInventory.CheckInterval");
+				remappedKeys.put("ItemCollector.CollectRadius", "FullInventory.CollectRadius");
 			}
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			//keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
@@ -291,19 +294,24 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	}
 
 	//region Full inventory handling
-	public boolean getFullInvCollect()
+	public boolean isItemCollectorEnabled()
 	{
-		return getConfigE().getBoolean("FullInventory.CollectItems", false);
+		return getConfigE().getBoolean("ItemCollector.Enabled", false);
 	}
 
-	public long getFullInvCheckInterval()
+	public long getItemCollectorCheckInterval()
 	{
-		return getConfigE().getInt("FullInventory.CheckInterval", 1) * 20L; // in seconds
+		return getConfigE().getInt("ItemCollector.CheckInterval", 1) * 20L; // in seconds
 	}
 
-	public double getFullInvRadius()
+	public double getItemCollectorRadius()
 	{
-		return getConfigE().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
+		return getConfigE().getDouble("ItemCollector.CollectRadius", 1.5); // in blocks
+	}
+
+	public boolean isItemCollectorWarnIfFullEnabled()
+	{
+		return getConfigE().getBoolean("ItemCollector.WarnIfFull", true);
 	}
 	//endregion
 

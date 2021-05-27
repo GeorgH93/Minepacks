@@ -232,7 +232,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			if(configuration.isCommandCooldownSyncEnabled()) pluginManager.registerEvents(cooldownManager, this);
 		}
 		//endregion
-		if(configuration.getFullInvCollect()) collector = new ItemsCollector(this);
+		if(configuration.isItemCollectorEnabled()) collector = new ItemsCollector(this);
 		worldBlacklist = configuration.getWorldBlacklist();
 		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
 

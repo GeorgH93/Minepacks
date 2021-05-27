@@ -58,6 +58,9 @@ Language:
       Cleared: "Inventory cleared."
       ClearedOther: "{DisplayName}'s&r inventory has been cleared."
       ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
+    ItemCollector:
+      BackpackFullWarning: "&eYour backpack and inventory is full, you are leaving items behind."
+      BackpackFullWarning_SendMethod: "action_bar"
     Shortcut:
       Given: "The backpack shortcut item has been added to your inventory."
       GivenOther: "The backpack shortcut item has been added to your inventory."

@@ -45,13 +45,15 @@ Cooldown:
   AddOnJoin: true
 
 # Controls for the auto pickup on full inventory function
-FullInventory:
+ItemCollector:
   # If items should be collected to the backpack if the players inventory is full
-  CollectItems: false
+  Enabled: false
   # Interval in seconds how often items around the player should be collected, increase it if it lags the server
   CheckInterval: 1
   # Radius in which items get collected, in meter/blocks, allow decimals
   CollectRadius: 1.5
+  # Warns the player if the backpack is full and no items where collected
+  WarnIfFull: true
 
 
 # Database settings
