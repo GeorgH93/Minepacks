@@ -33,7 +33,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -111,13 +110,13 @@ public class ShortcutCommand extends MinepacksCommand
 		//endregion
 		//region set default button
 		ItemConfig defaultItem = plugin.getBackpacksConfig().getBackpackStylesMap().get(MagicValues.BACKPACK_STYLE_NAME_DEFAULT);
-		ItemStack item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, defaultItem.getMaterial().name(), defaultItem.getAmount(), MagicValues.BACKPACK_STYLE_NAME_DEFAULT, defaultItem.getLore(), defaultItem.getModel(), defaultItem.getValue()).make(1);
+		ItemStack item = new ItemConfig(defaultItem.getName(), defaultItem.getMaterial().name(), defaultItem.getAmount(), plugin.getLanguage().getTranslated("Ingame.Shortcut.GUI.TitleDefault"), plugin.getLanguage().getTranslatedList("Ingame.Shortcut.GUI.DescriptionDefault"), defaultItem.getModel(), defaultItem.getValue()).make(1);
 		guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DEFAULT); player.closeInventory(); }));
 		//endregion
 		//region set disable button
 		if(allowPlayerDisable)
 		{
-			item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DISABLED, "BARRIER", 1, MagicValues.BACKPACK_STYLE_NAME_DISABLED, null, -1, null).make(1);
+			item = new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DISABLED, "BARRIER", 1, plugin.getLanguage().getTranslated("Ingame.Shortcut.GUI.TitleNone"), plugin.getLanguage().getTranslatedList("Ingame.Shortcut.GUI.DescriptionNone"), -1, null).make(1);
 			guiBuilder.addButton(new GuiButton(item, (player, clickType, cursor) -> { player.performCommand(setCommandBase + MagicValues.BACKPACK_STYLE_NAME_DISABLED); player.closeInventory(); }));
 		}
 		//endregion

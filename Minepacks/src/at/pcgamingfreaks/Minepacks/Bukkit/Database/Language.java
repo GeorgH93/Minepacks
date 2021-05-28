@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
@@ -67,5 +68,10 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 		List<String> switches = getLangE().getStringList("Command.Switches." + key, new ArrayList<>(1));
 		if(!switches.contains(defaultSwitch)) switches.add(defaultSwitch);
 		return switches.toArray(new String[0]);
+	}
+
+	public @NotNull List<String> getTranslatedList(final @NotNull String key)
+	{
+		return getYamlE().getStringList("Language." + key, new ArrayList<>(0)).stream().map(this::translateColorCodes).collect(Collectors.toList());
 	}
 }

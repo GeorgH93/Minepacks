@@ -70,6 +70,10 @@ Language:
       GUI:
         # No Json!!!
         Title: "&bSelect your backpack design"
+        TitleDefault: "&eDefault"
+        TitleNone: "&eDisable"
+        DescriptionDefault: [ "Use the servers default backpack skin." ]
+        DescriptionNone: [ "Disables the backpack item." ]
 
   # No Json!!!
   Items:

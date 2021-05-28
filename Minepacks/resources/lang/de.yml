@@ -69,6 +69,10 @@ Language:
       GUI:
         # No Json!!!
         Title: "&bSelect your backpack design"
+        TitleDefault: "&eStandard"
+        TitleNone: "&eDeaktiviert"
+        DescriptionDefault: [ "Nutzte das Server standard aussehen für den Rucksack." ]
+        DescriptionNone: [ "Deaktiviere das Rucksack Item." ]
 
   # No Json!!!
   Items:
