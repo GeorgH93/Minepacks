@@ -19,9 +19,11 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
+import at.pcgamingfreaks.YamlFileUpdateMethod;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +35,16 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 
 	public Language(final @NotNull JavaPlugin plugin)
 	{
-		super(plugin, LANG_VERSION, LANG_VERSION);
+		super(plugin, new Version(LANG_VERSION));
 	}
 
 	@Override
-	protected void doUpdate() {}
+	protected @Nullable YamlFileUpdateMethod getYamlUpdateMode()
+	{
+		YamlFileUpdateMethod mode = super.getYamlUpdateMode();
+		if(mode == YamlFileUpdateMethod.UPDATE) mode = YamlFileUpdateMethod.UPGRADE;
+		return mode;
+	}
 
 	@Override
 	protected void doUpgrade(final @NotNull YamlFileManager oldLang)
