@@ -17,13 +17,24 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
+import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface BackpackExtended extends Backpack
 {
 	@Override
 	@NotNull MinepacksPlayerExtended getOwner();
+
+	/**
+	 * Let a given player open this backpack.
+	 *
+	 * @param player   The player who opens the backpack.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 */
+	void open(@NotNull Player player, boolean editable, @Nullable Message title);
 }

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
@@ -46,7 +47,8 @@ public class Backpack implements BackpackExtended
 {
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
 	private static Object titleOwn;
-	private static String titleOtherFormat;
+	private static Message titleOtherFormat;
+	private final Object titleOtherComponent;
 	private final String titleOther;
 	@Getter private final MinepacksPlayerData owner;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
@@ -54,9 +56,9 @@ public class Backpack implements BackpackExtended
 	private int size;
 	private boolean hasChanged;
 
-	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
+	public static void setTitle(final @NotNull Message title, final @NotNull Message titleOther)
 	{
-		titleOwn = InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title);
+		titleOwn = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16) ? title.prepareChatComponent() : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title.prepareChatLegacy());
 		titleOtherFormat = titleOther;
 	}
 
@@ -73,7 +75,9 @@ public class Backpack implements BackpackExtended
 			Minepacks.getInstance().getLogger().warning("Backpacks with more than 6 rows are no longer supported on Minecraft 1.14 and up!");
 		}
 		this.owner = owner;
-		titleOther = StringUtils.limitLength(String.format(titleOtherFormat, owner.getName()), 32);
+		titleOther = StringUtils.limitLength(titleOtherFormat.prepareChatLegacy(owner.getName()), 32);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16)) titleOtherComponent = titleOtherFormat.prepareChatComponent(owner.getName());
+		else titleOtherComponent = null;
 		bp = Bukkit.createInventory(this, size, titleOther);
 		this.size = size;
 	}
@@ -137,6 +141,7 @@ public class Backpack implements BackpackExtended
 		checkResize();
 		opened.put(player, editable);
 		if(owner.getPlayer().equals(player)) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
+		else if(titleOtherComponent != null) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOtherComponent);
 		else player.openInventory(bp);
 	}
 
@@ -151,6 +156,20 @@ public class Backpack implements BackpackExtended
 		checkResize();
 		opened.put(player, editable);
 		InventoryUtils.openInventoryWithCustomTitle(player, bp, title);
+	}
+
+	@Override
+	public void open(@NotNull Player player, boolean editable, @Nullable Message title)
+	{
+		if(title == null)
+		{
+			open(player, editable);
+			return;
+		}
+		checkResize();
+		opened.put(player, editable);
+		if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16)) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, title.prepareChatComponent());
+		else InventoryUtils.openInventoryWithCustomTitle(player, bp, title.prepareChatLegacy());
 	}
 
 	public void close(Player p)
