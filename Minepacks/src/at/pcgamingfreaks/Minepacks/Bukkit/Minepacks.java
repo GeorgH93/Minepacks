@@ -38,6 +38,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoUpgradesFromV1;
+import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.WelcomeToV3;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
@@ -231,6 +232,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 			cooldownManager = new CooldownHandler(this);
 			if(configuration.isCommandCooldownSyncEnabled()) pluginManager.registerEvents(cooldownManager, this);
 		}
+		if(configuration.isUpdatedToV3()) pluginManager.registerEvents(new WelcomeToV3(this), this);
 		//endregion
 		if(configuration.isItemCollectorEnabled()) collector = new ItemsCollector(this);
 		worldBlacklist = configuration.getWorldBlacklist();

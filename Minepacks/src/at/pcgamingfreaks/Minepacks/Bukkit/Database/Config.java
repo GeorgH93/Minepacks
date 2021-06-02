@@ -38,13 +38,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import lombok.Getter;
+
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig, ILanguageConfiguration
 {
-	private static final int CONFIG_VERSION = 36, PRE_V2_VERSION = 20;
+	private static final int CONFIG_VERSION = 36, PRE_V2_VERSION = 20, PRE_V3_VERSION = 40;
+
+	@Getter private boolean updatedToV3 = false;
 
 	public Config(final @NotNull JavaPlugin plugin)
 	{
@@ -101,6 +105,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			//keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
 		}
+		if(oldConfig.version().olderThan(new Version(PRE_V3_VERSION))) updatedToV3 = true;
 	}
 
 	//region getter
