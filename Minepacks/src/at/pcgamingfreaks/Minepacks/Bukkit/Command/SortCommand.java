@@ -18,36 +18,53 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
+import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Utils;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SortCommand extends MinepacksCommand
 {
 	private final Message messageSorted;
+	private final ShrinkApproach defaultSortMethod;
+	private final List<String> sortMethods;
 
 	public SortCommand(final @NotNull Minepacks plugin)
 	{
 		super(plugin, "sort", plugin.getLanguage().getTranslated("Commands.Description.Sort"), Permissions.SORT, true, plugin.getLanguage().getCommandAliases("Sort"));
+		defaultSortMethod = ShrinkApproach.SORT;
+		sortMethods = Arrays.stream(ShrinkApproach.values()).map(Enum::name).collect(Collectors.toList());
 		messageSorted = plugin.getLanguage().getMessage("Ingame.Sort.Sorted");
 	}
 
 	@Override
 	public void execute(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
+		final ShrinkApproach sortMethod = Utils.getEnum(args.length > 0 ? args[0] : "", defaultSortMethod);
 		final Player player = (Player) commandSender;
 		getMinepacksPlugin().getBackpack(player, backpack -> {
 			InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
-			if(!compressor.sort().isEmpty())
+			List<ItemStack> result = new ArrayList<>(0);
+			switch(sortMethod)
+			{
+				case FAST: result = compressor.fast(); break;
+				case COMPRESS: result = compressor.compress(); break;
+				case SORT: result = compressor.sort(); break;
+			}
+			if(!result.isEmpty())
 			{
 				plugin.getLogger().warning("Failed to sort backpack!"); //this should not happen
 				return;
@@ -61,6 +78,7 @@ public class SortCommand extends MinepacksCommand
 	@Override
 	public List<String> tabComplete(final @NotNull CommandSender commandSender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
-		return null;
+		if(args.length == 0) return null;
+		return StringUtils.startsWithIgnoreCase(sortMethods, args[0]);
 	}
 }
