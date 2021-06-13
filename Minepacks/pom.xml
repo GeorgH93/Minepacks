@@ -25,7 +25,15 @@
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
+		<mavenShade.version>3.3.0-SNAPSHOT</mavenShade.version>
 	</properties>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>apache-snapshot</id>
+			<url>https://repository.apache.org/content/repositories/snapshots/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<dependencies>
 		<!-- Minepacks API -->
@@ -38,7 +46,7 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.30-SNAPSHOT</version>
+			<version>1.0.33-SNAPSHOT</version>
 		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
@@ -83,7 +91,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>${mavenShade.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -151,7 +159,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.2.1</version>
+						<version>${mavenShade.version}</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -243,7 +251,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-shade-plugin</artifactId>
-						<version>3.2.1</version>
+						<version>${mavenShade.version}</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
