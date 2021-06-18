@@ -10,7 +10,7 @@
 		<revision>3.0-ALPHA-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<pcgfPluginLibVersion>1.0.32-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.33-SNAPSHOT</pcgfPluginLibVersion>
 	</properties>
 
 	<scm>

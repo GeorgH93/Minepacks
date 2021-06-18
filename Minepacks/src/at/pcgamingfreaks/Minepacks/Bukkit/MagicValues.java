@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.32-SNAPSHOT";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.33-SNAPSHOT";
 	public static final String BACKPACK_STYLE_NAME_DEFAULT = "default";
 	public static final String BACKPACK_STYLE_NAME_DISABLED = "none";
 }
