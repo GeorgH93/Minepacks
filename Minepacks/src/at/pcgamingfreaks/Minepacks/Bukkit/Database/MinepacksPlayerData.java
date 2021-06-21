@@ -20,9 +20,8 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.Message.IMessage;
 import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -43,7 +42,7 @@ import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheablePlayer
+public class MinepacksPlayerData implements MinepacksPlayer, ICacheablePlayer
 {
 	@Getter @Setter private @NotNull String name;
 	private final @NotNull UUID uuid;
@@ -58,7 +57,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 
 	@Getter @Setter	private Object databaseKey = null;
 	private final Queue<Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack>> backpackLoadedQueue = new ConcurrentLinkedQueue<>();
-	private final Queue<Callback<MinepacksPlayer>> playerLoadedQueue = new ConcurrentLinkedQueue<>();
+	private final Queue<Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer>> playerLoadedQueue = new ConcurrentLinkedQueue<>();
 
 	public MinepacksPlayerData(final @Nullable UUID uuid, final @NotNull String name)
 	{
@@ -202,7 +201,7 @@ public class MinepacksPlayerData implements MinepacksPlayerExtended, ICacheableP
 	}
 
 	@Override
-	public void notifyOnLoad(final @NotNull Callback<MinepacksPlayer> callback)
+	public void notifyOnLoad(final @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer> callback)
 	{
 		if(isLoaded()) callback.onResult(this);
 		else playerLoadedQueue.add(callback);

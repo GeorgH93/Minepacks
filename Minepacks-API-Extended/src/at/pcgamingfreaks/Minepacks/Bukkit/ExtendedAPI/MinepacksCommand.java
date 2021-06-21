@@ -37,7 +37,7 @@ import java.util.List;
  */
 public abstract class MinepacksCommand extends SubCommand
 {
-	private static MinepacksPluginExtended minepacksPlugin = null;
+	private static MinepacksPlugin minepacksPlugin = null;
 	private static Method showHelp = null;
 	private static Message messageNoPermission   = new Message(ChatColor.RED + "You don't have the permission to do that.");
 	private static Message messageNotFromConsole = new Message(ChatColor.RED + "This command can't be used from console!");
@@ -95,7 +95,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 *
 	 * @return The instance of the marriage master plugin.
 	 */
-	protected @NotNull MinepacksPluginExtended getMinepacksPlugin()
+	protected @NotNull MinepacksPlugin getMinepacksPlugin()
 	{
 		return minepacksPlugin;
 	}

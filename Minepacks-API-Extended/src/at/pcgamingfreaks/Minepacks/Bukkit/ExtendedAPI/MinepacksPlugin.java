@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2020 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,24 +17,30 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI;
 
-import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Version;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface BackpackExtended extends Backpack
+public interface MinepacksPlugin extends at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin
 {
-	@Override
-	@NotNull MinepacksPlayerExtended getOwner();
+	/**
+	 * Gets the command manager of the Minepacks plugin.
+	 *
+	 * @return The command manager instance. null if the plugin is running in standalone mode
+	 */
+	@NotNull MinepacksCommandManager getCommandManager();
 
 	/**
-	 * Let a given player open this backpack.
+	 * Retrieves the backpack for a given player.
+	 * This method only returns a backpack if it is fully loaded.
 	 *
-	 * @param player   The player who opens the backpack.
-	 * @param editable Defines if the player who has opened the backpack can change the items inside.
-	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 * @param owner The player who's backpack should be retrieved.
+	 * @return The backpack of the given player. null if the backpack is not loaded.
 	 */
-	void open(@NotNull Player player, boolean editable, @Nullable Message title);
+	@Override
+	@Nullable Backpack getBackpackLoadedOnly(final @NotNull OfflinePlayer owner);
+
+	@NotNull Version getVersion();
 }

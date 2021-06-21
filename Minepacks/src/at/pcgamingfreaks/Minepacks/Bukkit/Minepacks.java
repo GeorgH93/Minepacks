@@ -22,18 +22,16 @@ import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.*;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPluginExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
@@ -61,7 +59,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 
-public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
+public class Minepacks extends JavaPlugin implements MinepacksPlugin
 {
 	@Getter private static Minepacks instance = null;
 
@@ -269,13 +267,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public void openBackpack(final @NotNull Player opener, final @NotNull MinepacksPlayer owner, final boolean editable, final @Nullable String title)
+	public void openBackpack(final @NotNull Player opener, final @NotNull at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer owner, final boolean editable, final @Nullable String title)
 	{
 		owner.getBackpack(backpack -> openBackpack(opener, backpack, editable, title));
 	}
 
 	@Override
-	public void openBackpack(final @NotNull Player opener, final @NotNull Backpack backpack, final boolean editable, final @Nullable String title)
+	public void openBackpack(final @NotNull Player opener, final @NotNull at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack backpack, final boolean editable, final @Nullable String title)
 	{
 		WorldBlacklistMode disabled = isDisabled(opener);
 		if(disabled != WorldBlacklistMode.None)
@@ -297,14 +295,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public @Nullable BackpackExtended getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
+	public @Nullable Backpack getBackpackLoadedOnly(@NotNull OfflinePlayer owner)
 	{
-		MinepacksPlayerExtended minepacksPlayer = getMinepacksPlayerLoadedOnly(owner);
+		MinepacksPlayer minepacksPlayer = getMinepacksPlayerLoadedOnly(owner);
 		return (minepacksPlayer != null) ? minepacksPlayer.getBackpack() : null;
 	}
 
 	@Override
-	public void getBackpack(final @NotNull OfflinePlayer owner, final @NotNull Callback<Backpack> callback)
+	public void getBackpack(final @NotNull OfflinePlayer owner, final @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback)
 	{
 		getMinepacksPlayer(owner).getBackpack(callback);
 	}
@@ -316,15 +314,15 @@ public class Minepacks extends JavaPlugin implements MinepacksPluginExtended
 	}
 
 	@Override
-	public void getMinepacksPlayer(final @NotNull OfflinePlayer player, final @NotNull Callback<MinepacksPlayer> callback)
+	public void getMinepacksPlayer(final @NotNull OfflinePlayer player, final @NotNull Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer> callback)
 	{
 		getMinepacksPlayer(player).notifyOnLoad(callback);
 	}
 
 	@Override
-	public @Nullable MinepacksPlayerExtended getMinepacksPlayerLoadedOnly(@NotNull OfflinePlayer player)
+	public @Nullable MinepacksPlayer getMinepacksPlayerLoadedOnly(@NotNull OfflinePlayer player)
 	{
-		MinepacksPlayerExtended mpPlayer = database.getPlayerCached(player);
+		MinepacksPlayer mpPlayer = database.getPlayerCached(player);
 		if(mpPlayer != null && mpPlayer.isLoaded()) return mpPlayer;
 		return null;
 	}

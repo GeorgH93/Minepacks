@@ -23,7 +23,7 @@ import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -73,7 +73,7 @@ public class OpenCommand extends MinepacksCommand
 		{
 			if(getMinepacksPlugin().isPlayerGameModeAllowed((Player) sender))
 			{
-				MinepacksPlayerExtended minepacksPlayer = plugin.getMinepacksPlayer((Player) sender);
+				MinepacksPlayer minepacksPlayer = plugin.getMinepacksPlayer((Player) sender);
 				if(plugin.getCooldownManager() != null && !player.hasPermission(Permissions.NO_COOLDOWN))
 				{
 					long cd = plugin.getCooldownManager().getRemainingCooldown(minepacksPlayer);

@@ -20,9 +20,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.BackpackExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayerExtended;
+import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -72,7 +72,7 @@ public class ClearCommand extends MinepacksCommand
 				{
 					if(backpack.getOwner().isOnline())
 					{
-						MinepacksPlayerExtended owner = ((BackpackExtended)backpack).getOwner();
+						MinepacksPlayer owner = ((Backpack)backpack).getOwner();
 						messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
 						owner.sendMessage(messageClearedBy, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
 					}
