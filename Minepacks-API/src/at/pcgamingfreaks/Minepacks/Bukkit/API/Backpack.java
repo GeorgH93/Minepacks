@@ -125,6 +125,28 @@ public interface Backpack extends InventoryHolder
 		return getInventory().addItem(itemStacks);
 	}
 
+	/**
+	 * Checks if this backpack is a multi page backpack page.
+	 *
+	 * @return true if this backpack is a multi page backpack page.
+	 */
+	default boolean isBackpackPage()
+	{
+		return false;
+	}
+
+	/**
+	 * Gets the {@link BackpackMultiPage} that owns this backpack page.
+	 *
+	 * @return null if not owned by a multi page backpack.
+	 */
+	@Nullable BackpackMultiPage getMultiPageOwner();
+
+	default boolean isMultiPageBackpack()
+	{
+		return false;
+	}
+
 	@SuppressWarnings("unused")
 	static boolean isBackpack(@Nullable Inventory inventory)
 	{
