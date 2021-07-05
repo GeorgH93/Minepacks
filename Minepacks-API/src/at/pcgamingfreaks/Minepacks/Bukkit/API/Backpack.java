@@ -126,9 +126,9 @@ public interface Backpack extends InventoryHolder
 	}
 
 	/**
-	 * Checks if this backpack is a multi page backpack page.
+	 * Checks if this backpack is a multi-page backpack page.
 	 *
-	 * @return true if this backpack is a multi page backpack page.
+	 * @return true if this backpack is a multi-page backpack page.
 	 */
 	default boolean isBackpackPage()
 	{
@@ -138,7 +138,7 @@ public interface Backpack extends InventoryHolder
 	/**
 	 * Gets the {@link BackpackMultiPage} that owns this backpack page.
 	 *
-	 * @return null if not owned by a multi page backpack.
+	 * @return null if not owned by a multi-page backpack.
 	 */
 	@Nullable BackpackMultiPage getMultiPageOwner();
 
