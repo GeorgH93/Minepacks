@@ -29,6 +29,7 @@ import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 import at.pcgamingfreaks.YamlFileUpdateMethod;
@@ -46,13 +47,13 @@ import java.util.stream.Collectors;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig, ILanguageConfiguration
 {
-	private static final int CONFIG_VERSION = 36, PRE_V2_VERSION = 20, PRE_V3_VERSION = 40;
+	private static final int PRE_V2_VERSION = 20, PRE_V3_VERSION = 40;
 
 	@Getter private boolean updatedToV3 = false;
 
 	public Config(final @NotNull JavaPlugin plugin)
 	{
-		super(plugin, new Version(CONFIG_VERSION));
+		super(plugin, new Version(MagicValues.CONFIG_VERSION));
 	}
 
 	@Override

@@ -26,6 +26,9 @@
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
 		<mavenShade.version>3.3.0-SNAPSHOT</mavenShade.version>
+
+		<configFileVersion>36</configFileVersion>
+		<languageFileVersion>20</languageFileVersion>
 	</properties>
 
 	<pluginRepositories>

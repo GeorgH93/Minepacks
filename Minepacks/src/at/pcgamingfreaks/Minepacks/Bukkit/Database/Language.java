@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 import at.pcgamingfreaks.YamlFileUpdateMethod;
@@ -31,11 +32,9 @@ import java.util.stream.Collectors;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 19;
-
 	public Language(final @NotNull JavaPlugin plugin)
 	{
-		super(plugin, new Version(LANG_VERSION));
+		super(plugin, new Version(MagicValues.LANG_VERSION));
 	}
 
 	@Override

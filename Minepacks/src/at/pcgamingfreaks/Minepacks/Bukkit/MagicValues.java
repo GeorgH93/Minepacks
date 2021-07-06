@@ -17,9 +17,39 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.33-SNAPSHOT";
 	public static final String BACKPACK_STYLE_NAME_DEFAULT = "default";
 	public static final String BACKPACK_STYLE_NAME_DISABLED = "none";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION;
+	public static final String LANG_VERSION;
+	public static final String CONFIG_VERSION;
+
+	static
+	{
+		String pcgfPluginLibVersion = "99999", langVersion = "0", configVersion = "0";
+
+		try(InputStream propertiesStream = MagicValues.class.getClassLoader().getResourceAsStream("Minepacks.properties"))
+		{
+			Properties properties = new Properties();
+			properties.load(propertiesStream);
+
+			pcgfPluginLibVersion = properties.getProperty("PCGFPluginLibVersion");
+			langVersion = properties.getProperty("LanguageFileVersion");
+			configVersion = properties.getProperty("ConfigFileVersion");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		MIN_PCGF_PLUGIN_LIB_VERSION = pcgfPluginLibVersion;
+		LANG_VERSION = langVersion;
+		CONFIG_VERSION = configVersion;
+	}
+
+	private MagicValues() { /* You should not create an instance of this utility class! */ }
 }

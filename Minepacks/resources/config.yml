@@ -217,4 +217,4 @@ Misc:
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
-Version: 36
+Version: ${configFileVersion}
