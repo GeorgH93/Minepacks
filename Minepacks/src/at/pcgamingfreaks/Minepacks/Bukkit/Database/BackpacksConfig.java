@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public class BackpacksConfig extends Configuration
 {
 	private static final int CONFIG_VERSION = 1;
-	private static final Pattern ITEM_TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{(?<placeholder>[\\w-.]+)}");
+	private static final Pattern ITEM_TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{(?<placeholder>[\\w_-]+)}");
 	@Getter private static BackpacksConfig instance;
 
 	private final @NotNull Minepacks plugin;
@@ -107,33 +107,16 @@ public class BackpacksConfig extends Configuration
 	{
 		getYamlE().getKeysFiltered(parentKey + "\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
-			try
+			final ItemConfig itemConfig = ItemConfig.fromConfig(this, key, this::translateItemText);
+			if(itemConfig != null)
 			{
-				if(!getConfigE().getBoolean(key + "Enabled", true)) return;
-				final String name = key.substring(parentKey.length() + 1);
-				if(parentKey.equals("Items") && name.equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED)) return;
-				final List<String> lore = getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
-				final List<String> loreFinal;
-				if(lore.size() == 0) loreFinal = null;
-				else
-				{
-					loreFinal = new ArrayList<>(lore.size());
-					lore.forEach(loreEntry -> loreFinal.add(translateItemData(loreEntry)));
-				}
-				final String displayName = translateItemData(getConfigE().getString(key + ".DisplayName", "&kBackpack"));
-				final String material = getYamlE().getString(key + ".Material");
-				final int model = getYamlE().getInt(key + ".Model", 0);
-				final int amount = getYamlE().getInt(key + ".Amount", 1);
-				itemConfigs.put(name, new ItemConfig(name, material, amount, displayName, loreFinal, model, getConfigE().getString(key + ".HeadValue", null)));
-			}
-			catch(Exception e)
-			{
-				plugin.getLogger().warning("Failed to load item definition for '" + key + "'! Error: " + e.getMessage());
+				if(parentKey.equals("Items") && itemConfig.getName().equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED)) return;
+				itemConfigs.put(itemConfig.getName(), itemConfig);
 			}
 		});
 	}
 
-	private @NotNull String translateItemData(@NotNull String text)
+	private @NotNull String translateItemText(@NotNull String text)
 	{
 		text = ChatColor.translateAlternateColorCodes('&', text);
 		Matcher matcher = ITEM_TEXT_PLACEHOLDER_PATTERN.matcher(text);
@@ -154,6 +137,6 @@ public class BackpacksConfig extends Configuration
 
 	public @NotNull List<ItemConfig> getBackpackItems()
 	{
-		return backpackStylesMap.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toList());
+		return new ArrayList<>(backpackStylesMap.values());
 	}
 }

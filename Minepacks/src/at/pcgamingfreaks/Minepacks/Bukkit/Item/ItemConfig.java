@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
+import at.pcgamingfreaks.Config.IConfig;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -28,8 +29,10 @@ import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 @Getter
 public final class ItemConfig
@@ -42,6 +45,38 @@ public final class ItemConfig
 	private final @Nullable String value;
 	private final @NotNull IItemProducer producer;
 	@Getter @Setter private @Nullable Object databaseKey;
+
+	public static ItemConfig fromConfig(final @NotNull IConfig config, final @NotNull String key, final @Nullable Function<String, String> translatePlaceholdersFunction)
+	{
+		try
+		{
+			if(!config.getConfigE().getBoolean(key + ".Enabled", true)) return null;
+			int nameStartAt = key.lastIndexOf('.');
+			final String name = key.substring(Math.max(0, nameStartAt));
+			final List<String> lore = config.getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));
+			final List<String> loreFinal;
+			if(lore.size() == 0) loreFinal = null;
+			else
+			{
+				loreFinal = new ArrayList<>(lore.size());
+				lore.forEach(loreEntry -> loreFinal.add(translatePlaceholdersFunction != null ? translatePlaceholdersFunction.apply(loreEntry) : loreEntry));
+			}
+			String displayName = config.getConfigE().getString(key + ".DisplayName", "&kBackpack");
+			if(translatePlaceholdersFunction != null)
+			{
+				displayName = translatePlaceholdersFunction.apply(displayName);
+			}
+			final String material = config.getConfigE().getString(key + ".Material");
+			final int model = config.getConfigE().getInt(key + ".Model", 0);
+			final int amount = config.getConfigE().getInt(key + ".Amount", 1);
+			return new ItemConfig(name, material, amount, displayName, loreFinal, model, config.getConfigE().getString(key + ".HeadValue", null));
+		}
+		catch(Exception e)
+		{
+			config.getLogger().warning("Failed to load item definition for '" + key + "'! Error: " + e.getMessage());
+		}
+		return null;
+	}
 
 	public ItemConfig(final @NotNull String name, final @NotNull String material, final int amount, final @NotNull String displayName, final @Nullable List<String> lore, int model, final @Nullable String value) throws IllegalArgumentException
 	{

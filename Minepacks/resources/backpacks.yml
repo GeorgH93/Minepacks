@@ -1,7 +1,7 @@
 Defaults:
   # The item that should be used as a shortcut by default
   BackpackItem: BackpackHeadBlue
-  BlockedSlotsMaterial: Barrier
+  BlockedSlots: Blocked
   # Options: top_left, top_right, bottom_left, bottom_right
   ControlsPosition: bottom_right
   ControlsLayout: None
@@ -37,7 +37,7 @@ Backpacks:
   1:
     Pages: 1
     SlotsPerPage: 9
-    BlockedSlotsMaterial: Barrier
+    BlockedSlots: Blocked
   2:
     Slots: 18
   3:
@@ -104,6 +104,10 @@ Buttons:
   Nothing:
     Material: LIGHT_GRAY_STAINED_GLASS_PANE
     DisplayName: ""
+    Action: nothing
+  Blocked:
+    Material: Barrier
+    DisplayName: "&e{BlockedSlot}"
     Action: nothing
 
 
