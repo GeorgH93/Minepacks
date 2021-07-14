@@ -51,12 +51,12 @@ Backpacks:
   Double:
     Pages: 2
     SlotsPerPage: 52
-    ControlsLayout: Minimal
+    ControlLayout: Minimal
   Mega:
     Slots: 213
-    ControlsLayout: FullRow
+    ControlLayout: FullRow
 
-ControlsLayouts:
+ControlLayouts:
   None: []
   Minimal: [ Next, Previous ]
   Extended: [ SortPage, Clear, Next, Previous ]

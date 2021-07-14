@@ -50,7 +50,6 @@ public final class ItemConfig
 	{
 		try
 		{
-			if(!config.getConfigE().getBoolean(key + ".Enabled", true)) return null;
 			int nameStartAt = key.lastIndexOf('.');
 			final String name = key.substring(Math.max(0, nameStartAt));
 			final List<String> lore = config.getConfigE().getStringList(key + ".Lore", new ArrayList<>(0));

@@ -19,9 +19,12 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonAction;
+import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Utils;
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 import at.pcgamingfreaks.YamlFileUpdateMethod;
@@ -35,7 +38,6 @@ import lombok.Getter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class BackpacksConfig extends Configuration
 {
@@ -46,6 +48,8 @@ public class BackpacksConfig extends Configuration
 	private final @NotNull Minepacks plugin;
 	@Getter private Set<String> validShortcutStyles;
 	@Getter private final Map<String, ItemConfig> backpackStylesMap = new HashMap<>();
+	@Getter private final Map<String, ButtonConfig> buttonConfigMap = new HashMap<>();
+	@Getter private final Map<String, ButtonConfig[]> controlLayoutsMap = new HashMap<>();
 	@Getter private boolean allowItemShortcut = true;
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
@@ -82,7 +86,9 @@ public class BackpacksConfig extends Configuration
 	{
 		allowItemShortcut = true;
 		backpackStylesMap.clear();
-		loadItemConfigs("Items", backpackStylesMap);
+		loadItemConfigs();
+		loadButtonConfigs();
+		loadControlLayouts();
 		if(backpackStylesMap.isEmpty())
 		{
 			logger.warning("There musst be at least one item defined to use the items feature!");
@@ -103,15 +109,61 @@ public class BackpacksConfig extends Configuration
 		}
 	}
 
-	private void loadItemConfigs(final @NotNull String parentKey, final @NotNull Map<String, ItemConfig> itemConfigs)
+	private void loadControlLayouts()
 	{
-		getYamlE().getKeysFiltered(parentKey + "\\.[^.]*\\.Material").forEach(materialKey -> {
+		getYamlE().getKeysFiltered("ControlLayouts\\.[^.]").forEach(key -> {
+			final List<String> buttonNames = getYamlE().getStringList(key, new ArrayList<>(0));
+			final String name = key.substring(key.indexOf('.'));
+			final ButtonConfig[] controls = new ButtonConfig[buttonNames.size()];
+			for(int i = 0; i < buttonNames.size(); i++)
+			{
+				String buttonName = buttonNames.get(i);
+				ButtonConfig buttonConfig = null;
+				if(buttonName == null || buttonName.isEmpty())
+				{
+					getLogger().warning("Empty button name in control layout '" + name + "' at index " + i);
+				}
+				else
+				{
+					buttonConfig = buttonConfigMap.get(buttonName);
+					if(buttonConfig == null)
+					{
+						getLogger().warning("Unable to find button '" + buttonName + "' used in control layout '" + name + "'.");
+					}
+				}
+				if(buttonConfig == null)
+				{
+					buttonConfig = new ButtonConfig(new ItemConfig("Nothing", "Stone", 1, "Missing", null, -1, null), ButtonAction.NOTHING);
+				}
+				controls[i] = buttonConfig;
+			}
+			controlLayoutsMap.put(name, controls);
+		});
+	}
+
+	private void loadButtonConfigs()
+	{
+		getYamlE().getKeysFiltered("Buttons\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
 			final ItemConfig itemConfig = ItemConfig.fromConfig(this, key, this::translateItemText);
 			if(itemConfig != null)
 			{
-				if(parentKey.equals("Items") && itemConfig.getName().equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED)) return;
-				itemConfigs.put(itemConfig.getName(), itemConfig);
+				buttonConfigMap.put(itemConfig.getName(), new ButtonConfig(itemConfig, Utils.getEnum(getConfigE().getString(key + ".Action", "nothing"), ButtonAction.NOTHING)));
+			}
+		});
+
+	}
+
+	private void loadItemConfigs()
+	{
+		getYamlE().getKeysFiltered("Items\\.[^.]*\\.Material").forEach(materialKey -> {
+			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
+			if(!getConfigE().getBoolean(key + ".Enabled", true)) return;
+			final ItemConfig itemConfig = ItemConfig.fromConfig(this, key, this::translateItemText);
+			if(itemConfig != null)
+			{
+				if(itemConfig.getName().equals(MagicValues.BACKPACK_STYLE_NAME_DISABLED)) return;
+				backpackStylesMap.put(itemConfig.getName(), itemConfig);
 			}
 		});
 	}
@@ -133,6 +185,22 @@ public class BackpacksConfig extends Configuration
 		}
 		matcher.appendTail(buffer);
 		return buffer.toString();
+	}
+
+	public int getAutoIntValue(final @NotNull String key)
+	{
+		int intValue = -1;
+		String strValue = getConfigE().getString(key, "auto");
+		if(!strValue.equalsIgnoreCase("auto"))
+		{
+			intValue = Utils.tryParse(strValue, -99);
+			if(intValue < -1)
+			{
+				getLogger().warning("Invalid value for " + key + ", falling back to auto!");
+				intValue = -1;
+			}
+		}
+		return intValue;
 	}
 
 	public @NotNull List<ItemConfig> getBackpackItems()
