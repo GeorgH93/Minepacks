@@ -1,10 +1,11 @@
 Defaults:
   # The item that should be used as a shortcut by default
   BackpackItem: BackpackHeadBlue
+  # Button that should be used for blocked slot, but will always use 'nothing' action
   BlockedSlots: Blocked
   # Options: top_left, top_right, bottom_left, bottom_right
-  ControlsPosition: bottom_right
-  ControlsLayout: None
+  ControlPosition: bottom_right
+  ControlLayout: None
 
 # The items define the possible backpack items that can be used as shortcuts
 Items:

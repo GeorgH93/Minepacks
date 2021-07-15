@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonAction;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ControlPosition;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -50,6 +51,9 @@ public class BackpacksConfig extends Configuration
 	@Getter private final Map<String, ItemConfig> backpackStylesMap = new HashMap<>();
 	@Getter private final Map<String, ButtonConfig> buttonConfigMap = new HashMap<>();
 	@Getter private final Map<String, ButtonConfig[]> controlLayoutsMap = new HashMap<>();
+	@Getter private ItemConfig defaultBlockedSlotItem;
+	@Getter private ControlPosition defaultControlPosition;
+	@Getter private String defaultControlLayout;
 	@Getter private boolean allowItemShortcut = true;
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
@@ -86,9 +90,26 @@ public class BackpacksConfig extends Configuration
 	{
 		allowItemShortcut = true;
 		backpackStylesMap.clear();
+		buttonConfigMap.clear();
+		controlLayoutsMap.clear();
 		loadItemConfigs();
 		loadButtonConfigs();
+		ButtonConfig btConf = buttonConfigMap.get(getConfigE().getString("Defaults.BlockedSlots", "Blocked"));
+		if(btConf != null)
+		{
+			defaultBlockedSlotItem = btConf.getItem();
+		}
+		else
+		{
+			defaultBlockedSlotItem = new ItemConfig("Nothing", "Stone", 1, "Missing", null, -1, null);
+		}
 		loadControlLayouts();
+		defaultControlPosition = Utils.getEnum(getConfigE().getString("Defaults.ControlPosition", "bottom_right"), ControlPosition.BOTTOM_RIGHT);
+		defaultControlLayout = getConfigE().getString("Defaults.ControlLayout", "None");
+		if(!controlLayoutsMap.containsKey(defaultControlLayout))
+		{
+			controlLayoutsMap.put(defaultControlLayout, new ButtonConfig[0]);
+		}
 		if(backpackStylesMap.isEmpty())
 		{
 			logger.warning("There musst be at least one item defined to use the items feature!");
@@ -133,7 +154,7 @@ public class BackpacksConfig extends Configuration
 				}
 				if(buttonConfig == null)
 				{
-					buttonConfig = new ButtonConfig(new ItemConfig("Nothing", "Stone", 1, "Missing", null, -1, null), ButtonAction.NOTHING);
+					buttonConfig = new ButtonConfig(defaultBlockedSlotItem, ButtonAction.NOTHING);
 				}
 				controls[i] = buttonConfig;
 			}
