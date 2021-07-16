@@ -198,6 +198,9 @@
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Callback</exclude>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin</exclude>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Events.*</exclude>
 											</excludes>
 										</relocation>
 									</relocations>
