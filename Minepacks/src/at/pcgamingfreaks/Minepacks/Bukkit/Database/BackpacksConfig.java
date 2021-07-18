@@ -92,7 +92,7 @@ public class BackpacksConfig extends Configuration
 		backpackStylesMap.clear();
 		buttonConfigMap.clear();
 		controlLayoutsMap.clear();
-		loadItemConfigs();
+		loadBackpackStyles();
 		loadButtonConfigs();
 		ButtonConfig btConf = buttonConfigMap.get(getConfigE().getString("Defaults.BlockedSlots", "Blocked"));
 		if(btConf != null)
@@ -108,25 +108,8 @@ public class BackpacksConfig extends Configuration
 		defaultControlLayout = getConfigE().getString("Defaults.ControlLayout", "None");
 		if(!controlLayoutsMap.containsKey(defaultControlLayout))
 		{
+			getLogger().warning("Default control layout '" + defaultControlLayout + "' is not defined! Disabling controls by default.");
 			controlLayoutsMap.put(defaultControlLayout, new ButtonConfig[0]);
-		}
-		if(backpackStylesMap.isEmpty())
-		{
-			logger.warning("There musst be at least one item defined to use the items feature!");
-			allowItemShortcut = false;
-			return;
-		}
-		validShortcutStyles = backpackStylesMap.keySet();
-		if(!backpackStylesMap.containsKey(MagicValues.BACKPACK_STYLE_NAME_DEFAULT))
-		{
-			String defaultBackpackItemName = getString("Defaults.BackpackItem", "unknown");
-			if(!backpackStylesMap.containsKey(defaultBackpackItemName))
-			{
-				String tmp = validShortcutStyles.iterator().next();
-				logger.warning("Unknown default backpack item '" + defaultBackpackItemName + "'. Using '" + tmp + "' instead.");
-				defaultBackpackItemName = tmp;
-			}
-			backpackStylesMap.put(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, backpackStylesMap.get(defaultBackpackItemName)));
 		}
 	}
 
@@ -175,8 +158,9 @@ public class BackpacksConfig extends Configuration
 
 	}
 
-	private void loadItemConfigs()
+	private void loadBackpackStyles()
 	{
+		backpackStylesMap.clear();
 		getYamlE().getKeysFiltered("Items\\.[^.]*\\.Material").forEach(materialKey -> {
 			final String key = materialKey.substring(0, materialKey.length() - ".Material".length());
 			if(!getConfigE().getBoolean(key + ".Enabled", true)) return;
@@ -187,6 +171,26 @@ public class BackpacksConfig extends Configuration
 				backpackStylesMap.put(itemConfig.getName(), itemConfig);
 			}
 		});
+		if(backpackStylesMap.isEmpty())
+		{
+			logger.warning("There musst be at least one item defined to use the items feature!");
+			allowItemShortcut = false;
+		}
+		else
+		{
+			validShortcutStyles = backpackStylesMap.keySet();
+			if(!backpackStylesMap.containsKey(MagicValues.BACKPACK_STYLE_NAME_DEFAULT))
+			{
+				String defaultBackpackItemName = getString("Defaults.BackpackItem", "unknown");
+				if(!backpackStylesMap.containsKey(defaultBackpackItemName))
+				{
+					String tmp = validShortcutStyles.iterator().next();
+					logger.warning("Unknown default backpack item '" + defaultBackpackItemName + "'. Using '" + tmp + "' instead.");
+					defaultBackpackItemName = tmp;
+				}
+				backpackStylesMap.put(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, new ItemConfig(MagicValues.BACKPACK_STYLE_NAME_DEFAULT, backpackStylesMap.get(defaultBackpackItemName)));
+			}
+		}
 	}
 
 	private @NotNull String translateItemText(@NotNull String text)
