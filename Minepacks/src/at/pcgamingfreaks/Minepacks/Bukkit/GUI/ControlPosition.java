@@ -24,14 +24,18 @@ public enum ControlPosition
 	// Horizontal controls
 	TOP_LEFT(true),
 	TOP_RIGHT(true),
+	TOP_CENTER(true),
 	BOTTOM_LEFT(true),
 	BOTTOM_RIGHT(true),
+	BOTTOM_CENTER(true),
 
 	// Vertical controls
 	LEFT_TOP(false),
 	LEFT_BOTTOM(false),
+	LEFT_CENTER(false),
 	RIGHT_TOP(false),
-	RIGHT_BOTTOM(false);
+	RIGHT_BOTTOM(false),
+	RIGHT_CENTER(false);
 
 	@Getter private final boolean vertical, horizontal;
 
@@ -44,19 +48,22 @@ public enum ControlPosition
 	public int[] getControlIds(int controlCount, int rowCount)
 	{
 		assert(controlCount <= 9);
-		int startId = -1, stride = isVertical() ? 9 : 1;
+		int startId = 0, stride = isVertical() ? 9 : 1;
 		switch(this)
 		{
-			case TOP_LEFT: startId = 0; break;
+			// Horizontal controls
 			case TOP_RIGHT: startId = 9 - controlCount; break;
 			case BOTTOM_LEFT: startId = (rowCount - 1) * 9; break;
 			case BOTTOM_RIGHT: startId = (rowCount * 9) - controlCount; break;
-			case LEFT_TOP: startId = 0; break;
-			case LEFT_BOTTOM: startId = (rowCount - controlCount) * 9; break;
+			case BOTTOM_CENTER: startId = ((rowCount - 1) * 9); // Fallthrough to not duplicate same calculation
+			case TOP_CENTER: startId += (9 - controlCount) / 2; break;
+			// Vertical controls
 			case RIGHT_TOP: startId = 8; break;
-			case RIGHT_BOTTOM: startId = ((rowCount - controlCount) * 9) + 8; break;
+			case RIGHT_BOTTOM: startId = 8;
+			case LEFT_BOTTOM: startId += (rowCount - controlCount) * 9; break;
+			case RIGHT_CENTER: startId = 8; // Fallthrough to not duplicate same calculation
+			case LEFT_CENTER: startId += ((rowCount - controlCount) / 2) * 9; break;
 		}
-		assert(startId != -1);
 
 		int[] ids = new int[controlCount];
 		for(int i = 0, id = startId; i < controlCount; i++, id += stride)

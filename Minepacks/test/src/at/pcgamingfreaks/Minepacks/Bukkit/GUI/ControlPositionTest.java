@@ -26,14 +26,21 @@ class ControlPositionTest
 	@Test
 	void testGetControlIds()
 	{
+		// Horizontal controls
 		assertArrayEquals(new int[]{0, 1, 2, 3, 4}, ControlPosition.TOP_LEFT.getControlIds(5, 6));
 		assertArrayEquals(new int[]{4, 5, 6, 7, 8}, ControlPosition.TOP_RIGHT.getControlIds(5, 6));
+		assertArrayEquals(new int[]{3, 4, 5}, ControlPosition.TOP_CENTER.getControlIds(3, 6));
 		assertArrayEquals(new int[]{45, 46, 47}, ControlPosition.BOTTOM_LEFT.getControlIds(3, 6));
 		assertArrayEquals(new int[]{51, 52, 53}, ControlPosition.BOTTOM_RIGHT.getControlIds(3, 6));
+		assertArrayEquals(new int[]{48, 49, 50}, ControlPosition.BOTTOM_CENTER.getControlIds(3, 6));
+
+		// Vertical controls
 		assertArrayEquals(new int[]{0, 9, 18}, ControlPosition.LEFT_TOP.getControlIds(3, 6));
 		assertArrayEquals(new int[]{27, 36, 45}, ControlPosition.LEFT_BOTTOM.getControlIds(3, 6));
+		assertArrayEquals(new int[]{9, 18, 27}, ControlPosition.LEFT_CENTER.getControlIds(3, 6));
 		assertArrayEquals(new int[]{8, 17, 26}, ControlPosition.RIGHT_TOP.getControlIds(3, 6));
 		assertArrayEquals(new int[]{35, 44, 53}, ControlPosition.RIGHT_BOTTOM.getControlIds(3, 6));
+		assertArrayEquals(new int[]{17, 26, 35}, ControlPosition.RIGHT_CENTER.getControlIds(3, 6));
 	}
 
 	@Test
