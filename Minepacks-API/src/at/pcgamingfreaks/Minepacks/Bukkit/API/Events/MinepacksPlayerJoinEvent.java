@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Event is fired when a player joins the server and all of it's data have been loaded successful.
+ * Event is fired when a player joins the server and all of its data have been loaded successful.
  */
 @AllArgsConstructor
 public class MinepacksPlayerJoinEvent extends Event
