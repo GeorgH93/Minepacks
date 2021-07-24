@@ -78,7 +78,12 @@ public class InventorySerializer
 		switch(usedSerializer)
 		{
 			case 0: return BUKKIT_ITEM_STACK_SERIALIZER.deserialize(data);
-			case 1: if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13)) logger.warning(ConsoleColor.YELLOW + "Backpack was created with an old version of minepacks and minecraft. There is the chance that some items will disappear from it." + ConsoleColor.RESET);
+			case 1:
+				if(MCVersion.isNewerOrEqualThan(MCVersion.MC_1_13))
+				{
+					logger.warning(ConsoleColor.YELLOW + "Backpack was created with an old version of minepacks and minecraft. There is the chance that some items will disappear from it." + ConsoleColor.RESET);
+				}
+				// fallthrough and use the new v2 serializer, it can read the old format
 			case 2: return serializer.deserialize(data);
 			default: logger.warning(ConsoleColor.RED + "No compatible deserializer for backpack format available!" + ConsoleColor.RESET);
 		}
