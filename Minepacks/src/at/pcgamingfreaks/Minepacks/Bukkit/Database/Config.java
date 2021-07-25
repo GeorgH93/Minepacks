@@ -43,6 +43,7 @@ import lombok.Getter;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, IUnCacheStrategyConfig, ILanguageConfiguration
@@ -171,7 +172,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getBPTitleOther()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName}", "%s"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitleOther", "{OwnerName} Backpack").replace("%", "%%").replace("{OwnerName}", "%s"));
 	}
 
 	public String getBPTitle()
@@ -228,7 +229,10 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			return channel;
 		}
-		else logger.info("Unknown update Channel: " + channel);
+		else
+		{
+			logger.log(Level.INFO, "Unknown update Channel: {0}", channel);
+		}
 		return null;
 	}
 
@@ -291,9 +295,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				gameModes.add(gm);
 			}
 		}
-		if(gameModes.size() < 1)
+		if(gameModes.isEmpty())
 		{
-			logger.info("No game-mode's allowed, allowing: " + GameMode.SURVIVAL.name());
+			logger.log(Level.INFO, "No game-mode's allowed, allowing: {0}", GameMode.SURVIVAL);
 			gameModes.add(GameMode.SURVIVAL);
 		}
 		return gameModes;
@@ -332,14 +336,19 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) && getConfigE().getBoolean("Shulkerboxes.DisableShulkerboxes", false);
 	}
 
+	private String getShulkerboxesExisting()
+	{
+		return getConfigE().getString("Shulkerboxes.Existing", "Ignore");
+	}
+
 	public boolean isShulkerboxesExistingDropEnabled()
 	{
-		return getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy");
+		return getShulkerboxesExisting().equalsIgnoreCase("Destroy");
 	}
 
 	public boolean isShulkerboxesExistingDestroyEnabled()
 	{
-		return getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Destroy") || getConfigE().getString("Shulkerboxes.Existing", "Ignore").equalsIgnoreCase("Remove");
+		return getShulkerboxesExisting().equalsIgnoreCase("Destroy") || getShulkerboxesExisting().equalsIgnoreCase("Remove");
 	}
 	//endregion
 
@@ -488,12 +497,18 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public @Nullable Sound getOpenSound()
 	{
-		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN"));
+		String defaultSound = "CHEST_OPEN";
+		if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11)) defaultSound = "BLOCK_SHULKER_BOX_OPEN";
+		else if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2)) defaultSound = "BLOCK_CHEST_OPEN";
+		return getSound("OpenSound", defaultSound);
 	}
 
 	public @Nullable Sound getCloseSound()
 	{
-		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
+		String defaultSound = "CHEST_CLOSE";
+		if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11)) defaultSound = "BLOCK_SHULKER_BOX_CLOSE";
+		else if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2)) defaultSound = "BLOCK_CHEST_CLOSE";
+		return getSound("CloseSound", defaultSound);
 	}
 
 	public @Nullable Sound getAutoCollectSound()
