@@ -25,9 +25,11 @@ import at.pcgamingfreaks.UUIDConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.logging.Level;
 
 public class Files extends DatabaseBackend
 {
+	private static final String FAILED_TO_RENAME_FILE = "Failed to rename file ({0}).";
 	public static final String EXT = ".backpack", EXT_REGEX = "\\.backpack", FOLDER_NAME = "backpacks";
 
 	private final File saveFolder;
@@ -56,20 +58,20 @@ public class Files extends DatabaseBackend
 		if(allFiles == null) return;
 		for (File file : allFiles)
 		{
-			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older then x days
+			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older than x days
 			{
 				if(!file.delete())
 				{
-					plugin.getLogger().warning("Failed to delete file (" + file.getAbsolutePath() + ").");
+					plugin.getLogger().log(Level.WARNING,  "Failed to delete file ({0}).", file.getAbsolutePath());
 				}
-				continue; // We don't have to check if the file name is correct cause we have the deleted the file
+				continue; // We don't have to check if the file name is correct because we have the deleted the file
 			}
 			int len = file.getName().length() - EXT.length();
 			if(len <= 16) // It's a player name
 			{
 				if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), onlineUUIDs, useUUIDSeparators) + EXT)))
 				{
-					plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+					plugin.getLogger().log(Level.WARNING, FAILED_TO_RENAME_FILE, file.getAbsolutePath());
 				}
 			}
 			else // It's an UUID
@@ -78,9 +80,9 @@ public class Files extends DatabaseBackend
 				{
 					if(!useUUIDSeparators)
 					{
-						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("-", ""))))
+						if(!file.renameTo(new File(saveFolder, file.getName().replace("-", ""))))
 						{
-							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+							plugin.getLogger().log(Level.WARNING, FAILED_TO_RENAME_FILE, file.getAbsolutePath());
 						}
 					}
 				}
@@ -90,7 +92,7 @@ public class Files extends DatabaseBackend
 					{
 						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT))))
 						{
-							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
+							plugin.getLogger().log(Level.WARNING, FAILED_TO_RENAME_FILE, file.getAbsolutePath());
 						}
 					}
 				}

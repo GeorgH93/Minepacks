@@ -78,7 +78,7 @@ public final class BackpackFile
 				int dataSize = dataStream.readInt();
 				byte[] data = new byte[dataSize];
 				int readCount = dataStream.read(data);
-				if(dataSize != readCount) Minepacks.getInstance().getLogger().warning("Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
+				if(dataSize != readCount) Minepacks.getInstance().getLogger().warning(() -> "Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
 				itemStacks[page] = inventorySerializer.deserialize(data, version);
 			}
 
@@ -90,7 +90,7 @@ public final class BackpackFile
 	{
 		byte[] out = new byte[(int) (file.length() - 1)];
 		int readCount = fis.read(out);
-		if(file.length() - 1 != readCount) Minepacks.getInstance().getLogger().warning("Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
+		if(file.length() - 1 != readCount) Minepacks.getInstance().getLogger().warning(() -> "Problem reading file, read " + readCount + " of " + (file.length() - 1) + " bytes.");
 		ItemStack[] itemStacks = inventorySerializer.deserialize(out, version);
 		return new BackpackFile("Unknown", MagicValues.BACKPACK_STYLE_NAME_DEFAULT, new ItemStack[][] { itemStacks});
 	}
