@@ -73,7 +73,7 @@ public class DisableShulkerboxes extends MinepacksListener
 		}
 	}
 
-	private boolean removeExisting, dropExistingContent;
+	private final boolean removeExisting, dropExistingContent;
 
 	public DisableShulkerboxes(final Minepacks plugin)
 	{
@@ -131,11 +131,8 @@ public class DisableShulkerboxes extends MinepacksListener
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryDragEvent event)
 	{
-		if(event.getCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getCursor().getType()))
-		{
-			event.setCancelled(true);
-		}
-		else if(event.getOldCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getOldCursor().getType()))
+		if ((event.getCursor() != null    && SHULKER_BOX_MATERIALS.contains(event.getCursor().getType())) ||
+			(event.getOldCursor() != null && SHULKER_BOX_MATERIALS.contains(event.getOldCursor().getType())))
 		{
 			event.setCancelled(true);
 		}
