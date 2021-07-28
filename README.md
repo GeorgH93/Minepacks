@@ -3,7 +3,7 @@
 [spigot]: https://www.spigotmc.org/resources/19286/
 [spigotRatingImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
 [spigotDownloadsImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=downloads%20%28spigotmc.org%29&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
-[bukkit]: http://dev.bukkit.org/bukkit-plugins/minepacks/
+[bukkit]: https://dev.bukkit.org/projects/minepacks
 [issues]: https://github.com/GeorgH93/Minepacks/issues
 [wiki]: https://github.com/GeorgH93/Minepacks/wiki
 [wikiFAQ]: https://github.com/GeorgH93/Minepacks/wiki/FAQ
