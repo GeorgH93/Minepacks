@@ -19,6 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.BackpackType;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonAction;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ControlPosition;
@@ -29,6 +30,8 @@ import at.pcgamingfreaks.Utils;
 import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 import at.pcgamingfreaks.YamlFileUpdateMethod;
+import at.pcgamingfreaks.yaml.YAML;
+import at.pcgamingfreaks.yaml.YamlKeyNotFoundException;
 
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +58,8 @@ public class BackpacksConfig extends Configuration
 	@Getter private ControlPosition defaultControlPosition;
 	@Getter private String defaultControlLayout;
 	@Getter private boolean allowItemShortcut = true;
+	@Getter private boolean allowControlsInRow7 = false;
+	@Getter private final Map<String, BackpackType> backpackTypes = new HashMap<>();
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
 	{
@@ -89,6 +94,7 @@ public class BackpacksConfig extends Configuration
 	public void loadData()
 	{
 		allowItemShortcut = true;
+		allowControlsInRow7 = getConfigE().getBoolean("AllowControlsInRow7", false) && MCVersion.isOlderThan(MCVersion.MC_1_14);
 		backpackStylesMap.clear();
 		buttonConfigMap.clear();
 		controlLayoutsMap.clear();
@@ -111,6 +117,27 @@ public class BackpacksConfig extends Configuration
 			getLogger().warning("Default control layout '" + defaultControlLayout + "' is not defined! Disabling controls by default.");
 			controlLayoutsMap.put(defaultControlLayout, new ButtonConfig[0]);
 		}
+
+	}
+
+	private void loadBackpackTypes()
+	{
+		backpackTypes.clear();
+		try
+		{
+			YAML backpacksSection = getConfigE().getSection("Backpacks");
+			for(String backpackName : backpacksSection.getNodeKeys())
+			{
+				if (backpackName.isEmpty()) continue;
+				backpackTypes.put(backpackName, new BackpackType(this, "Backpacks." + backpackName));
+			}
+		}
+		catch(YamlKeyNotFoundException e)
+		{
+			logger.severe("Missing 'Backpacks' config in backpacks.yml!");
+		}
+		if (backpackTypes.isEmpty())
+			backpackTypes.put("1", new BackpackType());
 	}
 
 	private void loadControlLayouts()
@@ -219,7 +246,7 @@ public class BackpacksConfig extends Configuration
 		if(!strValue.equalsIgnoreCase("auto"))
 		{
 			intValue = Utils.tryParse(strValue, -99);
-			if(intValue < -1)
+			if(intValue < -1 || intValue == 0)
 			{
 				getLogger().warning("Invalid value for " + key + ", falling back to auto!");
 				intValue = -1;
