@@ -42,7 +42,7 @@ public class PermissionsTest
 		permissions = new HashSet<>();
 		for(Field declaredField : Permissions.class.getDeclaredFields())
 		{
-			if(declaredField.getName().equals("BASE") || declaredField.getName().equals("SIZE_BASE")) continue;
+			if(declaredField.getName().equals("BASE") || declaredField.getName().equals("BASE_SIZE")) continue;
 			permissions.add((String) declaredField.get(null));
 		}
 	}

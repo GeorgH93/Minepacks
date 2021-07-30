@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.Message.IMessage;
 import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.BackpackType;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
@@ -236,5 +237,17 @@ public class MinepacksPlayerData implements MinepacksPlayer, ICacheablePlayer
 		Player bukkitPlayer = getPlayerOnline();
 		if(bukkitPlayer == null) return; // Is only null if the player is not online
 		message.send(bukkitPlayer, args);
+	}
+
+	public BackpackType getBackpackType()
+	{
+		for(BackpackType type : BackpacksConfig.getInstance().getBackpackTypes())
+		{
+			if (hasPermission(type.getPermission()))
+			{
+				return type;
+			}
+		}
+		return BackpacksConfig.getInstance().getDefaultBackpackType();
 	}
 }

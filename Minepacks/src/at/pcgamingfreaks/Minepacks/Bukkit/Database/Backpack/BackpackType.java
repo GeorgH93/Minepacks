@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackpacksConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ControlPosition;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,10 @@ public final class BackpackType
 	@Getter private int pageCount;
 	@Getter private ItemConfig defaultShortcutItem;
 	@Getter private ItemConfig blockedSlotItem;
-	private PageConfiguration[] pageConfigurations;
+	@Getter private final int priority;
+	@Getter private final String permission;
+	@Getter private final boolean isDefault;
+	private final PageConfiguration[] pageConfigurations;
 
 	public BackpackType()
 	{
@@ -45,6 +49,9 @@ public final class BackpackType
 		blockedSlotItem = null;
 		pageConfigurations = new PageConfiguration[] { new PageConfiguration(1) };
 		pageConfigurations[0].fillSlots(9);
+		priority = -1;
+		permission = Permissions.BASE_SIZE + name;
+		isDefault = true;
 	}
 
 	public BackpackType(final @NotNull BackpacksConfig config, final @NotNull String key)
@@ -157,6 +164,10 @@ public final class BackpackType
 				pageConfigurations[pages - 1].fillSlots(slotsLeft);
 			}
 		}
+
+		priority = config.getInt(key + ".Priority", slots);
+		permission = Permissions.BASE_SIZE + name;
+		isDefault = config.getBool(key + ".Default", false);
 	}
 
 	public Set<Integer> getUsableSlots()
@@ -182,11 +193,6 @@ public final class BackpackType
 	public int getRows(int pageIndex)
 	{
 		return pageConfigurations[pageIndex].getRows();
-	}
-
-	public String getPermission()
-	{
-		return "backpack.size." + name;
 	}
 
 	@Getter

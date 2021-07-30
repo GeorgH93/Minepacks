@@ -59,7 +59,9 @@ public class BackpacksConfig extends Configuration
 	@Getter private String defaultControlLayout;
 	@Getter private boolean allowItemShortcut = true;
 	@Getter private boolean allowControlsInRow7 = false;
-	@Getter private final Map<String, BackpackType> backpackTypes = new HashMap<>();
+	@Getter private final Map<String, BackpackType> backpackNameTypeMap = new HashMap<>();
+	@Getter private final List<BackpackType> backpackTypes = new ArrayList<>();
+	@Getter private BackpackType defaultBackpackType;
 
 	public BackpacksConfig(final @NotNull Minepacks plugin)
 	{
@@ -117,27 +119,36 @@ public class BackpacksConfig extends Configuration
 			getLogger().warning("Default control layout '" + defaultControlLayout + "' is not defined! Disabling controls by default.");
 			controlLayoutsMap.put(defaultControlLayout, new ButtonConfig[0]);
 		}
-
+		loadBackpackTypes();
 	}
 
 	private void loadBackpackTypes()
 	{
 		backpackTypes.clear();
+		backpackNameTypeMap.clear();
 		try
 		{
 			YAML backpacksSection = getConfigE().getSection("Backpacks");
 			for(String backpackName : backpacksSection.getNodeKeys())
 			{
 				if (backpackName.isEmpty()) continue;
-				backpackTypes.put(backpackName, new BackpackType(this, "Backpacks." + backpackName));
+				if (getConfigE().getBoolean("Backpacks." + backpackName + ".Enabled", true))
+				{
+					backpackNameTypeMap.put(backpackName, new BackpackType(this, "Backpacks." + backpackName));
+				}
 			}
 		}
 		catch(YamlKeyNotFoundException e)
 		{
 			logger.severe("Missing 'Backpacks' config in backpacks.yml!");
 		}
-		if (backpackTypes.isEmpty())
-			backpackTypes.put("1", new BackpackType());
+		if (backpackNameTypeMap.isEmpty())
+			backpackNameTypeMap.put("1", new BackpackType());
+
+		backpackTypes.addAll(backpackNameTypeMap.values());
+		backpackTypes.sort(Collections.reverseOrder(Comparator.comparingInt(BackpackType::getPriority)));
+		Optional<BackpackType> defaultType = backpackTypes.stream().filter(BackpackType::isDefault).findAny();
+		defaultBackpackType = defaultType.orElse(backpackTypes.get(backpackTypes.size() - 1));
 	}
 
 	private void loadControlLayouts()
