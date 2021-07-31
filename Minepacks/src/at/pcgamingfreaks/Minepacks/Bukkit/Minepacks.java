@@ -199,7 +199,19 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		commandManager = new CommandManager(this);
 		if(configuration.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
 
-		//region register events
+		registerEvents();
+
+		if(configuration.isItemCollectorEnabled()) collector = new ItemsCollector(this);
+		worldBlacklist = configuration.getWorldBlacklist();
+		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
+
+		gameModes = configuration.getAllowedGameModes();
+
+		openSound = configuration.getOpenSound();
+	}
+
+	private void registerEvents()
+	{
 		PluginManager pluginManager = getServer().getPluginManager();
 		pluginManager.registerEvents(new BackpackEventListener(this), this);
 		if(configuration.getDropOnDeath()) pluginManager.registerEvents(new DropOnDeath(this), this);
@@ -231,14 +243,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			if(configuration.isCommandCooldownSyncEnabled()) pluginManager.registerEvents(cooldownManager, this);
 		}
 		if(configuration.isUpdatedToV3()) pluginManager.registerEvents(new WelcomeToV3(this), this);
-		//endregion
-		if(configuration.isItemCollectorEnabled()) collector = new ItemsCollector(this);
-		worldBlacklist = configuration.getWorldBlacklist();
-		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
-
-		gameModes = configuration.getAllowedGameModes();
-
-		openSound = configuration.getOpenSound();
 	}
 
 	private void unload()
