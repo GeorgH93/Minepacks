@@ -6,7 +6,6 @@
 		<artifactId>Minepacks-Parent</artifactId>
 		<groupId>at.pcgamingfreaks</groupId>
 		<version>${revision}</version>
-		<relativePath>..</relativePath>
 	</parent>
 	<version>${revision}</version>
 	<packaging>jar</packaging>
