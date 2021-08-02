@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Item;
 
-import at.pcgamingfreaks.Bukkit.HeadUtils;
+import at.pcgamingfreaks.Bukkit.Util.HeadUtils;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

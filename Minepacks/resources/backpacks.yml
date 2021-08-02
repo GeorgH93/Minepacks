@@ -36,6 +36,7 @@ Items:
 
 Backpacks:
   1:
+    Default: true
     Pages: 1
     SlotsPerPage: 9
     BlockedSlots: Blocked

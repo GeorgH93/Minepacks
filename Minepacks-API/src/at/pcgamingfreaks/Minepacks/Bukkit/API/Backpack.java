@@ -25,7 +25,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 public interface Backpack extends InventoryHolder
 {
@@ -117,7 +119,7 @@ public interface Backpack extends InventoryHolder
 
 	/**
 	 * @param itemStacks The item that should be added to the backpack.
-	 * @return A HashMap containing items that didn't fit. The key is the number of the added item
+	 * @return A HashMap containing items that didn't fit. The key is the index of the added item
 	 */
 	default @NotNull Map<Integer, ItemStack> addItems(ItemStack... itemStacks)
 	{
@@ -146,6 +148,16 @@ public interface Backpack extends InventoryHolder
 	{
 		return false;
 	}
+
+	/**
+	 * Gets the special slots of the backpack.
+	 * Special slots do not contain valid items!
+	 * They might contain buttons, broken items, ...
+	 * These slots should not be processed by your plugin!
+	 *
+	 * @return Collection of slot IDs that are special slots.
+	 */
+	@NotNull Set<? extends Integer> getSpecialSlots();
 
 	@SuppressWarnings("unused")
 	static boolean isBackpack(@Nullable Inventory inventory)

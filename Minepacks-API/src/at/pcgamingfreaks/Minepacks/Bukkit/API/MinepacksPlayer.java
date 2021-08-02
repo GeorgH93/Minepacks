@@ -166,7 +166,19 @@ public interface MinepacksPlayer
 	 */
 	default void openBackpack(boolean editable)
 	{
-		openBackpack(editable, null);
+		openBackpack(editable, 0, null);
+	}
+
+	/**
+	 * Opens the backpack of the player for the player.
+	 * Will do nothing if the player is offline.
+	 *
+	 * @param editable True if the player should be able to open the backpack. False if not.
+	 * @param page The page that should be opened.
+	 */
+	default void openBackpack(boolean editable, int page)
+	{
+		openBackpack(editable, page, null);
 	}
 
 	/**
@@ -176,5 +188,18 @@ public interface MinepacksPlayer
 	 * @param editable True if the player should be able to open the backpack. False if not.
 	 * @param customTitle A custom title that should be used as title for the backpack inventory. Null = default title.
 	 */
-	void openBackpack(boolean editable, @Nullable String customTitle);
+	default void openBackpack(boolean editable, @Nullable String customTitle)
+	{
+		openBackpack(editable, 0, customTitle);
+	}
+
+	/**
+	 * Opens the backpack of the player for the player.
+	 * Will do nothing if the player is offline.
+	 *
+	 * @param editable True if the player should be able to open the backpack. False if not.
+	 * @param customTitle A custom title that should be used as title for the backpack inventory. Null = default title.
+	 * @param page The page that should be opened.
+	 */
+	void openBackpack(boolean editable, int page, @Nullable String customTitle);
 }

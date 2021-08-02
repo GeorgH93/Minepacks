@@ -94,7 +94,18 @@ public interface MinepacksPlugin
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
 	 */
-	void openBackpack(@NotNull final Player opener, @NotNull final MinepacksPlayer owner, final boolean editable, @Nullable String title);
+	void openBackpack(@NotNull final Player opener, @NotNull final MinepacksPlayer owner, final boolean editable, final @Nullable String title);
+
+	/**
+	 * Let a given player open the backpack of an other player.
+	 *
+	 * @param opener   The player who opens the backpack.
+	 * @param owner    The owner of the backpack that should be opened.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @param page     The page that should be opened.
+	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 */
+	void openBackpack(@NotNull final Player opener, @NotNull final MinepacksPlayer owner, final boolean editable, final int page, final @Nullable String title);
 
 	/**
 	 * Let a given player open the backpack of an other player.
@@ -119,7 +130,21 @@ public interface MinepacksPlugin
 	 * @param editable Defines if the player who has opened the backpack can change the items inside.
 	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
 	 */
-	void openBackpack(@NotNull final Player opener, @NotNull final Backpack backpack, boolean editable, @Nullable String title);
+	default void openBackpack(@NotNull final Player opener, @NotNull final Backpack backpack, boolean editable, @Nullable String title)
+	{
+		openBackpack(opener, backpack, editable, 0, title);
+	}
+
+	/**
+	 * Let a given player open a given {@link Backpack}.
+	 *
+	 * @param opener   The player who opens the backpack.
+	 * @param backpack The backpack to be opened.
+	 * @param editable Defines if the player who has opened the backpack can change the items inside.
+	 * @param page     The page that should be opened.
+	 * @param title    Custom title for the backpack (will be shown to the player who opened the backpack.
+	 */
+	void openBackpack(@NotNull final Player opener, @NotNull final Backpack backpack, boolean editable, int page, @Nullable String title);
 
 	/**
 	 * Retrieves the backpack for a given player.

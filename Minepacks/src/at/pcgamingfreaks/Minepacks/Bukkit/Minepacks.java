@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.BackpackMultiPage;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
@@ -243,6 +244,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			if(configuration.isCommandCooldownSyncEnabled()) pluginManager.registerEvents(cooldownManager, this);
 		}
 		if(configuration.isUpdatedToV3()) pluginManager.registerEvents(new WelcomeToV3(this), this);
+		pluginManager.registerEvents(new BackpackControls(this), this);
 	}
 
 	private void unload()
@@ -277,7 +279,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	}
 
 	@Override
-	public void openBackpack(final @NotNull Player opener, final @NotNull at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack backpack, final boolean editable, final @Nullable String title)
+	public void openBackpack(@NotNull Player opener, at.pcgamingfreaks.Minepacks.Bukkit.API.@NotNull MinepacksPlayer owner, boolean editable, int page, @Nullable String title)
+	{
+		owner.getBackpack(backpack -> openBackpack(opener, backpack, editable, page, title));
+	}
+
+	@Override
+	public void openBackpack(final @NotNull Player opener, final @NotNull at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack backpack, final boolean editable, int page, final @Nullable String title)
 	{
 		WorldBlacklistMode disabled = isDisabled(opener);
 		if(disabled != WorldBlacklistMode.None)
@@ -295,7 +303,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		{
 			opener.playSound(opener.getEyeLocation(), openSound, 1, 0);
 		}
-		backpack.open(opener, editable);
+		if(backpack instanceof BackpackMultiPage)
+		{
+			((BackpackMultiPage) backpack).open(opener, editable, page);
+		}
+		else
+		{
+			backpack.open(opener, editable);
+		}
 	}
 
 	@Override

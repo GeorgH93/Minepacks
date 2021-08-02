@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack;
 
+import at.pcgamingfreaks.Bukkit.GUI.GuiButton;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
@@ -36,13 +37,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack
@@ -53,10 +51,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 	private final Object titleOtherComponent;
 	private final String titleOther;
 	@Getter private final MinepacksPlayerData owner;
-	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
+	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>();
 	private Inventory bp;
 	private int size;
 	private boolean hasChanged;
+	private Map<Integer, GuiButton> specialSlots = new HashMap<>();
 
 	public static void setTitle(final @NotNull Message title, final @NotNull Message titleOther)
 	{
@@ -195,7 +194,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 	@Override
 	public boolean canEdit(@NotNull Player player)
 	{
-		return opened.containsKey(player) && opened.get(player);
+		return opened.getOrDefault(player, false);
 	}
 
 	@Override
@@ -285,5 +284,22 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 		InventoryUtils.dropInventory(bp, location);
 		setChanged();
 		save();
+	}
+
+	@Override
+	public @Nullable BackpackMultiPage getMultiPageOwner()
+	{
+		return null;
+	}
+
+	@Override
+	public @NotNull Set<? extends Integer> getSpecialSlots()
+	{
+		return specialSlots.keySet();
+	}
+
+	public GuiButton getButton(int slot)
+	{
+		return specialSlots.get(slot);
 	}
 }

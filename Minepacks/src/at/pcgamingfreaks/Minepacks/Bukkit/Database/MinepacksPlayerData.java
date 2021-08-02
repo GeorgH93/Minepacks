@@ -182,11 +182,11 @@ public class MinepacksPlayerData implements MinepacksPlayer, ICacheablePlayer
 	}
 
 	@Override
-	public void openBackpack(boolean editable, @Nullable String customTitle)
+	public void openBackpack(boolean editable, int page, @Nullable String customTitle)
 	{
 		if(!isOnline()) return;
 		//noinspection ConstantConditions
-		Minepacks.getInstance().openBackpack(getPlayerOnline(), this, editable, customTitle);
+		Minepacks.getInstance().openBackpack(getPlayerOnline(), this, editable, page, customTitle);
 	}
 
 	@Override
