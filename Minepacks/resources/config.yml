@@ -181,7 +181,7 @@ ItemShortcut:
   ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat
   BlockAsHat: false
-  # Opens a container if right clicked while holding the backpack shortcut in the hand. This option will only work on MC 1.13 or newer.
+  # Opens a container if right-clicked while holding the backpack shortcut in the hand. This option will only work on MC 1.13 or newer.
   OpenContainerOnRightClick: false
   # The id of the slot that should be preferred when giving a player the shortcut item
   PreferredSlotId: -1
@@ -211,7 +211,7 @@ Misc:
     # When auto update is disabled you still can use the build in update function manually with /backpack update
     Enabled: true
     Channel: ${updateChannel}
-  # Enable this option if you are using a BungeeCord setup!
+  # Enable this option if you are using a BungeeCord setup and want to share the plugin's database across multiple servers.
   UseBungeeCord: false
 
 # Config file version. Don't touch it!
