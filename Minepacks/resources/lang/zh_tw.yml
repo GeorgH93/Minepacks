@@ -1,0 +1,117 @@
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
+
+Language:
+  NotFromConsole: "&c指令不能從控制台使用"
+  Ingame:
+    NoPermission: "&c你沒有權限使用"
+    WorldDisabled: "&c這個世界不允許使用背包"
+    NaN: "[\"\",{\"text\":\"輸入的值不是數字!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "背包關閉!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} 關閉背包!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "無效的背包."
+    NotAllowedInBackpack: "&c{ItemName} 不允許放在背包裡."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&c您不得從庫存中刪除背包快捷方式!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"請稍等 \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} 秒\"}},{\"text\":\" 直到你重新打開你的背包.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "你不能在當前遊戲模式下打開背包."
+    Clean:
+      BackpackCleaned: "背包已清空"
+      BackpackCleanedBy: "您的背包已被清空 {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName}'s&r 背包已清空."
+    Sort:
+      Sorted: "整理背包."
+    Help:
+      Header: "&6### 擴充背包 指令幫助 ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&3正在重新讀取 Minepacks ..."
+      Reloaded: "&3Minepacks 重新讀取完畢! 翻譯版本 2.4.2 Specialbase#0428"
+    Update:
+      CheckingForUpdates: "&1檢查更新 ..."
+      Updated: "[\"\",{\"text\":\"插件已經更新，重新啟動伺服器後生效/reload.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"沒有更新的版本.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"查找更新時出現問題！ 請檢查控制台!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"有更新可用！ 請前往 \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" to download it!\"}]"
+    Backup:
+      Created: "背包回復成功."
+      NoBackpack: "玩家沒有背包或他的背包是空的"
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"回復\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"顯示頁面 {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< 上一頁 <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Showing page {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> 下一頁 >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "無法尋找備份 {BackupIdentifier} "
+      NoUserToRestoreToFound: "找不到可將備份還原到的有效用戶"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "還原備份成功"
+    InventoryClear:
+      UnknownPlayer: "&c找不到玩家 {Name}!"
+      Cleared: "清空背包."
+      ClearedOther: "{DisplayName}&r 已清空背包."
+      ClearedOtherTarget: "你的背包已遭清空 {DisplayName}&r."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "開啟你的背包"
+      Sort: "整理你的背包"
+      Clean: "清空你的背包"
+      CleanOthers: "清理其他玩家的背包"
+      OpenOthers: "看茶另一個玩家的背包"
+      Reload: "重新整理這個插件"
+      Update: "檢查更新"
+      Version: "列出有關插件及其依賴項的版本詳細信息"
+      Backup: "新增玩家背包的備份."
+      Restore: "恢復備份."
+      RestoreList: "列出所有玩家的備份."
+      Help: "顯示此指令表."
+      Migrate: "將使用的數據庫從一種類型遷移到另一種類型."
+
+Command:
+  Backpack:
+    - bag
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+
+# Will be shown in the console during startup
+LanguageName: "繁體中文"
+Author: "Specialbase#0428"
+
+# Language file version. Don't touch it!
+Version: 18

@@ -120,6 +120,7 @@ public class DebugCommand extends MinepacksCommand
 			{
 				writer.flush();
 				writer.close();
+				writer = null;
 			}
 			catch(Exception e) {e.printStackTrace();}
 			sender.getInventory().setItem(0, slot);

@@ -240,13 +240,19 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		boolean useBungee = getConfigE().getBoolean("Misc.UseBungeeCord", false);
 		boolean spigotUsesBungee = Utils.detectBungeeCord();
+		boolean shareableDB = getDatabaseType().equals("mysql") || getDatabaseType().equals("global");
 		if(useBungee && !spigotUsesBungee)
 		{
-			logger.warning("You have BungeeCord enabled, but it looks like you have not enabled it in your spigot.yml! You probably should check your configuration.");
+			logger.warning("You have BungeeCord enabled for the plugin, but it looks like you have not enabled it in your spigot.yml! You probably should check your configuration.");
 		}
-		else if(!useBungee && spigotUsesBungee && getDatabaseType() == DatabaseType.MYSQL)
+		else if(!useBungee && spigotUsesBungee && shareableDB)
 		{
-			logger.warning("Your server is running behind a BungeeCord server. If you are using the plugin on more than one server please make sure to also enable the 'UseBungeeCord' config option.");
+			logger.warning("Your server is running behind a BungeeCord server. If you are using the plugin on more than one server with a shared database, please make sure to also enable the 'UseBungeeCord' config option.");
+		}
+		else if(useBungee && !shareableDB)
+		{
+			logger.info("You have enabled BungeeCord mode for the plugin, but are not using a shared MySQL database.");
+			return false; // No need to enable BungeeCord mode if the database does not support it
 		}
 		return useBungee;
 	}

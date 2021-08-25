@@ -304,7 +304,7 @@ public class ItemShortcut extends MinepacksListener
 				}
 				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
 				{
-					player.performCommand(openCommand);
+					plugin.getServer().getScheduler().runTask(plugin, () -> { player.performCommand(openCommand); });
 					event.setCancelled(true);
 				}
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)
