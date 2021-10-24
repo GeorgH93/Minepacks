@@ -123,6 +123,18 @@ public class ItemShortcut extends MinepacksListener
 		}
 	}
 
+	private void removeItem(Player player)
+	{
+		for(ItemStack itemStack : player.getInventory())
+		{
+			if(isItemShortcut(itemStack))
+			{
+				itemStack.setAmount(0);
+				return;
+			}
+		}
+	}
+
 	//region Add backpack item
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onJoin(PlayerJoinEvent event)
@@ -139,10 +151,17 @@ public class ItemShortcut extends MinepacksListener
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onWorldChange(PlayerChangedWorldEvent event)
+	public void onWorldChange(final PlayerChangedWorldEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		Bukkit.getScheduler().runTaskLater(plugin, () -> {
+				Player player = event.getPlayer();
+				if(!player.isOnline()) return;
+				if(player.hasPermission(Permissions.USE))
+					addItem(player);
+				else
+					removeItem(player);
+			}, 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
