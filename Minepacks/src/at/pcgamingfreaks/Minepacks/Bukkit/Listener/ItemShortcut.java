@@ -153,11 +153,10 @@ public class ItemShortcut extends MinepacksListener
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(final PlayerChangedWorldEvent event)
 	{
-		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 				Player player = event.getPlayer();
 				if(!player.isOnline()) return;
-				if(player.hasPermission(Permissions.USE))
+				if(player.hasPermission(Permissions.USE) && plugin.isDisabled(player) == WorldBlacklistMode.None)
 					addItem(player);
 				else
 					removeItem(player);
