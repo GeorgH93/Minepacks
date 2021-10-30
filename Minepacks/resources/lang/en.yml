@@ -73,6 +73,7 @@ Language:
       Update: "Checks for new plugin updates."
       Version: "Prints the version details about the plugin and it's dependencies."
       Backup: "Creates a backup of a players backpack."
+      BackupEveryone: "Creates a backup of everyone currently online."
       Restore: "Restores a backup."
       RestoreList: "Lists all available backups."
       Help: "Shows all available commands and their description."
@@ -115,4 +116,4 @@ LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 19

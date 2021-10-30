@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 18, UPGRADE_THRESHOLD = LANG_VERSION;
+	private static final int LANG_VERSION = 19, UPGRADE_THRESHOLD = LANG_VERSION;
 
 	public Language(JavaPlugin plugin)
 	{

@@ -71,6 +71,7 @@ Language:
       Reload: "Lädt die Konfigurationsdatei neu."
       Update: "Prüft auf neue Plugin-Updates."
       Backup: "Erstellt eine Sicherungskopie eines Rucksacks."
+      BackupEveryone: "Erstellt eine Sicherungskopie der Rucksäcke aller verbundenen Spieler."
       Restore: "Stellt eine Sicherungskopie eines Rucksacks wieder her."
       RestoreList: "Listet alle verfügbaren Sicherungskopien von Rucksäcken auf."
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
@@ -120,4 +121,4 @@ LanguageName: "german"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 19

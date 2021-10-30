@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,7 +26,9 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,12 +37,14 @@ import java.util.List;
 public class BackupCommand extends MinepacksCommand
 {
 	private final Message messageCreated, messageNoBackpack;
-	private final String helpParam;
+	private final String helpParam, helpParamEveryone, descriptionEveryone;
 
 	public BackupCommand(Minepacks plugin)
 	{
 		super(plugin, "backup", plugin.getLanguage().getTranslated("Commands.Description.Backup"), Permissions.BACKUP, plugin.getLanguage().getCommandAliases("Backup"));
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
+		helpParamEveryone = "!everyone!";
+		descriptionEveryone = plugin.getLanguage().getTranslated("Commands.Description.BackupEveryone");
 		messageCreated = plugin.getLanguage().getMessage("Ingame.Backup.Created");
 		messageNoBackpack = plugin.getLanguage().getMessage("Ingame.Backup.NoBackpack");
 	}
@@ -50,26 +54,41 @@ public class BackupCommand extends MinepacksCommand
 	{
 		if(args.length == 1)
 		{
-			//noinspection deprecation
-			getMinepacksPlugin().getBackpack(plugin.getServer().getOfflinePlayer(args[0]), new Callback<Backpack>() {
-				@Override
-				public void onResult(Backpack backpack)
+			if(args[0].equalsIgnoreCase("!everyone!"))
+			{
+				for(Player player : plugin.getServer().getOnlinePlayers())
 				{
-					((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
-					messageCreated.send(sender);
+					backup(sender, player);
 				}
-
-				@Override
-				public void onFail()
-				{
-					messageNoBackpack.send(sender);
-				}
-			}, false);
+			}
+			else
+			{
+				//noinspection deprecation
+				backup(sender, plugin.getServer().getOfflinePlayer(args[0]));
+			}
 		}
 		else
 		{
 			showHelp(sender, mainCommandAlias);
 		}
+	}
+
+	private void backup(final @NotNull CommandSender sender, final @NotNull OfflinePlayer offlinePlayer)
+	{
+		getMinepacksPlugin().getBackpack(offlinePlayer, new Callback<Backpack>() {
+			@Override
+			public void onResult(Backpack backpack)
+			{
+				((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).backup();
+				messageCreated.send(sender);
+			}
+
+			@Override
+			public void onFail()
+			{
+				messageNoBackpack.send(sender);
+			}
+		}, false);
 	}
 
 	@Override
@@ -83,6 +102,7 @@ public class BackupCommand extends MinepacksCommand
 	{
 		List<HelpData> help = new ArrayList<>(1);
 		help.add(new HelpData(getTranslatedName(), helpParam, getDescription()));
+		help.add(new HelpData(getTranslatedName(), helpParamEveryone, descriptionEveryone));
 		return help;
 	}
 }
