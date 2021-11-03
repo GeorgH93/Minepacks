@@ -20,7 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Command.CommandExecutorWithSubCommandsGeneric;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.RegisterablePluginCommand;
+import at.pcgamingfreaks.Bukkit.Command.RegisterablePluginCommand;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
