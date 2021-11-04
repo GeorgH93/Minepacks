@@ -55,6 +55,7 @@ public class InventorySerializer
 		}
 		if(serializer == null)
 		{
+			logger.severe("NBTItemStackSerializer does not support your Minecraft version!\nFalling back to BukkitItemStackSerializer! This most likely is wrong!");
 			usedSerializer = 0;
 			serializer = BUKKIT_ITEM_STACK_SERIALIZER;
 		}
