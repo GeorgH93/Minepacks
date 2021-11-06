@@ -10,10 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java-version:
-          - 8
-          - 11
-          - 17
+        java-version: [ 8, 11, 17 ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,4 +20,4 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.java-version }}
       - name: Build and test with maven
-        run: mvn -B -s .github/workflows/settings.xml clean package test --file pom.xml
+        run: mvn -B -s .github/workflows/settings.xml clean package --file pom.xml
