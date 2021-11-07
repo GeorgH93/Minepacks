@@ -1,7 +1,7 @@
 # This workflow will run every time a new release is created.
 # It will first build the plugin using Maven, then publish it to GitHub packages and finally attach the artifacts to the release
 
-name: Maven build and deploy on release
+name: Build and release
 
 on:
   release:
