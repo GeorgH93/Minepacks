@@ -62,7 +62,10 @@ public abstract class ToSQLMigration extends Migration
 			case "mysql": newDb = new MySQL(plugin, connectionProvider); break;
 			case "sqlite":
 				final File dbFile = new File(SQLite.getDbFile(plugin));
-				if(dbFile.exists()) dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis()));
+				if(dbFile.exists() && !dbFile.renameTo(new File(SQLite.getDbFile(plugin) + ".old_" + System.currentTimeMillis())))
+				{
+					plugin.getLogger().warning("Failed to rename old database file.");
+				}
 				newDb = new SQLite(plugin, connectionProvider);
 				break;
 			default: newDb = null;

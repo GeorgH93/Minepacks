@@ -80,8 +80,10 @@ public class DebugCommand extends MinepacksCommand
 		messageStart.send(sender);
 
 		File debugFile = new File(plugin.getDataFolder(), "debug.txt");
-		if(debugFile.exists()) //noinspection ResultOfMethodCallIgnored
-			debugFile.delete();
+		if(debugFile.exists() && !debugFile.delete())
+		{
+			plugin.getLogger().warning("Unable to delete debug.txt file!");
+		}
 		writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(debugFile), StandardCharsets.UTF_8));
 
 		writer.append(plugin.getDescription().getName()).append(" Version: ").append(plugin.getDescription().getVersion());

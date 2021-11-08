@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
+import at.pcgamingfreaks.Version;
 import at.pcgamingfreaks.YamlFileManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Language
 {
-	private static final int LANG_VERSION = 19, UPGRADE_THRESHOLD = LANG_VERSION;
+	private static final Version LANG_VERSION = new Version(19), UPGRADE_THRESHOLD = LANG_VERSION;
 
 	public Language(JavaPlugin plugin)
 	{
