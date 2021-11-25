@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2021 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public class ItemsCollector extends BukkitRunnable
 			if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
 			if(player.getInventory().firstEmpty() == -1 && player.hasPermission(Permissions.USE) && player.hasPermission(Permissions.FULL_PICKUP))
 			{
-				// Only check loaded backpacks (loading them would take to much time for a repeating task, the backpack will be loaded async soon enough)
+				// Only check loaded backpacks (loading them would take too much time for a repeating task, the backpack will be loaded async soon enough)
 				Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
 				if(backpack == null)
 				{
@@ -68,12 +68,16 @@ public class ItemsCollector extends BukkitRunnable
 						Item item = (Item) entity;
 						if(!item.isDead() && item.getPickupDelay() <= 0)
 						{
-							if(itemFilter != null && itemFilter.isItemBlocked(item.getItemStack())) continue;
-							Map<Integer, ItemStack> full = backpack.addItems(item.getItemStack());
-							backpack.setChanged();
-							if(!full.isEmpty())
+							Map<Integer, ItemStack> leftover = player.getInventory().addItem(item.getItemStack());
+							if(!leftover.isEmpty())
 							{
-								item.setItemStack(full.get(0));
+								ItemStack itemStack = leftover.get(0);
+								if(itemStack == null || itemStack.getAmount() == 0 || (itemFilter != null && itemFilter.isItemBlocked(itemStack))) continue;
+								leftover = backpack.addItems(itemStack);
+							}
+							if(!leftover.isEmpty())
+							{
+								item.setItemStack(leftover.get(0));
 							}
 							else
 							{
