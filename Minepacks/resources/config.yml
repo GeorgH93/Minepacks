@@ -129,7 +129,8 @@ Database:
 
 Shulkerboxes:
   # This setting controls whether players can put shulkerboxes into their backpacks.
-  PreventInBackpack: true
+  PreventInBackpack: false
+ 
   # This setting allows disabling shulkerboxes all together. Players won't be able to craft or use them.
   DisableShulkerboxes: false
   # This setting controls how existing shulkerboxes are handled if they are disabled.
