@@ -17,7 +17,8 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API.Events;
 
-import org.bukkit.command.CommandSender;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -25,23 +26,22 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@RequiredArgsConstructor()
-public class InventoryClearEvent extends Event implements Cancellable
+/**
+ * Event is triggered bevor the backpacks content is dropped to the ground!
+ */
+public class BackpackDropOnDeathEvent extends Event implements Cancellable
 {
 	@Getter @Setter private boolean cancelled = false;
+	@Getter private final Player owner;
+	@Getter private final Backpack backpack;
 
-	/**
-	 * The player whose inventory should be cleared.
-	 */
-	@Getter final private Player player;
-
-	/**
-	 * The command sender who has requested the inventory to be cleared.
-	 */
-	@Getter final private CommandSender sender;
+	public BackpackDropOnDeathEvent(final @NotNull Player owner, final @NotNull Backpack backpack)
+	{
+		this.owner = owner;
+		this.backpack = backpack;
+	}
 
 	// Bukkit handler stuff
 	private static final HandlerList handlers = new HandlerList();

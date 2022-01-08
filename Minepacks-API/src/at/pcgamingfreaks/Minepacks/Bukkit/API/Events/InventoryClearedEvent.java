@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class InventoryClearedEvent extends Event
 {
 	/**
-	 * The player who's inventory has been cleared.
+	 * The player whose inventory has been cleared.
 	 */
 	@Getter final private Player player;
 
@@ -45,10 +45,9 @@ public class InventoryClearedEvent extends Event
 	@Override
 	public @NotNull HandlerList getHandlers()
 	{
-		return handlers;
+		return getHandlerList();
 	}
 
-	@SuppressWarnings("unused")
 	public static HandlerList getHandlerList()
 	{
 		return handlers;
