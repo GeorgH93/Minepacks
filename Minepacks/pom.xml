@@ -188,6 +188,7 @@
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone</shadedPattern>
 											<excludes>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.*</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Events.*</exclude>
 											</excludes>
 										</relocation>
 										<relocation>
