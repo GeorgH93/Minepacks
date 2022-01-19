@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
-			<version>1.9</version>
+			<version>1.11</version>
 		</dependency>
 		<!-- Tests -->
 		<dependency>
