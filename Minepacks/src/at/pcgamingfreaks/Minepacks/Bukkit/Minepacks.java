@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
+import at.pcgamingfreaks.Plugin.IPlugin;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
@@ -55,7 +56,7 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 
-public class Minepacks extends JavaPlugin implements MinepacksPlugin
+public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 {
 	private static Minepacks instance = null;
 
@@ -399,5 +400,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		if(shortcut == null) return false;
 		return shortcut.isItemShortcut(itemStack);
+	}
+
+	@Override
+	public @NotNull Version getVersion()
+	{
+		return new Version(getDescription().getVersion());
 	}
 }

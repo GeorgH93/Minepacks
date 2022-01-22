@@ -116,7 +116,7 @@ permissions:
     description: Allows to reload the config.
     default: op
   backpack.migrate:
-    description: Allows to migrate data from one format to another.
+    description: Allows migrating data from one format to another.
     default: op
   backpack.backup:
     description: Allows to create a backup of a backpack.
