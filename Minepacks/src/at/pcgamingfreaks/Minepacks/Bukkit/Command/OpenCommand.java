@@ -28,6 +28,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -95,8 +96,13 @@ public class OpenCommand extends MinepacksCommand
 		{
 			if(player.hasPermission(Permissions.OTHERS))
 			{
-				//noinspection deprecation
-				plugin.openBackpack(player, Bukkit.getOfflinePlayer(args[0]), player.hasPermission(Permissions.OTHERS_EDIT));
+				OfflinePlayer target = Bukkit.getPlayer(args[0]);
+				if(target == null)
+				{
+					//noinspection deprecation
+					target = Bukkit.getOfflinePlayer(args[0]);
+				}
+				plugin.openBackpack(player, target, player.hasPermission(Permissions.OTHERS_EDIT));
 			}
 			else
 			{
