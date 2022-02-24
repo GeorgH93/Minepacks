@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,6 +21,6 @@ import at.pcgamingfreaks.Bukkit.MCVersion;
 
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.33-SNAPSHOT";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.35-SNAPSHOT";
 	public static final MCVersion MIN_MC_VERSION_FOR_UPDATES = MCVersion.MC_1_8;
 }
