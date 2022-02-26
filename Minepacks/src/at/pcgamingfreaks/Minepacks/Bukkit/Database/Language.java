@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,34 +17,32 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
+import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Config.YamlFileManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Version;
-import at.pcgamingfreaks.YamlFileManager;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Language extends at.pcgamingfreaks.Bukkit.Language
+public class Language extends at.pcgamingfreaks.Bukkit.Config.Language
 {
-	private static final Version LANG_VERSION = new Version(19), UPGRADE_THRESHOLD = LANG_VERSION;
+	private static final Version LANG_VERSION = new Version(19);
 
-	public Language(JavaPlugin plugin)
+	public Language(Minepacks plugin)
 	{
-		super(plugin, LANG_VERSION, UPGRADE_THRESHOLD);
+		super(plugin, LANG_VERSION);
 	}
-
-	@Override
-	protected void doUpdate() {}
 
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldLang)
 	{
-		if(oldLang.getVersion() < 10) // Pre v2.0 versions
+		if(oldLang.getVersion().olderThan(new Version(10))) // Pre v2.0 versions
 		{
-			OldFileUpdater.updateLanguage(oldLang.getYamlE(), getYaml(), plugin.getLogger());
+			OldFileUpdater.updateLanguage(oldLang.getYamlE(), getYaml(), getLogger());
 		}
 		else
 		{
@@ -61,5 +59,13 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	{
 		List<String> aliases = getLangE().getStringList("Command." + command, new ArrayList<>(0));
 		return (aliases.size() > 0) ? aliases.toArray(new String[0]) : defaults;
+	}
+
+	@Override
+	public @NotNull Message getMessage(@NotNull String path)
+	{
+		Message msg = super.getMessage(path);
+		msg.enableStringFormat(); // TODO use new placeholder system instead!
+		return msg;
 	}
 }

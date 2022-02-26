@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -17,34 +17,34 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Bukkit.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
+import at.pcgamingfreaks.Config.Configuration;
+import at.pcgamingfreaks.Config.ILanguageConfiguration;
+import at.pcgamingfreaks.Config.YamlFileManager;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
-import at.pcgamingfreaks.YamlFileManager;
+import at.pcgamingfreaks.Version;
 
 import org.bukkit.*;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class Config extends Configuration implements DatabaseConnectionConfiguration
+public class Config extends Configuration implements DatabaseConnectionConfiguration, ILanguageConfiguration
 {
-	private static final int CONFIG_VERSION = 32, UPGRADE_THRESHOLD = CONFIG_VERSION, PRE_V2_VERSION = 20;
+	private static final Version CONFIG_VERSION = new Version(32), PRE_V2_VERSION = new Version(20);
 
-	public Config(JavaPlugin plugin)
+	public Config(Minepacks plugin)
 	{
-		super(plugin, CONFIG_VERSION, UPGRADE_THRESHOLD);
-		languageKey = "Language.Language";
-		languageUpdateKey = "Language.UpdateMode";
+		super(plugin, CONFIG_VERSION);
 	}
 
 	@Override
@@ -56,16 +56,16 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
-		if(oldConfig.getVersion() < PRE_V2_VERSION) // Pre V2.0 config file
+		if(oldConfig.getVersion().olderThan(PRE_V2_VERSION)) // Pre V2.0 config file
 		{
 			OldFileUpdater.updateConfig(oldConfig.getYamlE(), getConfigE());
 		}
 		else
 		{
 			Map<String, String> remappedKeys = new HashMap<>();
-			if(oldConfig.getVersion() <= 23) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
-			if(oldConfig.getVersion() <= 28) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
-			if(oldConfig.getVersion() <= 30)
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(23))) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(28))) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(30)))
 			{
 				remappedKeys.put("WorldSettings.FilteredWorlds", "WorldSettings.Blacklist");
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
@@ -130,7 +130,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			{
 				logger.warning("When using BungeeCord please make sure to set the UUID_Type config option explicitly!");
 			}
-			return plugin.getServer().getOnlineMode();
+			return Bukkit.getServer().getOnlineMode();
 		}
 		return type.equals("online");
 	}
