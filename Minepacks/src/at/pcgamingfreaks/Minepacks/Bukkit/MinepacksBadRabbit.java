@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ public class MinepacksBadRabbit extends BadRabbit
 	{
 		JavaPlugin newPluginInstance = null;
 		Plugin pcgfPluginLib = Bukkit.getPluginManager().getPlugin("PCGF_PluginLib");
+		boolean standalone = true;
 		if(pcgfPluginLib != null)
 		{
 			if(new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
@@ -45,18 +46,22 @@ public class MinepacksBadRabbit extends BadRabbit
 			else
 			{
 				getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
-				newPluginInstance = new Minepacks();
+				standalone = false;
 			}
 		}
 		else
 		{
 			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
 		}
-		if(newPluginInstance == null)
+		if(standalone)
 		{
 			Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
-			newPluginInstance = (JavaPlugin) standaloneClass.newInstance();
+			return (JavaPlugin) standaloneClass.newInstance();
 		}
-		return newPluginInstance;
+		else
+		{
+			Class<?> normalClass = Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.Minepacks");
+			return (JavaPlugin) normalClass.newInstance();
+		}
 	}
 }
