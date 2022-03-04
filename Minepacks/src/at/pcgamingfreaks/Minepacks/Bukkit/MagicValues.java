@@ -21,6 +21,6 @@ import at.pcgamingfreaks.Bukkit.MCVersion;
 
 public class MagicValues
 {
-	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.35-SNAPSHOT";
+	public static final String MIN_PCGF_PLUGIN_LIB_VERSION = "1.0.36-SNAPSHOT";
 	public static final MCVersion MIN_MC_VERSION_FOR_UPDATES = MCVersion.MC_1_8;
 }
