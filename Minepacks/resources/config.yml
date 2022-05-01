@@ -178,6 +178,7 @@ ItemShortcut:
   # The correct value is the one listed on the head page under Other/Value
   HeadTextureValue: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGRjYzZlYjQwZjNiYWRhNDFlNDMzOTg4OGQ2ZDIwNzQzNzU5OGJkYmQxNzVjMmU3MzExOTFkNWE5YTQyZDNjOCJ9fX0="
   # Increases compatibility with some death chest plugins. Enable this if the backpack item gets added to your death chest!
+  # Please note: This will not move items from the backpack to the death chest! The items in the backpack will still drop to the ground unless DropOnDeath is disabled.
   ImproveDeathChestCompatibility: false
   # Prevents the backpack from being used as a hat
   BlockAsHat: false
