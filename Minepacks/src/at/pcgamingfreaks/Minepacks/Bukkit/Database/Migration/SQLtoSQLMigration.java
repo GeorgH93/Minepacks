@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2018 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SuppressWarnings("ConstantConditions")
@@ -93,13 +95,14 @@ public class SQLtoSQLMigration extends ToSQLMigration
 		preparedStatement.setInt(1, backpacksResultSet.getInt((String) FIELD_BP_OWNER.get(oldDb)));
 		preparedStatement.setBytes(2, backpacksResultSet.getBytes((String) FIELD_BP_ITS.get(oldDb)));
 		preparedStatement.setInt(3, backpacksResultSet.getInt((String) FIELD_BP_VERSION.get(oldDb)));
+		final DateFormat sqliteDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		if(oldDb instanceof SQLite)
 		{
-			preparedStatement.setTimestamp(4, new Timestamp(SQLITE_DATE_FORMAT.parse(backpacksResultSet.getString((String) FIELD_BP_LAST_UPDATE.get(oldDb))).getTime()));
+			preparedStatement.setTimestamp(4, new Timestamp(sqliteDateFormat.parse(backpacksResultSet.getString((String) FIELD_BP_LAST_UPDATE.get(oldDb))).getTime()));
 		}
 		else
 		{
-			preparedStatement.setString(4, SQLITE_DATE_FORMAT.format(new Date(backpacksResultSet.getTimestamp((String) FIELD_BP_LAST_UPDATE.get(oldDb)).getTime())));
+			preparedStatement.setString(4, sqliteDateFormat.format(new Date(backpacksResultSet.getTimestamp((String) FIELD_BP_LAST_UPDATE.get(oldDb)).getTime())));
 		}
 	}
 }

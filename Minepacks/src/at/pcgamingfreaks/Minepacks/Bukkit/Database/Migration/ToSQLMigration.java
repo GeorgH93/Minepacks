@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -31,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 @SuppressWarnings("ConstantConditions")
 public abstract class ToSQLMigration extends Migration
@@ -45,7 +43,6 @@ public abstract class ToSQLMigration extends Migration
 	protected static final Field FIELD_BP_ITS         = Reflection.getField(SQL.class, "fieldBpIts");
 	protected static final Field FIELD_BP_VERSION     = Reflection.getField(SQL.class, "fieldBpVersion");
 	protected static final Field FIELD_BP_LAST_UPDATE = Reflection.getField(SQL.class, "fieldBpLastUpdate");
-	protected static final DateFormat SQLITE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 	protected final SQL newDb;
 
