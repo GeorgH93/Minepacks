@@ -41,7 +41,7 @@ public abstract class SQL extends Database
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
-	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks, queryGetUnsetOrInvalidUUIDs, queryFixUUIDs; // DB Querys
+	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks; // DB Querys
 	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
 	protected boolean syncCooldown;
 
@@ -111,65 +111,9 @@ public abstract class SQL extends Database
 
 	protected void checkUUIDs()
 	{
-		class UpdateData // Helper class for fixing UUIDs
-		{
-			int id;
-			String  uuid;
-
-			public UpdateData(String uuid, int id)
-			{
-				this.id = id;
-				this.uuid = uuid;
-			}
-		}
 		try(Connection connection = getConnection())
 		{
-			Map<String, UpdateData> toConvert = new HashMap<>();
-			List<UpdateData> toUpdate = new ArrayList<>();
-			try(Statement stmt = connection.createStatement(); ResultSet res = stmt.executeQuery(queryGetUnsetOrInvalidUUIDs))
-			{
-				while(res.next())
-				{
-					if(res.isFirst())
-					{
-						plugin.getLogger().info(START_UUID_UPDATE);
-					}
-					String uuid = res.getString(fieldPlayerUUID);
-					if(uuid == null)
-					{
-						toConvert.put(res.getString(fieldPlayerName).toLowerCase(Locale.ROOT), new UpdateData(null, res.getInt(fieldPlayerID)));
-					}
-					else
-					{
-						uuid = (useUUIDSeparators) ? uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") : uuid.replaceAll("-", "");
-						toUpdate.add(new UpdateData(uuid, res.getInt(fieldPlayerID)));
-					}
-				}
-			}
-			if(toConvert.size() > 0 || toUpdate.size() > 0)
-			{
-				if(toConvert.size() > 0)
-				{
-					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), onlineUUIDs, useUUIDSeparators);
-					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
-					{
-						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase(Locale.ROOT));
-						updateData.uuid = entry.getValue();
-						toUpdate.add(updateData);
-					}
-				}
-				try(PreparedStatement ps = connection.prepareStatement(queryFixUUIDs))
-				{
-					for(UpdateData updateData : toUpdate)
-					{
-						ps.setString(1, updateData.uuid);
-						ps.setInt(2, updateData.id);
-						ps.addBatch();
-					}
-					ps.executeBatch();
-				}
-				plugin.getLogger().info(String.format(UUIDS_UPDATED, toUpdate.size()));
-			}
+			DBTools.validateUUIDs(plugin.getLogger(), connection, tablePlayers, fieldPlayerName, fieldPlayerUUID, fieldPlayerID, useUUIDSeparators, onlineUUIDs);
 		}
 		catch(SQLException e)
 		{
@@ -195,15 +139,6 @@ public abstract class SQL extends Database
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
-		if(useUUIDSeparators)
-		{
-			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} NOT LIKE '%-%-%-%-%';";
-		}
-		else
-		{
-			queryGetUnsetOrInvalidUUIDs = "SELECT {FieldPlayerID},{FieldName},{FieldUUID} FROM {TablePlayers} WHERE {FieldUUID} IS NULL OR {FieldUUID} LIKE '%-%';";
-		}
-		queryFixUUIDs = "UPDATE {TablePlayers} SET {FieldUUID}=? WHERE {FieldPlayerID}=?;";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 
 		updateQuerysForDialect();
@@ -219,9 +154,7 @@ public abstract class SQL extends Database
 		queryGetBP                  = replacePlaceholders(queryGetBP);
 		queryInsertBp               = replacePlaceholders(queryInsertBp);
 		queryUpdateBp               = replacePlaceholders(queryUpdateBp);
-		queryFixUUIDs               = replacePlaceholders(queryFixUUIDs);
 		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
-		queryGetUnsetOrInvalidUUIDs = replacePlaceholders(queryGetUnsetOrInvalidUUIDs);
 		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
 		queryGetCooldown            = replacePlaceholders(queryGetCooldown);
 		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
