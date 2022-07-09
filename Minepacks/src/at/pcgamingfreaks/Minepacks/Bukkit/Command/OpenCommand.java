@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ public class OpenCommand extends MinepacksCommand
 
 	public OpenCommand(Minepacks plugin)
 	{
-		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Open"));
+		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, false, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
 		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f").replaceAll("\\{TimeSpanLeft}", "%2\\$s");
@@ -68,6 +68,11 @@ public class OpenCommand extends MinepacksCommand
 	@Override
 	public void execute(@NotNull CommandSender sender, @NotNull String main, @NotNull String s1, @NotNull String[] args)
 	{
+		if (!(sender instanceof Player))
+		{
+			handleOpenFromConsole(sender, args);
+			return;
+		}
 		Player player = (Player) sender;
 		if(args.length == 0)
 		{
@@ -109,6 +114,26 @@ public class OpenCommand extends MinepacksCommand
 				plugin.messageNoPermission.send(player);
 			}
 		}
+	}
+
+	void handleOpenFromConsole(final @NotNull CommandSender sender, final @NotNull String[] names)
+	{
+		int opened = 0;
+		List<String> notOnline = new ArrayList<>(names.length);
+		for(String name : names)
+		{
+			Player target = Bukkit.getPlayer(name);
+			if (target == null)
+			{
+				notOnline.add(name);
+			}
+			else if (target.hasPermission(Permissions.USE))
+			{
+				opened++;
+				plugin.openBackpack(target, target, true);
+			}
+		}
+		sender.sendMessage("Opened backpack of " + opened + " players." + (notOnline.isEmpty() ? "" : " Not online: " + String.join(", ", notOnline)));
 	}
 
 	@Override
