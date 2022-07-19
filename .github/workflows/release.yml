@@ -44,8 +44,3 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: 'artifacts/M*'
-
-    - name: Publish to GitHub Packages Apache Maven
-      run: 'mvn clean install deploy -pl Minepacks-API,Minepacks -s .github/workflows/settings.xml "-DaltDeploymentRepository=github::default::https://maven.pkg.github.com/GeorgH93/Minepacks"'
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
