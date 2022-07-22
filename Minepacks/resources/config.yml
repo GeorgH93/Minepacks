@@ -16,7 +16,7 @@ BackpackTitleOther: "&b{OwnerName}'s Backpack"
 BackpackTitle: "&bBackpack"
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.keepOnDeath" permission.
-DropOnDeath: true
+DropOnDeath: false
 # If this option is enabled the backpack will not drop if the keepInventory flag for the death event is set.
 # This should add compatibility with plugins protecting the players inventory on death (like SaveRod). But might prevent the backpack form dropping on death with some plugins.
 HonorKeepInventoryOnDeath: false
