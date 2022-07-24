@@ -94,7 +94,7 @@ Database:
   # Changing settings down here after you have used this plugin may result in data inconsistency!!!
   Tables:
     # Table names
-    # Don't change the players table if you have backpacks stored in your database already! Player id's might won't match anymore resulting data inconsistency.
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might not match any more resulting data inconsistency.
     User: backpack_players
     Backpack: backpacks
     Cooldown: backpack_cooldowns
