@@ -1,0 +1,113 @@
+Version: 19
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
+Language:
+  NotFromConsole: "&c命令无法从控制台使用。"
+  Ingame:
+    NoPermission: "&c你没有权限这么做。"
+    WorldDisabled: "&c这个世界是不允许使用背包的。"
+    NaN: "[\"\",{\"text\":\"输入的值不是数字!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "背包关闭!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName}的背包关闭!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "无效的背包。"
+    NotAllowedInBackpack: "&c{ItemName} 不允许放在背包里。"
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&c你不能从你的物品栏中删除背包快捷方式!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"请等待 \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} 秒\"}},{\"text\":\" 才能重新打开背包。\"}]"
+      # Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "在当前游戏模式下，你不允许打开背包。"
+    Clean:
+      BackpackCleaned: "背包已清空"
+      BackpackCleanedBy: "您的背包 {DisplayName} 已被清空&r."
+      BackpackCleanedOther: "{DisplayName}的&r 背包已经清除。"
+    Sort:
+      Sorted: "整理背包"
+    Help:
+      Header: "&6### Minepacks 指令 ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&3重载Minepacks中……"
+      Reloaded: "&aMinepacks重载成功!"
+    Update:
+      CheckingForUpdates: "&3检查更新中…"
+      Updated: "[\"\",{\"text\":\"插件已更新，将在下次重启时加载.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"没有更新的插件.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"在查找更新时出现了问题!请检查控制台!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"有一个可用的更新! 请浏览 \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" 去下载!\"}]"
+    Backup:
+      Created: "背包备份成功。"
+      NoBackpack: "玩家没有背包或者背包是空的。"
+    Restore:
+      BackupsPerPage: "10"
+      Headline: "[\"\",{\"text\":\"备份\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"页面 {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< 上一页 <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" 当前页面 {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> 下一页 >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"User: {BackupPlayerName} ({BackupPlayerUUID})\\nCreated: {BackupDate}\"}}]"
+      NoValidBackup: "没有找到匹配{BackupIdentifier}的备份"
+      NoUserToRestoreToFound: "没有有效用户可将备份恢复到已找到的位置"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "备份已成功恢复。"
+    InventoryClear:
+      UnknownPlayer: "&c找不到玩家 {Name}!"
+      Cleared: "背包东西清空。"
+      ClearedOther: "{DisplayName}的&r 背包东西已经清空。"
+      ClearedOtherTarget: "你的背包东西已经清空了 {DisplayName}&r."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "打开你的背包。"
+      Sort: "整理你的背包。"
+      Clean: "清空你的背包。"
+      CleanOthers: "清空其他玩家的背包。"
+      OpenOthers: "这是另一个玩家的背包。"
+      Reload: "重新加载插件的配置。"
+      Update: "检查新的插件更新。"
+      Version: "打印关于插件及其依赖项的版本详细信息。"
+      Backup: "创建玩家背包的备份。"
+      BackupEveryone: "创建当前在线的所有人的备份。"
+      Restore: "恢复备份。"
+      RestoreList: "列出所有可用的备份。"
+      Help: "显示所有可用命令及其描述。"
+      Migrate: "将使用的数据库从一种类型迁移到另一种类型。"
+LanguageName: "简体中文"
+Author: "Liou_Yang"
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
