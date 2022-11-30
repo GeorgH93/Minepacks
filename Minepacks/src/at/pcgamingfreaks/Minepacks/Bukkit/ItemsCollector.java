@@ -72,8 +72,8 @@ public class ItemsCollector extends BukkitRunnable
 		{
 			if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
 
-			// Check toggle
-			if (!isToggleable || !isPickupEnabled(player.getUniqueId())) return;
+			// If toggle is enabled AND player has been disabled, return.
+			if (isToggleable && !isPickupEnabled(player.getUniqueId())) return;
 
 			// No permission ot use the backpack.
 			if (!player.hasPermission(Permissions.USE)) return;
