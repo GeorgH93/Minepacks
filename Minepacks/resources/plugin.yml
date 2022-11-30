@@ -84,6 +84,9 @@ permissions:
   backpack.fullpickup:
     description: Allows the player to automatically pick up items when their inventory is full (function needs to be enabled in the config)
     defaut: true
+  backpack.fullpickup.toggle:
+    description: Allows the player to toggle the automatic pickup feature.
+    default: true
   backpack.clean.other:
     description: Allows the player to clean other players backpacks.
     default: op
