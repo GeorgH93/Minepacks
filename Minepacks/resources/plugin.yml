@@ -17,6 +17,7 @@ permissions:
       backpack.keepOnDeath: true
       backpack.clean: true
       backpack.fullpickup: true
+      backpack.fullpickup.toggle: true
       backpack.bypass: true
       backpack.admin: true
   backpack.disable:
