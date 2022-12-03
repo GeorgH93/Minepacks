@@ -60,6 +60,10 @@ Language:
       Cleared: "Inventory cleared."
       ClearedOther: "{DisplayName}'s&r inventory has been cleared."
       ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
+    Pickup:
+      NotEnabled: "&cNot allowed. &7This server doesn't allow you to change the toggle item collection."
+      ToggleOn: "&7Automatic item collection has been toggled &aON&7."
+      ToggleOff: "&7Automatic item collection has been toggled &cOFF&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -78,6 +82,7 @@ Language:
       RestoreList: "Lists all available backups."
       Help: "Shows all available commands and their description."
       Migrate: "Migrates the used database from one type to another."
+      Pickup: "Toggle the state of the automatic pickup when the inventory is full."
 
 Command:
   Backpack:
@@ -110,6 +115,9 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
+    - toggle
 
 # Will be shown in the console during startup
 LanguageName: "english"

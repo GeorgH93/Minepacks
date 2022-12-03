@@ -25,6 +25,7 @@ public class Permissions
 	public static final String CLEAN = BASE + "clean";
 	public static final String CLEAN_OTHER = BASE + "clean.other";
 	public static final String FULL_PICKUP = BASE + "fullpickup";
+	public static final String PICKUP_TOGGLE = BASE + "fullpickup.toggle";
 	public static final String OTHERS = BASE + "others";
 	public static final String OTHERS_EDIT = BASE + "others.edit";
 	public static final String KEEP_ON_DEATH = BASE + "keepOnDeath";

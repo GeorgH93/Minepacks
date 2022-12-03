@@ -317,6 +317,14 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	{
 		return getConfigE().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
 	}
+
+	public boolean isToggleAllowed() {
+		return getConfigE().getBoolean("FullInventory.IsToggleAllowed", false);
+	}
+
+	public boolean isEnabledOnJoin() {
+		return getFullInvCollect();
+	}
 	//endregion
 
 	//region Shulkerboxes
