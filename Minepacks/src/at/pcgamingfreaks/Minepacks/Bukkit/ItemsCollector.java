@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -78,8 +78,8 @@ public class ItemsCollector extends BukkitRunnable
 			// No permission ot use the backpack.
 			if (!player.hasPermission(Permissions.USE)) return;
 
-			// If a player has either of these permissions, pickup is allowed.
-			if (!player.hasPermission(Permissions.FULL_PICKUP) && !player.hasPermission(Permissions.PICKUP_TOGGLE));
+			// Check if auto pickup is allowed
+			if (!player.hasPermission(Permissions.FULL_PICKUP)) return;
 
 			// Inventory is full
 			if (player.getInventory().firstEmpty() != -1) return;
