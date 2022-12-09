@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Command.CommandExecutorWithSubCommandsGeneric;
+import at.pcgamingfreaks.Bukkit.Command.RegisterablePluginCommand;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Bukkit.Command.RegisterablePluginCommand;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
@@ -81,7 +81,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		registerSubCommand(new RestoreCommand(plugin));
 		registerSubCommand(new MigrateCommand(plugin));
 		registerSubCommand(new VersionCommand(plugin));
-		registerSubCommand(new PickupCommand(plugin));
+		if (plugin.getConfiguration().getFullInvCollect() && plugin.getConfiguration().isToggleAllowed()) registerSubCommand(new PickupCommand(plugin));
 		registerSubCommand(new DebugCommand(plugin));
 		registerSubCommand(new HelpCommand(plugin, commands, this));
 	}
@@ -129,7 +129,6 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 				{
 					case Message: plugin.messageWorldDisabled.send(sender); break;
 					case MissingPermission: plugin.messageNoPermission.send(sender); break;
-					case NoPlugin: return null;
 				}
 				return null;
 			}

@@ -40,7 +40,7 @@ import java.util.*;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, ILanguageConfiguration
 {
-	private static final Version CONFIG_VERSION = new Version(32), PRE_V2_VERSION = new Version(20);
+	private static final Version CONFIG_VERSION = new Version(33), PRE_V2_VERSION = new Version(20);
 
 	public Config(Minepacks plugin)
 	{

@@ -216,7 +216,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		else shortcut = null;
 		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
 		//endregion
-		if(config.getFullInvCollect() || config.isToggleAllowed()) collector = new ItemsCollector(this);
+		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
 		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlockMode();
 

@@ -30,7 +30,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Config.Language
 {
-	private static final Version LANG_VERSION = new Version(19);
+	private static final Version LANG_VERSION = new Version(20);
 
 	public Language(Minepacks plugin)
 	{

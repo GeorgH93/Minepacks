@@ -61,7 +61,6 @@ Language:
       ClearedOther: "{DisplayName}'s&r inventory has been cleared."
       ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
     Pickup:
-      NotEnabled: "&cNot allowed. &7This server doesn't allow you to change the toggle item collection."
       ToggleOn: "&7Automatic item collection has been toggled &aON&7."
       ToggleOff: "&7Automatic item collection has been toggled &cOFF&7."
   Commands:
@@ -123,4 +122,4 @@ LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 19
+Version: 20

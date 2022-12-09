@@ -65,47 +65,56 @@ public class ItemsCollector extends BukkitRunnable
 		itemFilter = plugin.getItemFilter();
 	}
 
+	private boolean canUseAutoPickup(Player player)
+	{
+		// Check if player can use in world
+		if(plugin.isDisabled(player) != WorldBlacklistMode.None) return false;
+
+		// Check if toggle is enabled AND player has been disabled, return.
+		if (isToggleable && !isPickupEnabled(player.getUniqueId())) return false;
+
+		// Check permission
+		return (player.hasPermission(Permissions.USE) && player.hasPermission(Permissions.FULL_PICKUP));
+	}
+
 	@Override
 	public void run()
 	{
 		for(Player player : Bukkit.getServer().getOnlinePlayers())
 		{
-			if(plugin.isDisabled(player) != WorldBlacklistMode.None) return;
-
-			// If toggle is enabled AND player has been disabled, return.
-			if (isToggleable && !isPickupEnabled(player.getUniqueId())) return;
-
-			// No permission ot use the backpack.
-			if (!player.hasPermission(Permissions.USE)) return;
-
-			// Check if auto pickup is allowed
-			if (!player.hasPermission(Permissions.FULL_PICKUP)) return;
+			if (!canUseAutoPickup(player)) continue;
 
 			// Inventory is full
-			if (player.getInventory().firstEmpty() != -1) return;
+			if (player.getInventory().firstEmpty() != -1) continue;
 
 			// Only check loaded backpacks (loading them would take too much time for a repeating task, the backpack will be loaded async soon enough)
 			Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
-			if(backpack == null)
-			{
-				continue;
-			}
+			if (backpack == null) continue;
+
 			List<Entity> entities = player.getNearbyEntities(radius, radius, radius);
 			for(Entity entity : entities)
 			{
-				if(entity instanceof Item) {
+				if(entity instanceof Item)
+				{
 					Item item = (Item) entity;
-					if (!item.isDead() && item.getPickupDelay() <= 0) {
+					if (!item.isDead() && item.getPickupDelay() <= 0)
+					{
 						Map<Integer, ItemStack> leftover = player.getInventory().addItem(item.getItemStack());
-						if (!leftover.isEmpty()) {
+						if (!leftover.isEmpty())
+						{
 							ItemStack itemStack = leftover.get(0);
 							if (itemStack == null || itemStack.getAmount() == 0 || (itemFilter != null && itemFilter.isItemBlocked(itemStack)))
+							{
 								continue;
+							}
 							leftover = backpack.addItems(itemStack);
 						}
-						if (!leftover.isEmpty()) {
+						if (!leftover.isEmpty())
+						{
 							item.setItemStack(leftover.get(0));
-						} else {
+						}
+						else
+						{
 							item.remove();
 						}
 					}
@@ -124,9 +133,11 @@ public class ItemsCollector extends BukkitRunnable
 	 * @param uuid The players UUID
 	 * @return The new state. True = collection enabled.
 	 */
-	public boolean toggleState(UUID uuid) {
+	public boolean toggleState(UUID uuid)
+	{
 		boolean removed = toggleList.remove(uuid);
-		if (!removed) {
+		if (!removed)
+		{
 			toggleList.add(uuid);
 		}
 		return isPickupEnabled(uuid);
@@ -137,15 +148,8 @@ public class ItemsCollector extends BukkitRunnable
 	 * @param uuid The player uuid
 	 * @return true if enabled
 	 */
-	public boolean isPickupEnabled(UUID uuid) {
+	public boolean isPickupEnabled(UUID uuid)
+	{
 		return enabledOnJoin ^ toggleList.contains(uuid);
-	}
-
-	/**
-	 * If this feature is enabled or not.
-	 * @return
-	 */
-	public boolean isToggleable() {
-		return isToggleable;
 	}
 }
