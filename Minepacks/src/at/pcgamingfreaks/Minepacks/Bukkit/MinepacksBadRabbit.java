@@ -26,7 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Uses BadRabbit to initiate the plugin in normal or standalone mode depending on the users environment.
+ * Uses BadRabbit to initiate the plugin in normal or standalone mode depending on the users' environment.
  */
 @SuppressWarnings("unused")
 public class MinepacksBadRabbit extends BadRabbit
@@ -34,7 +34,6 @@ public class MinepacksBadRabbit extends BadRabbit
 	@Override
 	protected @NotNull JavaPlugin createInstance() throws Exception
 	{
-		JavaPlugin newPluginInstance = null;
 		Plugin pcgfPluginLib = Bukkit.getPluginManager().getPlugin("PCGF_PluginLib");
 		boolean standalone = true;
 		if(pcgfPluginLib != null)
