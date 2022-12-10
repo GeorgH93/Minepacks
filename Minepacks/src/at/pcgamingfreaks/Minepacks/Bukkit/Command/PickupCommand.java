@@ -1,5 +1,4 @@
 /*
- *   Copyright (C) 2022 MartenM
  *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -71,6 +70,6 @@ public class PickupCommand extends MinepacksCommand
 	@Override
 	public boolean canUse(@NotNull CommandSender sender)
 	{
-		return canUse(sender) && sender.hasPermission(Permissions.FULL_PICKUP) && sender.hasPermission(Permissions.USE);
+		return super.canUse(sender) && sender.hasPermission(Permissions.FULL_PICKUP) && sender.hasPermission(Permissions.USE);
 	}
 }
