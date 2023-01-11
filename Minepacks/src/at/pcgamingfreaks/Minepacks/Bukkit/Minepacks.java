@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2022 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -216,7 +216,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		else shortcut = null;
 		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
 		//endregion
-		if(config.getFullInvCollect()) collector = new ItemsCollector(this);
+		if(config.getFullInvCollect() || config.isFullInvToggleAllowed()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
 		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlockMode();
 

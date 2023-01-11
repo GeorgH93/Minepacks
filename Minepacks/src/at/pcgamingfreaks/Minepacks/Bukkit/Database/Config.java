@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2022 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -318,11 +318,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
 	}
 
-	public boolean isToggleAllowed() {
+	public boolean isFullInvToggleAllowed() {
 		return getConfigE().getBoolean("FullInventory.IsToggleAllowed", false);
 	}
 
-	public boolean isEnabledOnJoin() {
+	public boolean isFullInvEnabledOnJoin() {
 		return getFullInvCollect();
 	}
 	//endregion

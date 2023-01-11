@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2022 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -81,7 +81,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		registerSubCommand(new RestoreCommand(plugin));
 		registerSubCommand(new MigrateCommand(plugin));
 		registerSubCommand(new VersionCommand(plugin));
-		if (plugin.getConfiguration().getFullInvCollect() && plugin.getConfiguration().isToggleAllowed()) registerSubCommand(new PickupCommand(plugin));
+		if (plugin.getConfiguration().isFullInvToggleAllowed()) registerSubCommand(new PickupCommand(plugin));
 		registerSubCommand(new DebugCommand(plugin));
 		registerSubCommand(new HelpCommand(plugin, commands, this));
 	}

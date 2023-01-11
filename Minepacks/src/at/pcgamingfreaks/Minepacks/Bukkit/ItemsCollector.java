@@ -1,6 +1,5 @@
 /*
- *   Copyright (C) 2022 MartenM
- *   Copyright (C) 2022 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -58,8 +57,8 @@ public class ItemsCollector extends BukkitRunnable
 		this.plugin = plugin;
 		this.radius = plugin.getConfiguration().getFullInvRadius();
 
-		this.isToggleable = plugin.getConfiguration().isToggleAllowed();
-		this.enabledOnJoin = plugin.getConfiguration().isEnabledOnJoin();
+		this.isToggleable = plugin.getConfiguration().isFullInvToggleAllowed();
+		this.enabledOnJoin = plugin.getConfiguration().isFullInvEnabledOnJoin();
 		this.toggleList = new HashSet<>();
 
 		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
