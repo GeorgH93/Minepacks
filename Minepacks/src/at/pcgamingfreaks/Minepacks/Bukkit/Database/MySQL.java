@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2019 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public class MySQL extends SQL
 			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} VARCHAR(16) NOT NULL,\n" +
 					                                                 "{FieldUUID} CHAR(" +  ((useUUIDSeparators) ? "36" : "32") + ") DEFAULT NULL," + "\nPRIMARY KEY ({FieldPlayerID}),\n" +
 					                                                 "UNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n);"));
-			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
+			DBTools.updateDB(connection, replacePlaceholders("CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} MEDIUMBLOB,\n{FieldBPVersion} INT DEFAULT 0,\n" +
 					                                                 "{FieldBPLastUpdate} TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n" +
 					                                                 "PRIMARY KEY ({FieldBPOwner}),\nCONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) " +
 					                                                 "REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n);"));
