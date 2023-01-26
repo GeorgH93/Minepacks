@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.BadRabbit.Bukkit.BadRabbit;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
 
 import org.bukkit.Bukkit;

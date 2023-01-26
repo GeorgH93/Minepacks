@@ -122,4 +122,4 @@ LanguageName: "english"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 20
+Version: ${languageFileVersion}

@@ -26,6 +26,10 @@
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
 		<mavenShade.version>3.3.0</mavenShade.version>
+
+		<configFileVersion>33</configFileVersion>
+		<languageFileVersion>20</languageFileVersion>
+		<pcgfPluginLibVersion>1.0.39-SNAPSHOT</pcgfPluginLibVersion>
 	</properties>
 
 	<pluginRepositories>
@@ -42,11 +46,16 @@
 			<artifactId>Minepacks-API</artifactId>
 			<version>${revision}</version>
 		</dependency>
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>Minepacks-MagicValues</artifactId>
+			<version>${revision}</version>
+		</dependency>
 		<!-- PCGF Plugin Lib -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
-			<version>1.0.38-SNAPSHOT</version>
+			<version>${pcgfPluginLibVersion}</version>
 		</dependency>
 		<!-- BadRabbit -->
 		<dependency>
@@ -104,6 +113,7 @@
 							<artifactSet>
 								<includes>
 									<include>at.pcgamingfreaks:Minepacks-API</include>
+									<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 								</includes>
 							</artifactSet>
 						</configuration>
@@ -175,6 +185,7 @@
 									<artifactSet>
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
+											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 											<include>at.pcgamingfreaks:PluginLib</include>
 										</includes>
 									</artifactSet>
@@ -270,6 +281,7 @@
 									<artifactSet>
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
+											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 											<include>at.pcgamingfreaks:BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks</include>
 										</includes>

@@ -32,6 +32,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Plugin.IPlugin;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;

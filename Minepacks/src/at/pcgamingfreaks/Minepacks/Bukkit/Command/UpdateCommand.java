@@ -20,9 +20,9 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -48,7 +48,7 @@ public class UpdateCommand extends MinepacksCommand
 	@Override
 	public void execute(@NotNull final CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
 	{
-		if(MCVersion.isNewerOrEqualThan(MagicValues.MIN_MC_VERSION_FOR_UPDATES))
+		if(MCVersion.isNewerOrEqualThan(MCVersion.getFromVersionName(MagicValues.MIN_MC_VERSION_FOR_UPDATES)))
 		{
 			messageCheckingForUpdates.send(sender);
 			/*if_not[STANDALONE]*/

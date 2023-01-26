@@ -142,6 +142,7 @@
 
 	<modules>
 		<module>Minepacks-API</module>
+		<module>Components/Minepacks-MagicValues</module>
 		<module>Minepacks</module>
 	</modules>
 
