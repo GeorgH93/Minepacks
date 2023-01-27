@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Config.YamlFileManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
 
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class Language extends at.pcgamingfreaks.Bukkit.Config.Language
 {
-	private static final Version LANG_VERSION = new Version(20);
+	private static final Version LANG_VERSION = new Version(MagicValues.LANG_VERSION);
 
 	public Language(Minepacks plugin)
 	{
