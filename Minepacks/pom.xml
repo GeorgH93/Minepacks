@@ -26,10 +26,6 @@
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
 		<mavenShade.version>3.3.0</mavenShade.version>
-
-		<configFileVersion>33</configFileVersion>
-		<languageFileVersion>20</languageFileVersion>
-		<pcgfPluginLibVersion>1.0.39-SNAPSHOT</pcgfPluginLibVersion>
 	</properties>
 
 	<pluginRepositories>
@@ -74,7 +70,6 @@
 
 	<build>
 		<defaultGoal>clean package test</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test/src</testSourceDirectory>
 		<resources>
 			<resource>
@@ -260,6 +255,11 @@
 					<version>${project.version}</version>
 					<classifier>Standalone</classifier>
 				</dependency>
+				<dependency>
+					<groupId>at.pcgamingfreaks</groupId>
+					<artifactId>Minepacks-BadRabbit-Bukkit</artifactId>
+					<version>${project.version}</version>
+				</dependency>
 			</dependencies>
 			<build>
 				<plugins>
@@ -283,6 +283,7 @@
 											<include>at.pcgamingfreaks:Minepacks-API</include>
 											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 											<include>at.pcgamingfreaks:BadRabbit-Bukkit</include>
+											<include>at.pcgamingfreaks:Minepacks-BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks</include>
 										</includes>
 									</artifactSet>

@@ -15,7 +15,6 @@
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
-		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
 				<directory>resources</directory>

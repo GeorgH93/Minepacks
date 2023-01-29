@@ -11,6 +11,12 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<configFileVersion>33</configFileVersion>
+		<languageFileVersion>20</languageFileVersion>
+		<pcgfPluginLibVersion>1.0.39-SNAPSHOT</pcgfPluginLibVersion>
+
+		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
+
 		<sonar.organization>georgh93</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
@@ -62,7 +68,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>${bukkitVersion}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Lombok -->
@@ -76,6 +82,7 @@
 
 	<build>
 		<defaultGoal>clean package</defaultGoal>
+		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -143,6 +150,7 @@
 	<modules>
 		<module>Minepacks-API</module>
 		<module>Components/Minepacks-MagicValues</module>
+		<module>Components/Minepacks-BadRabbit-Bukkit</module>
 		<module>Minepacks</module>
 	</modules>
 
