@@ -32,7 +32,6 @@
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
 			<version>1.11</version>
-			<scope>provided</scope>
 		</dependency>
 		<!-- Bukkit -->
 		<dependency>
