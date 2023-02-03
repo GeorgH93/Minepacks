@@ -150,9 +150,21 @@
 	<modules>
 		<module>Minepacks-API</module>
 		<module>Components/Minepacks-MagicValues</module>
-		<module>Components/Minepacks-BadRabbit-Bukkit</module>
 		<module>Minepacks</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<modules>
+				<module>Components/Minepacks-BadRabbit-Bukkit</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<distributionManagement>
 		<repository>
