@@ -81,6 +81,7 @@ Language:
       RestoreList: "列出所有可用的备份。"
       Help: "显示所有可用命令及其描述。"
       Migrate: "将使用的数据库从一种类型迁移到另一种类型。"
+      Pickup: "在物品栏已满时切换自动收集的状态。"
 Command:
   Backpack:
     - backpack
