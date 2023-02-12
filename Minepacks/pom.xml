@@ -173,7 +173,7 @@
 											<pattern>at.pcgamingfreaks</pattern>
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.at.pcgamingfreaks</shadedPattern>
 											<excludes>
-												<exclude>at.pcgamingfreaks.Minepacks.*</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.**</exclude>
 											</excludes>
 										</relocation>
 									</relocations>
