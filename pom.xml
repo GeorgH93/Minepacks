@@ -162,6 +162,7 @@
 
 			<modules>
 				<module>Components/Minepacks-BadRabbit-Bukkit</module>
+				<module>Minepacks-Paper</module>
 			</modules>
 		</profile>
 	</profiles>

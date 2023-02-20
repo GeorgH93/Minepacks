@@ -1,0 +1,7 @@
+name: "Minepacks"
+author: "GeorgH93"
+version: "${version}"
+api-version: "1.19"
+
+main: "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks"
+bootstrapper: "at.pcgamingfreaks.Minepacks.Paper.MinepacksBootstrap"
