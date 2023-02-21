@@ -5,3 +5,7 @@ api-version: "1.19"
 
 main: "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks"
 bootstrapper: "at.pcgamingfreaks.Minepacks.Paper.MinepacksBootstrap"
+
+dependencies:
+  - name: PCGF_PluginLib
+    required: false

@@ -23,8 +23,15 @@ import org.jetbrains.annotations.NotNull;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
 import io.papermc.paper.plugin.bootstrap.PluginProviderContext;
 
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+
+@SuppressWarnings({ "UnstableApiUsage", "unused" })
 public class MinepacksBootstrap implements PluginBootstrap
 {
+	private static final String MAIN_CLASS_NORMAL = "at.pcgamingfreaks.Minepacks.Bukkit.Minepacks";
+	private static final String MAIN_CLASS_STANDALONE = "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks";
+
 	@Override
 	public void bootstrap(@NotNull PluginProviderContext context)
 	{
@@ -33,41 +40,62 @@ public class MinepacksBootstrap implements PluginBootstrap
 	@Override
 	public @NotNull JavaPlugin createPlugin(@NotNull PluginProviderContext context)
 	{
-		//TODO find a way to check if PCGF PluginLib exists
-		//Plugin pcgfPluginLib = Bukkit.getPluginManager().getPlugin("PCGF_PluginLib");
-		boolean standalone = true;
-		/*if(pcgfPluginLib != null)
-		{
-			if(new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
-			{
-				getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
-			}
-			else
-			{
-				getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
-				standalone = false;
-			}
-		}
-		else
-		{
-			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
-		}*/
 		try
 		{
-			if(standalone)
+			if(checkPcgfPluginLib(context) && patchPluginMeta(context))
 			{
-				Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
-				return (JavaPlugin) standaloneClass.newInstance();
+				Class<?> normalClass = Class.forName(MAIN_CLASS_NORMAL);
+				return (JavaPlugin) normalClass.newInstance();
 			}
 			else
 			{
-				Class<?> normalClass = Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.Minepacks");
-				return (JavaPlugin) normalClass.newInstance();
+				Class<?> standaloneClass = Class.forName(MAIN_CLASS_STANDALONE);
+				return (JavaPlugin) standaloneClass.newInstance();
 			}
 		}
 		catch(Exception e)
 		{
 			throw new RuntimeException("Failed to create Minepacks plugin instance!", e);
 		}
+	}
+
+	private boolean patchPluginMeta(final @NotNull PluginProviderContext context)
+	{
+		try
+		{
+			Class<?> pluginMetaClass = context.getConfiguration().getClass();
+			Field mainField = pluginMetaClass.getDeclaredField("main");
+			mainField.setAccessible(true);
+			mainField.set(context.getConfiguration(), MAIN_CLASS_NORMAL);
+			return true;
+		}
+		catch(Exception e)
+		{
+			context.getLogger().log(Level.SEVERE, "Failed to patch main class in PluginMeta! Falling back to Standalone mode!", e);
+		}
+		return false;
+	}
+
+	private boolean checkPcgfPluginLib(final @NotNull PluginProviderContext context)
+	{
+		try
+		{
+			Class.forName("at.pcgamingfreaks.PluginLib.Bukkit.PluginLib");
+			//if (new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
+			if (true) // TODO check version
+			{
+				context.getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
+			}
+			else
+			{
+				context.getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
+			}
+			return true;
+		}
+		catch(ClassNotFoundException ignored)
+		{
+			context.getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
+		}
+		return false;
 	}
 }
