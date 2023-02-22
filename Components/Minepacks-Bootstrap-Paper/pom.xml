@@ -38,6 +38,12 @@
 			<version>1.19.3-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>Minepacks-MagicValues</artifactId>
+			<version>${version}</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

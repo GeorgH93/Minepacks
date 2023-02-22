@@ -17,6 +17,10 @@
 
 package at.pcgamingfreaks.Minepacks.Paper;
 
+import at.pcgamingfreaks.Minepacks.MagicValues;
+import at.pcgamingfreaks.PCGF_PluginLibVersionDetection;
+import at.pcgamingfreaks.Version;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -78,21 +82,21 @@ public class MinepacksBootstrap implements PluginBootstrap
 
 	private boolean checkPcgfPluginLib(final @NotNull PluginProviderContext context)
 	{
-		try
+		String version = PCGF_PluginLibVersionDetection.getVersionBukkit();
+		if (version != null)
 		{
-			Class.forName("at.pcgamingfreaks.PluginLib.Bukkit.PluginLib");
-			//if (new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
-			if (true) // TODO check version
+
+			if (new Version(version).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
 			{
-				context.getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
+				context.getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
+				return true;
 			}
 			else
 			{
-				context.getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
+				context.getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
 			}
-			return true;
 		}
-		catch(ClassNotFoundException ignored)
+		else
 		{
 			context.getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
 		}
