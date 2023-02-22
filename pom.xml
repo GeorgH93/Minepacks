@@ -16,6 +16,7 @@
 		<pcgfPluginLibVersion>1.0.39-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
+		<mavenShade.version>3.4.1</mavenShade.version>
 
 		<sonar.organization>georgh93</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -162,7 +163,7 @@
 
 			<modules>
 				<module>Components/Minepacks-BadRabbit-Bukkit</module>
-				<module>Minepacks-Paper</module>
+				<module>Components/Minepacks-Bootstrap-Paper</module>
 			</modules>
 		</profile>
 	</profiles>

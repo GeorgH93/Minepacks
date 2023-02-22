@@ -25,7 +25,6 @@
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
-		<mavenShade.version>3.3.0</mavenShade.version>
 	</properties>
 
 	<pluginRepositories>
@@ -239,7 +238,7 @@
 				</dependency>
 				<dependency>
 					<groupId>at.pcgamingfreaks</groupId>
-					<artifactId>Minepacks-Paper</artifactId>
+					<artifactId>Minepacks-Bootstrap-Paper</artifactId>
 					<version>${project.version}</version>
 				</dependency>
 			</dependencies>
@@ -264,7 +263,7 @@
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
 											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
-											<include>at.pcgamingfreaks:Minepacks-Paper</include>
+											<include>at.pcgamingfreaks:Minepacks-Bootstrap-Paper</include>
 											<include>at.pcgamingfreaks:BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks-BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks</include>
