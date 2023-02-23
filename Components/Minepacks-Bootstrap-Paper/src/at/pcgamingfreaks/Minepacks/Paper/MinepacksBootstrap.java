@@ -85,15 +85,14 @@ public class MinepacksBootstrap implements PluginBootstrap
 		String version = PCGF_PluginLibVersionDetection.getVersionBukkit();
 		if (version != null)
 		{
-
 			if (new Version(version).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
 			{
 				context.getLogger().info("PCGF-PluginLib to old! Switching to standalone mode!");
-				return true;
 			}
 			else
 			{
 				context.getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
+				return true;
 			}
 		}
 		else
