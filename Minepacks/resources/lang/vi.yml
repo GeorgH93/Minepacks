@@ -1,0 +1,121 @@
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
+Language:
+  NotFromConsole: "&cCommand không sử dụng được từ bảng điều khiển."
+  Ingame:
+    NoPermission: "&cBạn không có quyền làm điều đó."
+    WorldDisabled: "&cViệc sử dụng ba lô không được phép trong thế giới này."
+    NaN: "[\"\",{\"text\":\"Giá trị đã nhập không phải là số!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Ba lô đóng lại!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    # Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "Ba lô của {OwnerName} đã đóng!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Ba lô không hợp lệ."
+    NotAllowedInBackpack: "&c{ItemName} không được phép để trong ba lô."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cBạn không được xóa phím tắt ba lô khỏi hành trang của mình!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Vui lòng đợi \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{ TimeLeft} seconds\"}},{\"text\":\" cho đến khi bạn mở lại ba lô của mình.\"}]"
+      # Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Bạn không được phép mở ba lô trong chế độ trò chơi hiện tại."
+    Clean:
+      BackpackCleaned: "Đã xóa ba lô."
+      BackpackCleanedBy: "Ba lô của bạn đã bị xóa bởi {DisplayName}&r."
+      BackpackCleanedOther: "Ba lô của {DisplayName} đã bị xóa."
+    Sort:
+      Sorted: "Ba lô được sắp xếp."
+    Help:
+      Header: "&6### Lệnh Minepacks ###"
+      Footer: "&6############################"
+    Reload:
+      Reloading: "&1Đang tải lại Minepack ..."
+      Reloaded: "&1Gói mỏ đã được tải lại!"
+    Update:
+      CheckingForUpdates: "&1Đang kiểm tra các bản cập nhật ..."
+      Updated: "[\"\",{\"text\":\"Plugin đã cập nhật, sẽ được tải vào lần khởi động lại/tải lại tiếp theo.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Không có bản cập nhật plugin.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Đã xảy ra sự cố khi tìm kiếm bản cập nhật! Vui lòng kiểm tra bảng điều khiển!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Có bản cập nhật ! \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" để tải xuống!\"}]"
+    Backup:
+      Created: "Ba lô đã được sao lưu thành công."
+      NoBackpack: "Người chơi không có ba lô hoặc ba lô của anh ta trống rỗng."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Sao lưu\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"hiển thị trang {Trang hiện tại }/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Trang sau <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Hiện trang {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Trang tiếp >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\": {\"action\":\"show_text\",\"value\":\"Người dùng: {BackupPlayerName} ({BackupPlayerUUID})\\nĐã tạo: {BackupDate}\"}}]"
+      NoValidBackup: "Không tìm thấy bản sao lưu phù hợp {BackupIdentifier}"
+      NoUserToRestoreToFound: "Không có người dùng hợp lệ nào để khôi phục bản sao lưu vào tìm thấy"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Sao lưu đã được khôi phục thành công."
+    InventoryClear:
+      UnknownPlayer: "&cKhông thể tìm thấy người chơi {Name}!"
+      Cleared: "Đã xóa hàng tồn kho."
+      ClearedOther: "Khoảng không quảng cáo của {DisplayName} đã bị xóa."
+      ClearedOtherTarget: "Khoảng không quảng cáo của bạn đã được xóa bởi {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Bộ sưu tập vật phẩm tự động đã được bật &bẬT&7."
+      ToggleOff: "&7Tính năng thu thập vật phẩm tự động đã được bật &cTẮT&7."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}} ,{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "tên người chơi"
+    Description:
+      Backpack: "Mở ba lô của bạn."
+      Sort: "Sắp xếp ba lô của bạn."
+      Clean: "Làm sạch ba lô của bạn."
+      CleanOthers: "Dọn dẹp ba lô của người chơi khác."
+      OpenOthers: "Hiển thị ba lô của người chơi khác."
+      Reload: "Tải lại cấu hình của plugin."
+      Update: "Kiểm tra các bản cập nhật plugin mới."
+      Version: "In chi tiết phiên bản về plugin và phần phụ thuộc của nó."
+      Backup: "Tạo bản sao lưu ba lô của người chơi."
+      BackupEveryone: "Tạo bản sao lưu của mọi người hiện đang trực tuyến."
+      Restore: "Khôi phục một bản sao lưu."
+      RestoreList: "Liệt kê tất cả các bản sao lưu có sẵn."
+      Help: "Hiển thị tất cả các lệnh có sẵn và mô tả của chúng."
+      Migrate: "Di chuyển cơ sở dữ liệu đã sử dụng từ loại này sang loại khác."
+      Pickup: "Chuyển đổi trạng thái lấy hàng tự động khi kho đầy."
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
+# Will be shown in the console during startup
+LanguageName: "Vietnamese"
+Author: "RageOfFire"
+# Language file version. Don't touch it!
+Version: 20
