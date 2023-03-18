@@ -59,7 +59,7 @@ Minepacks is a free and reliable backpack plugin for minecraft server running bu
 ## Requirements:
 ### Runtime requirements:
 * Java 8
-* Bukkit, Spigot or Paper for Minecraft 1.8 or newer [![versionsImg]]
+* Bukkit, Spigot or Paper for Minecraft 1.8 or newer ![versionsImg]
 * (Optional) [PCGF PluginLib][pcgfPluginLib] ([Advantages of using the PCGF PluginLib][pcgfPluginLibAdvantages])
 
 ### Build requirements:
