@@ -17,6 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
+import at.pcgamingfreaks.Bukkit.Config.PermissionLoader;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
@@ -34,6 +35,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Plugin.IPlugin;
+import at.pcgamingfreaks.ServerType;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
@@ -101,6 +103,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		checkOldDataFolder();
 
 		if(!checkPCGF_PluginLib()) return;
+
+		if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_19_3) && ServerType.isPaperCompatible())
+		{
+			PermissionLoader.loadPermissionsFromPlugin(this);
+		}
 
 		updater = new ManagedUpdater(this);
 		instance = this;
