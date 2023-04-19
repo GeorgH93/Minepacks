@@ -1,0 +1,125 @@
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
+
+Language:
+  NotFromConsole: "&cКоманда не доступна з консолі."
+  Ingame:
+    NoPermission: "&cВи не маєте прав, щоб зробити це."
+    WorldDisabled: "&cВикористання рюкзака заборонено у цьому світі."
+    NaN: "[\"\",{\"text\":\"Введене значення не є числом!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Рюкзак зачинен!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "{OwnerName} рюкзак зачинен!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Рюкзак недійсний."
+    NotAllowedInBackpack: "&c{ItemName} не дозволяється носити в рюкзаку."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cВи не можете прибрати рюкзак з інвентарю!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Будь ласка, почекайте \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} секунд\"}},{\"text\":\", перш ніж знову відкривати рюкзак.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Ви не маєте права відчиняти рюкзак у поточному режимі гри."
+    Clean:
+      BackpackCleaned: "Рюкзак почищено"
+      BackpackCleanedBy: "Ваш рюкзак був почищен {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName}&r Рюкзак був почищений."
+    Sort:
+      Sorted: "Рюкзак відсортовано."
+    Help:
+      Header: "&6### Minepacks Команди ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&aПерезавантаження Minepacks..."
+      Reloaded: "&aMinepacks було перезавантажено!"
+    Update:
+      CheckingForUpdates: "&1Перевірка оновлень..."
+      Updated: "[\"\",{\"text\":\"Плагін було оновлено, він буде завантажен при наступному завантаженні.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Немає оновлень.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Виникла проблема з пошуком оновлень! Будь ласка, перевірте консоль!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Доступно оновлення. Буль ласка, перейдіть по \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" цоб завантажити його!\"}]"
+    Backup:
+      Created: "Рюкзак успішно пройшов резервне копіювання."
+      NoBackpack: "У гравця немає рюкзака або він порожній."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Бекапи\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"сторінка {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Попередня <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Показати сторінку {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Next >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Користувач: {BackupPlayerName} ({BackupPlayerUUID})\\nСтворено: {BackupDate}\"}}]"
+      NoValidBackup: "Данного бекапа {BackupIdentifier}, не знайдено"
+      NoUserToRestoreToFound: "Не знайдено дійсного користувача для відновлення резервної копії"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Бекап успішно відновлено."
+    InventoryClear:
+      UnknownPlayer: "&cНе вдалося дізнатися про {Name}!"
+      Cleared: "Інвентар відчищено."
+      ClearedOther: "{DisplayName}&r інвентар був відчищен."
+      ClearedOtherTarget: "Речі у вашому рюкзаку були вичищені {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Увімкнено автоматичний збір предметів було &aввімкнено&7."
+      ToggleOff: "&7Увімкнено автоматичний збір предметів було &cвимкнено&7."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Відчинить рюкзак."
+      Sort: "Відсортує рюкзак."
+      Clean: "Відчистиь рюкзак."
+      CleanOthers: "Відчистить рюкзак іншого гравця."
+      OpenOthers: "Покаже рюкзак іншого гравця."
+      Reload: "Перезавантажить налаштування."
+      Update: "Перевіряє оновленя."
+      Version: "Виводить інформацію про версію плагіна та його залежності."
+      Backup: "Створює резервну копію рюкзака гравця."
+      BackupEveryone: "Створює резервну копію всіх, хто зараз перебуває в мережі."
+      Restore: "Відновлює резервну копію."
+      RestoreList: "Показує всі доступні резервні копії."
+      Help: "Показує всі доступні команди та їх опис."
+      Migrate: "Переносить використовувану базу даних з одного типу в інший."
+      Pickup: "Увімкнути стан автоматичного підбирання, коли інвентар буде заповнено."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
+
+# Will be shown in the console during startup
+LanguageName: "українська"
+Author: "Andrii(IsPlayer)"
+
+# Language file version. Don't touch it!
+Version: 20
