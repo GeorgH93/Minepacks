@@ -128,6 +128,12 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			if(isBungeeCordModeEnabled())
 			{
+				Boolean detectedOnlineMode = Utils.getBungeeOrVelocityOnlineMode();
+				if (detectedOnlineMode != null)
+				{
+					logger.info("Detected online mode in paper config: " + detectedOnlineMode);
+					return detectedOnlineMode;
+				}
 				logger.warning("When using BungeeCord please make sure to set the UUID_Type config option explicitly!");
 			}
 			return Bukkit.getServer().getOnlineMode();
@@ -222,13 +228,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	public boolean isBungeeCordModeEnabled()
 	{
 		boolean useBungee = getConfigE().getBoolean("Misc.UseBungeeCord", false);
-		boolean spigotUsesBungee = Utils.detectBungeeCord();
+		boolean runsProxy = Utils.detectBungeeCord() || Utils.detectVelocity();
 		boolean shareableDB = getDatabaseType().equals("mysql") || getDatabaseType().equals("global");
-		if(useBungee && !spigotUsesBungee)
+		if(useBungee && !runsProxy)
 		{
 			logger.warning("You have BungeeCord enabled for the plugin, but it looks like you have not enabled it in your spigot.yml! You probably should check your configuration.");
 		}
-		else if(!useBungee && spigotUsesBungee && shareableDB)
+		else if(!useBungee && runsProxy && shareableDB)
 		{
 			logger.warning("Your server is running behind a BungeeCord server. If you are using the plugin on more than one server with a shared database, please make sure to also enable the 'UseBungeeCord' config option.");
 		}
