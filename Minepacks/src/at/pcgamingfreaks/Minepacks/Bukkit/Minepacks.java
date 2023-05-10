@@ -243,7 +243,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			inventoryClearCommand = null;
 		}
 		if(collector != null) collector.close();
-		commandManager.close();
+		if(commandManager != null) commandManager.close();
 		if(collector != null) collector.cancel();
 		if(database != null) database.close(); // Close the DB connection, we won't need them any longer
 		HandlerList.unregisterAll(this); // Stop the listeners
