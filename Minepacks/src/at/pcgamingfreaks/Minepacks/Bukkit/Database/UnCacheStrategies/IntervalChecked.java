@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ public class IntervalChecked extends UnCacheStrategie implements Runnable
 	public IntervalChecked(Database cache)
 	{
 		super(cache);
-		long delay = Minepacks.getInstance().getConfiguration().getUnCacheDelay();
-		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Minepacks.getInstance(), this, delay, Minepacks.getInstance().getConfiguration().getUnCacheInterval());
-		this.delay = delay * 50L;
+		long delayTicks = Minepacks.getInstance().getConfiguration().getUnCacheDelay();
+		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Minepacks.getInstance(), this, delayTicks, Minepacks.getInstance().getConfiguration().getUnCacheInterval());
+		this.delay = delayTicks * 50L;
 	}
 
 	@Override
