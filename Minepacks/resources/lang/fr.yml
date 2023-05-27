@@ -1,4 +1,4 @@
-# To simplify the customisation and the translation process please check out the editor: http://ptp.pcgamingfreaks.at
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
 
 Language:
   NotFromConsole: "&cCommande inutilisable depuis la console."
@@ -23,7 +23,7 @@ Language:
       WrongGameMode: "Vous n'êtes pas autorisé à ouvrir votre sac à dos dans votre mode de jeu actuel."
     Clean:
       BackpackCleaned: "Sac à dos nettoyé."
-      BackpackCleanedBy: "Votre sac à dos a été nettoyé par {DisplayName}&r."
+      BackpackCleanedBy: "Votre sac à dos à été nettoyé par {DisplayName}&r."
       BackpackCleanedOther: "Sac à dos de {DisplayName} &rnettoyé."
     Sort:
       Sorted: "Sac à dos trié."
@@ -31,8 +31,8 @@ Language:
       Header: "&6### Minepacks Commandes ###"
       Footer: "&6#############################"
     Reload:
-      Reloading: "&1Le plugin est en Rechargement ..."
-      Reloaded: "&1Le plugin a été Recharger !"
+      Reloading: "&1Le plugin est en cours de redémarrage ..."
+      Reloaded: "&1Le plugin à été rechargé !"
     Update:
       CheckingForUpdates: "&1Vérification des mises à jour ..."
       Updated: "[\"\",{\"text\":\"Plugin mis à jour, sera chargé au prochain redémarrage/rechargement.\",\"color\":\"yellow\"}]"
@@ -60,6 +60,9 @@ Language:
       Cleared: "Inventaire nettoyé."
       ClearedOther: "Inventaire de {DisplayName} &rnettoyé."
       ClearedOtherTarget: "Votre inventaire a été effacé par {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Le ramassage automatique à été défini sur: &aON&7."
+      ToggleOff: "&7Le ramassage automatique à été défini sur: &cOFF&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -73,10 +76,12 @@ Language:
       Update: "Vérifie les nouvelles mises à jour des plugins."
       Version: "Imprime les détails de la version du plugin et de ses dépendances."
       Backup: "Crée une sauvegarde d'un sac à dos de joueur."
+      BackupEveryone: "Crée une backup de tout les backpacks."
       Restore: "Restaure une sauvegarde."
       RestoreList: "Liste toutes les sauvegardes disponibles."
       Help: "Affiche toutes les commandes disponibles et leur description."
       Migrate: "Migre la base de données utilisée d'un type à un autre."
+      Pickup: "Switch l'état de ramassage automatique (ON/OFF)."
 
 Command:
   Backpack:
@@ -109,10 +114,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "Français"
 Author: "HiiRaZ & Sniper_TVmc"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 20
