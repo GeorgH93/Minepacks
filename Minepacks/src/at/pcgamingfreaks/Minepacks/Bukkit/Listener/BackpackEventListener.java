@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -44,11 +44,11 @@ public class BackpackEventListener extends MinepacksListener
 		closeSound = plugin.getConfiguration().getCloseSound();
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onClose(InventoryCloseEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getPlayer() instanceof Player)
-	    {
+		{
 			Backpack backpack = (Backpack)event.getInventory().getHolder();
 			Player closer = (Player)event.getPlayer();
 			if(backpack.canEdit(closer))
@@ -69,14 +69,14 @@ public class BackpackEventListener extends MinepacksListener
 			{
 				closer.playSound(closer.getLocation(), closeSound, 1, 0);
 			}
-	    }
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onClick(InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
-	    {
+		{
 			Backpack backpack = (Backpack) event.getInventory().getHolder();
 			if(!backpack.canEdit((Player)event.getWhoClicked()))
 			{
@@ -86,7 +86,7 @@ public class BackpackEventListener extends MinepacksListener
 			{
 				backpack.setChanged();
 			}
-	    }
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
