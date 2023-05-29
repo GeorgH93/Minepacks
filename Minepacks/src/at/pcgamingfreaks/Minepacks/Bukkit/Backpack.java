@@ -20,7 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
-import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Util.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -262,6 +262,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 			Minepacks.getInstance().getDatabase().saveBackpack(this);
 			hasChanged = false;
 		}
+	}
+
+	public void forceSave()
+	{
+		hasChanged = true;
+		save();
 	}
 
 	public void backup()
