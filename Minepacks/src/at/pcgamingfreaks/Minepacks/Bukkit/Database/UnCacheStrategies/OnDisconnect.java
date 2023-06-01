@@ -42,7 +42,6 @@ public class OnDisconnect extends UnCacheStrategie implements Listener
 		Backpack backpack = cache.getBackpack(event.getPlayer());
 		if(backpack != null && !backpack.isOpen())
 		{
-			backpack.save();
 			cache.unloadBackpack(backpack);
 		}
 	}

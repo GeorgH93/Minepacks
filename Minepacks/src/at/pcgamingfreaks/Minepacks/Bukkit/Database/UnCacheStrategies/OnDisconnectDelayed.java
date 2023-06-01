@@ -53,7 +53,6 @@ public class OnDisconnectDelayed extends UnCacheStrategie implements Listener
 				{
 					if(!backpack.isOpen())
 					{
-						backpack.save();
 						cache.unloadBackpack(backpack);
 					}
 					else

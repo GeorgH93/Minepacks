@@ -240,6 +240,7 @@ public abstract class Database implements Listener
 
 	public void unloadBackpack(Backpack backpack)
 	{
+		backpack.save();
 		backpacks.remove(backpack.getOwner());
 	}
 
