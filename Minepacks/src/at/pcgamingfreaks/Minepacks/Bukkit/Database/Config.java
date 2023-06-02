@@ -146,6 +146,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getBoolean("Database.UseUUIDSeparators", false);
 	}
 
+	public boolean isForceSaveOnUnloadEnabled()
+	{
+		return getConfigE().getBoolean("Database.ForceSaveOnUnload", false);
+	}
+
 	public String getUnCacheStrategie()
 	{
 		return getConfigE().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ENGLISH);

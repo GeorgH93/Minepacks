@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ public abstract class Database implements Listener
 
 	protected final Minepacks plugin;
 	protected final InventorySerializer itsSerializer;
-	protected final boolean onlineUUIDs, bungeeCordMode;
+	protected final boolean onlineUUIDs, bungeeCordMode, forceSaveOnUnload;
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
@@ -64,6 +64,7 @@ public abstract class Database implements Listener
 		useUUIDSeparators = plugin.getConfiguration().getUseUUIDSeparators();
 		onlineUUIDs = plugin.getConfiguration().useOnlineUUIDs();
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
+		forceSaveOnUnload = plugin.getConfiguration().isForceSaveOnUnloadEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
 		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
@@ -240,7 +241,14 @@ public abstract class Database implements Listener
 
 	public void unloadBackpack(Backpack backpack)
 	{
-		backpack.save();
+		if (forceSaveOnUnload)
+		{
+			backpack.forceSave();
+		}
+		else
+		{
+			backpack.save();
+		}
 		backpacks.remove(backpack.getOwner());
 	}
 

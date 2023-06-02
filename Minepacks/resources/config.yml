@@ -76,6 +76,9 @@ Database:
   # Options: auto, online, offline | auto will decide based on the server online mode option.
   # If you are using BungeeCord, set it to whatever you use on your BungeeCord server!!!
   UUID_Type: auto
+  # If enabled the backpack will be saved regardless of if there have been changes to it or not. This will slightly negatively impact performance.
+  # This will help with changes made to items inside the backpack by other plugins. For example plugins that allow you to interact with items, when you allow your players to store these items inside the backpack.
+  ForceSaveOnUnload: false
   # Settings only for MySQL
   SQL:
     Host: "localhost:3306"
