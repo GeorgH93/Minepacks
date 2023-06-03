@@ -70,6 +70,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				remappedKeys.put("WorldSettings.FilteredWorlds", "WorldSettings.Blacklist");
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
 			}
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(33))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
@@ -151,9 +152,9 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return getConfigE().getBoolean("Database.ForceSaveOnUnload", false);
 	}
 
-	public String getUnCacheStrategie()
+	public String getUnCacheStrategy()
 	{
-		return getConfigE().getString("Database.Cache.UnCache.Strategie", "interval").toLowerCase(Locale.ENGLISH);
+		return getConfigE().getString("Database.Cache.UnCache.Strategy", "interval").toLowerCase(Locale.ENGLISH);
 	}
 
 	public long getUnCacheInterval()

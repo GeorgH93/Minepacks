@@ -22,7 +22,7 @@ import at.pcgamingfreaks.Database.ConnectionProvider.ConnectionProvider;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
-import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategie;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategy;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.OfflinePlayer;
@@ -54,7 +54,7 @@ public abstract class Database implements Listener
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
-	private final UnCacheStrategie unCacheStrategie;
+	private final UnCacheStrategy unCacheStrategie;
 	private final File backupFolder;
 
 	public Database(Minepacks mp)
@@ -66,7 +66,7 @@ public abstract class Database implements Listener
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		forceSaveOnUnload = plugin.getConfiguration().isForceSaveOnUnloadEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
-		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategie.getUnCacheStrategie(this);
+		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategy.getUnCacheStrategie(this);
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
 		if(!backupFolder.exists() && !backupFolder.mkdirs()) mp.getLogger().info("Failed to create backups folder.");
 	}

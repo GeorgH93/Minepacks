@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,18 +20,18 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-public abstract class UnCacheStrategie
+public abstract class UnCacheStrategy
 {
 	protected Database cache;
 
-	public UnCacheStrategie(Database cache)
+	public UnCacheStrategy(Database cache)
 	{
 		this.cache = cache;
 	}
 
-	public static UnCacheStrategie getUnCacheStrategie(Database cache)
+	public static UnCacheStrategy getUnCacheStrategie(Database cache)
 	{
-		switch(Minepacks.getInstance().getConfiguration().getUnCacheStrategie())
+		switch(Minepacks.getInstance().getConfiguration().getUnCacheStrategy())
 		{
 			case "ondisconnect": return new OnDisconnect(cache);
 			case "ondisconnectdelayed": return new OnDisconnectDelayed(cache);

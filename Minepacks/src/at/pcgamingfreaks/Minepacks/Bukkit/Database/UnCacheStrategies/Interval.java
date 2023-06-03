@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2016 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
 
-public class Interval extends UnCacheStrategie implements Runnable
+public class Interval extends UnCacheStrategy implements Runnable
 {
 	private final int taskID;
 

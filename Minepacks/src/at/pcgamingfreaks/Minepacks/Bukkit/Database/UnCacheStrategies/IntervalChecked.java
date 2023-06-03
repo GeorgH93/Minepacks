@@ -23,7 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
 
-public class IntervalChecked extends UnCacheStrategie implements Runnable
+public class IntervalChecked extends UnCacheStrategy implements Runnable
 {
 	private final long delay;
 	private final int taskID;
