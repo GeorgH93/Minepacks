@@ -24,6 +24,7 @@ import at.pcgamingfreaks.Version;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
 import io.papermc.paper.plugin.bootstrap.PluginProviderContext;
 
@@ -35,8 +36,12 @@ public class MinepacksBootstrap implements PluginBootstrap
 	private static final String MAIN_CLASS_NORMAL = "at.pcgamingfreaks.Minepacks.Bukkit.Minepacks";
 	private static final String MAIN_CLASS_STANDALONE = "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks";
 
-	@Override
 	public void bootstrap(@NotNull PluginProviderContext context)
+	{
+	}
+
+	@Override
+	public void bootstrap(@NotNull BootstrapContext bootstrapContext)
 	{
 	}
 
