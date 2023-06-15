@@ -12,21 +12,19 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API.Events;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Event is triggered bevor the backpacks content is dropped to the ground!

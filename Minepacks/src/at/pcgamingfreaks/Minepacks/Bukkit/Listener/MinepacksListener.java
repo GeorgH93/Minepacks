@@ -12,16 +12,14 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-
-import org.bukkit.event.Listener;
-
 import lombok.AllArgsConstructor;
+import org.bukkit.event.Listener;
 
 @AllArgsConstructor
 abstract class MinepacksListener implements Listener

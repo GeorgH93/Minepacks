@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies;
@@ -20,7 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-
 import org.bukkit.Bukkit;
 
 public class Interval extends UnCacheStrategy implements Runnable
