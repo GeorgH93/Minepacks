@@ -287,6 +287,12 @@
 							<excludedScopes>test,provided,system</excludedScopes>
 							<generateBundle>true</generateBundle>
 							<licensesOutputFile>${project.build.directory}/generated-resources/licenses-THIRD-PARTY.xml</licensesOutputFile>
+							<licenseUrlReplacements>
+								<licenseUrlReplacement>
+									<regexp>https?://(www\.)?opensource\.org/licenses/mit-license\.php</regexp>
+									<replacement>https://ci.pcgamingfreaks.at/download/mit.txt</replacement>
+								</licenseUrlReplacement>
+							</licenseUrlReplacements>
 						</configuration>
 						<executions>
 							<execution>
