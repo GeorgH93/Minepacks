@@ -249,7 +249,8 @@ public abstract class SQL extends Database
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
 			{
-				ps.setString(1, getPlayerFormattedUUID(player));
+				final String playerUUID = getPlayerFormattedUUID(player);
+				ps.setString(1, fieldPlayerUUID);
 				final int bpID, version;
 				final byte[] data;
 				try(ResultSet rs = ps.executeQuery())
@@ -269,6 +270,10 @@ public abstract class SQL extends Database
 				}
 
 				ItemStack[] its = itsSerializer.deserialize(data, version);
+				if (data != null && data.length != 0 && its == null)
+				{
+					writeBackup(player.getName(), playerUUID, version, data);
+				}
 				final Backpack backpack = (its != null) ? new Backpack(player, its, bpID) : null;
 				plugin.getServer().getScheduler().runTask(plugin, () -> {
 					if(backpack != null)

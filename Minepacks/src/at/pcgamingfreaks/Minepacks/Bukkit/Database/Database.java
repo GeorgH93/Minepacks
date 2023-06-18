@@ -133,7 +133,7 @@ public abstract class Database implements Listener
 		writeBackup(backpack.getOwner().getName(), getPlayerFormattedUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
-	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final @NotNull byte[] data)
+	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final byte[] data)
 	{
 		if(userIdentifier.equalsIgnoreCase(userName)) userName = null;
 		if(userName != null) userIdentifier = userName + "_" + userIdentifier;
