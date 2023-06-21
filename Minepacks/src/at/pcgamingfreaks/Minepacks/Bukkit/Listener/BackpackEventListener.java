@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
@@ -20,7 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import org.bukkit.ChatColor;
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -39,7 +39,7 @@ public class BackpackEventListener extends MinepacksListener
 	{
 		super(plugin);
 		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
-		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName\\}", "%1\\$s").replaceAll("\\{OwnerDisplayName\\}", "%2\\$s");
+		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").placeholders(Placeholders.mkPlayerName("Owner"));
 		closeSound = plugin.getConfiguration().getCloseSound();
 	}
 	
@@ -62,7 +62,7 @@ public class BackpackEventListener extends MinepacksListener
 			else
 			{
 				OfflinePlayer owner = backpack.getOwner();
-				messageOtherBackpackClose.send(closer, owner.getName(), owner.isOnline() ? owner.getPlayer().getDisplayName() : ChatColor.GRAY + owner.getName());
+				messageOtherBackpackClose.send(closer, owner);
 			}
 			if(closeSound != null)
 			{
