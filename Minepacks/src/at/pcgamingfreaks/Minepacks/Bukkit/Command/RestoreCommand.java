@@ -25,7 +25,8 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
+import at.pcgamingfreaks.Util.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -48,11 +49,11 @@ public class RestoreCommand extends MinepacksCommand
 	{
 		super(plugin, "restore", plugin.getLanguage().getTranslated("Commands.Description.Restore"), Permissions.RESTORE, plugin.getLanguage().getCommandAliases("Restore"));
 		helpParam = "<" + plugin.getLanguage().get("Ingame.Restore.ParameterBackupName") + "> (" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ")";
-		messageBackupsHeader = plugin.getLanguage().getMessage("Ingame.Restore.Headline").replaceAll("\\{CurrentPage}", "%1\\$d").replaceAll("\\{MaxPage}", "%2\\$d").replaceAll("\\{MainCommand}", "%3\\$s").replaceAll("\\{SubCommand}", "%4\\$s");
-		messageBackupsFooter = plugin.getLanguage().getMessage("Ingame.Restore.Footer").replaceAll("\\{CurrentPage}", "%1\\$d").replaceAll("\\{MaxPage}", "%2\\$d").replaceAll("\\{MainCommand}", "%3\\$s").replaceAll("\\{SubCommand}", "%4\\$s");
-		messageBackupEntry = plugin.getLanguage().getMessage("Ingame.Restore.BackupEntry").replaceAll("\\{BackupIdentifier}", "%1\\$s").replaceAll("\\{BackupDate}", "%2\\$s")
-				.replaceAll("\\{BackupPlayerName}", "%3\\$s").replaceAll("\\{BackupPlayerUUID}", "%4\\$s").replaceAll("\\{MainCommand}", "%5\\$s").replaceAll("\\{SubCommand}", "%6\\$s");
-		messageUnableToLoadBackup = plugin.getLanguage().getMessage("Ingame.Restore.NoValidBackup").replaceAll("\\{BackupIdentifier}", "%1\\$s");
+		messageBackupsHeader = plugin.getLanguage().getMessage("Ingame.Restore.Headline").placeholders(Placeholders.PAGE_OPTIONS);
+		messageBackupsFooter = plugin.getLanguage().getMessage("Ingame.Restore.Footer").placeholders(Placeholders.PAGE_OPTIONS);
+		messageBackupEntry = plugin.getLanguage().getMessage("Ingame.Restore.BackupEntry").placeholder("BackupIdentifier").placeholder("BackupDate")
+				.placeholder("BackupPlayerName").placeholder("BackupPlayerUUID").placeholder("MainCommand").placeholder("SubCommand");
+		messageUnableToLoadBackup = plugin.getLanguage().getMessage("Ingame.Restore.NoValidBackup").placeholder("BackupIdentifier");
 		messageNoUserFound = plugin.getLanguage().getMessage("Ingame.Restore.NoUserToRestoreToFound");
 		messageRestored = plugin.getLanguage().getMessage("Ingame.Restore.Restored");
 		listCommands = plugin.getLanguage().getCommandAliases("ListBackups", "list");
@@ -151,7 +152,8 @@ public class RestoreCommand extends MinepacksCommand
 		int pages = backups.size() / elementsPerPage + 1;
 		page = Math.min(page, pages - 1);
 		int offset = page * elementsPerPage, end = Math.min(offset + elementsPerPage, backups.size());
-		messageBackupsHeader.send(sender, page + 1, pages, mainCommandAlias, alias + ' ' + args[0]);
+		String subCom = alias + ' ' + args[0];
+		messageBackupsHeader.send(sender, page + 1, pages, mainCommandAlias, subCom, page, page + 2);
 		while(offset < end)
 		{
 			String backup = backups.get(offset++), uuid = "No UUID", date = "Unknown";
@@ -167,7 +169,7 @@ public class RestoreCommand extends MinepacksCommand
 			}
 			messageBackupEntry.send(sender, backup, date, components[0], uuid, mainCommandAlias, alias);
 		}
-		messageBackupsFooter.send(sender, page + 1, pages, mainCommandAlias, alias + ' ' + args[0]);
+		messageBackupsFooter.send(sender, page + 1, pages, mainCommandAlias, subCom, page, page + 2);
 	}
 
 	@Override

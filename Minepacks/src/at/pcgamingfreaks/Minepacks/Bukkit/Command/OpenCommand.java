@@ -18,15 +18,16 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Message.Placeholder.Processors.GameModePlaceholderProcessor;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
+import at.pcgamingfreaks.Message.Placeholder.Processors.FloatPlaceholderProcessor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,12 +35,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class OpenCommand extends MinepacksCommand
 {
 	private final Message messageCooldown, messageWrongGameMode;
-	private final String allowedGameModes, descriptionOpenOthers, helpParam;
+	private final String descriptionOpenOthers, helpParam;
 	private final Minepacks plugin;
 
 	public OpenCommand(Minepacks plugin)
@@ -47,21 +47,12 @@ public class OpenCommand extends MinepacksCommand
 		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, false, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
-		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f").replaceAll("\\{TimeSpanLeft}", "%2\\$s");
-		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
+		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").placeholder("TimeLeft", new FloatPlaceholderProcessor(1)).placeholder("TimeSpanLeft");
+		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{AllowedGameModes}", new GameModePlaceholderProcessor().process(plugin.getConfiguration().getAllowedGameModes())).placeholder("CurrentGameMode", new GameModePlaceholderProcessor());
 		descriptionOpenOthers = plugin.getLanguage().getTranslated("Commands.Description.OpenOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 
 		StringBuilder allowedGameModesBuilder = new StringBuilder();
-		for(GameMode gameMode : plugin.getConfiguration().getAllowedGameModes())
-		{
-			if(allowedGameModesBuilder.length() > 1)
-			{
-				allowedGameModesBuilder.append(", ");
-			}
-			allowedGameModesBuilder.append(gameMode.name().toLowerCase(Locale.ROOT));
-		}
-		allowedGameModes = allowedGameModesBuilder.toString(); //TODO translate
 	}
 
 	@Override
@@ -92,8 +83,7 @@ public class OpenCommand extends MinepacksCommand
 			}
 			else
 			{
-				//noinspection StringToUpperCaseOrToLowerCaseWithoutLocale
-				messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(), allowedGameModes);
+				messageWrongGameMode.send(player, player.getGameMode());
 			}
 		}
 		else
