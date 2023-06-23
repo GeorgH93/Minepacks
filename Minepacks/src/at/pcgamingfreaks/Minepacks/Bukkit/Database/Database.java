@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
@@ -44,7 +44,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Database implements Listener
 {
-	protected static final String START_UUID_UPDATE = "Start updating database to UUIDs ...", UUIDS_UPDATED = "Updated %d accounts to UUIDs.";
 	public static final String MESSAGE_UNKNOWN_DB_TYPE = ConsoleColor.RED + "Unknown database type \"%s\"!" + ConsoleColor.RESET;
 
 	protected final Minepacks plugin;

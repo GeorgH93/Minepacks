@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
@@ -36,7 +36,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Plugin.IPlugin;
 import at.pcgamingfreaks.ServerType;
-import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
 import lombok.Getter;
