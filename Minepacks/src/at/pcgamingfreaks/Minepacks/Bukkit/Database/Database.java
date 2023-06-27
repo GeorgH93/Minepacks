@@ -24,6 +24,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.OnDisconnect;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies.UnCacheStrategy;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,11 +37,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 public abstract class Database implements Listener
 {
@@ -51,7 +50,7 @@ public abstract class Database implements Listener
 	protected final boolean onlineUUIDs, bungeeCordMode, forceSaveOnUnload;
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
-	private final Map<OfflinePlayer, Backpack> backpacks = new ConcurrentHashMap<>();
+	private final Map<UUID, Backpack> backpacks = new ConcurrentHashMap<>();
 	private final UnCacheStrategy unCacheStrategie;
 	private final File backupFolder;
 
@@ -78,7 +77,7 @@ public abstract class Database implements Listener
 	{
 		HandlerList.unregisterAll(this);
 		asyncSave = false;
-		backpacks.forEach((key, value) -> value.closeAll());
+		backpacks.forEach((key, value) -> { if (forceSaveOnUnload) { value.setChanged(); } value.closeAll(); });
 		backpacks.clear();
 		unCacheStrategie.close();
 	}
@@ -91,10 +90,10 @@ public abstract class Database implements Listener
 			ConnectionProvider connectionProvider = null;
 			if(dbType.equals("shared") || dbType.equals("external") || dbType.equals("global"))
 			{
-			/*if[STANDALONE]
-			plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
-			return null;
-			else[STANDALONE]*/
+				/*if[STANDALONE]
+				plugin.getLogger().warning(ConsoleColor.RED + "The shared database connection option is not available in standalone mode!" + ConsoleColor.RESET);
+				return null;
+				else[STANDALONE]*/
 				at.pcgamingfreaks.PluginLib.Database.DatabaseConnectionPool pool = at.pcgamingfreaks.PluginLib.Bukkit.PluginLib.getInstance().getDatabaseConnectionPool();
 				if(pool == null)
 				{
@@ -184,12 +183,12 @@ public abstract class Database implements Listener
 	/**
 	 * Gets a backpack for a player. This only includes backpacks that are cached! Do not use it unless you are sure that you only want to use cached data!
 	 *
-	 * @param player The player who's backpack should be retrieved.
+	 * @param player The player whose backpack should be retrieved.
 	 * @return The backpack for the player. null if the backpack is not in the cache.
 	 */
 	public @Nullable Backpack getBackpack(@Nullable OfflinePlayer player)
 	{
-		return (player == null) ? null : backpacks.get(player);
+		return (player == null) ? null : backpacks.get(player.getUniqueId());
 	}
 
 	public void getBackpack(final OfflinePlayer player, final Callback<at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack> callback, final boolean createNewOnFail)
@@ -198,7 +197,7 @@ public abstract class Database implements Listener
 		{
 			return;
 		}
-		Backpack lbp = backpacks.get(player);
+		Backpack lbp = backpacks.get(player.getUniqueId());
 		if(lbp == null)
 		{
 			loadBackpack(player, new Callback<Backpack>()
@@ -206,7 +205,7 @@ public abstract class Database implements Listener
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					backpacks.put(player, backpack);
+					backpacks.put(player.getUniqueId(), backpack);
 					callback.onResult(backpack);
 				}
 
@@ -216,7 +215,7 @@ public abstract class Database implements Listener
 					if(createNewOnFail)
 					{
 						Backpack backpack = new Backpack(player);
-						backpacks.put(player, backpack);
+						backpacks.put(player.getUniqueId(), backpack);
 						callback.onResult(backpack);
 					}
 					else
@@ -239,6 +238,7 @@ public abstract class Database implements Listener
 
 	public void unloadBackpack(Backpack backpack)
 	{
+		plugin.getLogger().log(Level.INFO, "Unloading backpack of {} ({})", new Object[] {backpack.getOwner().getName(), backpack.getOwner().getUniqueId()});
 		if (forceSaveOnUnload)
 		{
 			backpack.forceSave();
@@ -247,25 +247,25 @@ public abstract class Database implements Listener
 		{
 			backpack.save();
 		}
-		backpacks.remove(backpack.getOwner());
+		backpacks.remove(backpack.getOwner().getUniqueId());
 	}
 
 	public void asyncLoadBackpack(final OfflinePlayer player)
 	{
-		if(player != null && backpacks.get(player) == null)
+		if(player != null && backpacks.get(player.getUniqueId()) == null)
 		{
 			loadBackpack(player, new Callback<Backpack>()
 			{
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					backpacks.put(player, backpack);
+					backpacks.put(player.getUniqueId(), backpack);
 				}
 
 				@Override
 				public void onFail()
 				{
-					backpacks.put(player, new Backpack(player));
+					backpacks.put(player.getUniqueId(), new Backpack(player));
 				}
 			});
 		}
