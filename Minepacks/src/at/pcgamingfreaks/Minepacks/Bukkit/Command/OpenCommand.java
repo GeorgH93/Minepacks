@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2022 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -48,11 +48,9 @@ public class OpenCommand extends MinepacksCommand
 		this.plugin = plugin;
 
 		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").placeholder("TimeLeft", new FloatPlaceholderProcessor(1)).placeholder("TimeSpanLeft");
-		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{AllowedGameModes}", new GameModePlaceholderProcessor().process(plugin.getConfiguration().getAllowedGameModes())).placeholder("CurrentGameMode", new GameModePlaceholderProcessor());
+		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").staticPlaceholder("AllowedGameModes", new GameModePlaceholderProcessor(), plugin.getConfiguration().getAllowedGameModes()).placeholder("CurrentGameMode", new GameModePlaceholderProcessor());
 		descriptionOpenOthers = plugin.getLanguage().getTranslated("Commands.Description.OpenOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
-
-		StringBuilder allowedGameModesBuilder = new StringBuilder();
 	}
 
 	@Override
