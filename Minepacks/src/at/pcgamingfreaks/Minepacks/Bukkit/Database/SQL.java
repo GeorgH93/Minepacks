@@ -250,7 +250,7 @@ public abstract class SQL extends Database
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
 			{
 				final String playerUUID = getPlayerFormattedUUID(player);
-				ps.setString(1, fieldPlayerUUID);
+				ps.setString(1, playerUUID);
 				final int bpID, version;
 				final byte[] data;
 				try(ResultSet rs = ps.executeQuery())
