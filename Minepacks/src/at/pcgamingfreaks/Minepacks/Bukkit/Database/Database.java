@@ -238,7 +238,7 @@ public abstract class Database implements Listener
 
 	public void unloadBackpack(Backpack backpack)
 	{
-		plugin.getLogger().log(Level.INFO, "Unloading backpack of {} ({})", new Object[] {backpack.getOwner().getName(), backpack.getOwner().getUniqueId()});
+		plugin.getLogger().log(Level.INFO, "Unloading backpack of {0} ({1})", new Object[] {backpack.getOwner().getName(), backpack.getOwner().getUniqueId()});
 		if (forceSaveOnUnload)
 		{
 			backpack.forceSave();
