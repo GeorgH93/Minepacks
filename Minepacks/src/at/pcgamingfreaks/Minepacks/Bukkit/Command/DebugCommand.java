@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,13 +12,14 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Message.MessageBuilder;
+import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Message.MessageColor;
@@ -26,7 +27,7 @@ import at.pcgamingfreaks.Message.MessageFormat;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-import lombok.SneakyThrows;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,6 +42,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import lombok.SneakyThrows;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -87,6 +90,8 @@ public class DebugCommand extends MinepacksCommand
 		writer.append(plugin.getDescription().getName()).append(" Version: ").append(plugin.getDescription().getVersion());
 		writer.append("\nServer: ").append(Bukkit.getServer().getBukkitVersion()).append(" (").append(Bukkit.getServer().getVersion()).append(")");
 		writer.append("\nJava: ").append(System.getProperty("java.version"));
+		writer.append("\nProxy: ").append(Utils.detectBungeeCord() ? "Bungee" : (Utils.detectVelocity() ? "Velocity" : "None"));
+		writer.append("\nOnline Mode: ").append(String.valueOf(Bukkit.getServer().getOnlineMode())).append(" ; Proxy Online Mode: ").append(String.valueOf(Utils.getBungeeOrVelocityOnlineMode()));
 		writer.append("\n\nPlugins:\n");
 		for(Plugin p : Bukkit.getServer().getPluginManager().getPlugins())
 		{
