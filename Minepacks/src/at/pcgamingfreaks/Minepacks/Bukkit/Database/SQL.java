@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Utils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -38,8 +39,8 @@ public abstract class SQL extends Database
 
 	protected String tablePlayers, tableBackpacks, tableCooldowns; // Table Names
 	protected String fieldPlayerName, fieldPlayerID, fieldPlayerUUID, fieldBpOwner, fieldBpIts, fieldBpVersion, fieldBpLastUpdate, fieldCdPlayer, fieldCdTime; // Table Fields
-	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks; // DB Querys
-	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Querys
+	@Language("SQL") protected String queryUpdatePlayerAdd, queryGetPlayerID, queryInsertBp, queryUpdateBp, queryGetBP, queryDeleteOldBackpacks; // DB Queries
+	@Language("SQL") protected String queryDeleteOldCooldowns, querySyncCooldown, queryGetCooldown; // DB Queries
 	protected boolean syncCooldown;
 
 	public SQL(@NotNull Minepacks plugin, @NotNull ConnectionProvider connectionProvider)
@@ -50,7 +51,7 @@ public abstract class SQL extends Database
 		if(!dataSource.isAvailable()) throw new IllegalStateException("Failed to initialize database connection!");
 
 		loadSettings();
-		buildQuerys();
+		buildQueries();
 		checkDB();
 		checkUUIDs(); // Check if there are user accounts without UUID
 
@@ -125,9 +126,9 @@ public abstract class SQL extends Database
 
 	protected abstract void checkDB();
 
-	protected final void buildQuerys()
+	protected final void buildQueries()
 	{
-		// Build the SQL querys with placeholders for the table and field names
+		// Build the SQL queries with placeholders for the table and field names
 		queryGetBP = "SELECT {FieldBPOwner},{FieldBPITS},{FieldBPVersion} FROM {TableBackpacks} INNER JOIN {TablePlayers} ON {TableBackpacks}.{FieldBPOwner}={TablePlayers}.{FieldPlayerID} WHERE {FieldUUID}=?;";
 		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
@@ -138,7 +139,7 @@ public abstract class SQL extends Database
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";
 		queryDeleteOldCooldowns = "DELETE FROM {TableCooldowns} WHERE {FieldCDTime}<?;";
 
-		updateQuerysForDialect();
+		updateQueriesForDialect();
 
 		setTableAndFieldNames();
 	}
@@ -151,13 +152,13 @@ public abstract class SQL extends Database
 		queryGetBP                  = replacePlaceholders(queryGetBP);
 		queryInsertBp               = replacePlaceholders(queryInsertBp);
 		queryUpdateBp               = replacePlaceholders(queryUpdateBp);
-		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + ""));
+		queryDeleteOldBackpacks     = replacePlaceholders(queryDeleteOldBackpacks.replace("{VarMaxAge}", String.valueOf(maxAge)));
 		querySyncCooldown           = replacePlaceholders(querySyncCooldown);
 		queryGetCooldown            = replacePlaceholders(queryGetCooldown);
 		queryDeleteOldCooldowns     = replacePlaceholders(queryDeleteOldCooldowns);
 	}
 
-	protected abstract void updateQuerysForDialect();
+	protected abstract void updateQueriesForDialect();
 
 	protected String replacePlaceholders(@Language("SQL") String query)
 	{

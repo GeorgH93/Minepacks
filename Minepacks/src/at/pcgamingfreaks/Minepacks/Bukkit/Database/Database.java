@@ -51,7 +51,7 @@ public abstract class Database implements Listener
 	protected boolean useUUIDSeparators, asyncSave = true;
 	protected long maxAge;
 	private final Map<UUID, Backpack> backpacks = new ConcurrentHashMap<>();
-	private final UnCacheStrategy unCacheStrategie;
+	private final UnCacheStrategy unCacheStrategy;
 	private final File backupFolder;
 
 	public Database(Minepacks mp)
@@ -63,7 +63,7 @@ public abstract class Database implements Listener
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
 		forceSaveOnUnload = plugin.getConfiguration().isForceSaveOnUnloadEnabled();
 		maxAge = plugin.getConfiguration().getAutoCleanupMaxInactiveDays();
-		unCacheStrategie = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategy.getUnCacheStrategie(this);
+		unCacheStrategy = bungeeCordMode ? new OnDisconnect(this) : UnCacheStrategy.getUnCacheStrategy(this);
 		backupFolder = new File(this.plugin.getDataFolder(), "backups");
 		if(!backupFolder.exists() && !backupFolder.mkdirs()) mp.getLogger().info("Failed to create backups folder.");
 	}
@@ -79,7 +79,7 @@ public abstract class Database implements Listener
 		asyncSave = false;
 		backpacks.forEach((key, value) -> { if (forceSaveOnUnload) { value.setChanged(); } value.closeAll(); });
 		backpacks.clear();
-		unCacheStrategie.close();
+		unCacheStrategy.close();
 	}
 
 	public static @Nullable Database getDatabase(Minepacks plugin)

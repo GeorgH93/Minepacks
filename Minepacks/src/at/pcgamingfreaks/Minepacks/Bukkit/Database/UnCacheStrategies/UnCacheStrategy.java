@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies;
@@ -29,13 +29,13 @@ public abstract class UnCacheStrategy
 		this.cache = cache;
 	}
 
-	public static UnCacheStrategy getUnCacheStrategie(Database cache)
+	public static UnCacheStrategy getUnCacheStrategy(Database cache)
 	{
 		switch(Minepacks.getInstance().getConfiguration().getUnCacheStrategy())
 		{
 			case "ondisconnect": return new OnDisconnect(cache);
 			case "ondisconnectdelayed": return new OnDisconnectDelayed(cache);
-			case "intervalChecked": return new IntervalChecked(cache);
+			case "intervalchecked": return new IntervalChecked(cache);
 			case "interval": default: return new Interval(cache);
 		}
 	}
