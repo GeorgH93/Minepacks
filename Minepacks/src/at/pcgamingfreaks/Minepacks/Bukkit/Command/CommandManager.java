@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -28,6 +28,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -52,7 +53,8 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		backpackCommand.setExecutor(this);
 		backpackCommand.setTabCompleter(this);
 
-		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand\\}", "%1\\$s").replaceAll("\\{SubCommand\\}", "%2\\$s").replaceAll("\\{Parameters\\}", "%3\\$s").replaceAll("\\{Description\\}", "%4\\$s").replaceAll("suggest_command", "%5\\$s");
+		//TODO handle click action placeholder
+		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").placeholder("MainCommand").placeholder("SubCommand").placeholder("Parameters").placeholder("Description");//.placeholder("suggest_command", "%5\\$s");
 
 		// Setting the help format for the marry commands as well as the no permissions and not from console message
 		try
