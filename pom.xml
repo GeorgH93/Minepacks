@@ -7,13 +7,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>2.4.21.1</revision>
+		<revision>2.4.22-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<configFileVersion>34</configFileVersion>
 		<languageFileVersion>20</languageFileVersion>
-		<pcgfPluginLibVersion>1.0.39-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.39.1-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
 		<mavenShade.version>3.4.1</mavenShade.version>
@@ -37,7 +37,7 @@
 	</ciManagement>
 
 	<name>Minepacks-Parent</name>
-	<description>Minepacks is a backpack plugin with different backpack sizes, multi language support and SQLite and MySQL storage support.</description>
+	<description>Minepacks is a backpack plugin with different backpack sizes, multi-language support and SQLite and MySQL storage support.</description>
 	<url>https://www.spigotmc.org/resources/19286/</url>
 	<inceptionYear>2014</inceptionYear>
 	<licenses>

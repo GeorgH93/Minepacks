@@ -64,7 +64,7 @@ public class ItemsCollector extends BukkitRunnable
 		itemFilter = plugin.getItemFilter();
 	}
 
-	private boolean canUseAutoPickup(Player player)
+	public boolean canUseAutoPickup(Player player)
 	{
 		// Check if player can use in world
 		if(plugin.isDisabled(player) != WorldBlacklistMode.None) return false;

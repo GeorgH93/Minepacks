@@ -32,6 +32,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemFilter;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholder.PlaceholderManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Plugin.IPlugin;
@@ -79,6 +80,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 	private ItemFilter itemFilter = null;
 	private Sound openSound = null;
 	private ItemShortcut shortcut = null;
+	@Getter private PlaceholderManager placeholderManager = null;
 
 	public static Minepacks getInstance()
 	{
@@ -230,6 +232,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
 
 		openSound = config.getOpenSound();
+
+		placeholderManager = new PlaceholderManager(this);
 	}
 
 	private void unload()
@@ -240,6 +244,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			inventoryClearCommand.close();
 			inventoryClearCommand = null;
 		}
+		if (placeholderManager != null) { placeholderManager.close(); placeholderManager = null; }
 		if(collector != null) collector.close();
 		if(commandManager != null) commandManager.close();
 		if(collector != null) collector.cancel();
@@ -408,7 +413,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		return shortcut.isItemShortcut(itemStack);
 	}
 
-	public ItemsCollector getItemsCollector() {
+	public ItemsCollector getItemsCollector()
+	{
 		return collector;
 	}
 
