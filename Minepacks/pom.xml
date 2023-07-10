@@ -220,7 +220,7 @@
 			<properties>
 				<version>${project.version}-Release</version>
 				<dependencies/>
-				<soft-dependencies>PCGF_PluginLib</soft-dependencies>
+				<soft-dependencies>, PCGF_PluginLib</soft-dependencies>
 				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
 				<releaseType>Release</releaseType>
 			</properties>

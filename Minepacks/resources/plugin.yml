@@ -6,7 +6,7 @@ description: "${project.description}"
 version: "${version}"
 api-version: "1.13"
 depend: [${dependencies}]
-softdepend: [${soft-dependencies}]
+softdepend: [MVdWPlaceholderAPI, PlaceholderAPI ${soft-dependencies}]
 
 permissions:
   backpack.*:
