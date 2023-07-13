@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public interface Backpack extends InventoryHolder
@@ -36,7 +37,15 @@ public interface Backpack extends InventoryHolder
 	 *
 	 * @return The owner of the backpack;
 	 */
+	@Deprecated
 	@NotNull OfflinePlayer getOwner();
+
+	/**
+	 * Gets the id of the player owning the backpack.
+	 *
+	 * @return The uuid of the owning player.
+	 */
+	UUID getOwnerId();
 
 	/**
 	 * Let a given player open this backpack.

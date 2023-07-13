@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Util.StringUtils;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
@@ -43,10 +45,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	private static Object titleOwn;
 	private static String titleOtherFormat;
 	private final String titleOther;
-	private final OfflinePlayer owner;
+	@Getter private final UUID ownerId;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
 	private Inventory bp;
-	private int size, ownerID;
+	@Getter private int size;
+	@Getter @Setter private int ownerDatabaseId;
 	private boolean hasChanged;
 
 	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
@@ -72,11 +75,11 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 			size = 54;
 			Minepacks.getInstance().getLogger().warning("Backpacks with more than 6 rows are no longer supported on Minecraft 1.14 and up!");
 		}
-		this.owner = owner;
+		this.ownerId = owner.getUniqueId();
 		titleOther = StringUtils.limitLength(String.format(titleOtherFormat, owner.getName()), 32);
 		bp = Bukkit.createInventory(this, size, titleOther);
 		this.size = size;
-		ownerID = ID;
+		ownerDatabaseId = ID;
 	}
 	
 	public Backpack(final OfflinePlayer owner, ItemStack[] backpack, final int ID)
@@ -108,29 +111,20 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 		bp.setContents(backpack);
 	}
-	
-	public int getOwnerID()
-	{
-		return ownerID;
-	}
-	
-	public void setOwnerID(int id)
-	{
-		ownerID = id;
-	}
 
 	@Override
+	@Deprecated
 	public @NotNull OfflinePlayer getOwner()
 	{
-		return owner;
+		return Bukkit.getServer().getOfflinePlayer(ownerId);
 	}
 
 	private void checkResize()
 	{
-		if(owner.isOnline())
+		Player owner = Bukkit.getServer().getPlayer(this.ownerId);
+		if(owner != null)
 		{
-			Player owner = this.owner.getPlayer();
-			if(owner != null && owner.hasPermission(Permissions.USE))
+			if(owner.hasPermission(Permissions.USE))
 			{
 				int size = Minepacks.getInstance().getBackpackPermSize(owner);
 				if(size != bp.getSize())
@@ -153,7 +147,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	{
 		checkResize();
 		opened.put(player, editable);
-		if(owner.equals(player)) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
+		if(ownerId.equals(player.getUniqueId())) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
 		else player.openInventory(bp);
 	}
 
@@ -194,12 +188,6 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		return opened.containsKey(player) && opened.get(player);
 	}
 
-	@Override
-	public int getSize()
-	{
-		return size;
-	}
-	
 	public @NotNull List<ItemStack> setSize(int newSize)
 	{
 		opened.forEach((key, value) -> key.closeInventory()); // Close all open views of the inventory
