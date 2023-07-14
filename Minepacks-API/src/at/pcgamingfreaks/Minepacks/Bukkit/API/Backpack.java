@@ -47,6 +47,8 @@ public interface Backpack extends InventoryHolder
 	 */
 	UUID getOwnerId();
 
+	@Nullable Player getOwnerPlayer();
+
 	/**
 	 * Let a given player open this backpack.
 	 *

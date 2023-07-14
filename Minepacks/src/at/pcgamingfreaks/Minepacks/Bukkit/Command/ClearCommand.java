@@ -69,15 +69,15 @@ public class ClearCommand extends MinepacksCommand
 					if(backpack != null)
 					{
 						backpack.clear();
-						if(commandSender.equals(backpack.getOwner()))
+						if(commandSender instanceof Player && ((Player) commandSender).getUniqueId().equals(backpack.getOwnerId()))
 						{
 							messageCleared.send(commandSender);
 						}
 						else
 						{
-							if(backpack.getOwner().isOnline())
+							Player owner = backpack.getOwnerPlayer();
+							if(owner != null)
 							{
-								Player owner = backpack.getOwner().getPlayer();
 								messageClearedOther.send(commandSender, owner);
 								messageClearedBy.send(owner, commandSender);
 							}
