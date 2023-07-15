@@ -37,7 +37,7 @@ public class Interval extends UnCacheStrategy implements Runnable
 	{
 		for(Backpack backpack : cache.getLoadedBackpacks())
 		{
-			if(!backpack.getOwner().isOnline() && !backpack.isOpen())
+			if(backpack.getOwnerPlayer() == null && !backpack.isOpen())
 			{
 				this.cache.unloadBackpack(backpack);
 			}

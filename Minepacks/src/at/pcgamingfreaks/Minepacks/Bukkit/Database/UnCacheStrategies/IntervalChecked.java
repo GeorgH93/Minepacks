@@ -22,6 +22,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 public class IntervalChecked extends UnCacheStrategy implements Runnable
 {
@@ -42,7 +43,8 @@ public class IntervalChecked extends UnCacheStrategy implements Runnable
 		long currentTime = System.currentTimeMillis() - delay;
 		for(Backpack backpack : cache.getLoadedBackpacks())
 		{
-			if(!backpack.getOwner().isOnline() && backpack.getOwner().getLastPlayed() < currentTime && !backpack.isOpen())
+			OfflinePlayer owner = backpack.getOwner();
+			if(!owner.isOnline() && owner.getLastPlayed() < currentTime && !backpack.isOpen())
 			{
 				this.cache.unloadBackpack(backpack);
 			}

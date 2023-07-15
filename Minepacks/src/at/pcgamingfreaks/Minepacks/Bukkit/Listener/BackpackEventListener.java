@@ -55,14 +55,13 @@ public class BackpackEventListener extends MinepacksListener
 				backpack.save();
 			}
 			backpack.close(closer);
-			if(event.getPlayer().getUniqueId().equals(backpack.getOwner().getUniqueId()))
+			if(event.getPlayer().getUniqueId().equals(backpack.getOwnerId()))
 			{
 				messageOwnBackpackClose.send(closer);
 			}
 			else
 			{
-				OfflinePlayer owner = backpack.getOwner();
-				messageOtherBackpackClose.send(closer, owner);
+				messageOtherBackpackClose.send(closer, backpack.getOwner());
 			}
 			if(closeSound != null)
 			{

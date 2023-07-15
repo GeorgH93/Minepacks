@@ -30,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Files extends Database
@@ -68,13 +70,13 @@ public class Files extends Database
 		if(allFiles == null) return;
 		for (File file : allFiles)
 		{
-			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older then x days
+			if(maxAge > 0 && System.currentTimeMillis() - file.lastModified() > maxAge) // Check if the file is older than x days
 			{
 				if(!file.delete())
 				{
 					plugin.getLogger().warning("Failed to delete file (" + file.getAbsolutePath() + ").");
 				}
-				continue; // We don't have to check if the file name is correct cause we have the deleted the file
+				continue; // We don't have to check if the file name is correct because we have the deleted the file
 			}
 			int len = file.getName().length() - EXT.length();
 			if(len <= 16) // It's a player name
@@ -110,16 +112,16 @@ public class Files extends Database
 		}
 	}
 	
-	private String getFileName(OfflinePlayer player)
+	private String getFileName(UUID uuid)
 	{
-		return getPlayerFormattedUUID(player) + EXT;
+		return getPlayerFormattedUUID(uuid) + EXT;
 	}
 	
 	// DB Functions
 	@Override
 	public void saveBackpack(Backpack backpack)
 	{
-		File save = new File(saveFolder, getFileName(backpack.getOwner()));
+		File save = new File(saveFolder, getFileName(backpack.getOwnerId()));
 		try(FileOutputStream fos = new FileOutputStream(save))
 		{
 			fos.write(itsSerializer.getUsedSerializer());
@@ -128,7 +130,7 @@ public class Files extends Database
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "Failed to save backpack.", e);
 		}
 	}
 
@@ -161,7 +163,7 @@ public class Files extends Database
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
+				logger.log(Level.WARNING, "Failed to read backpack.", e);
 			}
 		}
 		return null;

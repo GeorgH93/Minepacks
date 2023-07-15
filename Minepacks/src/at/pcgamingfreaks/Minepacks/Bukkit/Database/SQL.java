@@ -203,7 +203,7 @@ public abstract class SQL extends Database
 	{
 		final byte[] data = itsSerializer.serialize(backpack.getInventory());
 		final int id = backpack.getOwnerDatabaseId(), usedSerializer = itsSerializer.getUsedSerializer();
-		final String nameOrUUID = getPlayerFormattedUUID(backpack.getOwner()), name = backpack.getOwner().getName();
+		final String nameOrUUID = getPlayerFormattedUUID(backpack.getOwnerId()), name = backpack.getOwner().getName();
 
 		Runnable runnable = () -> {
 			try(Connection connection = getConnection())

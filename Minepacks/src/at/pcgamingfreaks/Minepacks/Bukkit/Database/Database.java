@@ -121,14 +121,14 @@ public abstract class Database implements Listener
 		catch(IllegalStateException ignored) {}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "Failed to initialize database.", e);
 		}
 		return null;
 	}
 
 	public void backup(@NotNull Backpack backpack)
 	{
-		writeBackup(backpack.getOwner().getName(), getPlayerFormattedUUID(backpack.getOwner()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
+		writeBackup(backpack.getOwner().getName(), getPlayerFormattedUUID(backpack.getOwnerId()), itsSerializer.getUsedSerializer(), itsSerializer.serialize(backpack.getInventory()));
 	}
 
 	protected void writeBackup(@Nullable String userName, @NotNull String userIdentifier, final int usedSerializer, final byte[] data)
@@ -172,7 +172,12 @@ public abstract class Database implements Listener
 
 	protected String getPlayerFormattedUUID(OfflinePlayer player)
 	{
-		return (useUUIDSeparators) ? player.getUniqueId().toString() : player.getUniqueId().toString().replace("-", "");
+		return getPlayerFormattedUUID(player.getUniqueId());
+	}
+
+	protected String getPlayerFormattedUUID(UUID uuid)
+	{
+		return (useUUIDSeparators) ? uuid.toString() : uuid.toString().replace("-", "");
 	}
 
 	public @NotNull Collection<Backpack> getLoadedBackpacks()
@@ -238,7 +243,6 @@ public abstract class Database implements Listener
 
 	public void unloadBackpack(Backpack backpack)
 	{
-		plugin.getLogger().log(Level.INFO, "Unloading backpack of {0} ({1})", new Object[] {backpack.getOwner().getName(), backpack.getOwner().getUniqueId()});
 		if (forceSaveOnUnload)
 		{
 			backpack.forceSave();
@@ -247,7 +251,7 @@ public abstract class Database implements Listener
 		{
 			backpack.save();
 		}
-		backpacks.remove(backpack.getOwner().getUniqueId());
+		backpacks.remove(backpack.getOwnerId());
 	}
 
 	public void asyncLoadBackpack(final OfflinePlayer player)
