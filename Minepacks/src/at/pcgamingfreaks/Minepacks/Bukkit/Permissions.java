@@ -17,6 +17,13 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
+import lombok.SneakyThrows;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Permissions
 {
 	public static final String BASE = "backpack.";
@@ -41,4 +48,23 @@ public class Permissions
 
 	public static final String INVENTORY_CLEAR = "clearInventory";
 	public static final String INVENTORY_CLEAR_OTHER = "clearInventory.other";
+
+	@SneakyThrows
+	public static List<String> getPermissions()
+	{
+		Field[] fields = Permissions.class.getDeclaredFields();
+		List<String> permissions = new ArrayList<>(fields.length);
+		for(Field field : fields)
+		{
+			if (field.getType().equals(String.class) && field.getModifiers() == Modifier.STATIC)
+			{
+				String val = ((String) field.get(null));
+				if (!val.endsWith("."))
+				{
+					permissions.add(val);
+				}
+			}
+		}
+		return permissions;
+	}
 }
