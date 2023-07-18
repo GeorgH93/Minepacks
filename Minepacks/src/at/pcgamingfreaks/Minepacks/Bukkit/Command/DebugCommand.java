@@ -74,11 +74,9 @@ public class DebugCommand extends MinepacksCommand
 	}
 
 	@SneakyThrows
-	@Override
-	public void execute(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	private void debugSystem(final @NotNull CommandSender commandSender)
 	{
-		if(writer != null) return;
-		Player sender = (Player) commandSender;
+		final Player sender = (Player) commandSender;
 		messageStart.send(sender);
 
 		File debugFile = new File(plugin.getDataFolder(), "debug.txt");
@@ -132,6 +130,30 @@ public class DebugCommand extends MinepacksCommand
 			sender.getInventory().setItem(0, slot);
 			messageDone.send(sender);
 		}, 30*20L);
+	}
+
+	@SneakyThrows
+	@Override
+	public void execute(@NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
+	{
+		if(writer != null) return;
+		if (args.length == 2 && args[0].equals("permissions"))
+		{
+			Player player = Bukkit.getServer().getPlayer(args[1]);
+			if (player == null)
+			{
+				commandSender.sendMessage("Player " + args[1] + " is offline.");
+				return;
+			}
+			commandSender.sendMessage("### Permissions for " + player.getName() + " ###");
+			for(String perm : Permissions.getPermissions())
+			{
+				commandSender.sendMessage(perm + ": " + player.hasPermission(perm));
+			}
+			commandSender.sendMessage("###############################");
+		}
+		else
+			debugSystem(commandSender);
 	}
 
 	@Override
