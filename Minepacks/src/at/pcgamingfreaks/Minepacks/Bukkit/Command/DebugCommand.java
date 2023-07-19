@@ -49,6 +49,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.logging.Level;
 
 public class DebugCommand extends MinepacksCommand
 {
@@ -126,7 +127,7 @@ public class DebugCommand extends MinepacksCommand
 				writer.close();
 				writer = null;
 			}
-			catch(Exception e) {e.printStackTrace();}
+			catch(Exception e) { plugin.getLogger().log(Level.SEVERE, "Error while writing debug file.", e);}
 			sender.getInventory().setItem(0, slot);
 			messageDone.send(sender);
 		}, 30*20L);
