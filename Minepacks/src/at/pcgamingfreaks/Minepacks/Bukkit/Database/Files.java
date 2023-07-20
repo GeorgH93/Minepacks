@@ -137,7 +137,7 @@ public class Files extends Database
 	@Override
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{ //TODO this needs to be done async!
-		File save = new File(saveFolder, getFileName(player));
+		File save = new File(saveFolder, getFileName(player.getUniqueId()));
 		ItemStack[] itemStacks = readFile(itsSerializer, save, plugin.getLogger());
 		if(itemStacks != null)
 		{
