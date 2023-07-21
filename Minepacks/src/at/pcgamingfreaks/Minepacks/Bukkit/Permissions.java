@@ -56,7 +56,7 @@ public class Permissions
 		List<String> permissions = new ArrayList<>(fields.length);
 		for(Field field : fields)
 		{
-			if (field.getType().equals(String.class) && field.getModifiers() == Modifier.STATIC)
+			if (field.getType().equals(String.class) && Modifier.isStatic(field.getModifiers()))
 			{
 				String val = ((String) field.get(null));
 				if (!val.endsWith("."))
@@ -64,6 +64,10 @@ public class Permissions
 					permissions.add(val);
 				}
 			}
+		}
+		for (int i = 1; i < 10; i++)
+		{
+			permissions.add("backpack.size." + i);
 		}
 		return permissions;
 	}
