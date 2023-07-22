@@ -25,6 +25,7 @@ import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Message.MessageColor;
 import at.pcgamingfreaks.Message.MessageFormat;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -150,6 +151,47 @@ public class DebugCommand extends MinepacksCommand
 			for(String perm : Permissions.getPermissions())
 			{
 				commandSender.sendMessage(perm + ": " + player.hasPermission(perm));
+			}
+			commandSender.sendMessage("###############################");
+		}
+		else if (args.length == 2 && args[0].equals("size"))
+		{
+			Player player = Bukkit.getServer().getPlayer(args[1]);
+			if (player == null)
+			{
+				commandSender.sendMessage("Player " + args[1] + " is offline.");
+				return;
+			}
+			Backpack bp = Minepacks.getInstance().getBackpackCachedOnly(player);
+			int bpSize = -1, bpInvSize = -1, sizeShouldBe = Minepacks.getInstance().getBackpackPermSize(player);
+			String actualSize = "backpack not loaded", actualSizeInventory = "backpack not loaded";
+			if (bp != null)
+			{
+				bpSize = bp.getSize();
+				bpInvSize = bp.getInventory().getSize();
+				actualSize = String.valueOf(bpSize);
+				actualSizeInventory = String.valueOf(bpInvSize);
+			}
+			commandSender.sendMessage("### Backpack size for " + player.getName() + " ###");
+			commandSender.sendMessage("Size: " + actualSize);
+			commandSender.sendMessage("Inventory Size: " + actualSizeInventory);
+			commandSender.sendMessage("Should be: " + sizeShouldBe);
+			if (bpSize != sizeShouldBe)
+			{
+				commandSender.sendMessage("Size missmatch detected, attempt resize ...");
+				((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) bp).checkResize();
+				if (bp.getSize() != sizeShouldBe)
+				{
+					commandSender.sendMessage("Failed to resize backpack.");
+				}
+				else
+				{
+					commandSender.sendMessage("Resized backpack successfully.");
+				}
+			}
+			if (bp != null && bp.getSize() != bp.getInventory().getSize())
+			{
+				commandSender.sendMessage("Inventory size does not match backpack size!");
 			}
 			commandSender.sendMessage("###############################");
 		}

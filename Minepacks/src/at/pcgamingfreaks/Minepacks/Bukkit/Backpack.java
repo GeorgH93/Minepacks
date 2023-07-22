@@ -125,7 +125,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		return Bukkit.getServer().getPlayer(ownerId);
 	}
 
-	private void checkResize()
+	public void checkResize()
 	{
 		Player owner = Bukkit.getServer().getPlayer(this.ownerId);
 		if(owner != null)
