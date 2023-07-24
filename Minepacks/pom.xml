@@ -16,10 +16,6 @@
 	<url>https://www.spigotmc.org/resources/19286/</url>
 
 	<properties>
-		<author>GeorgH93</author>
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
-		<timestamp>${maven.build.timestamp}</timestamp>
-		<version>${project.version}-T${timestamp}</version>
 		<dependencies>PCGF_PluginLib</dependencies>
 		<soft-dependencies/>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>

@@ -1,6 +1,6 @@
 name: "Minepacks"
-author: "GeorgH93"
-version: "${version}"
+author: "${author}"
+version: "${pluginVersion}"
 api-version: "1.19"
 
 main: "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks"

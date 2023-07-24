@@ -18,6 +18,11 @@
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
 		<mavenShade.version>3.4.1</mavenShade.version>
 
+		<author>GeorgH93</author>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<pluginVersion>${project.version}-T${timestamp}</pluginVersion>
+
 		<sonar.organization>georgh93</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>

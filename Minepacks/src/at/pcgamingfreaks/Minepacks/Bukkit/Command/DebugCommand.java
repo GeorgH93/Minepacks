@@ -206,7 +206,7 @@ public class DebugCommand extends MinepacksCommand
 	{
 		if (args.length == 1)
 		{
-			List<String> completeList = new ArrayList<>(2);
+			List<String> completeList = new ArrayList<>(3);
 			if ("size".startsWith(args[0])) { completeList.add("size"); }
 			if ("system".startsWith(args[0])) { completeList.add("system"); }
 			if ("permissions".startsWith(args[0])) { completeList.add("permissions"); }
