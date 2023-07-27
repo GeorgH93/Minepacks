@@ -51,7 +51,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 public class DebugCommand extends MinepacksCommand
@@ -195,6 +194,7 @@ public class DebugCommand extends MinepacksCommand
 			{
 				commandSender.sendMessage("Inventory size does not match backpack size!");
 			}
+			commandSender.sendMessage("Player class: " + player.getClass().getName());
 			commandSender.sendMessage("###############################");
 		}
 		else
