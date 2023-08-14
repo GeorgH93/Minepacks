@@ -1,4 +1,4 @@
-# To simplify the customisation and the translation process please check out the editor: https://ptp.pcgamingfreaks.at
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
 
 Language:
   NotFromConsole: "&cЭту команду нельзя использовать в консоли."
@@ -23,6 +23,10 @@ Language:
       WrongGameMode: "Вам не разрешено открывать рюкзак в текущем режиме игры."
     Clean:
       BackpackCleaned: "Рюкзак очищен."
+      BackpackCleanedBy: "Ваш рюкзак был очищен игроком {DisplayName}&r."
+      BackpackCleanedOther: "{DisplayName}'s&r рюкзак был очищен."
+    Sort:
+      Sorted: "Рюкзак отсортирован."
     Help:
       Header: "&6### Команды Minepacks ###"
       Footer: "&6#############################"
@@ -35,7 +39,7 @@ Language:
       NoUpdate: "[\"\",{\"text\":\"Нет доступных обновлений.\",\"color\":\"gold\"}]"
       UpdateFail: "[\"\",{\"text\":\"При проверке обновлений произошла ошибка! Пожалуйста проверьте консоль!\",\"color\":\"red\"}]"
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
-      UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
+      UpdateAvailable: "[{\"text\":\"Доступно обновление! Пожалуйста, посетите сайт \\\"\",\"color\":\"green\"},{\"text\":\"https://www.spigotmc.org/resources/19286/\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.spigotmc.org/resources/19286/\"}},{\"text\":\"\\\" чтобы скачать его!\"}]"
     Backup:
       Created: "Рюкзак был успешно скопирован."
       NoBackpack: "У игрока нет рюкзака, либо он пустой."
@@ -43,7 +47,7 @@ Language:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Резервные копии\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"страница {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
       Footer: "[{\"text\":\"<<< Предыдущая <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Страница {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Следующая >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
-      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Пользователь: {BackupPlayerName} ({BackupPlayerUUID})\\nСоздана: {BackupDate}\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Пользователь: {BackupPlayerName} ({BackupPlayerUUID})\\\nСоздана: {BackupDate}\"}}]"
       NoValidBackup: "Резервная копия {BackupIdentifier} не найдена"
       NoUserToRestoreToFound: "Не найдено действительного пользователя или копии для восстановления"
       # No Json!!!
@@ -51,11 +55,20 @@ Language:
       # No Json!!!
       DateFormat: "dd.MM.yy HH:mm:ss"
       Restored: "Резервная копия успешно восстановлена."
+    InventoryClear:
+      UnknownPlayer: "&cНе удалось найти игрока {Name}!"
+      Cleared: "Инвентарь очищен."
+      ClearedOther: "{DisplayName}'s&r инвентарь был очищен."
+      ClearedOtherTarget: "Ваш инвентарь был очищен игроком {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Автоматический сбор предметов был переключен на &aВКЛ&7."
+      ToggleOff: "&7Автоматический сбор предметов был переключен на &cВЫКЛ&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
     Description:
       Backpack: "Открыть ваш рюкзак."
+      Sort: "Отсортировать ваш рюкзак."
       Clean: "Очистить ваш рюкзак."
       CleanOthers: "Очистить рюкзак другого игрока."
       OpenOthers: "Открыть рюкзак другого игрока."
@@ -63,10 +76,12 @@ Language:
       Update: "Проверить плагин на наличие новых версий."
       Version: "Посмотреть информацию о плагине и о его зависимостях."
       Backup: "Создать резервную копию рюкзака игрока."
+      BackupEveryone: "Создает резервную копию всех, кто в данный момент находится в сети."
       Restore: "Восстановить резервную копию."
       RestoreList: "Посмотреть список всех доступных резервных копий."
       Help: "Посмотреть все команды и их описание."
       Migrate: "Изменить тип используемой базы данных."
+      Pickup: "Переключить состояние автоматического подбора, когда инвентарь заполнен."
 
 Command:
   Backpack:
@@ -74,6 +89,8 @@ Command:
     - bp
   Open:
     - open
+  Sort:
+    - sort
   Clean:
     - clean
     - clear
@@ -93,10 +110,16 @@ Command:
     - version
   Help:
     - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "russian"
-Author: "MrZillaGold"
+Author: "maz1lovo"
 
 # Language file version. Don't touch it!
-Version: 17
+Version: 20
