@@ -91,7 +91,7 @@ public class ItemShortcut extends MinepacksListener
 		return itemDisplayName != null && itemNameNoReset.equals(itemDisplayName.replace(ChatColor.RESET.toString(), ""));
 	}
 
-	private void addItem(Player player)
+	public void addItem(Player player)
 	{
 		if(player.hasPermission(Permissions.USE))
 		{

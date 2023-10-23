@@ -27,6 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.*;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.CommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.Command.InventoryClearCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.Command.ShortcutCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Config;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Language;
@@ -220,6 +221,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		{
 			shortcut = new ItemShortcut(this);
 			pluginManager.registerEvents(shortcut, this);
+			commandManager.registerSubCommand(new ShortcutCommand(this, shortcut));
 		}
 		else shortcut = null;
 		if(config.isWorldWhitelistMode()) pluginManager.registerEvents(new WorldBlacklistUpdater(this), this);
