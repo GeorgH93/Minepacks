@@ -23,6 +23,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemShortcut;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,15 @@ public class ShortcutCommand extends MinepacksCommand
 	@Override
 	public void execute(@NotNull CommandSender sender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
-		itemShortcut.addItem((Player) sender);
+		if (args.length == 1 && sender.hasPermission(Permissions.OTHERS))
+		{
+			Player p = Bukkit.getPlayer(args[0]);
+			if (p != null && p.hasPermission(Permissions.USE)) itemShortcut.addItem(p);
+		}
+		else
+		{
+			itemShortcut.addItem((Player) sender);
+		}
 	}
 
 	@Override
