@@ -20,10 +20,12 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Bukkit.ItemStackSerializer.ItemStackSerializer;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.ConsoleColor;
+
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InventorySerializer
@@ -49,13 +51,16 @@ public class InventorySerializer
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to produce serializer!", e);
 		}
 		if(serializer == null)
 		{
 			logger.severe("NBTItemStackSerializer does not support your Minecraft version!\nFalling back to BukkitItemStackSerializer! This most likely is wrong!");
-			usedSerializer = 0;
-			serializer = BUKKIT_ITEM_STACK_SERIALIZER;
+			if (MCVersion.isOlderThan(MCVersion.MC_NMS_1_8_R1))
+			{
+				usedSerializer = 0;
+				serializer = BUKKIT_ITEM_STACK_SERIALIZER;
+			}
 		}
 		this.serializer = serializer;
 		this.usedSerializer = usedSerializer;
