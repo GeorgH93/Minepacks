@@ -120,6 +120,17 @@ public class ItemShortcut extends MinepacksListener
 				player.getInventory().addItem(HeadUtils.fromBase64(value, itemName, MINEPACKS_UUID));
 			}
 		}
+		else
+		{
+			for(ItemStack itemStack : player.getInventory())
+			{
+				if(isItemShortcut(itemStack))
+				{
+					player.getInventory().remove(itemStack);
+					return;
+				}
+			}
+		}
 	}
 
 	private void removeItem(Player player)
