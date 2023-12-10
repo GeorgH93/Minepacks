@@ -36,6 +36,7 @@ public interface Backpack extends InventoryHolder
 	 * Gets the owner of the backpack.
 	 *
 	 * @return The owner of the backpack;
+	 * @deprecated Use the {@link Backpack#getOwnerId()} function instead.
 	 */
 	@Deprecated
 	@NotNull OfflinePlayer getOwner();
