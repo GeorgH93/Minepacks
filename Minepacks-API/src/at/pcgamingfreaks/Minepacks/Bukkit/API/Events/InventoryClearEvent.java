@@ -35,12 +35,12 @@ public class InventoryClearEvent extends Event implements Cancellable
 	/**
 	 * The player whose inventory should be cleared.
 	 */
-	@Getter final private Player player;
+	@Getter private final Player player;
 
 	/**
 	 * The command sender who has requested the inventory to be cleared.
 	 */
-	@Getter final private CommandSender sender;
+	@Getter private final CommandSender sender;
 
 	// Bukkit handler stuff
 	private static final HandlerList handlers = new HandlerList();
