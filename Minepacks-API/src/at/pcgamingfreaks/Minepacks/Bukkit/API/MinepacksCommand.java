@@ -30,15 +30,20 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Only available if the plugin is not running in standalone mode!
  */
 public abstract class MinepacksCommand extends SubCommand
 {
-	private static MinepacksPlugin minepacksPlugin = null;
-	private static Method showHelp = null;
+	@SuppressWarnings("FieldMayBeFinal")
+	private static MinepacksPlugin minepacksPlugin = null; // Will be set by reflection
+	@SuppressWarnings("FieldMayBeFinal")
+	private static Method showHelp = null; // Will be set by reflection
+	@SuppressWarnings("FieldMayBeFinal") // Will be overwritten by reflection
 	private static Message messageNoPermission   = new Message(ChatColor.RED + "You don't have the permission to do that.");
+	@SuppressWarnings("FieldMayBeFinal") // Will be overwritten by reflection
 	private static Message messageNotFromConsole = new Message(ChatColor.RED + "This command can't be used from console!");
 	protected final JavaPlugin plugin;
 	private final boolean playerOnly;
@@ -52,7 +57,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 * @param description The description of the command.
 	 * @param aliases     List of aliases for that command.
 	 */
-	public MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String... aliases)
+	protected MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String... aliases)
 	{
 		this(plugin, name, description, null, aliases);
 	}
@@ -66,7 +71,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 * @param permission  The permission to be checked for this command. Players without the permission neither can use the command nor will they see it in help.
 	 * @param aliases     List of aliases for that command.
 	 */
-	public MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String permission, @Nullable String... aliases)
+	protected MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String permission, @Nullable String... aliases)
 	{
 		this(plugin, name, description, permission, false, aliases);
 	}
@@ -81,7 +86,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 * @param playerOnly  Limits the command to players, console can't use and can't see the command.
 	 * @param aliases     List of aliases for that command.
 	 */
-	public MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String permission, boolean playerOnly, @Nullable String... aliases)
+	protected MinepacksCommand(@NotNull JavaPlugin plugin, @NotNull String name, @NotNull String description, @Nullable String permission, boolean playerOnly, @Nullable String... aliases)
 	{
 		super(name, description, permission, aliases);
 		this.plugin = plugin;
@@ -173,7 +178,7 @@ public abstract class MinepacksCommand extends SubCommand
 	 * @param usedMainCommandAlias The used backpack alias to replace the /backpack with the used alias.
 	 */
 	@Override
-	public void showHelp(@NotNull CommandSender sendTo, @NotNull String usedMainCommandAlias)
+	public void showHelp(final @NotNull CommandSender sendTo, final @NotNull String usedMainCommandAlias)
 	{
 		try
 		{
@@ -181,7 +186,7 @@ public abstract class MinepacksCommand extends SubCommand
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> { return "Failed to execute command " + usedMainCommandAlias; });
 		}
 	}
 
