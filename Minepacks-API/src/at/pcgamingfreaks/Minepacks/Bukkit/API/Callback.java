@@ -21,5 +21,5 @@ public interface Callback<T>
 {
 	void onResult(T done);
 
-	void onFail();
+	default void onFail() { /* In most cases this can be ignored since it will not happen with most db queries used */ }
 }

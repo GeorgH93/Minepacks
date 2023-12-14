@@ -44,24 +44,16 @@ public class SortCommand extends MinepacksCommand
 	public void execute(final @NotNull CommandSender commandSender, @NotNull String mainCommandAlias, @NotNull String alias, @NotNull String[] args)
 	{
 		final Player player = (Player) commandSender;
-		getMinepacksPlugin().getBackpack(player, new Callback<Backpack>()
-		{
-			@Override
-			public void onResult(Backpack backpack)
+		getMinepacksPlugin().getBackpack(player, backpack -> {
+			InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
+			if(!compressor.sort().isEmpty())
 			{
-				InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
-				if(!compressor.sort().isEmpty())
-				{
-					plugin.getLogger().warning("Failed to sort backpack!"); //this should not happen
-					return;
-				}
-				backpack.getInventory().setContents(compressor.getTargetStacks());
-				backpack.setChanged();
-				messageSorted.send(player);
+				plugin.getLogger().warning("Failed to sort backpack!"); //this should not happen
+				return;
 			}
-
-			@Override
-			public void onFail() {} // This should not happen
+			backpack.getInventory().setContents(compressor.getTargetStacks());
+			backpack.setChanged();
+			messageSorted.send(player);
 		});
 	}
 

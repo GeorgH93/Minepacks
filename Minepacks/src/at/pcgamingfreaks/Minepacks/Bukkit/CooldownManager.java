@@ -91,16 +91,7 @@ public class CooldownManager extends BukkitRunnable implements Listener
 		{
 			final UUID uuid = event.getPlayer().getUniqueId();
 			cooldowns.put(uuid, System.currentTimeMillis() + cooldown); // Temporary cooldown till the data is loaded from the database
-			plugin.getDatabase().getCooldown(event.getPlayer(), new Callback<Long>() {
-				@Override
-				public void onResult(Long dbCooldownTime)
-				{
-					cooldowns.put(uuid, dbCooldownTime);
-				}
-
-				@Override
-				public void onFail() {}
-			});
+			plugin.getDatabase().getCooldown(event.getPlayer(), dbCooldownTime -> cooldowns.put(uuid, dbCooldownTime));
 		}
 		else if(addOnJoin)
 		{

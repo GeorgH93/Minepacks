@@ -114,17 +114,10 @@ public class RestoreCommand extends MinepacksCommand
 				messageNoUserFound.send(sender);
 				return;
 			}
-			getMinepacksPlugin().getBackpack(target, new Callback<Backpack>() {
-				@Override
-				public void onResult(Backpack backpack)
-				{
-					backpack.getInventory().setContents(items);
-					backpack.setChanged();
-					messageRestored.send(sender);
-				}
-
-				@Override
-				public void onFail() {}
+			getMinepacksPlugin().getBackpack(target, backpack -> {
+				backpack.getInventory().setContents(items);
+				backpack.setChanged();
+				messageRestored.send(sender);
 			});
 		}
 		else

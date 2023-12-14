@@ -306,17 +306,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 	@Override
 	public void openBackpack(@NotNull Player opener, @NotNull OfflinePlayer owner, boolean editable, @Nullable String title)
 	{
-		database.getBackpack(owner, new Callback<Backpack>()
-		{
-			@Override
-			public void onResult(Backpack backpack)
-			{
-				openBackpack(opener, backpack, editable, title);
-			}
-
-			@Override
-			public void onFail() {}
-		});
+		database.getBackpack(owner, backpack -> openBackpack(opener, backpack, editable, title));
 	}
 
 	@Override

@@ -48,21 +48,13 @@ public class DropOnDeath extends MinepacksListener
 		if (!player.hasPermission(Permissions.KEEP_ON_DEATH))
 		{
 			final Location location = player.getLocation();
-			plugin.getBackpack(player, new Callback<Backpack>()
-			{
-				@Override
-				public void onResult(Backpack backpack)
+			plugin.getBackpack(player, backpack -> {
+				BackpackDropOnDeathEvent event1 = new BackpackDropOnDeathEvent(player, backpack);
+				plugin.getServer().getPluginManager().callEvent(event1);
+				if(!event1.isCancelled())
 				{
-					BackpackDropOnDeathEvent event = new BackpackDropOnDeathEvent(player, backpack);
-					plugin.getServer().getPluginManager().callEvent(event);
-					if(!event.isCancelled())
-					{
-						backpack.drop(location);
-					}
+					backpack.drop(location);
 				}
-
-				@Override
-				public void onFail() {}
 			});
 		}
 	}
