@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.logging.Level;
 
 public class Config extends Configuration implements DatabaseConnectionConfiguration, ILanguageConfiguration
 {
@@ -97,7 +98,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 		catch(FileNotFoundException e)
 		{
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Failed to set database type", e);
 		}
 	}
 
@@ -131,7 +132,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				Boolean detectedOnlineMode = Utils.getBungeeOrVelocityOnlineMode();
 				if (detectedOnlineMode != null)
 				{
-					logger.info("Detected online mode in paper config: " + detectedOnlineMode);
+					logger.log(Level.INFO, "Detected online mode in paper config: {0}", detectedOnlineMode);
 					return detectedOnlineMode;
 				}
 				logger.warning("When using BungeeCord please make sure to set the UUID_Type config option explicitly!");
@@ -169,7 +170,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getBPTitleOther()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitleOther", "{OwnerName} Backpack").replaceAll("%", "%%").replaceAll("\\{OwnerName}", "%s"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitleOther", "{OwnerName} Backpack").replace("%", "%%").replace("{OwnerName}", "%s"));
 	}
 
 	public String getBPTitle()
@@ -208,7 +209,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		}
 		catch(IllegalArgumentException ignored)
 		{
-			logger.warning("Unknown ShrinkApproach \"" + approach + "\"!");
+			logger.log(Level.WARNING, "Unknown ShrinkApproach \"{0}\"!", approach);
 			return ShrinkApproach.SORT;
 		}
 	}
@@ -226,7 +227,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			return channel;
 		}
-		else logger.info("Unknown update Channel: " + channel);
+		else logger.log(Level.INFO, "Unknown update Channel: {0}", channel);
 		return null;
 	}
 
@@ -305,7 +306,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				gameModes.add(gm);
 			}
 		}
-		if(gameModes.size() < 1)
+		if(gameModes.isEmpty())
 		{
 			logger.info("No game-mode's allowed, allowing: " + GameMode.SURVIVAL.name());
 			gameModes.add(GameMode.SURVIVAL);
@@ -516,14 +517,17 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return null;
 	}
 
+	private static final @NotNull String DEFAULT_SOUND_OPEN = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN");
+	private static final @NotNull String DEFAULT_SOUND_CLOSE = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE");
+
 	public Sound getOpenSound()
 	{
-		return getSound("OpenSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_OPEN" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_OPEN" : "CHEST_OPEN"));
+		return getSound("OpenSound", DEFAULT_SOUND_OPEN);
 	}
 
 	public Sound getCloseSound()
 	{
-		return getSound("CloseSound", MCVersion.isNewerOrEqualThan(MCVersion.MC_1_11) ? "BLOCK_SHULKER_BOX_CLOSE" : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_9_2) ? "BLOCK_CHEST_CLOSE" : "CHEST_CLOSE"));
+		return getSound("CloseSound", DEFAULT_SOUND_CLOSE);
 	}
 	//endregion
 
