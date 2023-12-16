@@ -61,12 +61,12 @@ import java.util.Set;
 
 public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 {
-	private static Minepacks instance = null;
+	@Getter private static Minepacks instance = null;
 
 	private ManagedUpdater updater = null;
 	private Config config;
 	private Language lang;
-	private Database database;
+	@Getter private Database database;
 
 	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
@@ -82,11 +82,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 	private Sound openSound = null;
 	private ItemShortcut shortcut = null;
 	@Getter private PlaceholderManager placeholderManager = null;
-
-	public static Minepacks getInstance()
-	{
-		return instance;
-	}
 
 	@Override
 	public boolean isRunningInStandaloneMode()
@@ -228,7 +223,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		//endregion
 		if(config.getFullInvCollect() || config.isFullInvToggleAllowed()) collector = new ItemsCollector(this);
 		worldBlacklist = config.getWorldBlacklist();
-		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : config.getWorldBlockMode();
+		worldBlacklistMode = (worldBlacklist.isEmpty()) ? WorldBlacklistMode.None : config.getWorldBlockMode();
 
 		gameModes = config.getAllowedGameModes();
 		if(config.getCommandCooldown() > 0) cooldownManager = new CooldownManager(this);
@@ -286,11 +281,6 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		return lang;
 	}
 
-	public Database getDatabase()
-	{
-		return database;
-	}
-
 	@Override
 	public void openBackpack(@NotNull final Player opener, @NotNull final OfflinePlayer owner, final boolean editable)
 	{
@@ -319,6 +309,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			{
 				case Message: messageWorldDisabled.send(opener); break;
 				case MissingPermission: messageNoPermission.send(opener); break;
+				default: //Nothing special to do
 			}
 			return;
 		}
@@ -374,7 +365,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 	}
 
 	@Override
-	public WorldBlacklistMode isDisabled(Player player)
+	public @NotNull WorldBlacklistMode isDisabled(final @NotNull Player player)
 	{
 		if(worldBlacklistMode == WorldBlacklistMode.None || (worldBlacklistMode != WorldBlacklistMode.NoPlugin && player.hasPermission(Permissions.IGNORE_WORLD_BLACKLIST))) return WorldBlacklistMode.None;
 		if(worldBlacklist.contains(player.getWorld().getName().toLowerCase(Locale.ROOT))) return worldBlacklistMode;
