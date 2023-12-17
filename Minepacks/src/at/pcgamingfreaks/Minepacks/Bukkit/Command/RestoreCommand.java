@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
@@ -126,21 +124,32 @@ public class RestoreCommand extends MinepacksCommand
 		}
 	}
 
-	private void listBackups(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
+	private int parsePageNr(final @NotNull CommandSender sender, final @NotNull String[] args)
 	{
-		int page = 0;
 		if(args.length == 2)
 		{
 			try
 			{
-				page = StringUtils.parsePageNumber(args[1]);
+				return StringUtils.parsePageNumber(args[1]);
 			}
 			catch(NumberFormatException ignored)
 			{
 				((Minepacks) getMinepacksPlugin()).messageNotANumber.send(sender);
-				return;
 			}
 		}
+		return 0;
+	}
+
+	private String formatUUID(final @NotNull String uuidString)
+	{
+		if (uuidString.contains("-")) return uuidString;
+		return uuidString.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+	}
+
+	private void listBackups(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
+	{
+		int page = parsePageNr(sender, args);
+
 		ArrayList<String> backups = ((Minepacks) getMinepacksPlugin()).getDatabase().getBackups();
 		int pages = backups.size() / elementsPerPage + 1;
 		page = Math.min(page, pages - 1);
@@ -151,7 +160,7 @@ public class RestoreCommand extends MinepacksCommand
 		{
 			String backup = backups.get(offset++), uuid = "No UUID", date = "Unknown";
 			String[] components = backup.split("_");
-			if(components.length == 3) uuid = (components[1].contains("-")) ? components[1] : components[1].replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+			if(components.length == 3) uuid = formatUUID(components[1]);
 			if(dateFormat != null && (components.length == 2 || components.length == 3))
 			{
 				try
