@@ -32,6 +32,7 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
+import java.util.logging.Level;
 
 public abstract class SQL extends Database
 {
@@ -163,10 +164,10 @@ public abstract class SQL extends Database
 	protected String replacePlaceholders(@Language("SQL") String query)
 	{
 		return query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
-				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
-				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwner).replaceAll("\\{FieldBPITS}", fieldBpIts) // Backpacks
-				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
-				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayer).replaceAll("\\{FieldCDTime}", fieldCdTime); // Cooldowns
+				.replace("{TablePlayers}", tablePlayers).replace("{FieldName}", fieldPlayerName).replace("{FieldUUID}", fieldPlayerUUID).replace("{FieldPlayerID}", fieldPlayerID) // Players
+				.replace("{TableBackpacks}", tableBackpacks).replace("{FieldBPOwner}", fieldBpOwner).replace("{FieldBPITS}", fieldBpIts) // Backpacks
+				.replace("{FieldBPVersion}", fieldBpVersion).replace("{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
+				.replace("{TableCooldowns}", tableCooldowns).replace("{FieldCDPlayer}", fieldCdPlayer).replace("{FieldCDTime}", fieldCdTime); // Cooldowns
 	}
 
 	protected void runStatementAsync(final String query, final Object... args)
@@ -186,8 +187,7 @@ public abstract class SQL extends Database
 		}
 		catch(SQLException e)
 		{
-			plugin.getLogger().severe("Query: " + query);
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> "Query: " + query);
 		}
 	}
 
