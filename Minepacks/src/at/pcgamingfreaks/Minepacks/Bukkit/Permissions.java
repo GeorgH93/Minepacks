@@ -71,4 +71,6 @@ public class Permissions
 		}
 		return permissions;
 	}
+
+	private Permissions() {}
 }

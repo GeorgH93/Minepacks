@@ -24,7 +24,7 @@ public abstract class UnCacheStrategy
 {
 	protected Database cache;
 
-	public UnCacheStrategy(Database cache)
+	protected UnCacheStrategy(Database cache)
 	{
 		this.cache = cache;
 	}
