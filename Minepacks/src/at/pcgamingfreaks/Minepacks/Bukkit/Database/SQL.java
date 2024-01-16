@@ -65,7 +65,7 @@ public abstract class SQL extends Database
 			}
 			catch(SQLException e)
 			{
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to delete old backpacks! Error: {0}", e.getMessage());
 			}
 		}
 		// Delete old cooldowns
@@ -77,7 +77,7 @@ public abstract class SQL extends Database
 			}
 			catch(SQLException e)
 			{
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to delete cooldowns! Error: {0}", e.getMessage());
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public abstract class SQL extends Database
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "Failed to check UUIDs! Error: {0}", e.getMessage());
 		}
 	}
 
