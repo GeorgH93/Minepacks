@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
@@ -31,6 +31,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
+
 import org.bukkit.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -175,7 +176,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getBPTitle()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack").replace("%", "%%").replace("{OwnerName}", "%s"));
 	}
 
 	public boolean getDropOnDeath()

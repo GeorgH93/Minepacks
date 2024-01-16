@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
@@ -21,9 +21,7 @@ import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Util.StringUtils;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -32,6 +30,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +44,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
-	private static Object titleOwn;
-	private static String titleOtherFormat;
+	private static Object titleOwnGlobal;
+	private static String titleFormat, titleOtherFormat;
+	private final Object titleOwn;
 	private final String titleOther;
 	@Getter private final UUID ownerId;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
@@ -54,7 +57,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 
 	public static void setTitle(final @NotNull String title, final @NotNull String titleOther)
 	{
-		titleOwn = InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title);
+		titleOwnGlobal = title.contains("%s") ? null : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title);
+		titleFormat = title;
 		titleOtherFormat = titleOther;
 	}
 
@@ -80,6 +84,9 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		bp = Bukkit.createInventory(this, size, titleOther);
 		this.size = size;
 		ownerDatabaseId = ID;
+
+		if (titleOwnGlobal != null) titleOwn = titleOwnGlobal;
+		else titleOwn = InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(String.format(titleFormat, owner.getName()));
 	}
 	
 	public Backpack(final OfflinePlayer owner, ItemStack[] backpack, final int ID)
