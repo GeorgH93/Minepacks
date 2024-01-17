@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -236,8 +236,7 @@ public abstract class SQL extends Database
 			}
 			catch(SQLException e)
 			{
-				plugin.getLogger().warning("Failed to save backpack in database! Error: " + e.getMessage());
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to save backpack in database! Error: {0}", e.getMessage());
 				writeBackup(name, nameOrUUID, usedSerializer, data);
 			}
 		};
@@ -289,7 +288,7 @@ public abstract class SQL extends Database
 			}
 			catch(SQLException e)
 			{
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to load backpack! Error: {0}", e.getMessage());
 				plugin.getServer().getScheduler().runTask(plugin, callback::onFail);
 			}
 		});
@@ -317,7 +316,7 @@ public abstract class SQL extends Database
 			}
 			catch(SQLException e)
 			{
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to load cooldown! Error: {0}", e.getMessage());
 				plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(0L));
 			}
 		});
