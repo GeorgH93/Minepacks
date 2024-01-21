@@ -37,7 +37,7 @@ public class ShortcutCommand extends MinepacksCommand
 
 	public ShortcutCommand(Minepacks plugin, final @NotNull ItemShortcut itemShortcut)
 	{
-		super(plugin, "shortcut", plugin.getLanguage().getTranslated("Commands.Description.Shortcut"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Shortcut"));
+		super(plugin, "shortcut", ""/*plugin.getLanguage().getTranslated("Commands.Description.Shortcut")*/, Permissions.USE, true, plugin.getLanguage().getCommandAliases("Shortcut"));
 		this.itemShortcut = itemShortcut;
 	}
 
