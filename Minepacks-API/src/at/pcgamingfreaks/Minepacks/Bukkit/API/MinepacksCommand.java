@@ -186,7 +186,7 @@ public abstract class MinepacksCommand extends SubCommand
 		}
 		catch(Exception e)
 		{
-			plugin.getLogger().log(Level.SEVERE, e, () -> { return "Failed to execute command " + usedMainCommandAlias; });
+			plugin.getLogger().log(Level.SEVERE, e, () -> "Failed to execute command " + usedMainCommandAlias);
 		}
 	}
 
