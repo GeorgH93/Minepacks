@@ -305,12 +305,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		WorldBlacklistMode disabled = isDisabled(opener);
 		if(disabled != WorldBlacklistMode.None)
 		{
-			switch(disabled)
-			{
-				case Message: messageWorldDisabled.send(opener); break;
-				case MissingPermission: messageNoPermission.send(opener); break;
-				default: //Nothing special to do
-			}
+			if (disabled == WorldBlacklistMode.Message) messageWorldDisabled.send(opener);
+			else if (disabled == WorldBlacklistMode.MissingPermission) messageNoPermission.send(opener);
 			return;
 		}
 		if(backpack == null)

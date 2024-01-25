@@ -126,11 +126,8 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 			WorldBlacklistMode disabled = plugin.isDisabled((Player) sender);
 			if(disabled != WorldBlacklistMode.None)
 			{
-				switch(disabled)
-				{
-					case Message: plugin.messageWorldDisabled.send(sender); break;
-					case MissingPermission: plugin.messageNoPermission.send(sender); break;
-				}
+				if (disabled == WorldBlacklistMode.Message) plugin.messageWorldDisabled.send(sender);
+				else if (disabled == WorldBlacklistMode.MissingPermission) plugin.messageNoPermission.send(sender);
 				return null;
 			}
 		}
