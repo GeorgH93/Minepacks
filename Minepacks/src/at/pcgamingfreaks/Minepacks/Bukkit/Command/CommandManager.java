@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> /*if_not[STANDALONE]*/ implements MinepacksCommandManager /*end[STANDALONE]*/
 {
@@ -67,8 +68,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		}
 		catch(Exception e)
 		{
-			plugin.getLogger().warning(ConsoleColor.RED + "Unable to set the help format. Default format will be used.\nMore details:" + ConsoleColor.RESET);
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> ConsoleColor.RED + "Unable to set the help format. Default format will be used.\nMore details:" + ConsoleColor.RESET);
 		}
 
 		// Init backpack commands
