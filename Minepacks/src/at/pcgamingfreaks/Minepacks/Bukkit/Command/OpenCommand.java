@@ -64,42 +64,52 @@ public class OpenCommand extends MinepacksCommand
 		Player player = (Player) sender;
 		if(args.length == 0)
 		{
-			if(getMinepacksPlugin().isPlayerGameModeAllowed(player))
-			{
-				if(plugin.getCooldownManager() != null && !player.hasPermission(Permissions.NO_COOLDOWN))
-				{
-					long cd = plugin.getCooldownManager().getRemainingCooldown(player);
-					if(cd > 0)
-					{
-						TimeSpan ts = TimeSpan.fromMilliseconds(cd);
-						messageCooldown.send(sender, cd / 1000f, ts.toString());
-						return;
-					}
-					plugin.getCooldownManager().setCooldown(player);
-				}
-				plugin.openBackpack(player, player, true);
-			}
-			else
-			{
-				messageWrongGameMode.send(player, player.getGameMode());
-			}
+			executeSelf(player);
 		}
 		else
 		{
-			if(player.hasPermission(Permissions.OTHERS))
+			executeOther(player, args[0]);
+		}
+	}
+
+	void executeSelf(Player player)
+	{
+		if(getMinepacksPlugin().isPlayerGameModeAllowed(player))
+		{
+			if(plugin.getCooldownManager() != null && !player.hasPermission(Permissions.NO_COOLDOWN))
 			{
-				OfflinePlayer target = Bukkit.getPlayer(args[0]);
-				if(target == null)
+				long cd = plugin.getCooldownManager().getRemainingCooldown(player);
+				if(cd > 0)
 				{
-					//noinspection deprecation
-					target = Bukkit.getOfflinePlayer(args[0]);
+					TimeSpan ts = TimeSpan.fromMilliseconds(cd);
+					messageCooldown.send(player, cd / 1000f, ts.toString());
+					return;
 				}
-				plugin.openBackpack(player, target, player.hasPermission(Permissions.OTHERS_EDIT));
+				plugin.getCooldownManager().setCooldown(player);
 			}
-			else
+			plugin.openBackpack(player, player, true);
+		}
+		else
+		{
+			messageWrongGameMode.send(player, player.getGameMode());
+		}
+	}
+
+	void executeOther(Player player, String name)
+	{
+		if(player.hasPermission(Permissions.OTHERS))
+		{
+			OfflinePlayer target = Bukkit.getPlayer(name);
+			if(target == null)
 			{
-				plugin.messageNoPermission.send(player);
+				//noinspection deprecation
+				target = Bukkit.getOfflinePlayer(name);
 			}
+			plugin.openBackpack(player, target, player.hasPermission(Permissions.OTHERS_EDIT));
+		}
+		else
+		{
+			plugin.messageNoPermission.send(player);
 		}
 	}
 
