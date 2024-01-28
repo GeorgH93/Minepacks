@@ -73,7 +73,7 @@ public abstract class SQL extends Database
 		{
 			try(Connection connection = getConnection())
 			{
-				DBTools.runStatement(connection, queryDeleteOldCooldowns, System.currentTimeMillis());
+				DBTools.runStatement(connection, queryDeleteOldCooldowns, new Timestamp(System.currentTimeMillis()));
 			}
 			catch(SQLException e)
 			{
