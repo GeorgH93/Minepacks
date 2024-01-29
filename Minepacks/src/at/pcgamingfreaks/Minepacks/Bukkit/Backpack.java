@@ -18,6 +18,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.Bukkit.MCVersion;
+import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.InventoryCompressor;
 import at.pcgamingfreaks.Util.StringUtils;
@@ -44,6 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 {
 	@Setter(AccessLevel.PACKAGE) private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
+	@Setter(AccessLevel.PACKAGE) private static Message messageBackpackShrunk = new Message("Backpack shrunk!");
 	private static Object titleOwnGlobal;
 	private static String titleFormat, titleOtherFormat;
 	private final Object titleOwn;
@@ -142,13 +144,19 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 				int size = Minepacks.getInstance().getBackpackPermSize(owner);
 				if(size != bp.getSize())
 				{
+					boolean dropped = false;
 					List<ItemStack> items = setSize(size);
 					for(ItemStack i : items)
 					{
 						if(i != null)
 						{
 							owner.getWorld().dropItemNaturally(owner.getLocation(), i);
+							dropped = true;
 						}
+					}
+					if (dropped)
+					{
+						messageBackpackShrunk.send(owner);
 					}
 				}
 			}
