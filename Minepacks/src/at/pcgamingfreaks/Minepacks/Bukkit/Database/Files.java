@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
@@ -20,7 +20,8 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.UUIDConverter;
+import at.pcgamingfreaks.UUID.UuidConverter;
+
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,10 +40,12 @@ public class Files extends Database
 	public static final String EXT = ".backpack", EXT_REGEX = "\\.backpack", FOLDER_NAME = "backpacks";
 
 	private final File saveFolder;
+	private final UuidConverter converter;
 	
 	public Files(Minepacks plugin)
 	{
 		super(plugin);
+		converter = new UuidConverter(plugin.getLogger());
 		maxAge *= 24 * 3600000L;
 		saveFolder = new File(this.plugin.getDataFolder(), FOLDER_NAME);
 		if(!saveFolder.exists())
@@ -64,6 +67,21 @@ public class Files extends Database
 		// Files are stored with the users name or the uuid, there is no reason to update anything
 	}
 
+	private String getUuidFromFileName(String fileName)
+	{
+		String name = fileName.substring(0, fileName.length() - EXT.length());
+		UUID uuid = (onlineUUIDs) ? converter.getUUID(name, true) : UuidConverter.getOfflineModeUUID(name);
+		return getPlayerFormattedUUID(uuid);
+	}
+
+	private void tryRename(File file, File newFileName)
+	{
+		if (!file.renameTo(newFileName))
+		{
+			plugin.getLogger().log(Level.WARNING, () -> "Failed to rename file (" + file.getAbsolutePath() + " to " + newFileName.getAbsolutePath() + ").");
+		}
+	}
+
 	private void checkFiles()
 	{
 		File[] allFiles = saveFolder.listFiles((dir, name) -> name.endsWith(EXT));
@@ -81,32 +99,20 @@ public class Files extends Database
 			int len = file.getName().length() - EXT.length();
 			if(len <= 16) // It's a player name
 			{
-				if(!file.renameTo(new File(saveFolder, UUIDConverter.getUUIDFromName(file.getName().substring(0, len), onlineUUIDs, useUUIDSeparators) + EXT)))
-				{
-					plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-				}
+				tryRename(file, new File(saveFolder, getUuidFromFileName(file.getName()) + EXT));
 			}
-			else // It's an UUID
+			else // It's a UUID
 			{
 				if(file.getName().contains("-"))
 				{
 					if(!useUUIDSeparators)
 					{
-						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("-", ""))))
-						{
-							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-						}
+						tryRename(file, new File(saveFolder, file.getName().replaceAll("-", "")));
 					}
 				}
-				else
+				else if(useUUIDSeparators)
 				{
-					if(useUUIDSeparators)
-					{
-						if(!file.renameTo(new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT))))
-						{
-							plugin.getLogger().warning("Failed to rename file (" + file.getAbsolutePath() + ").");
-						}
-					}
+					tryRename(file, new File(saveFolder, file.getName().replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})" + EXT_REGEX, "$1-$2-$3-$4-$5" + EXT)));
 				}
 			}
 		}
