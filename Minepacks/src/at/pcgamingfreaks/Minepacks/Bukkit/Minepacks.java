@@ -121,7 +121,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 
 	private boolean checkMcVersion()
 	{
-		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R3))
+		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R4))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);

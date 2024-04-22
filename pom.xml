@@ -7,16 +7,16 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>2.4.27</revision>
+		<revision>2.4.28</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<configFileVersion>34</configFileVersion>
 		<languageFileVersion>21</languageFileVersion>
-		<pcgfPluginLibVersion>1.0.39.3-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.39.4-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
-		<mavenShade.version>3.4.1</mavenShade.version>
+		<mavenShade.version>3.5.3</mavenShade.version>
 
 		<author>GeorgH93</author>
 		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
