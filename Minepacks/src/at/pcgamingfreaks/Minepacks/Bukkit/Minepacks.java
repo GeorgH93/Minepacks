@@ -263,11 +263,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 
 	public void warnOnVersionIncompatibility()
 	{
-		String name = Bukkit.getServer().getClass().getPackage().getName();
-		String[] version = name.substring(name.lastIndexOf('.') + 2).split("_");
 		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		getLogger().warning(ConsoleColor.RED + String.format("Your minecraft version (MC %1$s) is currently not compatible with this plugins version (%2$s). " +
-				                                                     "Please check for updates!", version[0] + "." + version[1], getDescription().getVersion()) + ConsoleColor.RESET);
+				                                                     "Please check for updates!", Bukkit.getServer().getVersion(), getDescription().getVersion()) + ConsoleColor.RESET);
 		getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 		Utils.blockThread(5);
 	}
