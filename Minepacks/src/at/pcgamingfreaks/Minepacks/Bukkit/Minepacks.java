@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -38,10 +38,10 @@ import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Plugin.IPlugin;
 import at.pcgamingfreaks.ServerType;
-import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
+import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Version;
-import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -53,6 +53,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import lombok.Getter;
 
 import java.io.File;
 import java.util.Collection;
@@ -121,7 +123,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 
 	private boolean checkMcVersion()
 	{
-		if(MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R4))
+		if ((MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R4) || MCVersion.is(MCVersion.UNKNOWN)))
+		{
+			getLogger().warning("Minepacks is not yet compatible with Paper 1.20.5 and up!");
+			getLogger().warning("To use this plugin please switch to spigot or wait for an update.");
+			this.setEnabled(false);
+			return false;
+		}
+		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R4))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
