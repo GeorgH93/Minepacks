@@ -123,7 +123,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 
 	private boolean checkMcVersion()
 	{
-		if ((MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R4) || MCVersion.is(MCVersion.UNKNOWN)))
+		if ((MCVersion.isNewerThan(MCVersion.MC_NMS_1_20_R3) || MCVersion.is(MCVersion.UNKNOWN)) && ServerType.isPaperCompatible())
 		{
 			getLogger().warning("Minepacks is not yet compatible with Paper 1.20.5 and up!");
 			getLogger().warning("To use this plugin please switch to spigot or wait for an update.");
