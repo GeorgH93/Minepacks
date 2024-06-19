@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,13 +19,14 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Message.MessageBuilder;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Message.MessageColor;
 import at.pcgamingfreaks.Message.MessageFormat;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
@@ -119,7 +120,7 @@ public class DebugCommand extends MinepacksCommand
 			sender.performCommand("backpack");
 		}, 5*20L);
 		Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-			Bukkit.getPluginManager().callEvent(new ClickEvent(sender.getOpenInventory(), InventoryType.SlotType.QUICKBAR, sender.getOpenInventory().getTopInventory().getSize() + 27, ClickType.LEFT, InventoryAction.PICKUP_ALL));
+			Bukkit.getPluginManager().callEvent(new ClickEvent(sender.getOpenInventory(), InventoryType.SlotType.QUICKBAR, InventoryUtils.getPlayerTopInventory(sender).getSize() + 27, ClickType.LEFT, InventoryAction.PICKUP_ALL));
 		}, 10*20L);
 		Bukkit.getServer().getScheduler().runTaskLater(plugin, sender::closeInventory, 20*20L);
 		Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {

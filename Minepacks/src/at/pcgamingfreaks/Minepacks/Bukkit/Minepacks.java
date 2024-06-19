@@ -21,6 +21,7 @@ import at.pcgamingfreaks.Bukkit.Config.PermissionLoader;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
@@ -321,7 +322,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			return;
 		}
 		//noinspection ObjectEquality
-		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
+		if(InventoryUtils.getPlayerTopInventory(opener).getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
 			opener.playSound(opener.getLocation(), openSound, 1, 0);
