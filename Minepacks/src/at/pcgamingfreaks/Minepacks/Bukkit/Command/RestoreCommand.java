@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -21,10 +21,12 @@ import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommand;
+import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
 import at.pcgamingfreaks.Util.StringUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -113,6 +115,11 @@ public class RestoreCommand extends MinepacksCommand
 				return;
 			}
 			getMinepacksPlugin().getBackpack(target, backpack -> {
+				if (backpack.getSize() != items.length)
+				{
+					backpack.clear();
+					((Backpack) backpack).setSize(items.length);
+				}
 				backpack.getInventory().setContents(items);
 				backpack.setChanged();
 				messageRestored.send(sender);
