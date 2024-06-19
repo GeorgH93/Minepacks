@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
@@ -20,6 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.API;
 import at.pcgamingfreaks.Bukkit.Command.SubCommand;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +40,8 @@ public abstract class MinepacksCommand extends SubCommand
 {
 	@SuppressWarnings("FieldMayBeFinal")
 	private static MinepacksPlugin minepacksPlugin = null; // Will be set by reflection
+	@SuppressWarnings("FieldMayBeFinal")
+	private static Object minepacksCommandManager = null;
 	@SuppressWarnings("FieldMayBeFinal")
 	private static Method showHelp = null; // Will be set by reflection
 	@SuppressWarnings("FieldMayBeFinal") // Will be overwritten by reflection
@@ -182,11 +185,11 @@ public abstract class MinepacksCommand extends SubCommand
 	{
 		try
 		{
-			showHelp.invoke(getMinepacksPlugin().getCommandManager(), sendTo, usedMainCommandAlias, doGetHelp(sendTo));
+			showHelp.invoke(minepacksCommandManager, sendTo, usedMainCommandAlias, doGetHelp(sendTo));
 		}
 		catch(Exception e)
 		{
-			plugin.getLogger().log(Level.SEVERE, e, () -> "Failed to execute command " + usedMainCommandAlias);
+			plugin.getLogger().log(Level.SEVERE, e, () -> "Failed to show help for command " + usedMainCommandAlias);
 		}
 	}
 

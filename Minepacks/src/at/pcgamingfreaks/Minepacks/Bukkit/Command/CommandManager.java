@@ -62,6 +62,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		{
 			// Show help function
 			Reflection.setStaticField(MinepacksCommand.class, "minepacksPlugin", plugin); // Plugin instance
+			Reflection.setStaticField(MinepacksCommand.class, "minepacksCommandManager", this); // Command manager instance
 			Reflection.setStaticField(MinepacksCommand.class, "showHelp", this.getClass().getDeclaredMethod("sendHelp", CommandSender.class, String.class, Collection.class));
 			Reflection.setStaticField(MinepacksCommand.class, "messageNoPermission", plugin.messageNoPermission); // No permission message
 			Reflection.setStaticField(MinepacksCommand.class, "messageNotFromConsole", plugin.messageNotFromConsole); // Not from console message
