@@ -30,12 +30,14 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Helper.OldFileUpdater;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.ShrinkApproach;
 import at.pcgamingfreaks.Minepacks.MagicValues;
+import at.pcgamingfreaks.Reflection;
 import at.pcgamingfreaks.Version;
 
 import org.bukkit.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -509,7 +511,15 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		if(soundName.equals("DISABLED") || soundName.equals("FALSE")) return null;
 		try
 		{
-			return Sound.valueOf(soundName);
+			if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_21))
+			{
+				Field f = Reflection.getField(Sound.class, soundName);
+				if (f != null) return (Sound) f.get(null);
+			}
+			else
+			{
+				return Sound.valueOf(soundName);
+			}
 		}
 		catch(Exception ignored)
 		{
