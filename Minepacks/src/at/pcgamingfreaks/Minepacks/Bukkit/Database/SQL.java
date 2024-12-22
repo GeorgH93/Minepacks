@@ -219,7 +219,7 @@ public abstract class SQL extends Database
 							{
 								final int newID = rs.getInt(fieldPlayerID);
 								DBTools.runStatement(connection, queryInsertBp, newID, data, usedSerializer);
-								plugin.getServer().getScheduler().runTask(plugin, () -> backpack.setOwnerDatabaseId(newID));
+								Minepacks.getScheduler().runNextTick(task -> backpack.setOwnerDatabaseId(newID));
 							}
 							else
 							{
@@ -240,13 +240,13 @@ public abstract class SQL extends Database
 				writeBackup(name, nameOrUUID, usedSerializer, data);
 			}
 		};
-		if(asyncSave) Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable); else runnable.run();
+		if(asyncSave) Minepacks.getScheduler().runAsync(task -> runnable.run()); else runnable.run();
 	}
 
 	@Override
 	protected void loadBackpack(final OfflinePlayer player, final Callback<Backpack> callback)
 	{
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetBP))
 			{
 				final String playerUUID = getPlayerFormattedUUID(player);
@@ -275,7 +275,7 @@ public abstract class SQL extends Database
 					writeBackup(player.getName(), playerUUID, version, data);
 				}
 				final Backpack backpack = (its != null) ? new Backpack(player, its, bpID) : null;
-				plugin.getServer().getScheduler().runTask(plugin, () -> {
+				Minepacks.getScheduler().runNextTick(task1 -> {
 					if(backpack != null)
 					{
 						callback.onResult(backpack);
@@ -289,7 +289,7 @@ public abstract class SQL extends Database
 			catch(SQLException e)
 			{
 				plugin.getLogger().log(Level.SEVERE, "Failed to load backpack! Error: {0}", e.getMessage());
-				plugin.getServer().getScheduler().runTask(plugin, callback::onFail);
+				Minepacks.getScheduler().runNextTick(task1 -> callback.onFail());
 			}
 		});
 	}
@@ -304,20 +304,20 @@ public abstract class SQL extends Database
 	@Override
 	public void getCooldown(final Player player, final Callback<Long> callback)
 	{
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(asyncTask -> {
 			try(Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(queryGetCooldown))
 			{
 				ps.setString(1, getPlayerFormattedUUID(player));
 				try(ResultSet rs = ps.executeQuery())
 				{
 					final long time = (rs.next()) ? rs.getTimestamp(fieldCdTime).getTime() : 0;
-					plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(time));
+					Minepacks.getScheduler().runNextTick(task -> callback.onResult(time));
 				}
 			}
 			catch(SQLException e)
 			{
 				plugin.getLogger().log(Level.SEVERE, "Failed to load cooldown! Error: {0}", e.getMessage());
-				plugin.getServer().getScheduler().runTask(plugin, () -> callback.onResult(0L));
+				Minepacks.getScheduler().runNextTick(task -> callback.onResult(0L));
 			}
 		});
 	}

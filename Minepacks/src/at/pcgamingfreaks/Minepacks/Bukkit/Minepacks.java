@@ -43,6 +43,8 @@ import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Version;
 
+import com.tcoded.folialib.FoliaLib;
+import com.tcoded.folialib.impl.PlatformScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -65,6 +67,7 @@ import java.util.Set;
 public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 {
 	@Getter private static Minepacks instance = null;
+	@Getter private static FoliaLib foliaLib = null;
 
 	private ManagedUpdater updater = null;
 	private Config config;
@@ -110,6 +113,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 
 		updater = new ManagedUpdater(this);
 		instance = this;
+		foliaLib = new FoliaLib(this);
 		config = new Config(this);
 		updater.setChannel(config.getUpdateChannel());
 		if(config.useUpdater()) updater.update();
@@ -404,6 +408,9 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		return collector;
 	}
 
+	public static PlatformScheduler getScheduler() {
+		return foliaLib.getScheduler();
+	}
 	@Override
 	public @NotNull Version getVersion()
 	{

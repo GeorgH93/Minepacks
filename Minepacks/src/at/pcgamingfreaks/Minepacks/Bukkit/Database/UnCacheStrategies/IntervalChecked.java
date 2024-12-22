@@ -21,19 +21,19 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
-import org.bukkit.Bukkit;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.OfflinePlayer;
 
 public class IntervalChecked extends UnCacheStrategy implements Runnable
 {
 	private final long delay;
-	private final int taskID;
+	private final WrappedTask task;
 
 	public IntervalChecked(Database cache)
 	{
 		super(cache);
 		long delayTicks = Minepacks.getInstance().getConfiguration().getUnCacheDelay();
-		taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Minepacks.getInstance(), this, delayTicks, Minepacks.getInstance().getConfiguration().getUnCacheInterval());
+		task = Minepacks.getScheduler().runTimer(this, delayTicks, Minepacks.getInstance().getConfiguration().getUnCacheInterval());
 		this.delay = delayTicks * 50L;
 	}
 
@@ -54,7 +54,7 @@ public class IntervalChecked extends UnCacheStrategy implements Runnable
 	@Override
 	public void close()
 	{
-		Bukkit.getScheduler().cancelTask(taskID);
+		Minepacks.getScheduler().cancelTask(task);
 		super.close();
 	}
 }
