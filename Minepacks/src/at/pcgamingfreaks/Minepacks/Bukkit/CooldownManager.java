@@ -46,6 +46,7 @@ public class CooldownManager extends CancellableRunnable implements Listener
 		addOnJoin = plugin.getConfiguration().isCommandCooldownAddOnJoinEnabled();
 		clearOnLeave = plugin.getConfiguration().isCommandCooldownClearOnLeaveEnabled();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		schedule();
 	}
 
 	public void close()
