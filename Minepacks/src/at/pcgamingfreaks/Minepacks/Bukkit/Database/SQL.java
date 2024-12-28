@@ -24,7 +24,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -172,7 +171,7 @@ public abstract class SQL extends Database
 
 	protected void runStatementAsync(final String query, final Object... args)
 	{
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> runStatement(query, args));
+		Minepacks.getScheduler().runAsync(task -> runStatement(query, args));
 	}
 
 	protected void runStatement(final String query, final Object... args)

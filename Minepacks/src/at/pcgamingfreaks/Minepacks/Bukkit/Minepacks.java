@@ -262,7 +262,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		HandlerList.unregisterAll(this); // Stop the listeners
 		if(cooldownManager != null) cooldownManager.close();
 		cooldownManager = null;
-		getServer().getScheduler().cancelTasks(this); // Kill all running task
+		getScheduler().cancelAllTasks(); // Kill all running task
 		itemFilter = null;
 	}
 
