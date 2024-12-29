@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2023 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Message.Placeholder.Placeholder;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -110,6 +111,13 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 			{
 				ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
 				if(checkIsBlockedAndShowMessage(player, item))
+				{
+					event.setCancelled(true);
+				}
+			}
+			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getClick().name().equals("SWAP_OFFHAND"))
+			{
+				if(checkIsBlockedAndShowMessage(player, player.getInventory().getItemInOffHand()))
 				{
 					event.setCancelled(true);
 				}
