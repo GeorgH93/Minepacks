@@ -116,14 +116,10 @@ public class DebugCommand extends MinepacksCommand
 		ItemStack slot = sender.getInventory().getItem(0);
 		if(slot == null || slot.getAmount() == 0 || slot.getType() == Material.AIR) sender.getInventory().setItem(0, new ItemStack(Material.ACACIA_BOAT));
 
-		Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-			sender.performCommand("backpack");
-		}, 5*20L);
-		Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-			Bukkit.getPluginManager().callEvent(new ClickEvent(sender.getOpenInventory(), InventoryType.SlotType.QUICKBAR, InventoryUtils.getPlayerTopInventory(sender).getSize() + 27, ClickType.LEFT, InventoryAction.PICKUP_ALL));
-		}, 10*20L);
-		Bukkit.getServer().getScheduler().runTaskLater(plugin, sender::closeInventory, 20*20L);
-		Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
+		Minepacks.getScheduler().runAtEntityLater(sender, () -> sender.performCommand("backpack"), 5*20L);
+		Minepacks.getScheduler().runAtEntityLater(sender, () -> Bukkit.getPluginManager().callEvent(new ClickEvent(sender.getOpenInventory(), InventoryType.SlotType.QUICKBAR, InventoryUtils.getPlayerTopInventory(sender).getSize() + 27, ClickType.LEFT, InventoryAction.PICKUP_ALL)), 10*20L);
+		Minepacks.getScheduler().runAtEntityLater(sender, sender::closeInventory, 20*20L);
+		Minepacks.getScheduler().runLater(() -> {
 			try
 			{
 				writer.flush();

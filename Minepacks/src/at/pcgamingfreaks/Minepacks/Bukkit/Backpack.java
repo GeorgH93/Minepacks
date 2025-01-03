@@ -104,14 +104,16 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
 				if(owner.isOnline())
 				{
-					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> {
+					Minepacks.getScheduler().runNextTick(task -> {
 						if(owner.isOnline())
 						{
 							Player player = owner.getPlayer();
 							assert player != null;
-							Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
-							left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
-							this.setChanged();
+							Minepacks.getScheduler().runAtEntity(player, task1 -> {
+								Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
+								left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+								this.setChanged();
+							});
 						}
 					});
 				}
