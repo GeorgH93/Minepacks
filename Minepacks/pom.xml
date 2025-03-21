@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>com.github.technicallycoded</groupId>
 			<artifactId>FoliaLib</artifactId>
-			<version>0.4.3</version>
+			<version>0.4.4</version>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Tests -->
