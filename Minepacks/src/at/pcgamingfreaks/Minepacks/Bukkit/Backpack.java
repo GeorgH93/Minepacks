@@ -48,6 +48,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	@Setter(AccessLevel.PACKAGE) private static Message messageBackpackShrunk = new Message("Backpack shrunk!");
 	private static Object titleOwnGlobal;
 	private static String titleFormat, titleOtherFormat;
+	private static boolean useDynTitle;
 	private final Object titleOwn;
 	private final String titleOther;
 	@Getter private final UUID ownerId;
@@ -62,6 +63,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		titleOwnGlobal = title.contains("%s") ? null : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title);
 		titleFormat = title;
 		titleOtherFormat = titleOther;
+		useDynTitle = !title.equals(titleOther);
 	}
 
 	public Backpack(OfflinePlayer owner)
@@ -168,7 +170,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	{
 		checkResize();
 		opened.put(player, editable);
-		if(ownerId.equals(player.getUniqueId())) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
+		if(useDynTitle && ownerId.equals(player.getUniqueId())) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
 		else player.openInventory(bp);
 	}
 
