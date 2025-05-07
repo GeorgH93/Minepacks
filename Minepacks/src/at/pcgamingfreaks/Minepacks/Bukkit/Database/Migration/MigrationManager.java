@@ -63,7 +63,7 @@ public class MigrationManager
 		}
 		//endregion
 		//region Migrate data
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			MigrationResult migrationResult = null;
 			try
 			{
@@ -80,7 +80,7 @@ public class MigrationManager
 
 			//region Start the plugin again
 			final MigrationResult migrationResultFinal = migrationResult;
-			plugin.getServer().getScheduler().runTask(plugin, () -> {
+			Minepacks.getScheduler().runNextTick(task1 -> {
 				db.close();
 				// No need to reload the config
 				try

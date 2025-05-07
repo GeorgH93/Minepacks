@@ -22,7 +22,6 @@ import at.pcgamingfreaks.Database.ConnectionProvider.SQLiteConnectionProvider;
 import at.pcgamingfreaks.Database.DBTools;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Version;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,7 +123,7 @@ public class SQLite extends SQL
 	@Override
 	public void updatePlayer(final Player player)
 	{
-		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			runStatement(queryUpdatePlayerAdd, player.getName(), getPlayerFormattedUUID(player));
 			runStatement("UPDATE `" + tablePlayers + "` SET `" + fieldPlayerName + "`=? WHERE `" + fieldPlayerUUID + "`=?;", player.getName(), getPlayerFormattedUUID(player));
 		});

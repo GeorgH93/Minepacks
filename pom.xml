@@ -62,6 +62,10 @@
 			<id>spigot-nexus</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>jitpack</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
