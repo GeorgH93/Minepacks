@@ -181,6 +181,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack").replace("%", "%%").replace("{OwnerName}", "%s"));
 	}
 
+	public boolean useDynamicBPTitle()
+	{
+		return getConfigE().getBoolean("Database.UseDynamicTitle", true);
+	}
+
 	public boolean getDropOnDeath()
 	{
 		return getConfigE().getBoolean("DropOnDeath", true);

@@ -133,7 +133,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			getLogger().warning("Paper support is experimental! Use at your own risk!");
 			getLogger().warning("No guarantee for data integrity! Backup constantly!");
 		}
-		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_21_R3))
+		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_21_R4))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
@@ -204,7 +204,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		}
 		maxSize = config.getBackpackMaxSize();
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setShrinkApproach(config.getShrinkApproach());
-		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.getBPTitle(), config.getBPTitleOther());
+		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setTitle(config.useDynamicBPTitle() ? config.getBPTitle() : config.getBPTitleOther(), config.getBPTitleOther());
 		at.pcgamingfreaks.Minepacks.Bukkit.Backpack.setMessageBackpackShrunk(lang.getMessage("Ingame.BackpackShrunk"));
 		messageNotFromConsole  = lang.getMessage("NotFromConsole");
 		messageNoPermission    = lang.getMessage("Ingame.NoPermission");

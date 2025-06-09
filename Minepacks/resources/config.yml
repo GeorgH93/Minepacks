@@ -14,6 +14,8 @@ Language:
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
+# If disabled, both the owner and 3. party player will see the BackpackTitleOther
+UseDynamicTitle: true
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.keepOnDeath" permission.
 DropOnDeath: true

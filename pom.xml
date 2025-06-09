@@ -7,13 +7,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>2.4.31.6</revision>
+		<revision>2.4.31.7</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<configFileVersion>34</configFileVersion>
+		<configFileVersion>35</configFileVersion>
 		<languageFileVersion>21</languageFileVersion>
-		<pcgfPluginLibVersion>1.0.39.8-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.39.9-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
 		<mavenShade.version>3.5.3</mavenShade.version>
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.36</version>
+			<version>1.18.38</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
