@@ -26,7 +26,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class OnDisconnectDelayed extends UnCacheStrategy implements Listener
 {
@@ -45,21 +44,20 @@ public class OnDisconnectDelayed extends UnCacheStrategy implements Listener
 		final Backpack backpack = cache.getBackpack(event.getPlayer());
 		if(backpack != null) // We only uncache unmarried player.
 		{
-			new BukkitRunnable()
-			{
-				@Override
-				public void run()
+			Minepacks.getScheduler().runLater(() -> {
+				if (!backpack.isOpen())
 				{
-					if(!backpack.isOpen())
+					cache.unloadBackpack(backpack);
+				} else {
+					Minepacks.getScheduler().runLater(() ->
 					{
-						cache.unloadBackpack(backpack);
-					}
-					else
-					{
-						this.runTaskLater(Minepacks.getInstance(), delay);
-					}
+						if (!backpack.isOpen())
+						{
+							cache.unloadBackpack(backpack);
+						}
+					}, delay);
 				}
-			}.runTaskLater(Minepacks.getInstance(), delay);
+			}, delay);
 		}
 	}
 
