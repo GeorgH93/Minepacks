@@ -24,14 +24,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class CooldownManager extends BukkitRunnable implements Listener
+public class CooldownManager extends CancellableRunnable implements Listener
 {
 	private final Minepacks plugin;
 	private final Map<UUID, Long> cooldowns = new HashMap<>();
@@ -47,8 +46,7 @@ public class CooldownManager extends BukkitRunnable implements Listener
 		addOnJoin = plugin.getConfiguration().isCommandCooldownAddOnJoinEnabled();
 		clearOnLeave = plugin.getConfiguration().isCommandCooldownClearOnLeaveEnabled();
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-
-		runTaskTimer(plugin, plugin.getConfiguration().getCommandCooldownCleanupInterval(), plugin.getConfiguration().getCommandCooldownCleanupInterval());
+		schedule();
 	}
 
 	public void close()
@@ -108,5 +106,10 @@ public class CooldownManager extends BukkitRunnable implements Listener
 	public void run()
 	{
 		cooldowns.entrySet().removeIf(entry -> entry.getValue() < System.currentTimeMillis());
+	}
+
+	@Override
+	public void schedule() {
+		task = getScheduler().runTimer(this::run, plugin.getConfiguration().getCommandCooldownCleanupInterval(), plugin.getConfiguration().getCommandCooldownCleanupInterval());
 	}
 }
