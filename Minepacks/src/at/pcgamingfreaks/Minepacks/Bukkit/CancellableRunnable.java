@@ -1,7 +1,7 @@
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
-import com.tcoded.folialib.impl.PlatformScheduler;
-import com.tcoded.folialib.wrapper.task.WrappedTask;
+import at.pcgf.libs.com.tcoded.folialib.impl.PlatformScheduler;
+import at.pcgf.libs.com.tcoded.folialib.wrapper.task.WrappedTask;
 
 public abstract class CancellableRunnable {
     protected WrappedTask task = null;

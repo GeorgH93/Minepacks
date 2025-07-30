@@ -48,13 +48,6 @@
 			<artifactId>PluginLib</artifactId>
 			<version>${pcgfPluginLibVersion}</version>
 		</dependency>
-		<!-- FoliaLib -->
-		<dependency>
-			<groupId>com.github.technicallycoded</groupId>
-			<artifactId>FoliaLib</artifactId>
-			<version>0.4.4</version>
-			<scope>compile</scope>
-		</dependency>
 		<!-- Tests -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -150,17 +143,12 @@
 											<include>at.pcgamingfreaks:Minepacks-API</include>
 											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 											<include>at.pcgamingfreaks:PluginLib</include>
-											<include>com.github.technicallycoded:FoliaLib</include>
 										</includes>
 									</artifactSet>
 									<relocations>
 										<relocation>
 											<pattern>at.pcgf.libs</pattern>
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs</shadedPattern>
-										</relocation>
-										<relocation>
-											<pattern>com.tcoded.folialib</pattern>
-											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.folialib</shadedPattern>
 										</relocation>
 										<relocation>
 											<pattern>at.pcgamingfreaks.Minepacks</pattern>

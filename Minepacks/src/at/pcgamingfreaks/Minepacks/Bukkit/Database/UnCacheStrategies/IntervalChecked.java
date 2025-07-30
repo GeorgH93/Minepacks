@@ -20,8 +20,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.UnCacheStrategies;
 import at.pcgamingfreaks.Minepacks.Bukkit.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-
-import com.tcoded.folialib.wrapper.task.WrappedTask;
+import at.pcgf.libs.com.tcoded.folialib.wrapper.task.WrappedTask;
 import org.bukkit.OfflinePlayer;
 
 public class IntervalChecked extends UnCacheStrategy implements Runnable

@@ -42,9 +42,8 @@ import at.pcgamingfreaks.ServerType;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Version;
-
-import com.tcoded.folialib.FoliaLib;
-import com.tcoded.folialib.impl.PlatformScheduler;
+import at.pcgf.libs.com.tcoded.folialib.FoliaLib;
+import at.pcgf.libs.com.tcoded.folialib.impl.PlatformScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -408,9 +407,11 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 		return collector;
 	}
 
-	public static PlatformScheduler getScheduler() {
+	public static PlatformScheduler getScheduler()
+	{
 		return foliaLib.getScheduler();
 	}
+
 	@Override
 	public @NotNull Version getVersion()
 	{

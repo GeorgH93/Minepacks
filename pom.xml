@@ -7,13 +7,13 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>2.4.32.1</revision>
+		<revision>2.5</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<configFileVersion>35</configFileVersion>
 		<languageFileVersion>21</languageFileVersion>
-		<pcgfPluginLibVersion>1.0.40-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.40.2-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
 		<mavenShade.version>3.5.3</mavenShade.version>
@@ -61,10 +61,6 @@
 		<repository>
 			<id>spigot-nexus</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>jitpack</id>
-			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
 
