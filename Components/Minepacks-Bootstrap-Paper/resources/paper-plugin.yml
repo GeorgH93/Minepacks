@@ -2,7 +2,7 @@ name: "Minepacks"
 author: "${author}"
 version: "${pluginVersion}"
 api-version: "1.19"
-
+folia-supported: true
 main: "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks"
 bootstrapper: "at.pcgamingfreaks.Minepacks.Paper.MinepacksBootstrap"
 
