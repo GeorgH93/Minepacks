@@ -7,6 +7,7 @@ version: "${pluginVersion}"
 api-version: "1.13"
 depend: [${dependencies}]
 softdepend: [MVdWPlaceholderAPI, PlaceholderAPI ${soft-dependencies}]
+folia-supported: true
 
 permissions:
   backpack.*:

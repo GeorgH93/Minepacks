@@ -25,7 +25,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -150,21 +149,22 @@ public class ItemShortcut extends MinepacksListener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		Minepacks.getScheduler().runAtEntityLater(event.getPlayer(), task -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		Minepacks.getScheduler().runAtEntityLater(event.getPlayer(), task -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldChange(final PlayerChangedWorldEvent event)
 	{
-		Bukkit.getScheduler().runTaskLater(plugin, () -> {
-				Player player = event.getPlayer();
+		Player player = event.getPlayer();
+
+		Minepacks.getScheduler().runAtEntityLater(player, () -> {
 				if(!player.isOnline()) return;
 				if(player.hasPermission(Permissions.USE) && plugin.isDisabled(player) == WorldBlacklistMode.None)
 					addItem(player);
@@ -271,7 +271,7 @@ public class ItemShortcut extends MinepacksListener
 				}
 				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
 				{
-					plugin.getServer().getScheduler().runTask(plugin, () -> { player.performCommand(openCommand); });
+					Minepacks.getScheduler().runAtEntity(player, task -> player.performCommand(openCommand));
 					event.setCancelled(true);
 				}
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)

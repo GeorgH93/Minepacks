@@ -278,7 +278,7 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<version>1.20</version>
+						<version>2.6.0</version>
 						<configuration>
 							<excludedScopes>test,provided,system</excludedScopes>
 							<generateBundle>true</generateBundle>
@@ -287,6 +287,10 @@
 								<licenseUrlReplacement>
 									<regexp>https?://(www\.)?opensource\.org/licenses/mit-license\.php</regexp>
 									<replacement>https://ci.pcgamingfreaks.at/download/mit.txt</replacement>
+								</licenseUrlReplacement>
+								<licenseUrlReplacement>
+									<regexp>https?://(www\.)?gnu\.org/licenses/gpl-3.0.txt</regexp>
+									<replacement>https://ci.pcgamingfreaks.at/download/gpl-3.0.txt</replacement>
 								</licenseUrlReplacement>
 							</licenseUrlReplacements>
 						</configuration>

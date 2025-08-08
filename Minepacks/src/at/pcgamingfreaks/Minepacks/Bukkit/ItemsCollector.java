@@ -24,16 +24,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
-public class ItemsCollector extends BukkitRunnable
-{
+public class ItemsCollector extends CancellableRunnable {
 	private final Minepacks plugin;
 	private final double radius;
-	private final BukkitTask task;
 	private final ItemFilter itemFilter;
 
 	/**
@@ -59,8 +55,7 @@ public class ItemsCollector extends BukkitRunnable
 		this.isToggleable = plugin.getConfiguration().isFullInvToggleAllowed();
 		this.enabledOnJoin = plugin.getConfiguration().isFullInvEnabledOnJoin();
 		this.toggleList = new HashSet<>();
-
-		task = runTaskTimer(plugin, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+		schedule();
 		itemFilter = plugin.getItemFilter();
 	}
 
@@ -81,50 +76,56 @@ public class ItemsCollector extends BukkitRunnable
 	{
 		for(Player player : Bukkit.getServer().getOnlinePlayers())
 		{
-			if (!canUseAutoPickup(player)) continue;
+			Minepacks.getScheduler().runAtEntity(player, entityTask -> {
+				if (!canUseAutoPickup(player)) return;
 
-			// Inventory is full
-			if (player.getInventory().firstEmpty() != -1) continue;
+				// Inventory is full
+				if (player.getInventory().firstEmpty() != -1) return;
 
-			// Only check loaded backpacks (loading them would take too much time for a repeating task, the backpack will be loaded async soon enough)
-			Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
-			if (backpack == null) continue;
+				// Only check loaded backpacks (loading them would take too much time for a repeating task, the backpack will be loaded async soon enough)
+				Backpack backpack = (Backpack) plugin.getBackpackCachedOnly(player);
+				if (backpack == null) return;
 
-			List<Entity> entities = player.getNearbyEntities(radius, radius, radius);
-			for(Entity entity : entities)
-			{
-				if(entity instanceof Item)
+				List<Entity> entities = player.getNearbyEntities(radius, radius, radius);
+				for(Entity entity : entities)
 				{
-					Item item = (Item) entity;
-					if (!item.isDead() && item.getPickupDelay() <= 0)
+					if(entity instanceof Item)
 					{
-						Map<Integer, ItemStack> leftover = player.getInventory().addItem(item.getItemStack());
-						if (!leftover.isEmpty())
+						Item item = (Item) entity;
+						if (!item.isDead() && item.getPickupDelay() <= 0)
 						{
-							ItemStack itemStack = leftover.get(0);
-							if (itemStack == null || itemStack.getAmount() == 0 || (itemFilter != null && itemFilter.isItemBlocked(itemStack)))
+							Map<Integer, ItemStack> leftover = player.getInventory().addItem(item.getItemStack());
+							if (!leftover.isEmpty())
 							{
-								continue;
+								ItemStack itemStack = leftover.get(0);
+								if (itemStack == null || itemStack.getAmount() == 0 || (itemFilter != null && itemFilter.isItemBlocked(itemStack)))
+								{
+									continue;
+								}
+								leftover = backpack.addItems(itemStack);
 							}
-							leftover = backpack.addItems(itemStack);
-						}
-						if (!leftover.isEmpty())
-						{
-							item.setItemStack(leftover.get(0));
-						}
-						else
-						{
-							item.remove();
+							if (!leftover.isEmpty())
+							{
+								item.setItemStack(leftover.get(0));
+							}
+							else
+							{
+								item.remove();
+							}
 						}
 					}
 				}
-			}
+			});
 		}
 	}
 
-	public void close()
-	{
-		task.cancel();
+	@Override
+	public void schedule() {
+		task = getScheduler().runTimer(this::run, plugin.getConfiguration().getFullInvCheckInterval(), plugin.getConfiguration().getFullInvCheckInterval());
+	}
+
+	public void close() {
+		cancel();
 	}
 
 	/**
