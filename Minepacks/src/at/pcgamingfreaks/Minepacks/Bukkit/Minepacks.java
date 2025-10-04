@@ -44,6 +44,7 @@ import at.pcgamingfreaks.Util.StringUtils;
 import at.pcgamingfreaks.Version;
 import at.pcgf.libs.com.tcoded.folialib.FoliaLib;
 import at.pcgf.libs.com.tcoded.folialib.impl.PlatformScheduler;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
@@ -133,7 +134,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			getLogger().warning("No guarantee for data integrity! Backup constantly!");
 		}
 		// DO NOT REMOVE THIS! This is protecting your data! To add support for a new version, update PCGF PluginLib and then update the last version check!
-		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_21_R5))
+		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_1_21_R6))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
