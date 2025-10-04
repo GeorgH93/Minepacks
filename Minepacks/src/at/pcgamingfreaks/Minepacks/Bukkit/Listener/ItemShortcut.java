@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2025 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
@@ -25,6 +25,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -149,7 +150,7 @@ public class ItemShortcut extends MinepacksListener
 	public void onJoin(PlayerJoinEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Minepacks.getScheduler().runAtEntityLater(event.getPlayer(), task -> addItem(event.getPlayer()), 2L);
+		Minepacks.getScheduler().runLater(() -> Minepacks.getScheduler().runAtEntity(event.getPlayer(), task -> addItem(event.getPlayer())), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
