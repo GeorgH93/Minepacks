@@ -42,7 +42,7 @@ Language:
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
       UpdateAvailable: "[{\"text\":\"There is an update available! Please go to \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" to download it!\"}]"
     Backup:
-      Created: "The backpack has been backed up successful."
+      Created: "The backpack has been backed up successfully."
       NoBackpack: "The player doesn't have a backpack or his backpack is empty."
     Restore:
       BackupsPerPage: 10
@@ -55,7 +55,7 @@ Language:
       ParameterBackupName: "backup_name"
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
-      Restored: "Backup has been successful restored."
+      Restored: "Backup has been successfully restored."
     InventoryClear:
       UnknownPlayer: "&cCould not find player {Name}!"
       Cleared: "Inventory cleared."
@@ -71,12 +71,12 @@ Language:
       Backpack: "Opens your backpack."
       Sort: "Sorts your backpack."
       Clean: "Cleans your backpack."
-      CleanOthers: "Cleans the backpack of another players."
+      CleanOthers: "Cleans the backpack of another player."
       OpenOthers: "Shows the backpack of another player."
       Reload: "Reloads the config of the plugin."
       Update: "Checks for new plugin updates."
-      Version: "Prints the version details about the plugin and it's dependencies."
-      Backup: "Creates a backup of a players backpack."
+      Version: "Prints the version details about the plugin and its dependencies."
+      Backup: "Creates a backup of a player's backpack."
       BackupEveryone: "Creates a backup of everyone currently online."
       Restore: "Restores a backup."
       RestoreList: "Lists all available backups."
