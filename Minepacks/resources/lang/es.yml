@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cNo puedes remover la mochila de tu hotbar o inventario!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&c¡Tu mochila se ha encogido! ¡Algunos objetos cayeron al suelo!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Por favor, espera \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} segundos\"}},{\"text\":\" hasta que vuelvas a abrir tu mochila.\"}]"
@@ -60,6 +61,9 @@ Language:
       Cleared: "Inventario despejado."
       ClearedOther: "El inventario de {DisplayName}&r ha sido despejado."
       ClearedOtherTarget: "Tu inventario ha sido despejado por {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7La recolección automática de objetos ha sido &aACTIVADA&7."
+      ToggleOff: "&7La recolección automática de objetos ha sido &cDESACTIVADA&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -78,6 +82,7 @@ Language:
       RestoreList: "Lista de todas las mochilas disponibles."
       Help: "Muestra todos los comandos disponibles y sus descripciones."
       Migrate: " Migra la base de datos utilizada de un tipo a otro."
+      Pickup: "Alterna el estado de la recolección automática cuando el inventario está lleno."
 
 Command:
   Backpack:
@@ -110,10 +115,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "es_es"
 Author: "ThatOverPowered & PostBoxRetinal"
 
 # Language file version. Don't touch it!
-Version: 19
+Version: 21

@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&c你不能从你的物品栏中删除背包快捷方式！"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&c你的背包缩小了！一些物品掉到了地上！"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"请等待 \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} 秒\"}},{\"text\":\" 才能重新打开背包。\"}]"
@@ -121,4 +122,4 @@ LanguageName: "简体中文"
 Author: "YaoSiQian, Liou_Yang"
 
 # Language file version. Don't touch it!
-Version: 20
+Version: 21

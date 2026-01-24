@@ -1,4 +1,3 @@
-Version: 16
 # To simplify the customisation and the translation process please check out the editor: https://ptp.pcgamingfreaks.at
 Language:
   NotFromConsole: "&cO comando não pode ser usado no console."
@@ -13,6 +12,10 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Mochila inválida."
     NotAllowedInBackpack: "&c{ItemName} não pode ficar na mochila."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cVocê não deve remover o atalho da mochila do seu inventário!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cSua mochila encolheu! Alguns itens caíram no chão!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Por favor, espere \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" para abrir a mochila novamente.\"}]"
@@ -20,6 +23,10 @@ Language:
       WrongGameMode: "Você não pode abrir a mochila nesse modo de jogo."
     Clean:
       BackpackCleaned: "Mochila limpa."
+      BackpackCleanedBy: "Sua mochila foi limpa por {DisplayName}&r."
+      BackpackCleanedOther: "A mochila de {DisplayName}&r foi limpa."
+    Sort:
+      Sorted: "Mochila organizada."
     Help:
       Header: "&6### Comandos Minepacks ###"
       Footer: "&6#############################"
@@ -48,6 +55,14 @@ Language:
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Backup carregado com sucesso."
+    InventoryClear:
+      UnknownPlayer: "&cNão foi possível encontrar o jogador {Name}!"
+      Cleared: "Inventário limpo."
+      ClearedOther: "O inventário de {DisplayName}&r foi limpo."
+      ClearedOtherTarget: "Seu inventário foi limpo por {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7A coleta automática de itens foi &aATIVADA&7."
+      ToggleOff: "&7A coleta automática de itens foi &cDESATIVADA&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -60,12 +75,13 @@ Language:
       Update: "Procura por novas atualizações."
       Version: "Mostra detalhes da versão do plugin e suas dependências."
       Backup: "Cria um backup da mochila dos jogadores."
+      BackupEveryone: "Cria um backup de todos que estão online no momento."
       Restore: "Restaura um backup."
       RestoreList: "Mostra todos os backups disponíveis."
       Help: "Mostra todos os comandos disponíveis e suas descrições."
       Migrate: "Migra o banco de dados usado de um tipo para outro."
-LanguageName: "Português"
-Author: "dotJunyo"
+      Pickup: "Alterna o estado da coleta automática quando o inventário está cheio."
+
 Command:
   Backpack:
     - backpack
@@ -74,6 +90,9 @@ Command:
   Open:
     - open
     - abrir
+  Sort:
+    - sort
+    - organizar
   Clean:
     - clean
     - clear
@@ -100,3 +119,16 @@ Command:
   Help:
     - help
     - ajuda
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
+
+# Will be shown in the console during startup
+LanguageName: "Português"
+Author: "dotJunyo"
+
+# Language file version. Don't touch it!
+Version: 21

@@ -1,28 +1,126 @@
+# To simplify the customisation and translation process please check out the editor: https://ptp.pcgamingfreaks.at
+
 Language:
-  Console:
-    Enabled: MinePacks byl povolen.
-    Disabled: MinePacks byl zakazan.
-    NotFromConsole: Tento prikaz nelze pouzivat z konzole.
-    LangUpdated: Jazykovy soubor byl znovu nacten.
-    UpdateUUIDs: Zacal jsem aktualizovat databazi s UUIDs...
-    UpdatedUUIDs: 'Aktualizoval jsem %s uctu na UUIDs.'
+  NotFromConsole: "&cTento příkaz nelze použít z konzole."
   Ingame:
-    NoPermission: "Na toto nemas dostatecna opravneni!"
-    OwnBackPackClose: 'Batoh byl zavren.'
-    PlayerBackPackClose: "Batoh hrace %s byl zavren."
-    InvalidBackpack: Neznamy batoh.
-    BackpackCleaned: Batoh byl vycisten.
-    Cooldown: "Pockej chvili pred tim, nez znovu otevres tvuj batoh."
-    WrongGameMode: "Nemas opravneni na otevreni tveho batohu v tomto hernim modu."
-  Description:
-    Backpack: Otevre tvuj batoh.
-    Clean: Vycisti tvuj batoh.
-    CleanOther: Vymaze batoh jineho hrace.
-    View: Otevre batoh jineho hrace.
+    NoPermission: "&cNa toto nemáš dostatečná oprávnění!"
+    WorldDisabled: "&cPoužití batohu není v tomto světě povoleno."
+    NaN: "[\"\",{\"text\":\"Zadaná hodnota není číslo!\",\"color\":\"red\"}]"
+    OwnBackpackClose: "Batoh byl zavřen!"
+    OwnBackpackClose_SendMethod: "action_bar"
+    #Parameter: {OwnerName}, {OwnerDisplayName}
+    PlayerBackpackClose: "Batoh hráče {OwnerName} byl zavřen!"
+    PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Neplatný batoh."
+    NotAllowedInBackpack: "&c{ItemName} není v batohu povoleno."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cNesmíš odstranit zkratku batohu ze svého inventáře!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cTvůj batoh se zmenšil! Některé předměty spadly na zem!"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Počkej prosím \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} sekund\"}},{\"text\":\" než znovu otevřeš svůj batoh.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Nemáš oprávnění otevřít svůj batoh v aktuálním herním módu."
+    Clean:
+      BackpackCleaned: "Batoh byl vyčištěn."
+      BackpackCleanedBy: "Tvůj batoh byl vyčištěn hráčem {DisplayName}&r."
+      BackpackCleanedOther: "Batoh hráče {DisplayName}&r byl vyčištěn."
+    Sort:
+      Sorted: "Batoh byl seřazen."
+    Help:
+      Header: "&6### Minepacks Příkazy ###"
+      Footer: "&6#############################"
+    Reload:
+      Reloading: "&1Znovu načítám Minepacks ..."
+      Reloaded: "&1Minepacks znovu načten!"
+    Update:
+      CheckingForUpdates: "&1Kontroluji aktualizace ..."
+      Updated: "[\"\",{\"text\":\"Plugin aktualizován, bude načten při příštím restartu/reloadu.\",\"color\":\"yellow\"}]"
+      NoUpdate: "[\"\",{\"text\":\"Žádná aktualizace pluginu není k dispozici.\",\"color\":\"gold\"}]"
+      UpdateFail: "[\"\",{\"text\":\"Nastal problém při hledání aktualizací! Zkontroluj konzoli!\",\"color\":\"red\"}]"
+      # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
+      UpdateAvailable: "[{\"text\":\"Je k dispozici aktualizace! Jdi na \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" pro stažení!\"}]"
+    Backup:
+      Created: "Batoh byl úspěšně zálohován."
+      NoBackpack: "Hráč nemá batoh nebo je jeho batoh prázdný."
+    Restore:
+      BackupsPerPage: 10
+      Headline: "[\"\",{\"text\":\"Zálohy\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"zobrazena stránka {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
+      Footer: "[{\"text\":\"<<< Předchozí <<<\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}--\"}},{\"text\":\" Zobrazena stránka {CurrentPage}/{MaxPage} \",\"color\":\"gold\"},{\"text\":\">>> Další >>>\",\"color\":\"gray\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"/{MainCommand} {SubCommand} {CurrentPage}++\"}}]"
+      BackupEntry: "[\"\",{\"text\":\"{BackupIdentifier}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand} {BackupIdentifier}\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Uživatel: {BackupPlayerName} ({BackupPlayerUUID})\\nVytvořeno: {BackupDate}\"}}]"
+      NoValidBackup: "Žádná záloha odpovídající {BackupIdentifier} nenalezena"
+      NoUserToRestoreToFound: "Žádný platný uživatel pro obnovení zálohy nenalezen"
+      # No Json!!!
+      ParameterBackupName: "backup_name"
+      # No Json!!!
+      DateFormat: "yyyy.MM.dd HH:mm:ss"
+      Restored: "Záloha byla úspěšně obnovena."
+    InventoryClear:
+      UnknownPlayer: "&cHráče {Name} se nepodařilo najít!"
+      Cleared: "Inventář vyčištěn."
+      ClearedOther: "Inventář hráče {DisplayName}&r byl vyčištěn."
+      ClearedOtherTarget: "Tvůj inventář byl vyčištěn hráčem {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Automatický sběr předmětů byl &aZAPNUT&7."
+      ToggleOff: "&7Automatický sběr předmětů byl &cVYPNUT&7."
+  Commands:
+    HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
+    PlayerNameVariable: "player_name"
+    Description:
+      Backpack: "Otevře tvůj batoh."
+      Sort: "Seřadí tvůj batoh."
+      Clean: "Vyčistí tvůj batoh."
+      CleanOthers: "Vyčistí batoh jiného hráče."
+      OpenOthers: "Zobrazí batoh jiného hráče."
+      Reload: "Znovu načte konfiguraci pluginu."
+      Update: "Zkontroluje nové aktualizace pluginu."
+      Version: "Vypíše detaily o verzi pluginu a jeho závislostech."
+      Backup: "Vytvoří zálohu batohu hráče."
+      BackupEveryone: "Vytvoří zálohu pro všechny, kteří jsou momentálně online."
+      Restore: "Obnoví zálohu."
+      RestoreList: "Vypíše všechny dostupné zálohy."
+      Help: "Zobrazí všechny dostupné příkazy a jejich popis."
+      Migrate: "Převede používanou databázi z jednoho typu na jiný."
+      Pickup: "Přepne stav automatického sběru, když je inventář plný."
+
+Command:
+  Backpack:
+    - backpack
+    - bp
+  Open:
+    - open
+  Sort:
+    - sort
+  Clean:
+    - clean
+    - clear
+    - empty
+  Reload:
+    - reload
+    - restart
+  Update:
+    - update
+  Backup:
+    - backup
+  Restore:
+    - restore
+  ListBackups:
+    - listbackups
+  Version:
+    - version
+  Help:
+    - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "czech"
 Author: "ProPl4yerCz"
 
 # Language file version. Don't touch it!
-Version: 5
+Version: 21

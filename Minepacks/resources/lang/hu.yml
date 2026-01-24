@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cNem szabad eltávolítani a hátizsák ikonját az eszköztárból!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cA hátizsákod összement! Néhány tárgy a földre esett!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Várj \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} másodperc\"}},{\"text\":\", amíg újra nem nyitja a hátizsákot.\"}]"
@@ -23,6 +24,10 @@ Language:
       WrongGameMode: "A jelenlegi játékmódban nem engedélyezett kinyitni a hátizsákot."
     Clean:
       BackpackCleaned: "Hátizsák kitisztítva."
+      BackpackCleanedBy: "A hátizsákodat {DisplayName}&r tisztította ki."
+      BackpackCleanedOther: "{DisplayName}&r hátizsákja ki lett tisztítva."
+    Sort:
+      Sorted: "Hátizsák rendezve."
     Help:
       Header: "&6### Minepacks parancsok ###"
       Footer: "&6#############################"
@@ -51,6 +56,14 @@ Language:
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Biztonsági mentés sikeresen visszaállítva."
+    InventoryClear:
+      UnknownPlayer: "&cNem található a játékos {Name}!"
+      Cleared: "Leltár törölve."
+      ClearedOther: "{DisplayName}&r leltára törölve lett."
+      ClearedOtherTarget: "A leltárodat {DisplayName}&r törölte."
+    Pickup:
+      ToggleOn: "&7Az automatikus tárgyfelvétel &aBEKAPCSOLVA&7."
+      ToggleOff: "&7Az automatikus tárgyfelvétel &cKIKAPOCSOLVA&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -63,10 +76,12 @@ Language:
       Update: "Ellenőrzi a plugin új frissítéseit."
       Version: "Kiírja a plugin verziójának részleteit és annak függőségeit."
       Backup: "Létrehoz egy mentést a játékosok hátizsákjáról."
+      BackupEveryone: "Biztonsági mentést készít minden jelenleg online lévő személyről."
       Restore: "Visszaállít egy mentést."
       RestoreList: "Listázza az összes elérhető mentéseket."
       Help: "Megmutatja az összes elérhető parancsokat és azok leírását."
       Migrate: "A használt adatbázist áttelepíti egyik típusról a másikra."
+      Pickup: "Átváltja az automatikus felvétel állapotát, ha a leltár tele van."
 
 Command:
   Backpack:
@@ -74,6 +89,8 @@ Command:
     - bp
   Open:
     - open
+  Sort:
+    - sort
   Clean:
     - clean
     - clear
@@ -93,10 +110,16 @@ Command:
     - version
   Help:
     - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "hungarian"
 Author: "montlikadani"
 
 # Language file version. Don't touch it!
-Version: 17
+Version: 21

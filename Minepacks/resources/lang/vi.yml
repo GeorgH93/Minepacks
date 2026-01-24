@@ -15,6 +15,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cBạn không được xóa phím tắt ba lô khỏi hành trang của mình!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cBa lô của bạn đã bị thu nhỏ! Một số vật phẩm đã rơi xuống đất!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Vui lòng đợi \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{ TimeLeft} seconds\"}},{\"text\":\" cho đến khi bạn mở lại ba lô của mình.\"}]"
@@ -118,4 +119,4 @@ Command:
 LanguageName: "Vietnamese"
 Author: "RageOfFire"
 # Language file version. Don't touch it!
-Version: 20
+Version: 21

@@ -14,8 +14,9 @@ Language:
     InvalidBackpack: "Nieprawidłowy plecak."
     NotAllowedInBackpack: "&c{ItemName}nie jest dozwolone w plecaku."
     NotAllowedInBackpack_SendMethod: "action_bar"
-    DontRemoveShortcut: "&cYou must not remove the backpack shortcut from your inventory!"
+    DontRemoveShortcut: "&cNie wolno usuwać skrótu do plecaka z ekwipunku!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cTwój plecak się skurczył! Niektóre przedmioty spadły na ziemię!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\"Proszę czekać\",\"color\":\"dark_green\"},{\"text\":\" aż do ponownego otwarcia plecaka.\"}]"
@@ -23,6 +24,10 @@ Language:
       WrongGameMode: "W bieżącym trybie gry nie wolno otwierać plecaka."
     Clean:
       BackpackCleaned: "Plecak wyczyszczony."
+      BackpackCleanedBy: "Twój plecak został wyczyszczony przez {DisplayName}&r."
+      BackpackCleanedOther: "Plecak gracza {DisplayName}&r został wyczyszczony."
+    Sort:
+      Sorted: "Plecak posortowany."
     Help:
       Header: "&6### Paczka poleceń ###"
       Footer: "&6#############################"
@@ -51,6 +56,14 @@ Language:
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Kopia zapasowa została pomyślnie przywrócona."
+    InventoryClear:
+      UnknownPlayer: "&cNie można znaleźć gracza {Name}!"
+      Cleared: "Ekwipunek wyczyszczony."
+      ClearedOther: "Ekwipunek gracza {DisplayName}&r został wyczyszczony."
+      ClearedOtherTarget: "Twój ekwipunek został wyczyszczony przez {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Automatyczne zbieranie przedmiotów zostało &aWŁĄCZONE&7."
+      ToggleOff: "&7Automatyczne zbieranie przedmiotów zostało &cWYŁĄCZONE&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -63,10 +76,12 @@ Language:
       Update: "Sprawdza dostępność nowych aktualizacji wtyczek."
       Version: "Wyświetla szczegóły wersji wtyczki i jej zależności."
       Backup: "Tworzy kopię zapasową plecaka gracza."
+      BackupEveryone: "Tworzy kopię zapasową wszystkich obecnie online."
       Restore: "Przywraca kopię zapasową."
       RestoreList: "Wyświetla wszystkie dostępne kopie zapasowe."
       Help: "Pokazuje wszystkie dostępne polecenia i ich opis."
       Migrate: "Migruje używaną bazę danych z jednego typu na inny."
+      Pickup: "Przełącz stan automatycznego zbierania gdy ekwipunek jest pełny."
 
 Command:
   Backpack:
@@ -74,6 +89,9 @@ Command:
     - pk
   Open:
     - "otwórz"
+  Sort:
+    - sort
+    - sortuj
   Clean:
     - "wyczyść"
   Reload:
@@ -91,10 +109,16 @@ Command:
     - wersja
   Help:
     - pomoc
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "Polish"
 Author: "Lisheya"
 
 # Language file version. Don't touch it!
-Version: 17
+Version: 21

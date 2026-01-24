@@ -12,6 +12,10 @@ Language:
     PlayerBackpackClose_SendMethod: "action_bar"
     InvalidBackpack: "Geçersiz çanta."
     NotAllowedInBackpack: "&c{ItemName} çanta içinde bulundurulamaz."
+    NotAllowedInBackpack_SendMethod: "action_bar"
+    DontRemoveShortcut: "&cÇanta kısayolunu envanterinizden kaldırmamalısınız!"
+    DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cÇantanız küçüldü! Bazı eşyalar yere düştü!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Çantanızı geri açana kadar lütfen \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" bekleyin.\"}]"
@@ -19,6 +23,10 @@ Language:
       WrongGameMode: "Şu anki oyun modunda çantanızı açamazsınız."
     Clean:
       BackpackCleaned: "Çanta temizlendi."
+      BackpackCleanedBy: "Çantanız {DisplayName}&r tarafından temizlendi."
+      BackpackCleanedOther: "{DisplayName}&r çantası temizlendi."
+    Sort:
+      Sorted: "Çanta sıralandı."
     Help:
       Header: "&6### Minepacks Komutları ###"
       Footer: "&6#############################"
@@ -47,6 +55,14 @@ Language:
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Yedek başarıyla geri getirildi."
+    InventoryClear:
+      UnknownPlayer: "&cOyuncu {Name} bulunamadı!"
+      Cleared: "Envanter temizlendi."
+      ClearedOther: "{DisplayName}&r envanteri temizlendi."
+      ClearedOtherTarget: "Envanteriniz {DisplayName}&r tarafından temizlendi."
+    Pickup:
+      ToggleOn: "&7Otomatik eşya toplama &aAÇIK&7 duruma getirildi."
+      ToggleOff: "&7Otomatik eşya toplama &cKAPALI&7 duruma getirildi."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -59,16 +75,21 @@ Language:
       Update: "Eklenti için yeni güncellemeleri denetler."
       Version: "Eklenti detaylarını ve gerekliliklerinin çıktısını verir."
       Backup: "Oyuncunun çantasını yedekler."
+      BackupEveryone: "Şu anda çevrimiçi olan herkesin yedeğini oluşturur."
       Restore: "Yedeği yükler."
       RestoreList: "Mevcut tüm yedekleri listeler."
       Help: "Mevcut tüm komutları ve tanımlarını gösterir."
       Migrate: "Kullanılan veritabanını bir türden diğerine geçirir."
+      Pickup: "Envanter doluyken otomatik toplama durumunu değiştirir."
+
 Command:
   Backpack:
     - backpack
     - bp
   Open:
     - open
+  Sort:
+    - sort
   Clean:
     - clean
     - clear
@@ -88,10 +109,16 @@ Command:
     - version
   Help:
     - help
+  InventoryClear:
+    - clear
+    - inventoryclear
+    - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "turkish"
 Author: "imZesha"
 
 # Language file version. Don't touch it!
-Version: 16
+Version: 21

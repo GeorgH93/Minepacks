@@ -1,4 +1,3 @@
-Version: 18
 # To simplify the customisation and the translation process please check out the editor: https://ptp.pcgamingfreaks.at
 Language:
   NotFromConsole: "&cDit commando kan je niet vanuit de console gebruiken."
@@ -16,6 +15,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cJe mag de rugzak niet uit je inventaris halen!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cJe rugzak is gekrompen! Sommige items zijn op de grond gevallen!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Wacht \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" voordat je de rugzak heropent.\"}]"
@@ -60,6 +60,9 @@ Language:
       Cleared: "Inventaris geleegd"
       ClearedOther: "{DisplayName}'s&r inventaris is geleegd."
       ClearedOtherTarget: "Je inventaris is geleegd door {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Automatische itemverzameling is &aAAN&7 gezet."
+      ToggleOff: "&7Automatische itemverzameling is &cUIT&7 gezet."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -73,12 +76,13 @@ Language:
       Update: "Controleert op nieuwe plugin updates."
       Version: "Geeft details weer over de versie de plugin en diens afhankelijkheden."
       Backup: "Creëert een back-up van de rugzakken van de spelers."
+      BackupEveryone: "Maakt een back-up van iedereen die momenteel online is."
       Restore: "Herstelt een back-up."
       RestoreList: "Laat alle beschikbare back-ups zien."
       Help: "Laat alle commando's zien met hun beschrijving."
       Migrate: "Zet de database over naar een ander type."
-LanguageName: "Nederlands"
-Author: "Le0ne_"
+      Pickup: "Schakel de status van automatische pickup wanneer de inventaris vol is."
+
 Command:
   Backpack:
     - backpack
@@ -120,3 +124,12 @@ Command:
     - inventoryclear
     - wis
     - verwijder
+  Pickup:
+    - pickup
+
+# Will be shown in the console during startup
+LanguageName: "Nederlands"
+Author: "Le0ne_"
+
+# Language file version. Don't touch it!
+Version: 21

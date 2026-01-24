@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "§f［§b背包§f］ 您不能从背包丢弃头颅。"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "§f［§b背包§f］ 您的背包缩小了！一些物品掉到了地上！"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "§f［§b背包§f］ 请等待 §e{TimeLeft} §f秒。"
@@ -56,10 +57,13 @@ Language:
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Backup has been successful restored."
     InventoryClear:
-      UnknownPlayer: "&cCould not find player {Name}!"
-      Cleared: "Inventory cleared."
-      ClearedOther: "{DisplayName}'s&r inventory has been cleared."
-      ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
+      UnknownPlayer: "&c找不到玩家 {Name}！"
+      Cleared: "物品栏已清空。"
+      ClearedOther: "{DisplayName}&r 的物品栏已清空。"
+      ClearedOtherTarget: "您的物品栏已被 {DisplayName}&r 清空。"
+    Pickup:
+      ToggleOn: "&7自动物品收集已切换为 &a开&7。"
+      ToggleOff: "&7自动物品收集已切换为 &c关&7。"
   Commands:
     HelpFormat: "§f［§b背包§f］ {Description}命令 “/{MainCommand} {SubCommand} {Parameters}”"
     PlayerNameVariable: "player_name"
@@ -73,10 +77,12 @@ Language:
       Update: "检查更新"
       Version: "查看版本"
       Backup: "创建备份"
+      BackupEveryone: "为目前所有在线的玩家创建备份。"
       Restore: "打开备份"
       RestoreList: "列出所有备份"
       Help: "查看帮助"
       Migrate: "迁移数据类型"
+      Pickup: "当物品栏已满时切换自动拾取状态。"
 
 Command:
   Backpack:
@@ -109,10 +115,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "中文"
 Author: "尹"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 21

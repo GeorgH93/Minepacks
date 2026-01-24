@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&c您不能從背包中刪除快捷方式!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&c您的背包縮小了！一些物品掉到了地上！"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "&e請等待 {TimeLeft} 秒再使用該指令"
@@ -56,10 +57,13 @@ Language:
       DateFormat: "yyyy.MM.dd HH:mm:ss"
       Restored: "Backup has been successful restored."
     InventoryClear:
-      UnknownPlayer: "&cCould not find player {Name}!"
-      Cleared: "Inventory cleared."
-      ClearedOther: "{DisplayName}'s&r inventory has been cleared."
-      ClearedOtherTarget: "Your inventory has been cleared by {DisplayName}&r."
+      UnknownPlayer: "&c找不到玩家 {Name}！"
+      Cleared: "物品欄已清空。"
+      ClearedOther: "{DisplayName}&r 的物品欄已清空。"
+      ClearedOtherTarget: "您的物品欄已被 {DisplayName}&r 清空。"
+    Pickup:
+      ToggleOn: "&7自動物品收集已切換為 &a開&7。"
+      ToggleOff: "&7自動物品收集已切換為 &c關&7。"
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -73,10 +77,12 @@ Language:
       Update: "檢查可用的更新"
       Version: "查看此插件的版本"
       Backup: "建立一個新的備份"
+      BackupEveryone: "為目前所有在線的玩家建立備份。"
       Restore: "回復備份"
       RestoreList: "所有已備份的列表"
       Help: "查看所有指令的幫助"
       Migrate: "轉移玩家的隨身背包"
+      Pickup: "當物品欄已滿時切換自動拾取狀態。"
 
 Command:
   Backpack:
@@ -109,10 +115,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "繁體中文"
 Author: "Umekaw"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 21

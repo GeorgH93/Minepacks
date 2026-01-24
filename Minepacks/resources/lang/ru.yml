@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cВы не можете удалить иконку рюкзака из своего инвентаря!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cВаш рюкзак уменьшился! Некоторые предметы выпали на землю!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Пожалуйста подождите \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} секунд\"}},{\"text\":\", перед тем как снова открыть свой рюкзак.\"}]"
@@ -122,4 +123,4 @@ LanguageName: "russian"
 Author: "maz1lovo"
 
 # Language file version. Don't touch it!
-Version: 20
+Version: 21

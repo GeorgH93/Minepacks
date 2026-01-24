@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cVous ne devez pas supprimer le raccourci de sac à dos de votre inventaire !"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cVotre sac à dos a rétréci ! Certains objets sont tombés au sol !"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Veuillez patienter \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondes\"}},{\"text\":\" till you reopen your backpack.\"}]"
@@ -122,4 +123,4 @@ LanguageName: "Français"
 Author: "HiiRaZ & Sniper_TVmc"
 
 # Language file version. Don't touch it!
-Version: 20
+Version: 21

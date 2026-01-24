@@ -15,15 +15,16 @@ Language:
     NotAllowedInBackpack: "&c{ItemName} ist im Rucksack nicht erlaubt."
     DontRemoveShortcut: "&cDu darfst den Rucksack nicht aus deinem Inventar entfernen!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cDein Rucksack ist geschrumpft! Einige Items sind auf den Boden gefallen!"
+    Open:
+      #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
+      Cooldown: "[{\"text\":\"Bitte warte \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} Sekunden\"}},{\"text\":\" bis du deinen Rucksack wieder öffnest.\"}]"
+      #Parameter: {CurrentGameMode}, {AllowedGameModes}
+      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Gamemode nicht öffnen."
     Clean:
       BackpackCleaned: "Rucksack geleert."
       BackpackCleanedBy: "Dein Rucksack wurde von {DisplayName}&r geleert"
       BackpackCleanedOther: "Der Rucksack von {DisplayName}&r wurde geleert."
-    Open:
-      #Parameter: {TimeLeft} time in seconds till he can reopen his backpack
-      Cooldown: "&2Bitte warte noch {TimeLeft} Sekunden, bis du deinen Rucksack wieder öffnest."
-      #Parameter: {CurrentGameMode}, {AllowedGameModes}
-      WrongGameMode: "Du darfst deinen Rucksack in deinem aktuellem Gamemode nicht öffnen."
     Sort:
       Sorted: "Dein Rucksack wurde sortiert."
     Help:
@@ -59,6 +60,9 @@ Language:
       Cleared: "Inventar gelöscht."
       ClearedOther: "Das Inventar von {DisplayName}&r wurde gelöscht."
       ClearedOtherTarget: "Dein Inventar wurde von {DisplayName}&r gelöscht."
+    Pickup:
+      ToggleOn: "&7Automatisches Itemsammeln wurde &aEINGESCHALTET&7."
+      ToggleOff: "&7Automatisches Itemsammeln wurde &cAUSGESCHALTET&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -77,6 +81,7 @@ Language:
       Version: "Gibt die Versionsdetails über das Plugin und seine Abhängigkeiten aus."
       Help: "Zeigt die verfügbaren Befehle an."
       Migrate: "Erlaubt das Konvertieren der Datenbank in ein anderes Format."
+      Pickup: "Schaltet den automatischen Item-Aufnahmestatus um, wenn das Inventar voll ist."
 
 Command:
   Backpack:
@@ -115,10 +120,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "german"
 Author: "GeorgH93"
 
 # Language file version. Don't touch it!
-Version: 19
+Version: 21

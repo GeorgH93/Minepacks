@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cNon puoi rimuovere il backpack dalla hotbar o inventario!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cIl tuo zaino si è ristretto! Alcuni oggetti sono caduti a terra!"
     Open:
       #Parameter: {TimeLeft} secondi per riaprire il backpack, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Perfavore aspettaret \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondi\"}},{\"text\":\" per riaprire il backpack.\"}]"
@@ -60,6 +61,9 @@ Language:
       Cleared: "Inventario ripulito."
       ClearedOther: "L'inventario di {DisplayName}&r è stato ripulito."
       ClearedOtherTarget: "Il tuo inventario è stato ripulito da {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7La raccolta automatica degli oggetti è stata &aATTIVATA&7."
+      ToggleOff: "&7La raccolta automatica degli oggetti è stata &cDISATTIVATA&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -73,10 +77,12 @@ Language:
       Update: "Controlla per nuovi aggiornamenti."
       Version: "Mostra la versione del plugin e le sue relative dipendenze."
       Backup: "Crea un backup del backpack dell'utente."
+      BackupEveryone: "Crea un backup di tutti gli utenti attualmente online."
       Restore: "Ripristina un backup."
       RestoreList: "Mostra tutti i backup disponibili."
       Help: "Mostra tutti i comandi disponibili e le loro descrizioni."
       Migrate: "Migra il database da un utente all'altro."
+      Pickup: "Attiva/disattiva la raccolta automatica quando l'inventario è pieno."
 
 Command:
   Backpack:
@@ -109,10 +115,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "italiano"
 Author: "Mastory_Md5"
 
 # Language file version. Don't touch it!
-Version: 18
+Version: 21
