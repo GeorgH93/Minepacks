@@ -103,7 +103,7 @@ public abstract class SQL extends Database
 	public void close()
 	{
 		super.close();
-		Utils.blockThread(1); // Give the database some time to perform async operations
+		Utils.blockThread(5); // Give the database enough time to perform async operations
 		dataSource.close();
 	}
 
@@ -133,7 +133,7 @@ public abstract class SQL extends Database
 		querySyncCooldown = "INSERT INTO {TableCooldowns} ({FieldCDPlayer},{FieldCDTime}) SELECT {FieldPlayerID},? FROM {TablePlayers} WHERE {FieldUUID}=? ON DUPLICATE KEY UPDATE {FieldCDTime}=?;";
 		queryUpdatePlayerAdd = "INSERT INTO {TablePlayers} ({FieldName},{FieldUUID}) VALUES (?,?) ON DUPLICATE KEY UPDATE {FieldName}=?;";
 		queryGetPlayerID = "SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?;";
-		queryGetCooldown = "SELECT * FROM {TableCooldowns} WHERE {FieldCDPlayer} IN (SELECT {FieldPlayerID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
+		queryGetCooldown = "SELECT {FieldCDTime} FROM {TableCooldowns} INNER JOIN {TablePlayers} ON {TableCooldowns}.{FieldCDPlayer}={TablePlayers}.{FieldPlayerID} WHERE {FieldUUID}=?;";
 		queryInsertBp = "REPLACE INTO {TableBackpacks} ({FieldBPOwner},{FieldBPITS},{FieldBPVersion}) VALUES (?,?,?);";
 		queryUpdateBp = "UPDATE {TableBackpacks} SET {FieldBPITS}=?,{FieldBPVersion}=?,{FieldBPLastUpdate}={NOW} WHERE {FieldBPOwner}=?;";
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} < DATE('now', '-{VarMaxAge} days')";

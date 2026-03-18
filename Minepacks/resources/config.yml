@@ -88,7 +88,8 @@ Database:
     User: "minecraft"
     Password: "minecraft"
     # The max amount of connections to the database the connection pool will open
-    MaxConnections: 2
+    # Recommended: 8-12 for medium servers (20-50 players), 16-20 for large servers (50+ players)
+    MaxConnections: 10
     # Sets the max lifetime of the connection in seconds. -1 = Default (30min)
     MaxLifetime: -1
     # Sets the idle timeout of the connection in seconds. -1 = Default (15min)
