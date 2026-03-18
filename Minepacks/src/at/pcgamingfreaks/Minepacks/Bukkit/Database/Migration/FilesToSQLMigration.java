@@ -48,10 +48,13 @@ public class FilesToSQLMigration extends ToSQLMigration
 	{
 		File[] allFiles = saveFolder.listFiles((dir, name) -> name.endsWith(Files.EXT));
 		if(allFiles == null) return null;
+		final int BATCH_SIZE = 100;
 		try(Connection connection = newDb.getConnection(); PreparedStatement statementInsertUser = connection.prepareStatement(queryInsertUsers, PreparedStatement.RETURN_GENERATED_KEYS);
 		    PreparedStatement statementInsertBackpack = connection.prepareStatement(queryInsertBackpacks))
 		{
+			connection.setAutoCommit(false);
 			int migrated = 0;
+			int batchCount = 0;
 			for(File file : allFiles)
 			{
 				String name = file.getName().substring(0, file.getName().length() - Files.EXT.length());
@@ -71,12 +74,23 @@ public class FilesToSQLMigration extends ToSQLMigration
 							statementInsertBackpack.setInt(1, rs.getInt(1));
 							statementInsertBackpack.setBytes(2, data);
 							statementInsertBackpack.setInt(3, version);
-							statementInsertBackpack.executeUpdate();
+							statementInsertBackpack.addBatch();
 							migrated++;
+							batchCount++;
 						}
 					}
 				}
-
+				if(batchCount >= BATCH_SIZE)
+				{
+					statementInsertBackpack.executeBatch();
+					connection.commit();
+					batchCount = 0;
+				}
+			}
+			if(batchCount > 0)
+			{
+				statementInsertBackpack.executeBatch();
+				connection.commit();
 			}
 			return new MigrationResult("Migrated " + migrated + " backpacks from Files to " + newDb.getClass().getSimpleName(), MigrationResult.MigrationResultType.SUCCESS);
 		}
