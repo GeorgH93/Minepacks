@@ -43,6 +43,10 @@ public class SortCommand extends MinepacksCommand
 	{
 		final Player player = (Player) commandSender;
 		getMinepacksPlugin().getBackpack(player, backpack -> {
+			if (backpack.isOpen())
+			{
+				((at.pcgamingfreaks.Minepacks.Bukkit.Backpack) backpack).closeAll();
+			}
 			InventoryCompressor compressor = new InventoryCompressor(backpack.getInventory().getContents());
 			if(!compressor.sort().isEmpty())
 			{
