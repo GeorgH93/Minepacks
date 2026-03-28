@@ -115,6 +115,10 @@ public class RestoreCommand extends MinepacksCommand
 				return;
 			}
 			getMinepacksPlugin().getBackpack(target, backpack -> {
+				if (backpack.isOpen())
+				{
+					((Backpack) backpack).closeAll();
+				}
 				if (backpack.getSize() != items.length)
 				{
 					backpack.clear();
