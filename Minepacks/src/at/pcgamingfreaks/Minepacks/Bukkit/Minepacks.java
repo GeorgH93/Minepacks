@@ -134,7 +134,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 			getLogger().warning("No guarantee for data integrity! Backup constantly!");
 		}
 		// DO NOT REMOVE THIS! This is protecting your data! To add support for a new version, update PCGF PluginLib and then update the last version check!
-		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_26_1_R1))
+		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_26_2_R1))
 		{
 			this.warnOnVersionIncompatibility();
 			this.setEnabled(false);
