@@ -40,8 +40,7 @@ jobs:
         mv Minepacks/target/M*-Release.jar artifacts/
 
     - name: Upload the artifacts
-      uses: skx/github-action-publish-binaries@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: 'artifacts/M*'
+      run: |
+        gh release upload "${{ github.event.release.tag_name }}" "artifacts/M*"
