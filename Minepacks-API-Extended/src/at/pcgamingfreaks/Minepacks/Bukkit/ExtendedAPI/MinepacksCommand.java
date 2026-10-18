@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -31,15 +31,22 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Only available if the plugin is not running in standalone mode!
  */
 public abstract class MinepacksCommand extends SubCommand
 {
-	private static MinepacksPlugin minepacksPlugin = null;
-	private static Method showHelp = null;
+	@SuppressWarnings("FieldMayBeFinal")
+	private static MinepacksPlugin minepacksPlugin = null; // Will be set by reflection
+	@SuppressWarnings("FieldMayBeFinal")
+	private static Object minepacksCommandManager = null;
+	@SuppressWarnings("FieldMayBeFinal")
+	private static Method showHelp = null; // Will be set by reflection
+	@SuppressWarnings("FieldMayBeFinal") // Will be overwritten by reflection
 	private static Message messageNoPermission   = new Message(ChatColor.RED + "You don't have the permission to do that.");
+	@SuppressWarnings("FieldMayBeFinal") // Will be overwritten by reflection
 	private static Message messageNotFromConsole = new Message(ChatColor.RED + "This command can't be used from console!");
 	protected final JavaPlugin plugin;
 	private final boolean playerOnly;
@@ -174,15 +181,15 @@ public abstract class MinepacksCommand extends SubCommand
 	 * @param usedMainCommandAlias The used backpack alias to replace the /backpack with the used alias.
 	 */
 	@Override
-	public void showHelp(@NotNull CommandSender sendTo, @NotNull String usedMainCommandAlias)
+	public void showHelp(final @NotNull CommandSender sendTo, final @NotNull String usedMainCommandAlias)
 	{
 		try
 		{
-			showHelp.invoke(getMinepacksPlugin().getCommandManager(), sendTo, usedMainCommandAlias, doGetHelp(sendTo));
+			showHelp.invoke(minepacksCommandManager, sendTo, usedMainCommandAlias, doGetHelp(sendTo));
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> "Failed to show help for command " + usedMainCommandAlias);
 		}
 	}
 

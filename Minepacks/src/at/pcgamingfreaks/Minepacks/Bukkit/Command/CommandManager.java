@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 public class CommandManager extends CommandExecutorWithSubCommandsGeneric<MinepacksCommand> implements MinepacksCommandManager
 {
@@ -53,21 +54,22 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		backpackCommand.setExecutor(this);
 		backpackCommand.setTabCompleter(this);
 
-		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").replaceAll("\\{MainCommand}", "%1\\$s").replaceAll("\\{SubCommand}", "%2\\$s").replaceAll("\\{Parameters}", "%3\\$s").replaceAll("\\{Description}", "%4\\$s").replaceAll("suggest_command", "%5\\$s");
+		//TODO handle click action placeholder
+		helpFormat = plugin.getLanguage().getMessage("Commands.HelpFormat").placeholder("MainCommand").placeholder("SubCommand").placeholder("Parameters").placeholder("Description");//.placeholder("suggest_command", "%5\\$s");
 
 		// Setting the help format for the marry commands as well as the no permissions and not from console message
 		try
 		{
 			// Show help function
 			Reflection.setStaticField(MinepacksCommand.class, "minepacksPlugin", plugin); // Plugin instance
+			Reflection.setStaticField(MinepacksCommand.class, "minepacksCommandManager", this); // Command manager instance
 			Reflection.setStaticField(MinepacksCommand.class, "showHelp", this.getClass().getDeclaredMethod("sendHelp", CommandSender.class, String.class, Collection.class));
 			Reflection.setStaticField(MinepacksCommand.class, "messageNoPermission", plugin.messageNoPermission); // No permission message
 			Reflection.setStaticField(MinepacksCommand.class, "messageNotFromConsole", plugin.messageNotFromConsole); // Not from console message
 		}
 		catch(Exception e)
 		{
-			plugin.getLogger().warning(ConsoleColor.RED + "Unable to set the help format. Default format will be used.\nMore details:" + ConsoleColor.RESET);
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> ConsoleColor.RED + "Unable to set the help format. Default format will be used.\nMore details:" + ConsoleColor.RESET);
 		}
 
 		// Init backpack commands
@@ -81,6 +83,7 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 		registerSubCommand(new RestoreCommand(plugin));
 		registerSubCommand(new MigrateCommand(plugin));
 		registerSubCommand(new VersionCommand(plugin));
+		if (plugin.getConfiguration().isFullInvToggleAllowed()) registerSubCommand(new PickupCommand(plugin));
 		registerSubCommand(new DebugCommand(plugin));
 		registerSubCommand(new HelpCommand(plugin, commands, this));
 	}
@@ -124,12 +127,8 @@ public class CommandManager extends CommandExecutorWithSubCommandsGeneric<Minepa
 			WorldBlacklistMode disabled = plugin.isDisabled((Player) sender);
 			if(disabled != WorldBlacklistMode.None)
 			{
-				switch(disabled)
-				{
-					case Message: plugin.messageWorldDisabled.send(sender); break;
-					case MissingPermission: plugin.messageNoPermission.send(sender); break;
-					case NoPlugin: return null;
-				}
+				if (disabled == WorldBlacklistMode.Message) plugin.messageWorldDisabled.send(sender);
+				else if (disabled == WorldBlacklistMode.MissingPermission) plugin.messageNoPermission.send(sender);
 				return null;
 			}
 		}

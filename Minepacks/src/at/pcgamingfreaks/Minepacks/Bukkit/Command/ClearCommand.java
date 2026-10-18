@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -20,14 +20,13 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Command.HelpData;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
+import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
-import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -46,8 +45,8 @@ public class ClearCommand extends MinepacksCommand
 		descriptionCleanOthers = plugin.getLanguage().getTranslated("Commands.Description.CleanOthers");
 		helpParam = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 		messageCleared = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleaned");
-		messageClearedBy = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedBy").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
-		messageClearedOther = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedOther").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
+		messageClearedBy = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedBy").placeholders(Placeholders.PLAYER_NAME);
+		messageClearedOther = plugin.getLanguage().getMessage("Ingame.Clean.BackpackCleanedOther").placeholders(Placeholders.PLAYER_NAME);
 	}
 
 	@Override
@@ -62,24 +61,42 @@ public class ClearCommand extends MinepacksCommand
 		else if(args.length == 1) target = Bukkit.getOfflinePlayer(args[0]);
 		if(target != null)
 		{
-			getMinepacksPlugin().getBackpack(target, backpack -> {
-				backpack.clear();
-				if(commandSender.equals(backpack.getOwner().getPlayerOnline()))
+			getMinepacksPlugin().getBackpack(target, new Callback<Backpack>()
+			{
+				@Override
+				public void onResult(Backpack backpack)
 				{
-					messageCleared.send(commandSender);
-				}
-				else
-				{
-					if(backpack.getOwner().isOnline())
+					if(backpack != null)
 					{
-						MinepacksPlayer owner = ((Backpack)backpack).getOwner();
-						messageClearedOther.send(commandSender, backpack.getOwner().getName(), owner.getDisplayName());
-						owner.sendMessage(messageClearedBy, commandSender.getName(), (commandSender instanceof Player) ? ((Player) commandSender).getDisplayName() : ChatColor.GRAY + commandSender.getName());
+						backpack.clear();
+						if(commandSender instanceof Player && ((Player) commandSender).getUniqueId().equals(backpack.getOwnerId()))
+						{
+							messageCleared.send(commandSender);
+						}
+						else
+						{
+							Player owner = backpack.getOwnerPlayer();
+							if(owner != null)
+							{
+								messageClearedOther.send(commandSender, owner);
+								messageClearedBy.send(owner, commandSender);
+							}
+							else
+							{
+								messageClearedOther.send(commandSender, backpack.getOwner());
+							}
+						}
 					}
 					else
 					{
-						messageClearedOther.send(commandSender, backpack.getOwner().getName(), ChatColor.GRAY + backpack.getOwner().getName());
+						((Minepacks) getMinepacksPlugin()).messageInvalidBackpack.send(commandSender);
 					}
+				}
+
+				@Override
+				public void onFail()
+				{
+					((Minepacks) getMinepacksPlugin()).messageInvalidBackpack.send(commandSender);
 				}
 			});
 		}

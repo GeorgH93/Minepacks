@@ -10,7 +10,22 @@
 		<revision>3.0-ALPHA-SNAPSHOT</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<pcgfPluginLibVersion>1.0.33-SNAPSHOT</pcgfPluginLibVersion>
+		<pcgfPluginLibVersion>1.0.40.9-SNAPSHOT</pcgfPluginLibVersion>
+
+		<configFileVersion>36</configFileVersion>
+		<languageFileVersion>21</languageFileVersion>
+
+		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
+		<mavenShade.version>3.6.2</mavenShade.version>
+		<lombok.version>1.18.42</lombok.version>
+
+		<author>GeorgH93</author>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<pluginVersion>${project.version}-T${timestamp}</pluginVersion>
+
+		<sonar.organization>georgh93</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<scm>
@@ -28,13 +43,13 @@
 	</ciManagement>
 
 	<name>Minepacks-Parent</name>
-	<description>Minepacks is a backpack plugin with different backpack sizes, multi language support and SQLite and MySQL storage support.</description>
+	<description>Minepacks is a backpack plugin with different backpack sizes, multi-language support and SQLite and MySQL storage support.</description>
 	<url>https://www.spigotmc.org/resources/19286/</url>
 	<inceptionYear>2014</inceptionYear>
 	<licenses>
 		<license>
 			<name>GNU General Public License (GPL) v3</name>
-			<url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+			<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -54,27 +69,27 @@
 		<dependency>
 			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
-			<version>17.0.0</version>
+			<version>23.1.0</version>
 		</dependency>
 		<!-- Bukkit -->
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.15.2-R0.1-SNAPSHOT</version>
+			<version>${bukkitVersion}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.10</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<defaultGoal>clean package</defaultGoal>
+		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -82,6 +97,14 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 			<!-- Resolve lombok -->
@@ -143,8 +166,23 @@
 	<modules>
 		<module>Minepacks-API</module>
 		<module>Minepacks-API-Extended</module>
+		<module>Components/Minepacks-MagicValues</module>
 		<module>Minepacks</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+
+			<modules>
+				<module>Components/Minepacks-BadRabbit-Bukkit</module>
+				<module>Components/Minepacks-Bootstrap-Paper</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<distributionManagement>
 		<repository>

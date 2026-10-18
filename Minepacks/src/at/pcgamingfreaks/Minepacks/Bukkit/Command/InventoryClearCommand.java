@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -24,9 +24,8 @@ import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Events.InventoryClearedEvent;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -52,10 +51,10 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 		command.setTabCompleter(this);
 
 		// Load messages
-		messageUnknownPlayer = plugin.getLanguage().getMessage("Ingame.InventoryClear.UnknownPlayer").replaceAll("\\{Name}", "%s");
+		messageUnknownPlayer = plugin.getLanguage().getMessage("Ingame.InventoryClear.UnknownPlayer").placeholder("Name");
 		messageOwnInventoryCleared = plugin.getLanguage().getMessage("Ingame.InventoryClear.Cleared");
-		messageOtherInventoryCleared = plugin.getLanguage().getMessage("Ingame.InventoryClear.ClearedOther").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
-		messageInventoryWasCleared = plugin.getLanguage().getMessage("Ingame.InventoryClear.ClearedOtherTarget").replaceAll("\\{Name}", "%1\\$s").replaceAll("\\{DisplayName}", "%2\\$s");
+		messageOtherInventoryCleared = plugin.getLanguage().getMessage("Ingame.InventoryClear.ClearedOther").placeholders(Placeholders.PLAYER_NAME);
+		messageInventoryWasCleared = plugin.getLanguage().getMessage("Ingame.InventoryClear.ClearedOtherTarget").placeholders(Placeholders.PLAYER_NAME);
 	}
 
 	public void close()
@@ -75,8 +74,8 @@ public class InventoryClearCommand implements CommandExecutor, TabCompleter
 		}
 		else
 		{
-			messageInventoryWasCleared.send(player, sender.getName(), (sender instanceof Player) ? ((Player) sender).getDisplayName() : ChatColor.GRAY + sender.getName());
-			messageOtherInventoryCleared.send(sender, player.getName(), player.getDisplayName());
+			messageInventoryWasCleared.send(player, sender);
+			messageOtherInventoryCleared.send(sender, player);
 		}
 		Bukkit.getPluginManager().callEvent(new InventoryClearedEvent(player, sender));
 	}

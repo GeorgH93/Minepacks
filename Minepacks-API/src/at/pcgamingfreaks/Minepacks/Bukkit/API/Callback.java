@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API;
@@ -22,5 +22,5 @@ public interface Callback<T>
 	void onResult(T done);
 
 	@Deprecated
-	default void onFail() {}
+	default void onFail() { /* In most cases this can be ignored since it will not happen with most db queries used */ }
 }

@@ -41,6 +41,18 @@ public class BackpackMultiPage implements at.pcgamingfreaks.Minepacks.Bukkit.Ext
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>();
 
 	@Override
+	public @NotNull UUID getOwnerId()
+	{
+		return owner.getUUID();
+	}
+
+	@Override
+	public @Nullable Player getOwnerPlayer()
+	{
+		return owner.getPlayerOnline();
+	}
+
+	@Override
 	public boolean isOpen()
 	{
 		return !opened.isEmpty();

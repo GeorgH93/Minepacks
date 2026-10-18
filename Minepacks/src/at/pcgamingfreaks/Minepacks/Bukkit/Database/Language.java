@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,17 +12,18 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Config.YamlFileManager;
+import at.pcgamingfreaks.Config.YamlFileUpdateMethod;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
-import at.pcgamingfreaks.YamlFileManager;
-import at.pcgamingfreaks.YamlFileUpdateMethod;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,15 +31,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Language extends at.pcgamingfreaks.Bukkit.Language
+public class Language extends at.pcgamingfreaks.Bukkit.Config.Language
 {
-	public Language(final @NotNull JavaPlugin plugin)
+	private static final Version LANG_VERSION = new Version(MagicValues.LANG_VERSION);
+
+	public Language(final @NotNull Minepacks plugin)
 	{
-		super(plugin, new Version(MagicValues.LANG_VERSION));
+		super(plugin, LANG_VERSION);
 	}
 
 	@Override
-	protected @Nullable YamlFileUpdateMethod getYamlUpdateMode()
+	public @Nullable YamlFileUpdateMethod getYamlUpdateMode()
 	{
 		YamlFileUpdateMethod mode = super.getYamlUpdateMode();
 		if(mode == YamlFileUpdateMethod.UPDATE) mode = YamlFileUpdateMethod.UPGRADE;
@@ -48,7 +51,7 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 	@Override
 	protected void doUpgrade(final @NotNull YamlFileManager oldLang)
 	{
-		if(oldLang.version().olderThan(new Version(10))) // Pre v2.0 versions
+		if(oldLang.getVersion().olderThan(new Version(10))) // Pre v2.0 versions
 		{
 			logger.warning("Upgrading from v1.x language files is not supported!");
 		}
@@ -78,6 +81,11 @@ public class Language extends at.pcgamingfreaks.Bukkit.Language
 
 	public @NotNull List<String> getTranslatedList(final @NotNull String key)
 	{
-		return getYamlE().getStringList("Language." + key, new ArrayList<>(0)).stream().map(this::translateColorCodes).collect(Collectors.toList());
+		return getLangE().getStringList("Language." + key, new ArrayList<>(0)).stream().map(Language::translateColorCodes).collect(Collectors.toList());
+	}
+
+	private static String translateColorCodes(final @NotNull String text)
+	{
+		return ChatColor.translateAlternateColorCodes('&', text);
 	}
 }

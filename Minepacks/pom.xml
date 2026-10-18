@@ -15,19 +15,11 @@
 	<url>https://www.spigotmc.org/resources/19286/</url>
 
 	<properties>
-		<author>GeorgH93</author>
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
-		<timestamp>${maven.build.timestamp}</timestamp>
-		<version>${project.version}-T${timestamp}</version>
 		<dependencies>PCGF_PluginLib</dependencies>
 		<soft-dependencies/>
 		<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</mainClass>
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
-		<mavenShade.version>3.3.0-SNAPSHOT</mavenShade.version>
-
-		<configFileVersion>36</configFileVersion>
-		<languageFileVersion>20</languageFileVersion>
 	</properties>
 
 	<pluginRepositories>
@@ -44,24 +36,22 @@
 			<artifactId>Minepacks-API-Extended</artifactId>
 			<version>${revision}</version>
 		</dependency>
-		<!-- PCGF Plugin Lib -->
-		<dependency>
-			<groupId>at.pcgamingfreaks.pcgf_pluginlib</groupId>
-			<artifactId>pcgf_pluginlib-plugin-bukkit</artifactId>
-			<version>${pcgfPluginLibVersion}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- BadRabbit -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
-			<artifactId>BadRabbit-Bukkit</artifactId>
-			<version>1.9</version>
+			<artifactId>Minepacks-MagicValues</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<!-- PCGF Plugin Lib -->
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>PluginLib</artifactId>
+			<version>${pcgfPluginLibVersion}</version>
 		</dependency>
 		<!-- Tests -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.6.0</version>
+			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -108,6 +98,7 @@
 								<includes>
 									<include>at.pcgamingfreaks:Minepacks-API</include>
 									<include>at.pcgamingfreaks:Minepacks-API-Extended</include>
+									<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 								</includes>
 							</artifactSet>
 						</configuration>
@@ -118,34 +109,6 @@
 	</build>
 
 	<profiles>
-		<profile>
-			<id>ExcludeBadRabbit</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>3.1.2</version>
-						<executions>
-							<execution>
-								<id>default-jar</id>
-								<phase>package</phase>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-								<configuration>
-									<excludes>
-										<exclude>at/pcgamingfreaks/Minepacks/Bukkit/MinepacksBadRabbit.class</exclude>
-									</excludes>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 		<profile>
 			<id>Standalone</id>
 			<activation>
@@ -187,6 +150,7 @@
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
 											<include>at.pcgamingfreaks:Minepacks-API-Extended</include>
+											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
 											<include>at.pcgamingfreaks:PluginLib</include>
 										</includes>
 									</artifactSet>
@@ -210,26 +174,31 @@
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone</shadedPattern>
 											<excludes>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.**</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.MagicValues</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.MagicValues</exclude>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.Permissions</exclude>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach</exclude>
 												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType</exclude>
-											</excludes>
+												</excludes>
 										</relocation>
 										<relocation>
 											<pattern>at.pcgamingfreaks</pattern>
 											<shadedPattern>at.pcgamingfreaks.MinepacksStandalone.libs.at.pcgamingfreaks</shadedPattern>
 											<excludes>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Callback</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksCommandManager</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.ItemFilter</exclude>
-												<exclude>at.pcgamingfreaks.Minepacks.Bukkit.API.Events.*</exclude>
+												<exclude>at.pcgamingfreaks.Minepacks.**</exclude>
 											</excludes>
 										</relocation>
 									</relocations>
+									<filters>
+										<filter>
+											<artifact>at.pcgamingfreaks:PluginLib</artifact>
+											<excludes>
+												<exclude>at/pcgamingfreaks/Bungee/**</exclude>
+												<exclude>at/pcgamingfreaks/PluginLib/**</exclude>
+												<exclude>PCGF_PluginLib.properties</exclude>
+												<exclude>update.yml</exclude>
+											</excludes>
+										</filter>
+									</filters>
 								</configuration>
 							</execution>
 						</executions>
@@ -263,7 +232,7 @@
 			<properties>
 				<version>${project.version}-Release</version>
 				<dependencies/>
-				<soft-dependencies>PCGF_PluginLib</soft-dependencies>
+				<soft-dependencies>, PCGF_PluginLib</soft-dependencies>
 				<mainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}BadRabbit</mainClass>
 				<releaseType>Release</releaseType>
 			</properties>
@@ -273,6 +242,16 @@
 					<artifactId>Minepacks</artifactId>
 					<version>${project.version}</version>
 					<classifier>Standalone</classifier>
+				</dependency>
+				<dependency>
+					<groupId>at.pcgamingfreaks</groupId>
+					<artifactId>Minepacks-BadRabbit-Bukkit</artifactId>
+					<version>${project.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>at.pcgamingfreaks</groupId>
+					<artifactId>Minepacks-Bootstrap-Paper</artifactId>
+					<version>${project.version}</version>
 				</dependency>
 			</dependencies>
 			<build>
@@ -296,7 +275,10 @@
 										<includes>
 											<include>at.pcgamingfreaks:Minepacks-API</include>
 											<include>at.pcgamingfreaks:Minepacks-API-Extended</include>
+											<include>at.pcgamingfreaks:Minepacks-MagicValues</include>
+											<include>at.pcgamingfreaks:Minepacks-Bootstrap-Paper</include>
 											<include>at.pcgamingfreaks:BadRabbit-Bukkit</include>
+											<include>at.pcgamingfreaks:Minepacks-BadRabbit-Bukkit</include>
 											<include>at.pcgamingfreaks:Minepacks</include>
 										</includes>
 									</artifactSet>
@@ -313,11 +295,21 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>license-maven-plugin</artifactId>
-						<version>1.20</version>
+						<version>2.6.0</version>
 						<configuration>
 							<excludedScopes>test,provided,system</excludedScopes>
 							<generateBundle>true</generateBundle>
 							<licensesOutputFile>${project.build.directory}/generated-resources/licenses-THIRD-PARTY.xml</licensesOutputFile>
+							<licenseUrlReplacements>
+								<licenseUrlReplacement>
+									<regexp>https?://(www\.)?opensource\.org/licenses/mit-license\.php</regexp>
+									<replacement>https://ci.pcgamingfreaks.at/download/mit.txt</replacement>
+								</licenseUrlReplacement>
+								<licenseUrlReplacement>
+									<regexp>https?://(www\.)?gnu\.org/licenses/gpl-3.0.txt</regexp>
+									<replacement>https://ci.pcgamingfreaks.at/download/gpl-3.0.txt</replacement>
+								</licenseUrlReplacement>
+							</licenseUrlReplacements>
 						</configuration>
 						<executions>
 							<execution>

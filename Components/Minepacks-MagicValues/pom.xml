@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>Minepacks-MagicValues</artifactId>
+	<parent>
+		<artifactId>Minepacks-Parent</artifactId>
+		<groupId>at.pcgamingfreaks</groupId>
+		<version>${revision}</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+	<version>${revision}</version>
+	<packaging>jar</packaging>
+
+	<name>Minepacks-MagicValues</name>
+	<description>Contains the magic values used by Minepacks.</description>
+
+	<build>
+		<defaultGoal>clean install</defaultGoal>
+		<resources>
+			<resource>
+				<directory>resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+</project>

@@ -16,6 +16,7 @@ Language:
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cPrašome neišesti kuprinės iš savo inventoriaus!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cTavo kuprinė susitraukė! Kai kurie daiktai nukrito ant žemės!"
     Open:
       #Nustatymai: {TimeLeft} laikas kada vėl bus galima atidaryti, {TimeSpanLeft} laikas formatuotas kuprinės atidarymui
       Cooldown: "[{\"text\":\"Prašome palaukti \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} s\"}},{\"text\":\" kol vėl galėsite naudoti kuprinę!\"}]"
@@ -60,6 +61,9 @@ Language:
       Cleared: "Inventorius išvalytas!"
       ClearedOther: "{DisplayName}&r išvalė inventorių!"
       ClearedOtherTarget: "Jūsų inventorių išvalė: {DisplayName}&r."
+    Pickup:
+      ToggleOn: "&7Automatinis daiktų rinkimas buvo &aĮJUNGTAS&7."
+      ToggleOff: "&7Automatinis daiktų rinkimas buvo &cIŠJUNGTAS&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -73,10 +77,12 @@ Language:
       Update: "Patikrins ar kuprinių sistema turi atnaujinimų"
       Version: "Parodys kuprinių sistemos esamą versijos aprašą"
       Backup: "Sukurs kuprinės įrašą archyve"
+      BackupEveryone: "Sukurs visų šiuo metu prisijungusių žaidėjų atsarginę kopiją."
       Restore: "Atsatys kuprinę pagal įrašą archyve"
       RestoreList: "parodys archyvo įrašus"
       Help: "Parodys visas galimas kuprinių sistemos komandas"
       Migrate: "Perkels duomenų bazės įrašus nauju formatu"
+      Pickup: "Perjungti automatinio rinkimo būseną, kai inventoriuje pilna."
 
 Command:
   Backpack:
@@ -109,10 +115,12 @@ Command:
     - clear
     - inventoryclear
     - clean
+  Pickup:
+    - pickup
 
 #Bus rodoma konsolėje starto metu!
 LanguageName: "lithuanian"
 Author: "Vyciokazz"
 
-# Language file version. Use UTF8 instead!
-Version: 18
+# Language file version. Don't touch it!
+Version: 21

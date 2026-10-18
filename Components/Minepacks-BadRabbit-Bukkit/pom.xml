@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>Minepacks-BadRabbit-Bukkit</artifactId>
+	<parent>
+		<artifactId>Minepacks-Parent</artifactId>
+		<groupId>at.pcgamingfreaks</groupId>
+		<version>${revision}</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+	<version>${revision}</version>
+	<packaging>jar</packaging>
+
+	<name>Minepacks-BadRabbit-Bukkit</name>
+	<description>BadRabbit loader for Minepacks.</description>
+	<url>https://www.spigotmc.org/resources/19286/</url>
+
+	<dependencies>
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>Minepacks-MagicValues</artifactId>
+			<version>${revision}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>at.pcgamingfreaks.pcgf_pluginlib</groupId>
+			<artifactId>pcgf_pluginlib-common</artifactId>
+			<version>${pcgfPluginLibVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- BadRabbit -->
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>BadRabbit-Bukkit</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<!-- Bukkit -->
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>${bukkitVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+</project>

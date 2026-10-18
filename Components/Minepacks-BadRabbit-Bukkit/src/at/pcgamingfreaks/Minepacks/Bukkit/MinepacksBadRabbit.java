@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,12 +12,13 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
 
 import at.pcgamingfreaks.BadRabbit.Bukkit.BadRabbit;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
 
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Uses BadRabbit to initiate the plugin in normal or standalone mode depending on the users environment.
+ * Uses BadRabbit to initiate the plugin in normal or standalone mode depending on the users' environment.
  */
 @SuppressWarnings("unused")
 public class MinepacksBadRabbit extends BadRabbit
@@ -34,8 +35,8 @@ public class MinepacksBadRabbit extends BadRabbit
 	@Override
 	protected @NotNull JavaPlugin createInstance() throws Exception
 	{
-		JavaPlugin newPluginInstance = null;
 		Plugin pcgfPluginLib = Bukkit.getPluginManager().getPlugin("PCGF_PluginLib");
+		boolean standalone = true;
 		if(pcgfPluginLib != null)
 		{
 			if(new Version(pcgfPluginLib.getDescription().getVersion()).olderThan(new Version(MagicValues.MIN_PCGF_PLUGIN_LIB_VERSION)))
@@ -45,18 +46,22 @@ public class MinepacksBadRabbit extends BadRabbit
 			else
 			{
 				getLogger().info("PCGF-PluginLib installed. Switching to normal mode!");
-				newPluginInstance = new Minepacks();
+				standalone = false;
 			}
 		}
 		else
 		{
 			getLogger().info("PCGF-PluginLib not installed. Switching to standalone mode!");
 		}
-		if(newPluginInstance == null)
+		if(standalone)
 		{
 			Class<?> standaloneClass = Class.forName("at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks");
-			newPluginInstance = (JavaPlugin) standaloneClass.newInstance();
+			return (JavaPlugin) standaloneClass.newInstance();
 		}
-		return newPluginInstance;
+		else
+		{
+			Class<?> normalClass = Class.forName("at.pcgamingfreaks.Minepacks.Bukkit.Minepacks");
+			return (JavaPlugin) normalClass.newInstance();
+		}
 	}
 }

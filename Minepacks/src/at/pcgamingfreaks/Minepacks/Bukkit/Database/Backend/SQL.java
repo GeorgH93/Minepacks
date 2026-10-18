@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -27,22 +27,19 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.BackupHandler;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-import at.pcgamingfreaks.UUIDConverter;
 import at.pcgamingfreaks.Utils;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import lombok.AllArgsConstructor;
-
 import java.sql.*;
 import java.util.*;
+import java.util.logging.Level;
 
 public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPlaceholdersHolder, ILoadableStringFieldsHolder
 {
@@ -125,64 +122,13 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 	protected void checkUUIDs()
 	{
-		@AllArgsConstructor
-		class UpdateData // Helper class for fixing UUIDs
-		{
-			String  uuid;
-			final int id;
-		}
 		try(Connection connection = getConnection())
 		{
-			Map<String, UpdateData> toConvert = new HashMap<>();
-			List<UpdateData> toUpdate = new ArrayList<>();
-			try(Statement stmt = connection.createStatement(); ResultSet res = stmt.executeQuery(queryGetUnsetOrInvalidUUIDs))
-			{
-				while(res.next())
-				{
-					if(res.isFirst())
-					{
-						plugin.getLogger().info(START_UUID_UPDATE);
-					}
-					String uuid = res.getString(fieldPlayerUUID);
-					if(uuid == null)
-					{
-						toConvert.put(res.getString(fieldPlayerName).toLowerCase(Locale.ROOT), new UpdateData(null, res.getInt(fieldPlayerID)));
-					}
-					else
-					{
-						uuid = (useUUIDSeparators) ? uuid.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5") : uuid.replaceAll("-", "");
-						toUpdate.add(new UpdateData(uuid, res.getInt(fieldPlayerID)));
-					}
-				}
-			}
-			if(toConvert.size() > 0 || toUpdate.size() > 0)
-			{
-				if(toConvert.size() > 0)
-				{
-					Map<String, String> newUUIDs = UUIDConverter.getUUIDsFromNames(toConvert.keySet(), onlineUUIDs, useUUIDSeparators);
-					for(Map.Entry<String, String> entry : newUUIDs.entrySet())
-					{
-						UpdateData updateData = toConvert.get(entry.getKey().toLowerCase(Locale.ROOT));
-						updateData.uuid = entry.getValue();
-						toUpdate.add(updateData);
-					}
-				}
-				try(PreparedStatement ps = connection.prepareStatement(queryFixUUIDs))
-				{
-					for(UpdateData updateData : toUpdate)
-					{
-						ps.setString(1, updateData.uuid);
-						ps.setInt(2, updateData.id);
-						ps.addBatch();
-					}
-					ps.executeBatch();
-				}
-				plugin.getLogger().info(String.format(UUIDS_UPDATED, toUpdate.size()));
-			}
+			DBTools.validateUUIDs(plugin.getLogger(), connection, tablePlayers, fieldPlayerName, fieldPlayerUUID, fieldPlayerID, useUUIDSeparators, onlineUUIDs);
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "Failed to check UUIDs! Error: {0}", e.getMessage());
 		}
 	}
 
@@ -226,7 +172,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 		updateQueriesForDialect();
 
-		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replaceAll("\\{VarMaxAge}", maxAge + "");
+		queryDeleteOldBackpacks = queryDeleteOldBackpacks.replace("{VarMaxAge}", maxAge + "");
 		replacePlaceholders();
 	}
 
@@ -236,12 +182,12 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	public @NotNull String replacePlaceholders(@NotNull @Language("SQL") String query)
 	{
 		query = query.replaceAll("(\\{\\w+})", "`$1`").replaceAll("`(\\{\\w+})`_(\\w+)", "`$1_$2`").replaceAll("fk_`(\\{\\w+})`_`(\\{\\w+})`_`(\\{\\w+})`", "`fk_$1_$2_$3`") // Fix name formatting
-				.replaceAll("\\{TablePlayers}", tablePlayers).replaceAll("\\{FieldName}", fieldPlayerName).replaceAll("\\{FieldUUID}", fieldPlayerUUID).replaceAll("\\{FieldPlayerID}", fieldPlayerID) // Players
-				.replaceAll("\\{TableBackpacks}", tableBackpacks).replaceAll("\\{FieldBPOwner}", fieldBpOwnerID).replaceAll("\\{FieldBPITS}", fieldBpItemStacks) // Backpacks
-				.replaceAll("\\{FieldBPVersion}", fieldBpVersion).replaceAll("\\{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
-				.replaceAll("\\{TableCooldowns}", tableCooldowns).replaceAll("\\{FieldCDPlayer}", fieldCdPlayerID).replaceAll("\\{FieldCDTime}", fieldCdTime) // Cooldowns
-				.replaceAll("\\{TableBackpackStyles}", tableBackpackStyles).replaceAll("\\{FieldBSStyleID}", fieldBsStyleID).replaceAll("\\{FieldBSStyleName}", fieldBsStyleName) // Backpack styles
-				.replaceAll("\\{TablePlayerSettings}", tablePlayerSettings).replaceAll("\\{FieldPSPlayerID}", fieldPsPlayerID).replaceAll("\\{FieldPSBackpackStyle}", fieldPsStyleID) // Player settings
+				.replace("{TablePlayers}", tablePlayers).replace("{FieldName}", fieldPlayerName).replace("{FieldUUID}", fieldPlayerUUID).replace("{FieldPlayerID}", fieldPlayerID) // Players
+				.replace("{TableBackpacks}", tableBackpacks).replace("{FieldBPOwner}", fieldBpOwnerID).replace("{FieldBPITS}", fieldBpItemStacks) // Backpacks
+				.replace("{FieldBPVersion}", fieldBpVersion).replace("{FieldBPLastUpdate}", fieldBpLastUpdate) // Backpacks
+				.replace("{TableCooldowns}", tableCooldowns).replace("{FieldCDPlayer}", fieldCdPlayerID).replace("{FieldCDTime}", fieldCdTime) // Cooldowns
+				.replace("{TableBackpackStyles}", tableBackpackStyles).replace("{FieldBSStyleID}", fieldBsStyleID).replace("{FieldBSStyleName}", fieldBsStyleName) // Backpack styles
+				.replace("{TablePlayerSettings}", tablePlayerSettings).replace("{FieldPSPlayerID}", fieldPsPlayerID).replace("{FieldPSBackpackStyle}", fieldPsStyleID) // Player settings
 		;
 		if(query.matches(".*\\{\\w+}.*")) plugin.getLogger().warning("Found unresolved placeholder in query:\n" + query);
 		return query;
@@ -249,7 +195,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 
 	protected void runStatementAsync(final @NotNull @Language("SQL") String query, final Object... args)
 	{
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> runStatement(query, args));
+		Minepacks.getScheduler().runAsync(task -> runStatement(query, args));
 	}
 
 	protected void runStatement(final @NotNull @Language("SQL") String query, final Object... args)
@@ -260,8 +206,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 		}
 		catch(SQLException e)
 		{
-			plugin.getLogger().severe("Query: " + query);
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, e, () -> "Query: " + query);
 		}
 	}
 
@@ -328,7 +273,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	@Override
 	public void loadPlayer(final @NotNull MinepacksPlayerData player)
 	{
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			try(Connection connection = getConnection())
 			{
 				for(int i = 0; i < 3; i++) // Try to load player 3 times
@@ -347,7 +292,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 								final long cd = cooldown;
 								final ItemConfig backpackItem = backpackStyleMap.get(rs.getInt(fieldPsStyleID));
 
-								plugin.getServer().getScheduler().runTask(plugin, () -> player.setLoaded(id, cd, backpackItem));
+								Minepacks.getScheduler().runNextTick(task1 -> player.setLoaded(id, cd, backpackItem));
 								return;
 							}
 						}
@@ -356,7 +301,7 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			}
 			catch(SQLException e)
 			{
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to load player from database! Error: {0}", e.getMessage());
 			}
 			plugin.getLogger().warning("Failed to get player id for player " + player.getName());
 		});
@@ -366,21 +311,35 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 	public void loadBackpack(final @NotNull MinepacksPlayerData player)
 	{
 		if(!player.isLoaded()) return;
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			try(Connection connection = getConnection(); PreparedStatement ps = connection.prepareStatement(queryGetBP))
 			{
 				ps.setInt(1, (int) player.getDatabaseKey());
 				try(ResultSet rs = ps.executeQuery())
 				{
-					ItemStack[] its = (rs.next()) ? itsSerializer.deserialize(rs.getBytes(fieldBpItemStacks), rs.getInt(fieldBpVersion)) : null;
-					final Backpack backpack = (its != null) ? new Backpack(player, its) : new Backpack(player);
-					plugin.getServer().getScheduler().runTask(plugin, () -> player.setBackpack(backpack));
+					final Backpack backpack;
+					if(rs.next())
+					{
+						final byte[] data = rs.getBytes(fieldBpItemStacks);
+						final int version = rs.getInt(fieldBpVersion);
+						ItemStack[] its = itsSerializer.deserialize(data, version);
+						if(its == null && data != null && data.length != 0)
+						{
+							plugin.getLogger().warning("Failed to load the backpack of " + player.getName() + " from the database! Writing a backup of the corrupted data.");
+							BackupHandler.getInstance().writeBackup(player.getName(), formatUUID(player.getUUID()), version, data);
+						}
+						backpack = (its != null) ? new Backpack(player, its) : new Backpack(player);
+					}
+					else
+					{
+						backpack = new Backpack(player);
+					}
+					Minepacks.getScheduler().runNextTick(task1 -> player.setBackpack(backpack));
 				}
 			}
 			catch(SQLException e)
 			{
-				plugin.getLogger().warning("Failed to load backpack from database for player " + player.getName() + "! Error: " + e.getMessage());
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to load backpack from database for player " + player.getName() + "! Error: {0}", e.getMessage());
 			}
 		});
 	}
@@ -407,12 +366,11 @@ public abstract class SQL extends DatabaseBackend implements IStringFieldsWithPl
 			}
 			catch(SQLException e)
 			{
-				plugin.getLogger().warning("Failed to save backpack in database for player " + name + "! Error: " + e.getMessage());
-				e.printStackTrace();
+				plugin.getLogger().log(Level.SEVERE, "Failed to save backpack in database for player " + name + "! Error: {0}", e.getMessage());
 				BackupHandler.getInstance().writeBackup(name, uuid, usedSerializer, data);
 			}
 		};
-		if(asyncSave) Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable); else runnable.run();
+		if(asyncSave) Minepacks.getScheduler().runAsync(task -> runnable.run()); else runnable.run();
 	}
 
 	@Override

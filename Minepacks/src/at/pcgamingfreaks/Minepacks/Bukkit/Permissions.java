@@ -12,10 +12,17 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit;
+
+import lombok.SneakyThrows;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Permissions
 {
@@ -25,6 +32,7 @@ public class Permissions
 	public static final String CLEAN = BASE + "clean";
 	public static final String CLEAN_OTHER = BASE + "clean.other";
 	public static final String FULL_PICKUP = BASE + "fullpickup";
+	public static final String PICKUP_TOGGLE = BASE + "fullpickup.toggle";
 	public static final String OTHERS = BASE + "others";
 	public static final String OTHERS_EDIT = BASE + "others.edit";
 	public static final String KEEP_ON_DEATH = BASE + "keepOnDeath";
@@ -42,4 +50,29 @@ public class Permissions
 
 	public static final String INVENTORY_CLEAR = "clearInventory";
 	public static final String INVENTORY_CLEAR_OTHER = "clearInventory.other";
+
+	@SneakyThrows
+	public static List<String> getPermissions()
+	{
+		Field[] fields = Permissions.class.getDeclaredFields();
+		List<String> permissions = new ArrayList<>(fields.length);
+		for(Field field : fields)
+		{
+			if (field.getType().equals(String.class) && Modifier.isStatic(field.getModifiers()))
+			{
+				String val = ((String) field.get(null));
+				if (!val.endsWith("."))
+				{
+					permissions.add(val);
+				}
+			}
+		}
+		for (int i = 1; i < 10; i++)
+		{
+			permissions.add("backpack.size." + i);
+		}
+		return permissions;
+	}
+
+	private Permissions() {}
 }

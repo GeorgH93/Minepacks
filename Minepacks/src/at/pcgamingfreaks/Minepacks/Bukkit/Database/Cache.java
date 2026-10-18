@@ -20,6 +20,8 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 import at.pcgamingfreaks.Database.Cache.ICacheablePlayer;
 import at.pcgamingfreaks.Database.Cache.IPlayerCache;
 
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,8 +33,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Cache implements IPlayerCache
 {
 	private final Map<UUID, MinepacksPlayerData> players = new ConcurrentHashMap<>();
+	private final boolean forceSaveOnUnload;
 
-	public Cache() {}
+	public Cache(final boolean forceSaveOnUnload)
+	{
+		this.forceSaveOnUnload = forceSaveOnUnload;
+	}
 
 	public void close()
 	{
@@ -52,6 +58,15 @@ public class Cache implements IPlayerCache
 	@Override
 	public void unCache(final @NotNull ICacheablePlayer player)
 	{
+		if(player instanceof MinepacksPlayerData)
+		{
+			Backpack backpack = ((MinepacksPlayerData) player).getBackpack();
+			if(backpack != null)
+			{
+				if(forceSaveOnUnload) backpack.forceSave();
+				else backpack.save();
+			}
+		}
 		players.remove(player.getUUID());
 	}
 

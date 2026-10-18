@@ -21,6 +21,8 @@ import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.ManagedUpdater;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
+import at.pcgamingfreaks.Bukkit.Config.PermissionLoader;
+import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
 import at.pcgamingfreaks.ConsoleColor;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.BackpackMultiPage;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Callback;
@@ -34,13 +36,19 @@ import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommandManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlugin;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.*;
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholder.PlaceholderManager;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoDatabaseWorker;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.NoUpgradesFromV1;
 import at.pcgamingfreaks.Minepacks.Bukkit.SpecialInfoWorker.WelcomeToV3;
+import at.pcgamingfreaks.Plugin.IPlugin;
+import at.pcgamingfreaks.ServerType;
 import at.pcgamingfreaks.StringUtils;
 import at.pcgamingfreaks.Updater.UpdateResponseCallback;
 import at.pcgamingfreaks.Version;
+import at.pcgf.libs.com.tcoded.folialib.FoliaLib;
+import at.pcgf.libs.com.tcoded.folialib.impl.PlatformScheduler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -60,9 +68,10 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Set;
 
-public class Minepacks extends JavaPlugin implements MinepacksPlugin
+public class Minepacks extends JavaPlugin implements MinepacksPlugin, IPlugin
 {
 	@Getter private static Minepacks instance = null;
+	@Getter private static FoliaLib foliaLib = null;
 
 	private ManagedUpdater updater = null;
 	@Getter private Config configuration;
@@ -70,7 +79,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Getter private Language language;
 	@Getter private Database database;
 
-	public Message messageNoPermission, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
+	public Message messageNoPermission, messageInvalidBackpack, messageWorldDisabled, messageNotFromConsole, messageNotANumber;
 
 	private int maxSize;
 	@Getter private Set<String> worldBlacklist;
@@ -83,6 +92,7 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	@Getter private ItemFilter itemFilter = null;
 	private Sound openSound = null;
 	private ItemShortcut shortcut = null;
+	@Getter private PlaceholderManager placeholderManager = null;
 
 	@Override
 	public boolean isRunningInStandaloneMode()
@@ -99,8 +109,14 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		if(!checkPCGF_PluginLib()) return;
 
+		if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_19_3) && ServerType.isPaperCompatible())
+		{
+			PermissionLoader.loadPermissionsFromPlugin(this);
+		}
+
 		updater = new ManagedUpdater(this);
 		instance = this;
+		foliaLib = new FoliaLib(this);
 		try
 		{
 			configuration = new Config(this);
@@ -128,7 +144,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 
 	private boolean checkMcVersion()
 	{
-		if(MCVersion.is(MCVersion.UNKNOWN) || MCVersion.isOlderThan(MCVersion.MC_1_8) || MCVersion.isNewerThan(MCVersion.MC_NMS_1_17_R1))
+		if (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_19_3) && ServerType.isPaperCompatible())
+		{
+			getLogger().warning("Paper support is experimental! Use at your own risk!");
+			getLogger().warning("No guarantee for data integrity! Backup constantly!");
+		}
+		// DO NOT REMOVE THIS! This is protecting your data! To add support for a new version, update PCGF PluginLib and then update the last version check!
+		if (MCVersion.is(MCVersion.UNKNOWN) || !MCVersion.isUUIDsSupportAvailable() || MCVersion.isNewerThan(MCVersion.MC_NMS_26_3_R1))
 		{
 			getLogger().warning(ConsoleColor.RED + "################################" + ConsoleColor.RESET);
 			getLogger().warning(ConsoleColor.RED + String.format("Your server version (%1$s) is currently not compatible with your current version (%2$s) of the plugin. " +
@@ -191,18 +213,21 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		maxSize = configuration.getBackpackMaxSize();
 		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setShrinkApproach(configuration.getShrinkApproach());
-		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setTitle(new Message(configuration.getBPTitle()), new Message(configuration.getBPTitleOther()));
-		messageNotFromConsole = language.getMessage("NotFromConsole");
-		messageNoPermission   = language.getMessage("Ingame.NoPermission");
-		messageWorldDisabled  = language.getMessage("Ingame.WorldDisabled");
-		messageNotANumber     = language.getMessage("Ingame.NaN");
+		final String bpTitle = configuration.getBPTitle(), bpTitleOther = configuration.getBPTitleOther();
+		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setTitle(new Message(bpTitle), new Message(bpTitleOther), configuration.useDynamicBPTitle() && bpTitle.contains("%s"));
+		at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack.setMessageBackpackShrunk(language.getMessage("Ingame.BackpackShrunk"));
+		messageNotFromConsole  = language.getMessage("NotFromConsole");
+		messageNoPermission    = language.getMessage("Ingame.NoPermission");
+		messageInvalidBackpack = language.getMessage("Ingame.InvalidBackpack");
+		messageWorldDisabled   = language.getMessage("Ingame.WorldDisabled");
+		messageNotANumber      = language.getMessage("Ingame.NaN");
 
 		commandManager = new CommandManager(this);
 		if(configuration.isInventoryManagementClearCommandEnabled()) inventoryClearCommand = new InventoryClearCommand(this);
 
 		registerEvents();
 
-		if(configuration.isItemCollectorEnabled()) collector = new ItemsCollector(this);
+		if(configuration.isItemCollectorEnabled() || configuration.getFullInvCollect() || configuration.isFullInvToggleAllowed()) collector = new ItemsCollector(this);
 		worldBlacklist = configuration.getWorldBlacklist();
 		worldBlacklistMode = (worldBlacklist.size() == 0) ? WorldBlacklistMode.None : configuration.getWorldBlockMode();
 
@@ -245,6 +270,8 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 		}
 		if(configuration.isUpdatedToV3()) pluginManager.registerEvents(new WelcomeToV3(this), this);
 		pluginManager.registerEvents(new BackpackControls(this), this);
+
+		placeholderManager = new PlaceholderManager(this);
 	}
 
 	private void unload()
@@ -254,13 +281,18 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			inventoryClearCommand.close();
 			inventoryClearCommand = null;
 		}
+		if (placeholderManager != null)
+		{
+			placeholderManager.close();
+			placeholderManager = null;
+		}
 		if(collector != null) collector.close();
 		commandManager.close();
 		if(collector != null) collector.cancel();
 		if(database != null) database.close(); // Close the DB connection, we won't need them any longer
 		HandlerList.unregisterAll(this); // Stop the listeners
 		cooldownManager = null;
-		getServer().getScheduler().cancelTasks(this); // Kill all running task
+		getScheduler().cancelAllTasks(); // Kill all running task
 		itemFilter = null;
 	}
 
@@ -283,6 +315,17 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	{
 		owner.getBackpack(backpack -> openBackpack(opener, backpack, editable, page, title));
 	}
+	public void openBackpack(final @NotNull Player opener, @Nullable final Backpack backpack, final boolean editable)
+	{
+		openBackpack(opener, backpack, editable, 0, null);
+	}
+
+	@Override
+	public void openBackpack(final @NotNull Player opener, final @NotNull OfflinePlayer owner, final boolean editable, final @Nullable String title)
+	{
+		getMinepacksPlayer(owner).getBackpack(backpack -> openBackpack(opener, backpack, editable, 0, title));
+	}
+
 
 	@Override
 	public void openBackpack(final @NotNull Player opener, final @NotNull at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack backpack, final boolean editable, int page, final @Nullable String title)
@@ -297,8 +340,13 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 			}
 			return;
 		}
+		if(backpack == null)
+		{
+			messageInvalidBackpack.send(opener);
+			return;
+		}
 		//noinspection ObjectEquality
-		if(opener.getOpenInventory().getTopInventory().getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
+		if(InventoryUtils.getPlayerTopInventory(opener).getHolder() == backpack) return; // == is fine as there is only one instance of each backpack
 		if(openSound != null)
 		{
 			opener.playSound(opener.getEyeLocation(), openSound, 1, 0);
@@ -390,5 +438,15 @@ public class Minepacks extends JavaPlugin implements MinepacksPlugin
 	public @NotNull Version getVersion()
 	{
 		return new Version(getDescription().getVersion());
+	}
+
+	public ItemsCollector getItemsCollector()
+	{
+		return collector;
+	}
+
+	public static PlatformScheduler getScheduler()
+	{
+		return foliaLib.getScheduler();
 	}
 }

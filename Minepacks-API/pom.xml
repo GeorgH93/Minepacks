@@ -13,6 +13,15 @@
 	<name>Minepacks-API</name>
 	<description>API for the Bukkit/Spigot plugin Minepacks.</description>
 
+	<dependencies>
+		<dependency>
+			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>PluginLib</artifactId>
+			<version>${pcgfPluginLibVersion}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<defaultGoal>clean install</defaultGoal>
 		<plugins>

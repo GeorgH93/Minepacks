@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2025 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -100,6 +99,16 @@ public class ItemShortcut extends MinepacksListener
 	}
 
 	@Contract("null,_->false")
+	public boolean isItemShortcut(final @Nullable ItemStack stack)
+	{
+		if(stack == null) return false;
+		for(ItemConfig itemConfig : plugin.getBackpacksConfig().getBackpackItems())
+		{
+			if(isItemShortcut(stack, itemConfig)) return true;
+		}
+		return false;
+	}
+
 	public boolean isItemShortcut(final @Nullable ItemStack stack, final @NotNull ItemConfig itemConfig)
 	{
 		if(stack == null || !stack.hasItemMeta()) return false;
@@ -146,6 +155,29 @@ public class ItemShortcut extends MinepacksListener
 			}
 			player.getInventory().addItem(itemConfig.make(1));
 		}
+		else
+		{
+			for(ItemStack itemStack : player.getInventory())
+			{
+				if(isItemShortcut(itemStack))
+				{
+					player.getInventory().remove(itemStack);
+					return;
+				}
+			}
+		}
+	}
+
+	private void removeItem(Player player)
+	{
+		for(ItemStack itemStack : player.getInventory())
+		{
+			if(isItemShortcut(itemStack))
+			{
+				itemStack.setAmount(0);
+				return;
+			}
+		}
 	}
 
 	//region Add backpack item
@@ -153,21 +185,28 @@ public class ItemShortcut extends MinepacksListener
 	public void onJoin(MinepacksPlayerJoinEvent event)
 	{
 		if(plugin.isDisabled(event.getBukkitPlayer()) != WorldBlacklistMode.None || !event.getBukkitPlayer().hasPermission(Permissions.USE)) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem((MinepacksPlayerData) event.getPlayer(), event.getBukkitPlayer()), 2L);
+		Minepacks.getScheduler().runLater(() -> Minepacks.getScheduler().runAtEntity(event.getBukkitPlayer(), task -> addItem((MinepacksPlayerData) event.getPlayer(), event.getBukkitPlayer())), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onSpawn(PlayerRespawnEvent event)
 	{
 		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		Minepacks.getScheduler().runAtEntityLater(event.getPlayer(), task -> addItem(event.getPlayer()), 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onWorldChange(PlayerChangedWorldEvent event)
+	public void onWorldChange(final PlayerChangedWorldEvent event)
 	{
-		if(plugin.isDisabled(event.getPlayer()) != WorldBlacklistMode.None) return;
-		Bukkit.getScheduler().runTaskLater(plugin, () -> addItem(event.getPlayer()), 2L);
+		Player player = event.getPlayer();
+
+		Minepacks.getScheduler().runAtEntityLater(player, () -> {
+				if(!player.isOnline()) return;
+				if(player.hasPermission(Permissions.USE) && plugin.isDisabled(player) == WorldBlacklistMode.None)
+					addItem(player);
+				else
+					removeItem(player);
+			}, 2L);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -304,7 +343,7 @@ public class ItemShortcut extends MinepacksListener
 				}
 				else if(event.getClick() == ClickType.RIGHT || event.getClick() == ClickType.SHIFT_RIGHT)
 				{
-					plugin.getServer().getScheduler().runTask(plugin, () -> { player.performCommand(openCommand); });
+					Minepacks.getScheduler().runAtEntity(player, task -> player.performCommand(openCommand));
 					event.setCancelled(true);
 				}
 				else if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)

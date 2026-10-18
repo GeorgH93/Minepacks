@@ -19,7 +19,7 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Database.Backend;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.InventorySerializer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
 import org.bukkit.inventory.ItemStack;

@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,21 +12,24 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package at.pcgamingfreaks.Minepacks.Bukkit;
+package at.pcgamingfreaks.Minepacks;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.util.Properties;
 
 public class MagicValues
 {
+	public static final int LANG_VERSION;
+	public static final int CONFIG_VERSION;
 	public static final String BACKPACK_STYLE_NAME_DEFAULT = "default";
 	public static final String BACKPACK_STYLE_NAME_DISABLED = "none";
 	public static final String MIN_PCGF_PLUGIN_LIB_VERSION;
-	public static final String LANG_VERSION;
-	public static final String CONFIG_VERSION;
+	public static final String MIN_MC_VERSION_FOR_UPDATES = "1.8";
 
 	static
 	{
@@ -45,10 +48,23 @@ public class MagicValues
 		{
 			e.printStackTrace();
 		}
-
 		MIN_PCGF_PLUGIN_LIB_VERSION = pcgfPluginLibVersion;
-		LANG_VERSION = langVersion;
-		CONFIG_VERSION = configVersion;
+		// Try to parse the version strings, fall back to a known min version
+		LANG_VERSION = tryParse(langVersion, 20);
+		CONFIG_VERSION = tryParse(configVersion, 33);
+	}
+
+	private static int tryParse(@NotNull String string, int fallbackValue)
+	{
+		try
+		{
+			return Integer.parseInt(string);
+		}
+		catch (NumberFormatException ignored)
+		{
+			System.out.println("Failed to parse integer '" + string + "'! Falling back to: " + fallbackValue);
+		}
+		return fallbackValue;
 	}
 
 	private MagicValues() { /* You should not create an instance of this utility class! */ }

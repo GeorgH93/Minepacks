@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,16 +12,18 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Message.Placeholder.Processors.GameModePlaceholderProcessor;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
 import at.pcgamingfreaks.Calendar.TimeSpan;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
+import at.pcgamingfreaks.Message.Placeholder.Processors.FloatPlaceholderProcessor;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
@@ -29,7 +31,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,40 +38,33 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class OpenCommand extends MinepacksCommand
 {
 	private final Message messageCooldown, messageWrongGameMode;
-	private final String allowedGameModes, descriptionOpenOthers, helpParamPlayerName, helpParamPage;
+	private final String descriptionOpenOthers, helpParamPlayerName, helpParamPage;
 	private final Minepacks plugin;
 
 	public OpenCommand(final @NotNull Minepacks plugin)
 	{
-		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, true, plugin.getLanguage().getCommandAliases("Open"));
+		super(plugin, "open", plugin.getLanguage().getTranslated("Commands.Description.Backpack"), Permissions.USE, false, plugin.getLanguage().getCommandAliases("Open"));
 		this.plugin = plugin;
 
-		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").replaceAll("\\{TimeLeft}", "%1\\$.1f").replaceAll("\\{TimeSpanLeft}", "%2\\$s");
-		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").replaceAll("\\{CurrentGameMode}", "%1\\$s").replaceAll("\\{AllowedGameModes}", "%1\\$s");
+		messageCooldown       = plugin.getLanguage().getMessage("Ingame.Open.Cooldown").placeholder("TimeLeft", new FloatPlaceholderProcessor(1)).placeholder("TimeSpanLeft");
+		messageWrongGameMode  = plugin.getLanguage().getMessage("Ingame.Open.WrongGameMode").staticPlaceholder("AllowedGameModes", new GameModePlaceholderProcessor(), plugin.getConfiguration().getAllowedGameModes()).placeholder("CurrentGameMode", new GameModePlaceholderProcessor());
 		descriptionOpenOthers = plugin.getLanguage().getTranslated("Commands.Description.OpenOthers");
 		helpParamPlayerName   = "<" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ">";
 		helpParamPage         = "<" + plugin.getLanguage().get("Commands.PageVariable") + ">";
-
-		StringBuilder allowedGameModesBuilder = new StringBuilder();
-		for(GameMode gameMode : plugin.getConfiguration().getAllowedGameModes())
-		{
-			if(allowedGameModesBuilder.length() > 1)
-			{
-				allowedGameModesBuilder.append(", ");
-			}
-			allowedGameModesBuilder.append(gameMode.name().toLowerCase(Locale.ROOT));
-		}
-		allowedGameModes = allowedGameModesBuilder.toString(); //TODO translate
 	}
 
 	@Override
 	public void execute(final @NotNull CommandSender sender, final @NotNull String main, final @NotNull String alias, final @NotNull String[] args)
 	{
+		if (!(sender instanceof Player))
+		{
+			handleOpenFromConsole(sender, args);
+			return;
+		}
 		Player player = (Player) sender;
 		int page = 0;
 		OfflinePlayer target = player;
@@ -136,20 +130,40 @@ public class OpenCommand extends MinepacksCommand
 			}
 			else
 			{
-				messageWrongGameMode.send(player, player.getGameMode().name().toLowerCase(Locale.ENGLISH), allowedGameModes); //TODO translate gamemode
+				messageWrongGameMode.send(player, player.getGameMode());
 			}
 		}
 		else
 		{
 			if(player.hasPermission(Permissions.OTHERS))
 			{
-				plugin.openBackpack((Player) sender, plugin.getMinepacksPlayer(target), player.hasPermission(Permissions.OTHERS_EDIT), page, null);
+				plugin.openBackpack(player, plugin.getMinepacksPlayer(target), player.hasPermission(Permissions.OTHERS_EDIT), page, null);
 			}
 			else
 			{
 				plugin.messageNoPermission.send(player);
 			}
 		}
+	}
+
+	void handleOpenFromConsole(final @NotNull CommandSender sender, final @NotNull String[] names)
+	{
+		int opened = 0;
+		List<String> notOnline = new ArrayList<>(names.length);
+		for(String name : names)
+		{
+			Player target = Bukkit.getPlayer(name);
+			if (target == null)
+			{
+				notOnline.add(name);
+			}
+			else if (target.hasPermission(Permissions.USE))
+			{
+				opened++;
+				plugin.openBackpack(target, plugin.getMinepacksPlayer(target), true, 0, null);
+			}
+		}
+		sender.sendMessage("Opened backpack of " + opened + " players." + (notOnline.isEmpty() ? "" : " Not online: " + String.join(", ", notOnline)));
 	}
 
 	@Override

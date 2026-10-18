@@ -44,21 +44,24 @@ import org.jetbrains.annotations.Nullable;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public final class Database implements Listener
 {
 	public static final String MESSAGE_UNKNOWN_DB_TYPE = ConsoleColor.RED + "Unknown database type \"%s\"!" + ConsoleColor.RESET;
 
-	private final boolean bungeeCordMode, syncCooldown;
+	private final boolean bungeeCordMode, syncCooldown, forceSaveOnUnload;
 	private final BackupHandler backupHandler;
 	@Getter private final DatabaseBackend backend;
-	private final Cache cache = new Cache();
+	private final Cache cache;
 	private final BaseUnCacheStrategy unCacheStrategy;
 
 	public Database(final @NotNull Minepacks plugin)
 	{
 		bungeeCordMode = plugin.getConfiguration().isBungeeCordModeEnabled();
+		forceSaveOnUnload = plugin.getConfiguration().isForceSaveOnUnloadEnabled();
+		cache = new Cache(forceSaveOnUnload);
 		syncCooldown = plugin.getConfiguration().isCommandCooldownSyncEnabled();
 		unCacheStrategy = UnCacheStrategyMaker.make(plugin, cache, plugin.getConfiguration());
 		backupHandler = new BackupHandler(plugin);
@@ -123,8 +126,7 @@ public final class Database implements Listener
 		catch(IllegalStateException ignored) {}
 		catch(Exception e)
 		{
-			plugin.getLogger().severe("Failed to create database backend!");
-			e.printStackTrace();
+			plugin.getLogger().log(Level.SEVERE, "Failed to create database backend!", e);
 		}
 		return null;
 	}

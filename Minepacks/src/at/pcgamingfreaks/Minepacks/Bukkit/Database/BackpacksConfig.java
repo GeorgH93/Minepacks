@@ -17,19 +17,20 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.Config.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.BackpackType;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonAction;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ButtonConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.GUI.ControlPosition;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Utils;
 import at.pcgamingfreaks.Version;
-import at.pcgamingfreaks.YamlFileManager;
-import at.pcgamingfreaks.YamlFileUpdateMethod;
+import at.pcgamingfreaks.Config.YamlFileManager;
+import at.pcgamingfreaks.Config.IConfig;
+import at.pcgamingfreaks.Config.YamlFileUpdateMethod;
 import at.pcgamingfreaks.yaml.YAML;
 import at.pcgamingfreaks.yaml.YamlKeyNotFoundException;
 
@@ -43,7 +44,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BackpacksConfig extends Configuration
+public class BackpacksConfig extends Configuration implements IConfig
 {
 	private static final int CONFIG_VERSION = 1;
 	private static final Pattern ITEM_TEXT_PLACEHOLDER_PATTERN = Pattern.compile("\\{(?<placeholder>[\\w_-]+)}");
@@ -68,6 +69,12 @@ public class BackpacksConfig extends Configuration
 		super(plugin, new Version(CONFIG_VERSION), "backpacks.yml");
 		this.plugin = plugin;
 		instance = this;
+	}
+
+	@Override
+	public java.util.logging.Logger getLogger()
+	{
+		return plugin.getLogger();
 	}
 
 	@Override

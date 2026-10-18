@@ -17,7 +17,7 @@
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database;
 
-import at.pcgamingfreaks.Bukkit.Configuration;
+import at.pcgamingfreaks.Config.Configuration;
 import at.pcgamingfreaks.Bukkit.MCVersion;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Bukkit.Util.Utils;
@@ -27,15 +27,15 @@ import at.pcgamingfreaks.Database.Cache.IUnCacheStrategyConfig;
 import at.pcgamingfreaks.Database.Cache.UnCacheStrategy;
 import at.pcgamingfreaks.Database.DatabaseConnectionConfiguration;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.WorldBlacklistMode;
+import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.ShrinkApproach;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Version;
-import at.pcgamingfreaks.YamlFileManager;
-import at.pcgamingfreaks.YamlFileUpdateMethod;
+import at.pcgamingfreaks.Config.YamlFileManager;
+import at.pcgamingfreaks.Config.YamlFileUpdateMethod;
 
 import org.bukkit.*;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,9 +52,12 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	@Getter private boolean updatedToV3 = false;
 
-	public Config(final @NotNull JavaPlugin plugin)
+	private final Minepacks plugin;
+
+	public Config(final @NotNull Minepacks plugin)
 	{
 		super(plugin, new Version(MagicValues.CONFIG_VERSION));
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -78,22 +81,22 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	@Override
 	protected void doUpgrade(@NotNull YamlFileManager oldConfig)
 	{
-		if(oldConfig.version().olderThan(new Version(PRE_V2_VERSION))) // Pre V2.0 config file
+		if(oldConfig.getVersion().olderThan(new Version(PRE_V2_VERSION))) // Pre V2.0 config file
 		{
 			throw new IllegalStateException("Upgrading from Minepacks v1.x is not supported!");
 		}
 		else
 		{
 			Map<String, String> remappedKeys = new HashMap<>();
-			if(oldConfig.version().olderOrEqualThan(new Version(23))) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
-			if(oldConfig.version().olderOrEqualThan(new Version(28))) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
-			if(oldConfig.version().olderOrEqualThan(new Version(30)))
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(23))) remappedKeys.put("ItemFilter.Materials", "ItemFilter.Blacklist");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(28))) remappedKeys.put("Misc.AutoUpdate.Enabled", "Misc.AutoUpdate");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(30)))
 			{
 				remappedKeys.put("WorldSettings.FilteredWorlds", "WorldSettings.Blacklist");
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
 			}
-			if(oldConfig.version().olderOrEqualThan(new Version(34))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
-			if(oldConfig.version().olderOrEqualThan(new Version(35)))
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(34))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(35)))
 			{
 				remappedKeys.put("Database.Tables.User", "Database.Tables.Player");
 				remappedKeys.put("Database.Tables.Fields.User.PlayerID", "Database.Tables.Fields.User.Player_ID");
@@ -102,12 +105,13 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				remappedKeys.put("ItemCollector.Enabled", "FullInventory.CollectItems");
 				remappedKeys.put("ItemCollector.CheckInterval", "FullInventory.CheckInterval");
 				remappedKeys.put("ItemCollector.CollectRadius", "FullInventory.CollectRadius");
+			remappedKeys.put("ItemCollector.WarnIfFull", "FullInventory.WarnIfFull");
 			}
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			//keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
 		}
-		if(oldConfig.version().olderThan(new Version(PRE_V3_VERSION))) updatedToV3 = true;
+		if(oldConfig.getVersion().olderThan(new Version(PRE_V3_VERSION))) updatedToV3 = true;
 	}
 
 	//region getter
@@ -157,6 +161,12 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 		{
 			if(isBungeeCordModeEnabled())
 			{
+				Boolean detectedOnlineMode = Utils.getBungeeOrVelocityOnlineMode();
+				if(detectedOnlineMode != null)
+				{
+					logger.log(Level.INFO, "Detected online mode in paper config: {0}", detectedOnlineMode);
+					return detectedOnlineMode;
+				}
 				logger.warning("When using BungeeCord please make sure to set the UUID_Type config option explicitly!");
 			}
 			return plugin.getServer().getOnlineMode();
@@ -177,7 +187,17 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 
 	public String getBPTitle()
 	{
-		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack"));
+		return ChatColor.translateAlternateColorCodes('&', getConfigE().getString("BackpackTitle", "Backpack").replace("%", "%%").replace("{OwnerName}", "%s"));
+	}
+
+	public boolean useDynamicBPTitle()
+	{
+		return getConfigE().getBoolean("Database.UseDynamicTitle", true);
+	}
+
+	public boolean isForceSaveOnUnloadEnabled()
+	{
+		return getConfigE().getBoolean("Database.ForceSaveOnUnload", false);
 	}
 
 	public boolean getDropOnDeath()
@@ -312,22 +332,47 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 	//region Full inventory handling
 	public boolean isItemCollectorEnabled()
 	{
-		return getConfigE().getBoolean("ItemCollector.Enabled", false);
+		return getFullInvCollect();
+	}
+
+	public boolean getFullInvCollect()
+	{
+		return getConfigE().getBoolean("FullInventory.CollectItems", false);
+	}
+
+	public boolean isFullInvToggleAllowed()
+	{
+		return getConfigE().getBoolean("FullInventory.IsToggleAllowed", false);
+	}
+
+	public boolean isFullInvEnabledOnJoin()
+	{
+		return getFullInvCollect();
 	}
 
 	public long getItemCollectorCheckInterval()
 	{
-		return getConfigE().getInt("ItemCollector.CheckInterval", 1) * 20L; // in seconds
+		return getFullInvCheckInterval();
+	}
+
+	public long getFullInvCheckInterval()
+	{
+		return getConfigE().getInt("FullInventory.CheckInterval", 1) * 20L; // in seconds
 	}
 
 	public double getItemCollectorRadius()
 	{
-		return getConfigE().getDouble("ItemCollector.CollectRadius", 1.5); // in blocks
+		return getFullInvRadius();
+	}
+
+	public double getFullInvRadius()
+	{
+		return getConfigE().getDouble("FullInventory.CollectRadius", 1.5); // in blocks
 	}
 
 	public boolean isItemCollectorWarnIfFullEnabled()
 	{
-		return getConfigE().getBoolean("ItemCollector.WarnIfFull", true);
+		return getConfigE().getBoolean("FullInventory.WarnIfFull", true);
 	}
 	//endregion
 

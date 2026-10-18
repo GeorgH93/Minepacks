@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -20,10 +20,12 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Command;
 import at.pcgamingfreaks.Bukkit.Message.Message;
 import at.pcgamingfreaks.Command.HelpData;
 import at.pcgamingfreaks.Message.MessageClickEvent;
+import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
-import at.pcgamingfreaks.StringUtils;
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
+import at.pcgamingfreaks.Util.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
 
 public class RestoreCommand extends MinepacksCommand
 {
@@ -47,17 +50,29 @@ public class RestoreCommand extends MinepacksCommand
 	{
 		super(plugin, "restore", plugin.getLanguage().getTranslated("Commands.Description.Restore"), Permissions.RESTORE, plugin.getLanguage().getCommandAliases("Restore"));
 		helpParam = "<" + plugin.getLanguage().get("Ingame.Restore.ParameterBackupName") + "> (" + plugin.getLanguage().get("Commands.PlayerNameVariable") + ")";
-		messageBackupsHeader = plugin.getLanguage().getMessage("Ingame.Restore.Headline").replaceAll("\\{CurrentPage}", "%1\\$d").replaceAll("\\{MaxPage}", "%2\\$d").replaceAll("\\{MainCommand}", "%3\\$s").replaceAll("\\{SubCommand}", "%4\\$s");
-		messageBackupsFooter = plugin.getLanguage().getMessage("Ingame.Restore.Footer").replaceAll("\\{CurrentPage}", "%1\\$d").replaceAll("\\{MaxPage}", "%2\\$d").replaceAll("\\{MainCommand}", "%3\\$s").replaceAll("\\{SubCommand}", "%4\\$s");
-		messageBackupEntry = plugin.getLanguage().getMessage("Ingame.Restore.BackupEntry").replaceAll("\\{BackupIdentifier}", "%1\\$s").replaceAll("\\{BackupDate}", "%2\\$s")
-				.replaceAll("\\{BackupPlayerName}", "%3\\$s").replaceAll("\\{BackupPlayerUUID}", "%4\\$s").replaceAll("\\{MainCommand}", "%5\\$s").replaceAll("\\{SubCommand}", "%6\\$s");
-		messageUnableToLoadBackup = plugin.getLanguage().getMessage("Ingame.Restore.NoValidBackup").replaceAll("\\{BackupIdentifier}", "%1\\$s");
+		messageBackupsHeader = plugin.getLanguage().getMessage("Ingame.Restore.Headline").placeholders(Placeholders.PAGE_OPTIONS);
+		messageBackupsFooter = plugin.getLanguage().getMessage("Ingame.Restore.Footer").placeholders(Placeholders.PAGE_OPTIONS);
+		messageBackupEntry = plugin.getLanguage().getMessage("Ingame.Restore.BackupEntry").placeholder("BackupIdentifier").placeholder("BackupDate")
+				.placeholder("BackupPlayerName").placeholder("BackupPlayerUUID").placeholder("MainCommand").placeholder("SubCommand");
+		messageUnableToLoadBackup = plugin.getLanguage().getMessage("Ingame.Restore.NoValidBackup").placeholder("BackupIdentifier");
 		messageNoUserFound = plugin.getLanguage().getMessage("Ingame.Restore.NoUserToRestoreToFound");
 		messageRestored = plugin.getLanguage().getMessage("Ingame.Restore.Restored");
 		listCommands = plugin.getLanguage().getCommandAliases("ListBackups", "list");
 		//noinspection ConstantConditions
 		elementsPerPage = plugin.getLanguage().getYaml().getInt("Ingame.Restore.BackupsPerPage", 10);
-		dateFormat = (plugin.getLanguage().get("Ingame.Restore.BackupEntry").contains("{BackupDate}")) ? new SimpleDateFormat(plugin.getLanguage().get("Ingame.Restore.DateFormat")) : null;
+
+		SimpleDateFormat sdf = null;
+		if (plugin.getLanguage().get("Ingame.Restore.BackupEntry").contains("{BackupDate}"))
+		{
+			String formatString = plugin.getLanguage().get("Ingame.Restore.DateFormat");
+			try {
+				sdf = new SimpleDateFormat(formatString);
+			} catch(IllegalArgumentException e) {
+				plugin.getLogger().log(Level.SEVERE, "Failed to create date formatter from format string: " + formatString, e);
+				sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // Fallback
+			}
+		}
+		dateFormat = sdf;
 	}
 
 	@Override
@@ -114,6 +129,11 @@ public class RestoreCommand extends MinepacksCommand
 				return;
 			}
 			getMinepacksPlugin().getBackpack(target, backpack -> {
+				if (backpack.getSize() != items.length)
+				{
+					backpack.clear();
+					((Backpack) backpack).setSize(items.length);
+				}
 				backpack.getInventory().setContents(items);
 				backpack.setChanged();
 				messageRestored.send(sender);
@@ -125,31 +145,43 @@ public class RestoreCommand extends MinepacksCommand
 		}
 	}
 
-	private void listBackups(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
+	private int parsePageNr(final @NotNull CommandSender sender, final @NotNull String[] args)
 	{
-		int page = 0;
 		if(args.length == 2)
 		{
 			try
 			{
-				page = StringUtils.parsePageNumber(args[1]);
+				return StringUtils.parsePageNumber(args[1]);
 			}
 			catch(NumberFormatException ignored)
 			{
 				((Minepacks) getMinepacksPlugin()).messageNotANumber.send(sender);
-				return;
 			}
 		}
+		return 0;
+	}
+
+	private String formatUUID(final @NotNull String uuidString)
+	{
+		if (uuidString.contains("-")) return uuidString;
+		return uuidString.replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+	}
+
+	private void listBackups(final @NotNull CommandSender sender, final @NotNull String mainCommandAlias, final @NotNull String alias, final @NotNull String[] args)
+	{
+		int page = parsePageNr(sender, args);
+
 		List<String> backups = ((Minepacks) getMinepacksPlugin()).getDatabase().getBackups();
 		int pages = backups.size() / elementsPerPage + 1;
 		page = Math.min(page, pages - 1);
 		int offset = page * elementsPerPage, end = Math.min(offset + elementsPerPage, backups.size());
-		messageBackupsHeader.send(sender, page + 1, pages, mainCommandAlias, alias + ' ' + args[0]);
+		String subCom = alias + ' ' + args[0];
+		messageBackupsHeader.send(sender, page + 1, pages, mainCommandAlias, subCom, page, page + 2);
 		while(offset < end)
 		{
 			String backup = backups.get(offset++), uuid = "No UUID", date = "Unknown";
 			String[] components = backup.split("_");
-			if(components.length == 3) uuid = (components[1].contains("-")) ? components[1] : components[1].replaceAll("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})", "$1-$2-$3-$4-$5");
+			if(components.length == 3) uuid = formatUUID(components[1]);
 			if(dateFormat != null && (components.length == 2 || components.length == 3))
 			{
 				try
@@ -160,7 +192,7 @@ public class RestoreCommand extends MinepacksCommand
 			}
 			messageBackupEntry.send(sender, backup, date, components[0], uuid, mainCommandAlias, alias);
 		}
-		messageBackupsFooter.send(sender, page + 1, pages, mainCommandAlias, alias + ' ' + args[0]);
+		messageBackupsFooter.send(sender, page + 1, pages, mainCommandAlias, subCom, page, page + 2);
 	}
 
 	@Override

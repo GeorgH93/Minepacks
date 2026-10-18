@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2022 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -12,21 +12,20 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.API.Events;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 @RequiredArgsConstructor()
 public class InventoryClearEvent extends Event implements Cancellable
@@ -36,7 +35,7 @@ public class InventoryClearEvent extends Event implements Cancellable
 	/**
 	 * The player whose inventory should be cleared.
 	 */
-	@Getter final private Player player;
+	@Getter private final Player player;
 
 	/**
 	 * The command sender who has requested the inventory to be cleared.
@@ -49,7 +48,7 @@ public class InventoryClearEvent extends Event implements Cancellable
 	@Override
 	public @NotNull HandlerList getHandlers()
 	{
-		return handlers;
+		return getHandlerList();
 	}
 
 	public static HandlerList getHandlerList()

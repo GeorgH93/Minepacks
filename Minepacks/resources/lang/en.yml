@@ -11,10 +11,12 @@ Language:
     #Parameter: {OwnerName}, {OwnerDisplayName}
     PlayerBackpackClose: "{OwnerName}'s backpack closed!"
     PlayerBackpackClose_SendMethod: "action_bar"
+    InvalidBackpack: "Invalid backpack."
     NotAllowedInBackpack: "&c{ItemName} is not allowed in the backpack."
     NotAllowedInBackpack_SendMethod: "action_bar"
     DontRemoveShortcut: "&cYou must not remove the backpack shortcut from your inventory!"
     DontRemoveShortcut_SendMethod: "action_bar"
+    BackpackShrunk: "&cYour backpack shrunk! Some items fell to the ground!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Please wait \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" till you reopen your backpack.\"}]"
@@ -40,7 +42,8 @@ Language:
       # You can change this message if you like to, but don't cry if the link isn't linking to the plugin anymore!
       UpdateAvailable: "[{\"text\":\"There is an update available! Please go to \\\"\",\"color\":\"green\"},{\"text\":\"${project.url}\",\"color\":\"yellow\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"${project.url}\"}},{\"text\":\"\\\" to download it!\"}]"
     Backup:
-      Created: "The backpack has been backed up successful."
+      Created: "The backpack has been backed up successfully."
+      NoBackpack: "The player doesn't have a backpack or his backpack is empty."
     Restore:
       BackupsPerPage: 10
       Headline: "[\"\",{\"text\":\"Backups\",\"color\":\"yellow\"},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"showing page {CurrentPage}/{MaxPage}\",\"color\":\"gold\"}]"
@@ -52,7 +55,7 @@ Language:
       ParameterBackupName: "backup_name"
       # No Json!!!
       DateFormat: "yyyy.MM.dd HH:mm:ss"
-      Restored: "Backup has been successful restored."
+      Restored: "Backup has been successfully restored."
     InventoryClear:
       UnknownPlayer: "&cCould not find player {Name}!"
       Cleared: "Inventory cleared."
@@ -81,6 +84,9 @@ Language:
     DescriptionOpen: "Right click to open your backpack."
     DescriptionDragAndDrop: "Drag items on it to place them in your backpack."
 
+    Pickup:
+      ToggleOn: "&7Automatic item collection has been toggled &aON&7."
+      ToggleOff: "&7Automatic item collection has been toggled &cOFF&7."
   Commands:
     HelpFormat: "[\"\",{\"text\":\"/{MainCommand} {SubCommand} {Parameters}\",\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"/{MainCommand} {SubCommand}\"}},{\"text\":\" - \",\"color\":\"white\"},{\"text\":\"{Description}\",\"color\":\"aqua\"}]"
     PlayerNameVariable: "player_name"
@@ -89,18 +95,20 @@ Language:
       Backpack: "Opens your backpack."
       Sort: "Sorts your backpack."
       Clean: "Cleans your backpack."
-      CleanOthers: "Cleans the backpack of another players."
+      CleanOthers: "Cleans the backpack of another player."
       OpenOthers: "Shows the backpack of another player."
       Reload: "Reloads the config of the plugin."
       Update: "Checks for new plugin updates."
-      Version: "Prints the version details about the plugin and it's dependencies."
-      Backup: "Creates a backup of a players backpack."
+      Version: "Prints the version details about the plugin and its dependencies."
+      Backup: "Creates a backup of a player's backpack."
+      BackupEveryone: "Creates a backup of everyone currently online."
       Restore: "Restores a backup."
       RestoreList: "Lists all available backups."
       Help: "Shows all available commands and their description."
       Migrate: "Migrates the used database from one type to another."
       Shortcut: "Adds the backpack shortcut item to your inventory."
       ShortcutChose: "Opens a dialog to chose how your backpack item should look like."
+      Pickup: "Toggle the state of the automatic pickup when the inventory is full."
 
 Command:
   Backpack:
@@ -138,6 +146,8 @@ Command:
   Switches:
     Set:
       - set
+  Pickup:
+    - pickup
 
 # Will be shown in the console during startup
 LanguageName: "english"

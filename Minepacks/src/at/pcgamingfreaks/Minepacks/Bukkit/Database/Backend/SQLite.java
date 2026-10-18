@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -147,7 +147,7 @@ public class SQLite extends SQL
 	public void saveBackpackStyle(final @NotNull MinepacksPlayerData player)
 	{
 		Object backpackStyle = player.getBackpackStyle() != null ? player.getBackpackStyle().getDatabaseKey() : 0;
-		Bukkit.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			runStatement(querySaveBackpackStyle, player.getDatabaseKey(), backpackStyle);
 			runStatement(queryUpdateBackpackStyle, backpackStyle, player.getDatabaseKey());
 		});

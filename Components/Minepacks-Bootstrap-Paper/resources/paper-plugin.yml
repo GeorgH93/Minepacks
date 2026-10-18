@@ -1,0 +1,22 @@
+name: "Minepacks"
+author: "${author}"
+version: "${pluginVersion}"
+api-version: "1.19"
+folia-supported: true
+main: "at.pcgamingfreaks.MinepacksStandalone.Bukkit.Minepacks"
+bootstrapper: "at.pcgamingfreaks.Minepacks.Paper.MinepacksBootstrap"
+
+dependencies:
+  - name: PCGF_PluginLib
+    required: false
+    bootstrap: true
+  - name: MVdWPlaceholderAPI
+    required: false
+  - name: PlaceholderAPI
+    required: false
+
+load-after:
+  - name: PCGF_PluginLib
+    bootstrap: true
+  - name: MVdWPlaceholderAPI
+  - name: PlaceholderAPI

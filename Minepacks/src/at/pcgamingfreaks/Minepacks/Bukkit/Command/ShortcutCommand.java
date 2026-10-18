@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Command;
@@ -27,7 +27,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.MinepacksPlayerData;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksCommand;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
 import at.pcgamingfreaks.Minepacks.Bukkit.Listener.ItemShortcut;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Minepacks.Bukkit.Permissions;
 import at.pcgamingfreaks.StringUtils;
@@ -61,8 +61,8 @@ public class ShortcutCommand extends MinepacksCommand
 		messageItemGiven = plugin.getLanguage().getMessage("Ingame.Shortcut.Given");
 		messageItemGivenOther = plugin.getLanguage().getMessage("Ingame.Shortcut.GivenOther");
 		messageShortcutSet = plugin.getLanguage().getMessage("Ingame.Shortcut.Set");
-		messageUnknownPlayer = plugin.getLanguage().getMessage("Ingame.Shortcut.UnknownPlayer").replaceAll("\\{Name}", "%s");
-		messageUnknownShortcutStyle = plugin.getLanguage().getMessage("Ingame.Shortcut.UnknownShortcutStyle").replaceAll("\\{ShortcutStyle}", "%s");
+		messageUnknownPlayer = new Message(plugin.getLanguage().getTranslated("Ingame.Shortcut.UnknownPlayer").replaceAll("\\{Name}", "%s"));
+		messageUnknownShortcutStyle = new Message(plugin.getLanguage().getTranslated("Ingame.Shortcut.UnknownShortcutStyle").replaceAll("\\{ShortcutStyle}", "%s"));
 
 		setSwitch = plugin.getLanguage().getSwitch("Set", "set");
 
@@ -162,7 +162,7 @@ public class ShortcutCommand extends MinepacksCommand
 						}
 					}
 				}
-				else if(sender.hasPermission(Permissions.OTHERS)) giveItemOther(sender, args[1]);
+				else if(sender.hasPermission(Permissions.OTHERS)) giveItemOther(sender, args[0]);
 				else showHelp(sender, mainCommandAlias);
 			}
 			else
@@ -176,7 +176,7 @@ public class ShortcutCommand extends MinepacksCommand
 	private void giveItemOther(final @NotNull CommandSender sender, final @NotNull String target)
 	{
 		Player player = Bukkit.getPlayer(target);
-		if(player != null)
+		if(player != null && player.hasPermission(Permissions.USE))
 		{
 			itemShortcut.addItem(player);
 			messageItemGivenOther.send(sender);

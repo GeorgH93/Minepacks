@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public class MySQL extends SQL
 	protected void updateQueriesForDialect()
 	{
 		queryDeleteOldBackpacks = "DELETE FROM {TableBackpacks} WHERE {FieldBPLastUpdate} + INTERVAL {VarMaxAge} day < NOW()";
-		queryUpdateBp = queryUpdateBp.replaceAll("\\{NOW}", "NOW()");
+		queryUpdateBp = queryUpdateBp.replace("{NOW}", "NOW()");
 
 		// Prevent auto id incrementing if no insert was performed
 		queryInsertPlayer = "INSERT IGNORE INTO {TablePlayers} ({FieldName},{FieldUUID}) SELECT ?,? FROM (SELECT 1) AS `tmp` WHERE NOT EXISTS (SELECT {FieldUUID} FROM {TablePlayers} WHERE {FieldUUID}=?);";
@@ -59,7 +59,7 @@ public class MySQL extends SQL
 		{
 			mkTable(connection, "CREATE TABLE IF NOT EXISTS {TablePlayers} (\n{FieldPlayerID} INT UNSIGNED NOT NULL AUTO_INCREMENT,\n{FieldName} VARCHAR(16) NOT NULL,\n{FieldUUID} CHAR(" +  ((useUUIDSeparators) ? "36" : "32") + ") DEFAULT NULL," +
 								"\nPRIMARY KEY ({FieldPlayerID}),\nUNIQUE INDEX {FieldUUID}_UNIQUE ({FieldUUID})\n) ENGINE=InnoDB;");
-			mkTable(connection, "CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} BLOB,\n{FieldBPVersion} INT NOT NULL DEFAULT 0,\n" +
+			mkTable(connection, "CREATE TABLE IF NOT EXISTS {TableBackpacks} (\n{FieldBPOwner} INT UNSIGNED NOT NULL,\n{FieldBPITS} MEDIUMBLOB,\n{FieldBPVersion} INT NOT NULL DEFAULT 0,\n" +
                                 "{FieldBPLastUpdate} TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\nPRIMARY KEY ({FieldBPOwner}),\n" +
 								"CONSTRAINT fk_{TableBackpacks}_{TablePlayers}_{FieldBPOwner} FOREIGN KEY ({FieldBPOwner}) REFERENCES {TablePlayers} ({FieldPlayerID}) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB;");
 			if(syncCooldown)

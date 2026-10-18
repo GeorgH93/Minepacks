@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2020 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -19,8 +19,11 @@ package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.ItemNameResolver;
 import at.pcgamingfreaks.Bukkit.Message.Message;
+import at.pcgamingfreaks.Bukkit.Message.Placeholder.Processors.ItemDisplayNamePlaceholderProcessor;
+import at.pcgamingfreaks.Bukkit.Message.Placeholder.Processors.ItemNamePlaceholderProcessor;
 import at.pcgamingfreaks.Bukkit.MinecraftMaterial;
 import at.pcgamingfreaks.Bukkit.Util.InventoryUtils;
+import at.pcgamingfreaks.Message.Placeholder.Placeholder;
 import at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 
@@ -28,10 +31,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.InventoryAction;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Contract;
@@ -64,27 +64,14 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 		filter.addFilteredNames(plugin.getConfiguration().getItemFilterNames());
 		filter.addFilteredLore(plugin.getConfiguration().getItemFilterLore());
 
-		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").replaceAll("\\{ItemName}", "%s");
-
 		/*if[STANDALONE]
 		itemNameResolver = new ItemNameResolver();
-		if (at.pcgamingfreaks.Bukkit.MCVersion.isOlderThan(at.pcgamingfreaks.Bukkit.MCVersion.MC_1_13))
-		{
-			at.pcgamingfreaks.Bukkit.Language itemNameLanguage = new at.pcgamingfreaks.Bukkit.Language(plugin, 1, 1, java.io.File.separator + "lang", "items_", "legacy_items_");
-			itemNameLanguage.setFileDescription("item name language");
-			itemNameLanguage.load(plugin.getConfiguration().getLanguage(), at.pcgamingfreaks.YamlFileUpdateMethod.OVERWRITE);
-			itemNameResolver.loadLegacy(itemNameLanguage, plugin.getLogger());
-		}
-		else
-		{
-			at.pcgamingfreaks.Bukkit.Language itemNameLanguage = new at.pcgamingfreaks.Bukkit.Language(plugin, 2, java.io.File.separator + "lang", "items_");
-			itemNameLanguage.setFileDescription("item name language");
-			itemNameLanguage.load(plugin.getConfiguration().getLanguage(), at.pcgamingfreaks.YamlFileUpdateMethod.OVERWRITE);
-			itemNameResolver.load(itemNameLanguage, plugin.getLogger());
-		}
+		itemNameResolver.load(plugin, plugin.getConfiguration());
 		else[STANDALONE]*/
 		itemNameResolver = at.pcgamingfreaks.PluginLib.Bukkit.ItemNameResolver.getInstance();
 		/*end[STANDALONE]*/
+
+		messageNotAllowedInBackpack = plugin.getLanguage().getMessage("Ingame.NotAllowedInBackpack").placeholders(new Placeholder("ItemName", new ItemNamePlaceholderProcessor(itemNameResolver)), new Placeholder("ItemDisplayName", new ItemDisplayNamePlaceholderProcessor(itemNameResolver)));
 	}
 
 	@Override
@@ -97,13 +84,13 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	@Override
 	public void sendNotAllowedMessage(@NotNull Player player, @NotNull ItemStack itemStack)
 	{
-		messageNotAllowedInBackpack.send(player, itemNameResolver.getName(itemStack));
+		messageNotAllowedInBackpack.send(player, itemStack);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemMove(InventoryMoveItemEvent event)
 	{
-		if(event.getDestination().getHolder() instanceof Backpack && isItemBlocked(event.getItem()))
+		if(event.getDestination().getType() == InventoryType.CHEST && event.getDestination().getHolder() instanceof Backpack && isItemBlocked(event.getItem()))
 		{
 			if(event.getSource().getHolder() instanceof Player)
 			{
@@ -117,7 +104,7 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	public void onItemClick(InventoryClickEvent event)
 	{
 		if(!(event.getWhoClicked() instanceof Player)) return;
-		if(event.getInventory().getHolder() instanceof Backpack)
+		if(event.getInventory().getType() == InventoryType.CHEST && event.getInventory().getHolder() instanceof Backpack)
 		{
 			Player player = (Player) event.getWhoClicked();
 			if(event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY && checkIsBlockedAndShowMessage(player, event.getCurrentItem()))
@@ -132,6 +119,13 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 					event.setCancelled(true);
 				}
 			}
+			else if((event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD || event.getAction() == InventoryAction.HOTBAR_SWAP) && event.getClick().name().equals("SWAP_OFFHAND"))
+			{
+				if(checkIsBlockedAndShowMessage(player, player.getInventory().getItemInOffHand()))
+				{
+					event.setCancelled(true);
+				}
+			}
 			else if(!player.getInventory().equals(InventoryUtils.getClickedInventory(event)) && checkIsBlockedAndShowMessage(player, event.getCursor()))
 			{
 				event.setCancelled(true);
@@ -142,9 +136,9 @@ public class ItemFilter extends MinepacksListener implements at.pcgamingfreaks.M
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onItemDrag(InventoryDragEvent event)
 	{
-		if(event.getInventory().getHolder() instanceof Backpack && (isItemBlocked(event.getOldCursor()) || isItemBlocked(event.getCursor())) && event.getRawSlots().containsAll(event.getInventorySlots()))
+		if(event.getInventory().getType() == InventoryType.CHEST && event.getInventory().getHolder() instanceof Backpack && (isItemBlocked(event.getOldCursor()) || isItemBlocked(event.getCursor())) && event.getRawSlots().containsAll(event.getInventorySlots()))
 		{
-			messageNotAllowedInBackpack.send(event.getView().getPlayer(), itemNameResolver.getName(event.getOldCursor()));
+			sendNotAllowedMessage((Player) event.getView().getPlayer(), event.getOldCursor());
 			event.setCancelled(true);
 		}
 	}

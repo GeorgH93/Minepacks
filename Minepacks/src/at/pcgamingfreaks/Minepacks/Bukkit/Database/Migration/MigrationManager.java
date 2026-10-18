@@ -12,7 +12,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 package at.pcgamingfreaks.Minepacks.Bukkit.Database.Migration;
@@ -24,7 +24,6 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Database;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Enums.DatabaseType;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.Reflection;
-
 import org.bukkit.event.HandlerList;
 
 public class MigrationManager
@@ -65,7 +64,7 @@ public class MigrationManager
 		}
 		//endregion
 		//region Migrate data
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+		Minepacks.getScheduler().runAsync(task -> {
 			MigrationResult migrationResult = null;
 			try
 			{
@@ -82,7 +81,7 @@ public class MigrationManager
 
 			//region Start the plugin again
 			final MigrationResult migrationResultFinal = migrationResult;
-			plugin.getServer().getScheduler().runTask(plugin, () -> {
+			Minepacks.getScheduler().runNextTick(task1 -> {
 				db.close();
 				// No need to reload the config
 				try

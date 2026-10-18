@@ -13,6 +13,8 @@ Language:
 BackpackTitleOther: "&b{OwnerName}'s Backpack"
 # The title of the inventory for the owner of the backpack.
 BackpackTitle: "&bBackpack"
+# If disabled, both the owner and 3. party player will see the BackpackTitleOther
+UseDynamicTitle: true
 # Defines if the content of the backpack get dropped on the death of a player.
 # If enabled, it can be disabled for individual players with the "backpack.keepOnDeath" permission.
 DropOnDeath: true
@@ -45,13 +47,16 @@ Cooldown:
   AddOnJoin: true
 
 # Controls for the auto pickup on full inventory function
-ItemCollector:
-  # If items should be collected to the backpack if the players inventory is full
-  Enabled: false
+FullInventory:
+  # If items should be collected to the backpack if the players inventory is full.
+  # This is also the default if 'IsToggleAllowed' is enabled.
+  CollectItems: false
   # Interval in seconds how often items around the player should be collected, increase it if it lags the server
   CheckInterval: 1
   # Radius in which items get collected, in meter/blocks, allow decimals
   CollectRadius: 1.5
+  # If this feature may be toggled.
+  IsToggleAllowed: false
   # Warns the player if the backpack is full and no items where collected
   WarnIfFull: true
 
@@ -71,6 +76,9 @@ Database:
   # Options: auto, online, offline | auto will decide based on the server online mode option.
   # If you are using BungeeCord, set it to whatever you use on your BungeeCord server!!!
   UUID_Type: auto
+  # If enabled the backpack will be saved regardless of if there have been changes to it or not. This will slightly negatively impact performance.
+  # This will help with changes made to items inside the backpack by other plugins. For example plugins that allow you to interact with items, when you allow your players to store these items inside the backpack.
+  ForceSaveOnUnload: false
   # Settings only for MySQL
   SQL:
     Host: "localhost:3306"
@@ -92,7 +100,7 @@ Database:
   # Changing settings down here after you have used this plugin may result in data inconsistency!!!
   Tables:
     # Table names
-    # Don't change the players table if you have backpacks stored in your database already! Player id's might won't match anymore resulting data inconsistency.
+    # Don't change the players table if you have backpacks stored in your database already! Player id's might not match any more resulting data inconsistency.
     Player: backpack_players
     Backpack: backpacks
     Cooldown: backpack_cooldowns

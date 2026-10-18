@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2023 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,10 +18,9 @@
 package at.pcgamingfreaks.Minepacks.Bukkit.Listener;
 
 import at.pcgamingfreaks.Bukkit.Message.Message;
-import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
-
+import at.pcgamingfreaks.Minepacks.Bukkit.Placeholders;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,15 +39,15 @@ public class BackpackEventListener extends MinepacksListener
 	{
 		super(plugin);
 		messageOwnBackpackClose = plugin.getLanguage().getMessage("Ingame.OwnBackpackClose");
-		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").replaceAll("\\{OwnerName}", "%1\\$s").replaceAll("\\{OwnerDisplayName}", "%2\\$s");
+		messageOtherBackpackClose = plugin.getLanguage().getMessage("Ingame.PlayerBackpackClose").placeholders(Placeholders.mkPlayerName("Owner"));
 		closeSound = plugin.getConfiguration().getCloseSound();
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onClose(final InventoryCloseEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getPlayer() instanceof Player)
-	    {
+		{
 			Backpack backpack = (Backpack)event.getInventory().getHolder();
 			Player closer = (Player)event.getPlayer();
 			if(backpack.canEdit(closer))
@@ -62,21 +61,20 @@ public class BackpackEventListener extends MinepacksListener
 			}
 			else
 			{
-				MinepacksPlayer owner = backpack.getOwner();
-				messageOtherBackpackClose.send(closer, owner.getName(), owner.getDisplayName());
+				messageOtherBackpackClose.send(closer, backpack.getOwner().getPlayer());
 			}
 			if(closeSound != null)
 			{
 				closer.playSound(closer.getEyeLocation(), closeSound, 1, 0);
 			}
-	    }
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onClick(final InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
-	    {
+		{
 			Backpack backpack = (Backpack) event.getInventory().getHolder();
 			if(!backpack.canEdit((Player)event.getWhoClicked()))
 			{
@@ -86,7 +84,7 @@ public class BackpackEventListener extends MinepacksListener
 			{
 				backpack.setChanged();
 			}
-	    }
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)

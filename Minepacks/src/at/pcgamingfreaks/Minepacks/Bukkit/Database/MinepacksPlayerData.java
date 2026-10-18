@@ -24,7 +24,7 @@ import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.Backpack;
 import at.pcgamingfreaks.Minepacks.Bukkit.Database.Backpack.BackpackType;
 import at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.MinepacksPlayer;
 import at.pcgamingfreaks.Minepacks.Bukkit.Item.ItemConfig;
-import at.pcgamingfreaks.Minepacks.Bukkit.MagicValues;
+import at.pcgamingfreaks.Minepacks.MagicValues;
 import at.pcgamingfreaks.Minepacks.Bukkit.Minepacks;
 import at.pcgamingfreaks.UUIDConverter;
 

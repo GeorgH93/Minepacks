@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2021 GeorgH93
+ *   Copyright (C) 2024 GeorgH93
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,8 +47,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.Backpack
 {
 	@Setter private static ShrinkApproach shrinkApproach = ShrinkApproach.COMPRESS;
-	private static Object titleOwn;
+	@Setter(AccessLevel.PUBLIC) private static Message messageBackpackShrunk = new Message("Backpack shrunk!");
+	private static Message titleOwnFormat;
+	private static Object titleOwnGlobal;
+	private static boolean useDynTitle;
 	private static Message titleOtherFormat;
+	private final Object titleOwn;
 	private final Object titleOtherComponent;
 	private final String titleOther;
 	@Getter private final MinepacksPlayerData owner;
@@ -57,10 +62,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 	private boolean hasChanged;
 	private Map<Integer, GuiButton> specialSlots = new HashMap<>();
 
-	public static void setTitle(final @NotNull Message title, final @NotNull Message titleOther)
+	public static void setTitle(final @NotNull Message title, final @NotNull Message titleOther, final boolean dynamicTitle)
 	{
-		titleOwn = MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16) ? title.prepareChatComponent() : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title.prepareChatLegacy());
+		titleOwnFormat = title;
 		titleOtherFormat = titleOther;
+		useDynTitle = dynamicTitle;
+		titleOwnGlobal = (useDynTitle) ? null : (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16) ? title.prepareChatComponent() : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(title.prepareChatLegacy()));
 	}
 
 	public Backpack(MinepacksPlayerData owner)
@@ -81,6 +88,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 		else titleOtherComponent = null;
 		bp = Bukkit.createInventory(this, size, titleOther);
 		this.size = size;
+		if(useDynTitle) titleOwn = (MCVersion.isNewerOrEqualThan(MCVersion.MC_1_16)) ? titleOwnFormat.prepareChatComponent(owner.getName()) : InventoryUtils.prepareTitleForOpenInventoryWithCustomTitle(StringUtils.limitLength(titleOwnFormat.prepareChatLegacy(owner.getName()), 32));
+		else titleOwn = titleOwnGlobal;
 	}
 	
 	public Backpack(final MinepacksPlayerData owner, ItemStack[] backpack)
@@ -96,14 +105,16 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 				Minepacks.getInstance().getLogger().warning(owner.getName() + "'s backpack has to many items.");
 				if(owner.isOnline())
 				{
-					Bukkit.getScheduler().runTask(Minepacks.getInstance(), () -> {
+					Minepacks.getScheduler().runNextTick(task -> {
 						if(owner.isOnline())
 						{
 							Player player = owner.getPlayerOnline();
 							assert player != null;
-							Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
-							left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
-							this.setChanged();
+							Minepacks.getScheduler().runAtEntity(player, task1 -> {
+								Map<Integer, ItemStack> left = player.getInventory().addItem(toMuch.toArray(new ItemStack[0]));
+								left.forEach((id, stack) -> player.getWorld().dropItemNaturally(player.getLocation(), stack));
+								setChanged();
+							});
 						}
 					});
 				}
@@ -113,7 +124,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 		bp.setContents(backpack);
 	}
 
-	private void checkResize()
+	public void checkResize()
 	{
 		if(owner.isOnline())
 		{
@@ -123,13 +134,19 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 				int size = Minepacks.getInstance().getBackpackPermSize(owner);
 				if(size != bp.getSize())
 				{
+					boolean droppedItems = false;
 					List<ItemStack> items = setSize(size);
 					for(ItemStack i : items)
 					{
 						if(i != null)
 						{
 							owner.getWorld().dropItemNaturally(owner.getLocation(), i);
+							droppedItems = true;
 						}
+					}
+					if(droppedItems)
+					{
+						messageBackpackShrunk.send(owner);
 					}
 				}
 			}
@@ -238,6 +255,18 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 	}
 
 	@Override
+	public @NotNull UUID getOwnerId()
+	{
+		return owner.getUUID();
+	}
+
+	@Override
+	public @Nullable Player getOwnerPlayer()
+	{
+		return owner.getPlayerOnline();
+	}
+
+	@Override
 	public @NotNull Inventory getInventory()
 	{
 		return bp;
@@ -263,6 +292,12 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.ExtendedAPI.
 			Minepacks.getInstance().getDatabase().saveBackpack(this);
 			hasChanged = false;
 		}
+	}
+
+	public void forceSave()
+	{
+		setChanged();
+		save();
 	}
 
 	public void backup()

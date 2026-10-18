@@ -4,6 +4,8 @@
 [spigotRatingImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=rating&query=%24.rating.average&suffix=%20%2F%205&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
 [spigotDownloadsImg]: https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=downloads%20%28spigotmc.org%29&query=%24.downloads&url=https%3A%2F%2Fapi.spiget.org%2Fv2%2Fresources%2F19286
 [bukkit]: https://dev.bukkit.org/projects/minepacks
+[bukkitDownloadsImg]: https://cf.way2muchnoise.eu/full_minepacks_downloads.svg
+[versionsImg]: https://cf.way2muchnoise.eu/versions/minepacks.svg
 [issues]: https://github.com/GeorgH93/Minepacks/issues
 [wiki]: https://github.com/GeorgH93/Minepacks/wiki
 [wikiFAQ]: https://github.com/GeorgH93/Minepacks/wiki/FAQ
@@ -37,10 +39,10 @@
 Minepacks is a free and reliable backpack plugin for minecraft server running bukkit or spigot.
 
 [![ciImg]][ci] [![releaseImg]][release]
-[![apiVersionImg]][api] [![licenseImg]][license]
+[![apiVersionImg]][api] [![licenseImg]][license] [![spigotRatingImg]][spigot]
 
 [![featureRequestsImg]][featureRequests] [![bugReportsImg]][bugReports]
-[![spigotRatingImg]][spigot] [![spigotDownloadsImg]][spigot]
+[![spigotDownloadsImg]][spigot] [![bukkitDownloadsImg]][bukkit]
 
 ## Features:
 * [Configuration][config]
@@ -57,7 +59,7 @@ Minepacks is a free and reliable backpack plugin for minecraft server running bu
 ## Requirements:
 ### Runtime requirements:
 * Java 8
-* Bukkit, Spigot or Paper for Minecraft 1.7.5 or newer
+* Bukkit, Spigot or Paper for Minecraft 1.8 or newer ![versionsImg]
 * (Optional) [PCGF PluginLib][pcgfPluginLib] ([Advantages of using the PCGF PluginLib][pcgfPluginLibAdvantages])
 
 ### Build requirements:
@@ -83,7 +85,7 @@ This version works without the PCGF-PluginLib, however some API features are not
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
-mvn package -P Standalone,ExcludeBadRabbit
+mvn package -P Standalone
 ```
 The final file will be in the `Minepacks/target` folder, named `Minepacks-<CurrentVersion>-Standalone.jar`.
 
@@ -92,7 +94,7 @@ This is the version of the plugin published on dev.bukkit.org and spigotmc.org.
 ```
 git clone https://github.com/GeorgH93/Minepacks.git
 cd Minepacks
-mvn clean install -P Standalone,ExcludeBadRabbit
+mvn clean install -P Standalone
 mvn clean package -P Release
 ```
 The final file will be in the `Minepacks/target` folder, named `Minepacks-<CurrentVersion>-Release.jar`.
@@ -113,7 +115,7 @@ For more details about the API please check the following links:
 * [Faq][wikiFAQ]
 
 ## Links:
-* [Spigot][spigot]
-* [Dev Bukkit][bukkit]
+* [Spigot][spigot] - [![spigotDownloadsImg]][spigot]
+* [CurseForge][bukkit] - [![bukkitDownloadsImg]][bukkit]
 * [Build Server - Release Builds ![ciImg]][ci]
 * [Build Server - Dev Builds ![ciDevImg]][ciDev]
