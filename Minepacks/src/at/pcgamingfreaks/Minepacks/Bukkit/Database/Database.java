@@ -210,8 +210,7 @@ public abstract class Database implements Listener
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					backpacks.put(player.getUniqueId(), backpack);
-					callback.onResult(backpack);
+					callback.onResult(cacheIfAbsent(player, backpack));
 				}
 
 				@Override
@@ -219,9 +218,7 @@ public abstract class Database implements Listener
 				{
 					if(createNewOnFail)
 					{
-						Backpack backpack = new Backpack(player);
-						backpacks.put(player.getUniqueId(), backpack);
-						callback.onResult(backpack);
+						callback.onResult(backpacks.computeIfAbsent(player.getUniqueId(), uuid -> new Backpack(player)));
 					}
 					else
 					{
@@ -263,16 +260,26 @@ public abstract class Database implements Listener
 				@Override
 				public void onResult(Backpack backpack)
 				{
-					backpacks.put(player.getUniqueId(), backpack);
+					cacheIfAbsent(player, backpack);
 				}
 
 				@Override
 				public void onFail()
 				{
-					backpacks.put(player.getUniqueId(), new Backpack(player));
+					backpacks.computeIfAbsent(player.getUniqueId(), uuid -> new Backpack(player));
 				}
 			});
 		}
+	}
+
+	/**
+	 * Another load for the same player may have finished first. Only one backpack instance may exist per player,
+	 * otherwise two viewers get separate inventories of the same backpack and can duplicate items (#413).
+	 */
+	private @NotNull Backpack cacheIfAbsent(final @NotNull OfflinePlayer player, final @NotNull Backpack backpack)
+	{
+		Backpack cached = backpacks.putIfAbsent(player.getUniqueId(), backpack);
+		return cached != null ? cached : backpack;
 	}
 
 	@EventHandler
