@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cNon puoi rimuovere il backpack dalla hotbar o inventario!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cIl tuo zaino si è ristretto! Alcuni oggetti sono caduti a terra!"
+    LockedSlot: "&cQuesta riga non è ancora sbloccata!"
     Open:
       #Parameter: {TimeLeft} secondi per riaprire il backpack, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Perfavore aspettaret \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} secondi\"}},{\"text\":\" per riaprire il backpack.\"}]"

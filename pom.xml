@@ -7,12 +7,12 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>2.5.9.1</revision>
+		<revision>2.5.9.2</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<configFileVersion>35</configFileVersion>
-		<languageFileVersion>21</languageFileVersion>
+		<configFileVersion>36</configFileVersion>
+		<languageFileVersion>22</languageFileVersion>
 		<pcgfPluginLibVersion>1.0.40.9-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>

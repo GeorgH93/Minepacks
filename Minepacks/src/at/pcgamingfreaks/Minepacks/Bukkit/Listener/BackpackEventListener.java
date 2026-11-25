@@ -52,6 +52,7 @@ public class BackpackEventListener extends MinepacksListener
 			Player closer = (Player)event.getPlayer();
 			if(backpack.canEdit(closer))
 			{
+				backpack.updateInventoryFromView();
 				backpack.save();
 			}
 			backpack.close(closer);
@@ -69,18 +70,24 @@ public class BackpackEventListener extends MinepacksListener
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onClick(InventoryClickEvent event)
 	{
 		if (event.getInventory() != null && event.getInventory().getHolder() instanceof Backpack && event.getWhoClicked() instanceof Player)
 		{
 			Backpack backpack = (Backpack) event.getInventory().getHolder();
-			if(!backpack.canEdit((Player)event.getWhoClicked()))
+
+			if (!backpack.canEdit((Player)event.getWhoClicked()))
 			{
 				event.setCancelled(true);
 			}
-		    else
+			else if (event.getRawSlot() >= backpack.getSize() && event.getRawSlot() < event.getView().getTopInventory().getSize())
+			{
+				// disable removing a glass pane
+				event.setCancelled(true);
+			}
+			else
 			{
 				backpack.setChanged();
 			}

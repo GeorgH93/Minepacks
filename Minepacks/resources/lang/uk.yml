@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cВи не можете прибрати рюкзак з інвентарю!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cВаш рюкзак зменшився! Деякі предмети впали на землю!"
+    LockedSlot: "&cЦей рядок ще не розблокований!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Будь ласка, почекайте \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} секунд\"}},{\"text\":\", перш ніж знову відкривати рюкзак.\"}]"

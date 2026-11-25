@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cPrašome neišesti kuprinės iš savo inventoriaus!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cTavo kuprinė susitraukė! Kai kurie daiktai nukrito ant žemės!"
+    LockedSlot: "&cŠi eilė dar neatšaldyta!"
     Open:
       #Nustatymai: {TimeLeft} laikas kada vėl bus galima atidaryti, {TimeSpanLeft} laikas formatuotas kuprinės atidarymui
       Cooldown: "[{\"text\":\"Prašome palaukti \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} s\"}},{\"text\":\" kol vėl galėsite naudoti kuprinę!\"}]"

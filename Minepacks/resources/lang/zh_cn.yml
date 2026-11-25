@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&c你不能从你的物品栏中删除背包快捷方式！"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&c你的背包缩小了！一些物品掉到了地上！"
+    LockedSlot: "&c此行尚未解锁！"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"请等待 \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} 秒\"}},{\"text\":\" 才能重新打开背包。\"}]"
