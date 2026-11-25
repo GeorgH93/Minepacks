@@ -14,6 +14,7 @@ Language:
         DontRemoveShortcut: "&c您不得從庫存中刪除背包快捷方式!"
         DontRemoveShortcut_SendMethod: action_bar
         BackpackShrunk: "&c你的背包縮小了！一些物品掉到了地上！"
+        LockedSlot: "&c此行尚未解鎖！"
         Open:
             Cooldown: '[{"text":"請稍等
                 ","color":"dark_green"},{"text":"{TimeSpanLeft}","hoverEvent":{"action":"show_text","value":"{TimeLeft}

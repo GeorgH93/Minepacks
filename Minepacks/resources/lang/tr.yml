@@ -16,6 +16,7 @@ Language:
     DontRemoveShortcut: "&cÇanta kısayolunu envanterinizden kaldırmamalısınız!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cÇantanız küçüldü! Bazı eşyalar yere düştü!"
+    LockedSlot: "&cBu satır hala kilidli!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Çantanızı geri açana kadar lütfen \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" bekleyin.\"}]"

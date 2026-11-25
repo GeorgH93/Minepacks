@@ -16,6 +16,7 @@ Language:
     DontRemoveShortcut: "&cDu darfst den Rucksack nicht aus deinem Inventar entfernen!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cDein Rucksack ist geschrumpft! Einige Items sind auf den Boden gefallen!"
+    LockedSlot: "&cDiese Reihe ist noch nicht freigeschaltet!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Bitte warte \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} Sekunden\"}},{\"text\":\" bis du deinen Rucksack wieder öffnest.\"}]"

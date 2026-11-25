@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "§f［§b背包§f］ 您不能从背包丢弃头颅。"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "§f［§b背包§f］ 您的背包缩小了！一些物品掉到了地上！"
+    LockedSlot: "&c此行尚未解锁！"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "§f［§b背包§f］ 请等待 §e{TimeLeft} §f秒。"

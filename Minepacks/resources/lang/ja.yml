@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cバックパックショートカットをインベントリから削除しないでください！"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cバックパックが縮小しました！一部のアイテムが地面に落ちました！"
+    LockedSlot: "&cこの行はまだ解除されていません！"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "&2バックパックを開くまで{TimeSpanLeft}秒待ってください。"

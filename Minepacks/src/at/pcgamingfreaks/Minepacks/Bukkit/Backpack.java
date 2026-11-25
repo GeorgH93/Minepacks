@@ -184,7 +184,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		if (showFullSize) {
 			ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
 			ItemMeta  meta  = glass.getItemMeta();
-			meta.setDisplayName(" ");
+			meta.setDisplayName(Minepacks.getInstance().getLanguage().getMessage("Ingame.LockedSlot").prepareChatLegacy());
 			glass.setItemMeta(meta);
 
 			for (int i = bp.getSize(); i < 54; i++) {

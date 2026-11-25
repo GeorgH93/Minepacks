@@ -16,6 +16,7 @@ Language:
     DontRemoveShortcut: "&cJe mag de rugzak niet uit je inventaris halen!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cJe rugzak is gekrompen! Sommige items zijn op de grond gevallen!"
+    LockedSlot: "&cDeze rij is nog niet ontgrendeld!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Wacht \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" voordat je de rugzak heropent.\"}]"

@@ -16,6 +16,7 @@ Language:
     DontRemoveShortcut: "&cVocê não deve remover o atalho da mochila do seu inventário!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cSua mochila encolheu! Alguns itens caíram no chão!"
+    LockedSlot: "&cEsta linha ainda não está desbloqueada!"
     Open:
       # Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Por favor, espere \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\" para abrir a mochila novamente.\"}]"

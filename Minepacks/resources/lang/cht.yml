@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&c您不能從背包中刪除快捷方式!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&c您的背包縮小了！一些物品掉到了地上！"
+    LockedSlot: "&c此行尚未解鎖！"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "&e請等待 {TimeLeft} 秒再使用該指令"

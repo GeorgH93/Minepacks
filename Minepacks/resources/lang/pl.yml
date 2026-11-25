@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cNie wolno usuwać skrótu do plecaka z ekwipunku!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cTwój plecak się skurczył! Niektóre przedmioty spadły na ziemię!"
+    LockedSlot: "&cTen rząd nie jest jeszcze odblokowany!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} seconds\"}},{\"text\":\"Proszę czekać\",\"color\":\"dark_green\"},{\"text\":\" aż do ponownego otwarcia plecaka.\"}]"

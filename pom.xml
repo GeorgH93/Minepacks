@@ -12,7 +12,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<configFileVersion>36</configFileVersion>
-		<languageFileVersion>21</languageFileVersion>
+		<languageFileVersion>22</languageFileVersion>
 		<pcgfPluginLibVersion>1.0.40.9-SNAPSHOT</pcgfPluginLibVersion>
 
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>

@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cNesmíš odstranit zkratku batohu ze svého inventáře!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cTvůj batoh se zmenšil! Některé předměty spadly na zem!"
+    LockedSlot: "&cToto řádku ještě není odemčené!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Počkej prosím \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} sekund\"}},{\"text\":\" než znovu otevřeš svůj batoh.\"}]"

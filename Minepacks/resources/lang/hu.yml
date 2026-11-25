@@ -17,6 +17,7 @@ Language:
     DontRemoveShortcut: "&cNem szabad eltávolítani a hátizsák ikonját az eszköztárból!"
     DontRemoveShortcut_SendMethod: "action_bar"
     BackpackShrunk: "&cA hátizsákod összement! Néhány tárgy a földre esett!"
+    LockedSlot: "&cEz a sor még nincs feloldva!"
     Open:
       #Parameter: {TimeLeft} time in seconds till the backpack can be reopened, {TimeSpanLeft} time formatted as string till the backpack can be reopened
       Cooldown: "[{\"text\":\"Várj \",\"color\":\"dark_green\"},{\"text\":\"{TimeSpanLeft}\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"{TimeLeft} másodperc\"}},{\"text\":\", amíg újra nem nyitja a hátizsákot.\"}]"
