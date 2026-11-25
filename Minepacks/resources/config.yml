@@ -36,6 +36,9 @@ ShrinkApproach: Sort
 # Options: ADVENTURE, CREATIVE, SPECTATOR, SURVIVAL
 # AllowedGameModes: [ "SURVIVAL", "ADVENTURE" ]
 AllowedGameModes: [ "SURVIVAL" ]
+# Show the full size of the backpack in the GUI
+# Put a glass pane in rows that are exceeding the max size
+ShowFullSize: false
 
 Cooldown:
   # Defines how long a player have to wait till he can reopen his backpack.

@@ -25,10 +25,12 @@ import at.pcgamingfreaks.Util.StringUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,6 +56,7 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 	@Getter private final UUID ownerId;
 	private final Map<Player, Boolean> opened = new ConcurrentHashMap<>(); //Thanks Minecraft 1.14
 	private Inventory bp;
+	private Inventory bpViewed; // mirror of bp with glass panes for disabled rows
 	@Getter private int size;
 	@Getter @Setter private int ownerDatabaseId;
 	private boolean hasChanged;
@@ -167,13 +170,46 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 	}
 
+	public void setInventoryToOpen() {
+		// Check if all rows needs to be visible
+		boolean showFullSize = Minepacks.getInstance().getConfiguration().getShowFullSize();
+		int invSize = showFullSize ? 54 : bp.getSize();
+
+		bpViewed = Bukkit.createInventory(this, invSize, titleOther);
+		for (int i = 0; i < bp.getSize(); i++) {
+			bpViewed.setItem(i, bp.getItem(i));
+		}
+
+		// Fill remaining rows with glass panes
+		if (showFullSize) {
+			ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+			ItemMeta  meta  = glass.getItemMeta();
+			meta.setDisplayName(" ");
+			glass.setItemMeta(meta);
+
+			for (int i = bp.getSize(); i < 54; i++) {
+				bpViewed.setItem(i, glass);
+			}
+		}
+	}
+
+	public void updateInventoryFromView()
+	{
+		for (int i = 0; i < bp.getSize(); i++)
+		{
+			bp.setItem(i, bpViewed.getItem(i));
+		}
+		setChanged();
+	}
+
 	@Override
 	public void open(final @NotNull Player player, final boolean editable)
 	{
 		checkResize();
 		opened.put(player, editable);
-		if(useDynTitle && ownerId.equals(player.getUniqueId())) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bp, titleOwn);
-		else player.openInventory(bp);
+		setInventoryToOpen();
+		if(useDynTitle && ownerId.equals(player.getUniqueId())) InventoryUtils.openInventoryWithCustomTitlePrepared(player, bpViewed, titleOwn);
+		else player.openInventory(bpViewed);
 	}
 
 	@Override
@@ -186,7 +222,8 @@ public class Backpack implements at.pcgamingfreaks.Minepacks.Bukkit.API.Backpack
 		}
 		checkResize();
 		opened.put(player, editable);
-		InventoryUtils.openInventoryWithCustomTitle(player, bp, title);
+		setInventoryToOpen();
+		InventoryUtils.openInventoryWithCustomTitle(player, bpViewed, title);
 	}
 
 	public void close(Player p)

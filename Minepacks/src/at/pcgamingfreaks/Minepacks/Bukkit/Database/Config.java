@@ -74,6 +74,7 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 				remappedKeys.put("WorldSettings.BockMode", "WorldSettings.BlacklistMode");
 			}
 			if(oldConfig.getVersion().olderOrEqualThan(new Version(33))) remappedKeys.put("Database.Cache.UnCache.Strategy", "Database.Cache.UnCache.Strategie");
+			if(oldConfig.getVersion().olderOrEqualThan(new Version(35))) remappedKeys.put("ShowFullSize", "false");
 			Collection<String> keysToKeep = oldConfig.getYamlE().getKeysFiltered("Database\\.SQL\\.(MaxLifetime|IdleTimeout)");
 			keysToKeep.addAll(oldConfig.getYamlE().getKeysFiltered("Database\\.Tables\\.Fields\\..+"));
 			doUpgrade(oldConfig, remappedKeys, keysToKeep);
@@ -320,6 +321,11 @@ public class Config extends Configuration implements DatabaseConnectionConfigura
 			gameModes.add(GameMode.SURVIVAL);
 		}
 		return gameModes;
+	}
+
+	public boolean getShowFullSize()
+	{
+		return getConfigE().getBoolean("ShowFullSize", false);
 	}
 
 	//region Full inventory handling
